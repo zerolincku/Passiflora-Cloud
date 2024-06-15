@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405092003_menu_drop_column
+      author: linck
+      changes:
+      - dropColumn:
+          schemaName: public
+          tableName: sys_menu
+          columns:
+            - column:
+                name: locale

@@ -1,0 +1,48 @@
+server:
+  port: 51000
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: passiflora-gateway-app
+  profiles:
+    active: @env@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.serverAddr@
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: passiflora-system-app
+          uri: lb://passiflora-system-app
+          predicates:
+            - Path=/passiflora/system-api/**
+        - id: passiflora-storage-app
+          uri: lb://passiflora-storage-app
+          predicates:
+            - Path=/passiflora/storage-api/**
+
+      default-filters:
+        - TokenCheck #添加默认 Filter TokenCheckGatewayFilterFactory
+
+knife4j:
+  gateway:
+    enabled: true
+    strategy: manual
+    routes:
+      - name: 系统服务
+        service-name: passiflora-system-app
+        url: /passiflora/system-api/v3/api-docs?group=default
+        context-path: /passiflora/system-api
+      - name: 文件服务
+        service-name: passiflora-storage-app
+        url: /passiflora/storage-api/v3/api-docs?group=default
+        context-path: /passiflora/storage-api
+
+passiflora:
+  env: @env@
+  project-version: @projectVersion@

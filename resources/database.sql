@@ -1,0 +1,2 @@
+CREATE DATABASE passiflora_system;
+CREATE DATABASE passiflora_storage;

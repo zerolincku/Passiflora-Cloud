@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405072002_menu_add_column
+      author: linck
+      changes:
+      - addColumn:
+          schemaName: public
+          tableName: sys_menu
+          columns:
+              - column:
+                    name: menu_type
+                    type: int2
+                    constraints:
+                      nullable: false
+                    defaultValue: 0
+                    remarks: 类型

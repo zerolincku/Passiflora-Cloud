@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405402001_file_add_column_default_value.yml
+      author: linck
+      changes:
+        - addDefaultValue:
+            tableName: storage_file
+            columnName: file_purpose
+            defaultValue: ""

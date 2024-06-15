@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出 -->
+<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数 -->
+<configuration monitorInterval="5">
+    <!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+    <!--变量配置 -->
+    <Properties>
+        <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+        <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
+        <property name="applicationName">${spring:spring.application.name}</property>
+        <property name="CONSOLE_LOG_PATTERN"
+                  value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%4.5p} %clr{${sys:PID}}{magenta} %clr{-}{faint} %clr{[%5.20t]}{faint} %clr{%-30.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx" />
+        <property name="FILE_LOG_PATTERN"
+                  value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%t] %c{1.}.%M(%L): %msg%n" />
+
+        <!-- 定义日志存储的路径，不要配置相对路径 -->
+        <property name="FILE_PATH" value="logs/${applicationName}" />
+        <property name="FILE_NAME" value="${applicationName}.log" />
+    </Properties>
+
+    <springProfile name="dev">
+        <appenders>
+            <console name="Console" target="SYSTEM_OUT">
+                <PatternLayout charset="UTF-8" pattern="${CONSOLE_LOG_PATTERN}" />
+                <ThresholdFilter level="trace" onMatch="ACCEPT"
+                                 onMismatch="DENY" />
+            </console>
+        </appenders>
+        <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。 -->
+        <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效 -->
+        <loggers>
+            <root level="info">
+                <appender-ref ref="Console" />
+            </root>
+            <logger name="com.zerolinck.passiflora.system.mapper" level="debug"/>
+        </loggers>
+    </springProfile>
+
+    <springProfile name="prod">
+        <appenders>
+            <!-- 这个会打印出所有的info及以上级别的信息，每次大小超过size，则这size大小的日志会自动压缩，作为存档 -->
+            <RollingFile name="RollingFileInfo"
+                         fileName="${FILE_PATH}/${FILE_NAME}"
+                         filePattern="${FILE_PATH}/%d{yyyy-MM-dd}_%i.log.gz">
+                <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+                <ThresholdFilter level="debug" onMatch="ACCEPT"
+                                 onMismatch="DENY" />
+                <PatternLayout charset="UTF-8" pattern="${FILE_LOG_PATTERN}" />
+                <Policies>
+                    <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                </Policies>
+                <DefaultRolloverStrategy max="180" />
+            </RollingFile>
+        </appenders>
+        <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。 -->
+        <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效 -->
+        <loggers>
+            <root level="info">
+                <appender-ref ref="RollingFileInfo" />
+            </root>
+            <logger name="com.zerolinck.passiflora.system.mapper" level="debug"/>
+        </loggers>
+    </springProfile>
+</configuration>

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405072001_menu_add_column
+      author: linck
+      changes:
+      - addColumn:
+          schemaName: public
+          tableName: sys_menu
+          columns:
+              - column:
+                    name: status
+                    type: int2
+                    defaultValue: 1
+
+      - addColumn:
+          schemaName: public
+          tableName: sys_permission
+          columns:
+            - column:
+                name: status
+                type: int2
+                defaultValue: 1

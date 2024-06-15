@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405302004_permission_rename_column.yml
+      author: linck
+      changes:
+      - renameColumn:
+          schemaName: public
+          tableName: sys_permission
+          oldColumnName: title
+          newColumnName: permission_title
+
+      - renameColumn:
+            schemaName: public
+            tableName: sys_permission
+            oldColumnName: name
+            newColumnName: permission_name
+
+      - renameColumn:
+            schemaName: public
+            tableName: sys_permission
+            oldColumnName: icon
+            newColumnName: permission_icon
+
+      - renameColumn:
+            schemaName: public
+            tableName: sys_permission
+            oldColumnName: level
+            newColumnName: permission_level
+
+      - renameColumn:
+            schemaName: public
+            tableName: sys_permission
+            oldColumnName: status
+            newColumnName: permission_status

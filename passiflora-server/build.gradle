@@ -1,0 +1,76 @@
+plugins{
+    id 'java'
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+allprojects {
+    group = 'com.zerolinck'
+    version = '0.1'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
+
+    dependencyManagement{
+        imports{
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:2023.0.1.0"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+            mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.0"
+        }
+    }
+}
+
+subprojects { subProject ->
+    if (!subProject.name.startsWith('app')) {
+        jar {
+            enabled = true
+        }
+    }
+}
+
+spotless {
+    java {
+        target '**/*.java'
+        importOrder()
+        removeUnusedImports()
+        cleanthat()
+        // https://github.com/jhipster/prettier-java
+        prettier(['prettier': '3.0.3', 'prettier-plugin-java': '2.3.0']).config(['parser': 'java', 'tabWidth': 4, 'charset': 'utf-8', 'end_of_line': 'lf', 'plugins': ['prettier-plugin-java']])
+        formatAnnotations()
+        licenseHeader '/* \n' +
+                ' * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>\n' +
+                ' * \n' +
+                ' * This program is free software: you can redistribute it and/or modify\n' +
+                ' * it under the terms of the GNU Affero General Public License as published\n' +
+                ' * by the Free Software Foundation, either version 3 of the License, or\n' +
+                ' * (at your option) any later version.\n' +
+                ' * \n' +
+                ' * This program is distributed in the hope that it will be useful,\n' +
+                ' * but WITHOUT ANY WARRANTY; without even the implied warranty of\n' +
+                ' * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n' +
+                ' * GNU Affero General Public License for more details.\n' +
+                ' * \n' +
+                ' * You should have received a copy of the GNU Affero General Public License\n' +
+                ' * along with this program.  If not, see <https://www.gnu.org/licenses/>.\n' +
+                ' */'
+    }
+}
+
+compileJava {
+    dependsOn('spotlessApply')
+}

@@ -1,0 +1,5 @@
+FROM openjdk:21-slim
+COPY passiflora-server /app/
+WORKDIR /app/
+RUN ["./gradlew", "dependencies", "--refresh-dependencies"]
+RUN rm -rf /app

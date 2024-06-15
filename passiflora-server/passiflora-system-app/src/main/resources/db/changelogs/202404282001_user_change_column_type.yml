@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202404282001_user_change_column_type.yml
+      author: linck
+      changes:
+      - modifyDataType:
+          schemaName: public
+          tableName: sys_user
+          columnName: user_password
+          newDataType: varchar(100)

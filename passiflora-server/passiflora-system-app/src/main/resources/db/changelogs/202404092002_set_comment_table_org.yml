@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202404092002_add_comment_table_org
+      author: linck
+      changes:
+        - setTableRemarks:
+            tableName: sys_org
+            remarks: "机构"

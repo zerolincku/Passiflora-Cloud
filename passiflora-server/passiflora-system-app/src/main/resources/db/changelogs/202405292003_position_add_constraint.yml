@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405292003_position_add_constraint.yml
+      author: linck
+      changes:
+      - addNotNullConstraint:
+          schemaName: public
+          tableName: sys_position
+          columnName: position_status
+
+      - addNotNullConstraint:
+          schemaName: public
+          tableName: sys_position
+          columnName: order

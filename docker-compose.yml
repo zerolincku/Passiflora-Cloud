@@ -1,0 +1,80 @@
+services:
+  passiflora-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile-gateway
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    container_name: passiflora-gateway
+    restart: unless-stopped
+    image: passiflora-gateway
+    extra_hosts:
+      - "passiflora-nacos:host-gateway"
+      - "passiflora-redis:host-gateway"
+    expose:
+      - 51000
+    ports:
+      - "51000:51000"
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:51000" ]
+      start_period: 90s
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      
+  passiflora-system:
+    build:
+      context: .
+      dockerfile: Dockerfile-system
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    container_name: passiflora-system
+    restart: unless-stopped
+    image: passiflora-system
+    extra_hosts:
+      - "passiflora-nacos:host-gateway"
+      - "passiflora-postgres:host-gateway"
+      - "passiflora-redis:host-gateway"
+    expose:
+      - 51001
+    depends_on:
+      passiflora-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:51001/passiflora/system-api" ]
+      start_period: 90s
+      interval: 60s
+      timeout: 10s
+      retries: 5
+
+  passiflora-storage:
+    build:
+      context: .
+      dockerfile: Dockerfile-storage
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Shanghai
+    container_name: passiflora-storage
+    restart: unless-stopped
+    image: passiflora-file
+    extra_hosts:
+      - "passiflora-nacos:host-gateway"
+      - "passiflora-postgres:host-gateway"
+      - "passiflora-redis:host-gateway"
+      - "passiflora-minio:host-gateway"
+    expose:
+      - 51002
+    depends_on:
+      passiflora-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:51002/passiflora/storage-api" ]
+      start_period: 90s
+      interval: 60s
+      timeout: 10s
+      retries: 5

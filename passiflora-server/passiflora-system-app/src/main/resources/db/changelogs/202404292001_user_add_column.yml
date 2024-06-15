@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024040292001_user_add_column_1
+      author: linck
+      changes:
+      - addColumn:
+          schemaName: public
+          tableName: sys_user
+          columns:
+              - column:
+                    name: org_id
+                    type: varchar(20)
+                    defaultValue: '0'
+
+      - dropDefaultValue:
+          schemaName: public
+          tableName: sys_user
+          columnName: org_id

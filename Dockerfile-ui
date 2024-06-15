@@ -1,0 +1,10 @@
+FROM node:20 AS build
+COPY passiflora-ui /app
+WORKDIR /app
+RUN npm install
+RUN npm run build
+
+FROM nginx:1.21
+COPY passiflora-ui/nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist /usr/share/nginx/dist
+VOLUME /etc/localtime:/etc/localtime:ro

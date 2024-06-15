@@ -1,0 +1,160 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405062001_create_table_menu
+      author: linck
+      changes:
+        - createTable:
+            tableName: sys_menu
+            remarks: 系统菜单
+            columns:
+              - column:
+                  name: menu_id
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                  remarks: 主键
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: 标题
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: 名称
+              - column:
+                  name: local
+                  type: varchar(50)
+                  constraints:
+                    nullable: true
+                  remarks: 国际化
+              - column:
+                  name: icon
+                  type: varchar(50)
+                  constraints:
+                    nullable: true
+                  remarks: 图标
+              - column:
+                  name: parent_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 上级ID
+              - column:
+                  name: menu_id_path
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+                  remarks: ID路径
+              - column:
+                  name: sort
+                  type: int4
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 排序
+              - column:
+                  name: remark
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+                  remarks: 备注
+              - column:
+                  name: create_by
+                  type: varchar(20)
+                  remarks: 创建用户id
+              - column:
+                  name: update_by
+                  type: varchar(20)
+                  remarks: 更新用户id
+              - column:
+                  name: create_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: del_flag
+                  type: int2
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 删除标识
+              - column:
+                  name: version
+                  type: int8
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 乐观锁版本
+
+        - createTable:
+            tableName: sys_position_menu
+            remarks: 系统职位菜单绑定
+            columns:
+              - column:
+                  name: bind_id
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                  remarks: 主键
+              - column:
+                  name: position_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  remarks: 职位ID
+              - column:
+                  name: menu_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  remarks: 菜单ID
+              - column:
+                  name: create_by
+                  type: varchar(20)
+                  remarks: 创建用户id
+              - column:
+                  name: update_by
+                  type: varchar(20)
+                  remarks: 更新用户id
+              - column:
+                  name: create_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: del_flag
+                  type: int2
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 删除标识
+              - column:
+                  name: version
+                  type: int8
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 乐观锁版本

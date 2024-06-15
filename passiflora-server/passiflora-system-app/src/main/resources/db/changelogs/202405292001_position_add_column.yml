@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405292001_position_add_column
+      author: linck
+      changes:
+      - addColumn:
+          schemaName: public
+          tableName: sys_position
+          columns:
+              - column:
+                    name: position_status
+                    type: int2
+                    defaultValue: 1
+                    remarks: 职位状态

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202404031442_dict_rename_column_1.yml
+      author: linck
+      changes:
+      - renameColumn:
+          schemaName: public
+          tableName: sys_dict
+          oldColumnName: item_value_is_only
+          newColumnName: value_is_only

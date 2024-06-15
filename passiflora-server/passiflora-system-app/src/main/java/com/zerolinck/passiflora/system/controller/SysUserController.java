@@ -1,0 +1,134 @@
+/* 
+ * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.zerolinck.passiflora.system.controller;
+
+import com.zerolinck.passiflora.common.api.ListWithPage;
+import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.feign.system.SysUserApi;
+import com.zerolinck.passiflora.model.system.entity.SysUser;
+import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
+import com.zerolinck.passiflora.model.system.valid.Login;
+import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
+import com.zerolinck.passiflora.model.system.vo.SysUserVo;
+import com.zerolinck.passiflora.model.valid.Insert;
+import com.zerolinck.passiflora.model.valid.Update;
+import com.zerolinck.passiflora.system.service.SysUserService;
+import jakarta.annotation.Resource;
+import java.util.List;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author linck
+ * @since 2024-02-05
+ */
+@RestController
+@RequestMapping("sysUser")
+public class SysUserController implements SysUserApi {
+
+    @Resource
+    private SysUserService sysUserService;
+
+    @Override
+    public Result<ListWithPage<SysUserVo>> page(
+        String orgId,
+        QueryCondition<SysUser> condition
+    ) {
+        return Result.page(sysUserService.page(orgId, condition));
+    }
+
+    @Override
+    public Result<String> add(
+        @RequestBody @Validated(Insert.class) SysUser sysUser
+    ) {
+        sysUser.setUserId(null);
+        sysUserService.add(sysUser);
+        return Result.ok(sysUser.getUserId());
+    }
+
+    @Override
+    public Result<String> update(
+        @RequestBody @Validated(Update.class) SysUser sysUser
+    ) {
+        sysUser.setUserPassword(null);
+        sysUser.setUserName(null);
+        sysUser.setSalt(null);
+        boolean success = sysUserService.update(sysUser);
+        if (success) {
+            return Result.ok(sysUser.getUserId());
+        } else {
+            return Result.failed(ResultCodeEnum.COMPETE_FAILED);
+        }
+    }
+
+    @Override
+    public Result<SysUser> detail(
+        @RequestParam(value = "userId") String userId
+    ) {
+        AssertUtil.notBlank(userId);
+        return Result.ok(sysUserService.detail(userId));
+    }
+
+    @Override
+    public Result<String> delete(@RequestBody List<String> userIds) {
+        AssertUtil.notEmpty(userIds);
+        sysUserService.deleteByIds(userIds);
+        return Result.ok();
+    }
+
+    @Override
+    public Result<String> login(
+        @RequestBody @Validated(Login.class) SysUser sysUser
+    ) {
+        return Result.ok(sysUserService.login(sysUser));
+    }
+
+    @Override
+    public Result<String> logout() {
+        sysUserService.logout();
+        return Result.ok();
+    }
+
+    @Override
+    public Result<SysUser> currentUserInfo() {
+        SysUserInfo sysUserInfo = SysUserConvert.INSTANCE.entity2info(
+            sysUserService.getById(CurrentUtil.getCurrentUserId())
+        );
+        // FIXME mock data
+        sysUserInfo.getMenu().add("workplace");
+        sysUserInfo.getMenu().add("user");
+        sysUserInfo.getMenu().add("system");
+        sysUserInfo.getMenu().add("dict");
+        sysUserInfo.getMenu().add("organization");
+        sysUserInfo.getMenu().add("org");
+        sysUserInfo.getMenu().add("permission");
+        sysUserInfo.getMenu().add("position");
+        return Result.ok(sysUserInfo);
+    }
+
+    @Override
+    public Result<Boolean> checkToken() {
+        return Result.ok(sysUserService.checkToken());
+    }
+}

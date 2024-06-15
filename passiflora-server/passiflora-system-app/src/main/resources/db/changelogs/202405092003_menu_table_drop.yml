@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202405092003_menu_table_rename.yml
+      author: linck
+      changes:
+      - dropTable:
+          schemaName: public
+          tableName: sys_position_menu

@@ -1,0 +1,113 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'org.liquibase.gradle' version '2.2.1'
+    id 'org.springframework.boot' version '3.3.0'
+}
+
+configurations {
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+ext {
+    // 默认是开发环境；切换生产环境使用 gradle -Denv=prod
+    environment = System.getProperty("env", "dev")
+    print('使用 ' + environment + ' 环境编译')
+    configFile = file('../config.groovy')
+    configMap = new ConfigSlurper(environment).parse(configFile.toURI().toURL()).toProperties()
+    configMap['projectVersion'] = project.version
+    configMap['env'] = environment
+    configMap['isProd'] = (environment == 'prod') ? 'true' : 'false'
+    configMap['isDev'] = (environment == 'dev') ? 'true' : 'false'
+}
+
+dependencies {
+    implementation project(':modules:passiflora-feign')
+    annotationProcessor platform(project(':modules:passiflora-bom'))
+    testAnnotationProcessor platform(project(':modules:passiflora-bom'))
+    liquibaseRuntime platform(project(':modules:passiflora-bom'))
+
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    testAnnotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+    testAnnotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // 非开发环境，排除 Swagger UI
+    if (configMap['isDev'] == 'true') {
+        implementation 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter'
+    } else {
+        implementation('com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter') {
+            exclude group: 'com.github.xiaoymin', module: 'knife4j-openapi3-ui'
+            exclude group: 'org.webjars', module: 'swagger-ui'
+        }
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+
+    implementation 'org.redisson:redisson-spring-boot-starter'
+    implementation 'com.baomidou:mybatis-plus-boot-starter'
+    implementation 'cn.hutool:hutool-crypto'
+    implementation 'cn.hutool:hutool-http'
+    implementation 'org.postgresql:postgresql'
+
+    // liquibase
+    liquibaseRuntime 'org.liquibase:liquibase-core'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl'
+    liquibaseRuntime 'info.picocli:picocli'
+    liquibaseRuntime 'org.postgresql:postgresql'
+
+    implementation 'io.minio:minio'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    doLast {
+        copy {
+            from("src/main/java") {
+                include("**/*Mapper.xml")
+            }
+            into("build/classes/java/main")
+        }
+    }
+}
+
+jar {
+    enabled = false
+}
+
+processResources {
+    // src/main/resources 下的文件中 @key@ 的内容使用 config.groovy 里对应的进行替换
+    from('src/main/resources') {
+        filter(ReplaceTokens, tokens: configMap)
+        duplicatesStrategy(DuplicatesStrategy.INCLUDE)
+    }
+    exclude 'db/**'
+}
+
+liquibase {
+    activities {
+        main {
+            changelogFile 'src/main/resources/db/main.yml'
+            url configMap.'storage_app.database.url'
+            username configMap.'storage_app.database.username'
+            password configMap.'storage_app.database.username'
+            logLevel "info"
+        }
+    }
+}
