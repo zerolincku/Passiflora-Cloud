@@ -33,13 +33,30 @@ jobs:
       with:
         platforms: linux/amd64
 
-    - uses: actions/checkout@v4 
-    - name: Server Build and push Docker images
+    - uses: actions/checkout@v4
+
+    - name: Gateway Server Build and push Docker images
+      uses: docker/build-push-action@v5.3.0
+      with:
+        file: Dockerfile-gateway
+        platforms: linux/amd64
+        tags: zerolinck/passiflora-gateway:latest
+        push: true
+
+    - name: System Server Build and push Docker images
       uses: docker/build-push-action@v5.3.0
       with:
         file: Dockerfile-system
         platforms: linux/amd64
         tags: zerolinck/passiflora-system:latest
+        push: true
+
+    - name: Storage Server Build and push Docker images
+      uses: docker/build-push-action@v5.3.0
+      with:
+        file: Dockerfile-storage
+        platforms: linux/amd64
+        tags: zerolinck/passiflora-storage:latest
         push: true
         
     - name: UI Build and push Docker images
