@@ -11,9 +11,9 @@ environments {
             database = '8'
         }
         minio {
-            endpoint = 'http://passiflora-minio:9090'
-            accessKey = '2Uwho01oDDbxZpzEjfb4'
-            secretKey = 'KIF9NCJR6SmyeVRAloQhUfrofI11FfGAhnsAXAoa'
+            endpoint = 'http://passiflora-minio:9000'
+            accessKey = '2Zj1xM3B7ti9rDt8TjIR'
+            secretKey = 'yHJ08hiDHAnd3ChR6CvETti8X1dqDvxgLxW0ojwJ'
         }
         system_app {
             database {
@@ -44,9 +44,9 @@ environments {
             database = '8'
         }
         minio {
-            endpoint = 'http://passiflora-minio:9090'
-            accessKey = 'pTHkPFHbhmBqgjVR35Ko'
-            secretKey = 'aPAtdzHGFTsI2qcxM7Q0krunDI80dd7Gtgm7grCR'
+            endpoint = 'http://passiflora-minio:9000'
+            accessKey = 'U2eBKxUCW5I70Xx4D0fR'
+            secretKey = 'NDPeMlhQLO36o0R3pG9lE4syXeZInm5o6dW6VfOa'
         }
         system_app {
             database {

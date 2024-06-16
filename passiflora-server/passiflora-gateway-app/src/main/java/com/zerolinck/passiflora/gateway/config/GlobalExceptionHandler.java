@@ -45,6 +45,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
     private final ObjectMapper objectMapper;
 
     @Override
+    @SuppressWarnings("all")
     public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
@@ -107,11 +108,11 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             );
         } else if (throwable instanceof NoResourceFoundException) {
             log.warn(
-                    "NoResourceFoundException: path={}, exception={}",
-                    request.getPath(),
-                    throwable.getMessage()
+                "NoResourceFoundException: path={}, exception={}",
+                request.getPath(),
+                throwable.getMessage()
             );
-        }else {
+        } else {
             log.error(
                 "Unexpected exception: path={}",
                 request.getPath(),
