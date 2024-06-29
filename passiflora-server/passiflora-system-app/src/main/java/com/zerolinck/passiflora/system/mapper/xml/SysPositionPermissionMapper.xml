@@ -43,4 +43,18 @@
         </foreach>
     </delete>
 
+
+    <select id="permissionIdsByPositionIds" resultType="java.lang.String">
+        SELECT permission_id from sys_permission
+        WHERE permission_status = 1
+        AND del_flag = 0
+        AND permission_id IN (
+        SELECT  permission_id from sys_position_permission
+        WHERE del_flag = 0
+        AND position_id IN
+        <foreach item="id" index="index" collection="positionIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </select>
 </mapper>

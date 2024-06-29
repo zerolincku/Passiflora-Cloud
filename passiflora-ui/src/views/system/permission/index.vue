@@ -283,12 +283,12 @@
   import {
     PermissionRecord,
     permissionTableTree,
-    menuDelete,
-    menuAdd,
-    menuUpdate,
-    menuUpdateOrder,
-    menuDisable,
-    menuEnable,
+    permissionDelete,
+    permissionAdd,
+    permissionUpdate,
+    permissionUpdateOrder,
+    permissionDisable,
+    permissionEnable,
   } from '@/api/system/permission';
   import {
     TableColumnData,
@@ -453,7 +453,7 @@
   const tableChange = async (a: PermissionRecord[]) => {
     renderData.value = a;
     assignOrder(renderData.value);
-    await menuUpdateOrder(renderData.value);
+    await permissionUpdateOrder(renderData.value);
     await appStore.fetchServerMenuConfig();
   };
 
@@ -591,7 +591,7 @@
   };
 
   const batchDisable = async (ids: string[]) => {
-    const { data } = await menuDisable(ids);
+    const { data } = await permissionDisable(ids);
     if (data.code === 200) {
       Message.success({
         content: '禁用成功',
@@ -603,7 +603,7 @@
   };
 
   const batchEnable = async (ids: string[]) => {
-    const { data } = await menuEnable(ids);
+    const { data } = await permissionEnable(ids);
     if (data.code === 200) {
       Message.success({
         content: '启用成功',
@@ -615,7 +615,7 @@
   };
 
   const batchDelete = async (ids: string[]) => {
-    const { data } = await menuDelete(ids);
+    const { data } = await permissionDelete(ids);
     selectedKeys.value = [];
     if (data.code === 200) {
       Message.success({
@@ -633,7 +633,7 @@
     const err = await editFormRef.value.validate();
     if (!err) {
       const saveAction =
-        editFormModelTitle.value === '新增' ? menuAdd : menuUpdate;
+        editFormModelTitle.value === '新增' ? permissionAdd : permissionUpdate;
       const { data } = await saveAction(editFormModel);
 
       if (data.code === 200) {

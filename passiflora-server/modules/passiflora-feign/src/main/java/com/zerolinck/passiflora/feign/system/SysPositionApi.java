@@ -20,19 +20,21 @@ import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
+import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @author linck
@@ -90,5 +92,17 @@ public interface SysPositionApi {
     @PostMapping("updateOrder")
     Result<String> updateOrder(
         @RequestBody @Validated(Update.class) List<SysPositionVo> sysPositionVos
+    );
+
+    @Operation(summary = "根据职位ids获取权限ids")
+    @PostMapping("permissionIdsByPositionIds")
+    Result<List<String>> permissionIdsByPositionIds(
+            @RequestBody List<String> positionIds
+    );
+
+    @Operation(summary = "保存职位权限")
+    @PostMapping("savePositionPermission")
+    Result<String> savePositionPermission(
+            @RequestBody @Validated PositionPermissionSaveDto positionPermissionSaveDto
     );
 }

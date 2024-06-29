@@ -22,8 +22,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
-import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author linck
@@ -49,4 +51,6 @@ public interface SysPositionPermissionMapper
         @Param("positionIds") Collection<String> positionIds,
         @Param("updateBy") String updateBy
     );
+
+    List<String> permissionIdsByPositionIds(@Param("positionIds") List<String> positionIds);
 }

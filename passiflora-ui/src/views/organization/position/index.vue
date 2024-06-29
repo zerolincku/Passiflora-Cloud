@@ -142,6 +142,12 @@
                 <a-button type="text" size="small" @click="updateButton(record)"
                   >编辑</a-button
                 >
+                <a-button
+                  type="text"
+                  size="small"
+                  @click="permissionButton(record)"
+                  >权限</a-button
+                >
                 <a-popconfirm
                   v-if="record.positionStatus === 1"
                   content="禁用会自动禁用下级职位，确认禁用吗？"
@@ -207,8 +213,8 @@
           </a-form-item>
           <a-form-item field="dataScopeType" label="数据权限范围" required>
             <a-radio-group
-              direction="vertical"
               v-model="editFormModel.dataScopeType"
+              direction="vertical"
               :options="dataScopeTypeOptions"
             />
           </a-form-item>
@@ -238,6 +244,32 @@
         </a-form>
       </div>
     </a-drawer>
+    <a-drawer
+      :width="490"
+      :visible="permissionFormVisible"
+      unmount-on-close
+      @ok="permissionHandleOk"
+      @cancel="permissionHandleCancel"
+    >
+      <template #title>权限</template>
+      <div>
+        <a-tree
+          v-model:checked-keys="permissionCheckedKeys"
+          :field-names="{
+            key: 'permissionId',
+            title: 'permissionTitle',
+          }"
+          :check-strictly="true"
+          :checkable="true"
+          :data="permissionTreeModel"
+          @expandAll="
+            () => {
+              return true;
+            }
+          "
+        />
+      </div>
+    </a-drawer>
   </div>
 </template>
 
@@ -245,6 +277,11 @@
   import { computed, ref, reactive, watch, nextTick, onMounted, h } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
+    PermissionRecord,
+    permissionTableTree,
+  } from '@/api/system/permission';
+  import {
+    positionPermissionSaveDto,
     PositionRecord,
     positionTree,
     positionDelete,
@@ -253,6 +290,8 @@
     positionUpdateOrder,
     positionDisable,
     positionEnable,
+    permissionIdsByPositionIds,
+    savePositionPermission,
   } from '@/api/organization/position';
   import {
     TableColumnData,
@@ -276,6 +315,8 @@
   const cloneColumns = ref<Column[]>([]);
   const showColumns = ref<Column[]>([]);
   const selectedKeys = ref<string[]>([]);
+  const permissionCheckedKeys = ref<string[]>([]);
+  const permissionTreeModel = ref<PermissionRecord[]>([]);
 
   const size = ref<SizeProps>('large');
 
@@ -361,7 +402,6 @@
     );
   };
 
-  const appStore = useAppStore();
   const tableChange = async (a: PositionRecord[]) => {
     renderData.value = a;
     assignOrder(renderData.value);
@@ -488,6 +528,15 @@
     editFormVisible.value = true;
   };
 
+  const permissionButton = async (recode: PositionRecord) => {
+    const { data } = await permissionTableTree();
+    permissionTreeModel.value = data.data;
+    const req = await permissionIdsByPositionIds([recode.positionId as string]);
+    permissionCheckedKeys.value = req.data.data;
+    positionPermission.positionId = recode.positionId;
+    permissionFormVisible.value = true;
+  };
+
   const batchDisable = async (ids: string[]) => {
     const { data } = await positionDisable(ids);
     if (data.code === 200) {
@@ -544,6 +593,27 @@
     editFormModel = reactive<Partial<PositionRecord>>({
       positionStatus: 1,
     });
+  };
+
+  const positionPermission: positionPermissionSaveDto = {
+    positionId: '',
+    permissionIds: [],
+  };
+  // 权限抽屉
+  const permissionFormVisible = ref(false);
+  const permissionHandleCancel = () => {
+    permissionFormVisible.value = false;
+  };
+  const permissionHandleOk = async () => {
+    positionPermission.permissionIds = permissionCheckedKeys.value;
+    const { data } = await savePositionPermission(positionPermission);
+    if (data.code === 200) {
+      Message.success({
+        content: `保存成功`,
+        duration: 5 * 1000,
+      });
+      permissionFormVisible.value = false;
+    }
   };
 </script>
 

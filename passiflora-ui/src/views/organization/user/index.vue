@@ -246,15 +246,17 @@
                 <a-button type="text" size="small" @click="updateButton(record)"
                   >编辑</a-button
                 >
-                <a-popconfirm
-                  content="确认删除吗？"
-                  @ok="batchDelete([record.userId])"
-                >
-                  <a-button type="text" size="small" status="danger"
-                    ><template #icon> <icon-delete /> </template
-                    ><template #default>删除</template></a-button
+                <div>
+                  <a-popconfirm
+                    content="确认删除吗？"
+                    @ok="batchDelete([record.userId])"
                   >
-                </a-popconfirm>
+                    <a-button type="text" size="small" status="danger"
+                      ><template #icon> <icon-delete /> </template
+                      ><template #default>删除</template></a-button
+                    >
+                  </a-popconfirm>
+                </div>
               </a-space>
             </template>
           </a-table>
@@ -551,6 +553,7 @@
       title: '操作',
       dataIndex: 'operations',
       slotName: 'operations',
+      width: 240,
       headerCellStyle: { paddingLeft: '16px' },
     },
   ]);

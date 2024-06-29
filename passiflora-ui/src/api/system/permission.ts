@@ -22,7 +22,7 @@ export interface permissionPageParams
   extends Partial<PermissionRecord>,
     BasePageParam {}
 
-export function menuPage(params: permissionPageParams) {
+export function permissionPage(params: permissionPageParams) {
   return axios.get<Result<Page<PermissionRecord>>>(
     '/system-api/sysPermission/page',
     {
@@ -40,43 +40,43 @@ export function permissionTableTree() {
   );
 }
 
-export function menuUpdateOrder(data: PermissionRecord[]) {
+export function permissionUpdateOrder(data: PermissionRecord[]) {
   return axios.post<Result<string>>(
     '/system-api/sysPermission/updateOrder',
     data
   );
 }
 
-export function menuAdd(data: PermissionRecord) {
+export function permissionAdd(data: PermissionRecord) {
   return axios.post<Result<string>>('/system-api/sysPermission/add', data);
 }
 
-export function menuUpdate(data: PermissionRecord) {
+export function permissionUpdate(data: PermissionRecord) {
   return axios.post<Result<string>>('/system-api/sysPermission/update', data);
 }
 
-export function menuDetail(data: string) {
+export function permissionDetail(data: string) {
   return axios.post<Result<PermissionRecord>>(
     '/system-api/sysPermission/detail',
     data
   );
 }
 
-export function menuDelete(data: string[]) {
+export function permissionDelete(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
     '/system-api/sysPermission/delete',
     data
   );
 }
 
-export function menuDisable(data: string[]) {
+export function permissionDisable(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
     '/system-api/sysPermission/disable',
     data
   );
 }
 
-export function menuEnable(data: string[]) {
+export function permissionEnable(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
     '/system-api/sysPermission/enable',
     data

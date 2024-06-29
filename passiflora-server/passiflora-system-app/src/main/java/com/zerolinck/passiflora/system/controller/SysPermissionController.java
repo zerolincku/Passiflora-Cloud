@@ -28,11 +28,13 @@ import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionVo;
 import com.zerolinck.passiflora.system.service.SysPermissionService;
+import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
 import jakarta.annotation.Resource;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author linck
@@ -45,6 +47,9 @@ public class SysPermissionController implements SysPermissionApi {
 
     @Resource
     private SysPermissionService sysPermissionService;
+
+    @Resource
+    private SysPositionPermissionService sysPositionPermissionService;
 
     @Override
     public Result<ListWithPage<SysPermission>> page(
@@ -110,12 +115,14 @@ public class SysPermissionController implements SysPermissionApi {
 
     @Override
     public Result<String> disable(List<String> permissionIds) {
+        AssertUtil.notEmpty(permissionIds);
         sysPermissionService.disable(permissionIds);
         return Result.ok();
     }
 
     @Override
     public Result<String> enable(List<String> permissionIds) {
+        AssertUtil.notEmpty(permissionIds);
         sysPermissionService.enable(permissionIds);
         return Result.ok();
     }

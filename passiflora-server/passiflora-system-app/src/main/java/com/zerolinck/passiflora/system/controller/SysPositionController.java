@@ -24,14 +24,17 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysPositionApi;
+import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
+import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
 import com.zerolinck.passiflora.system.service.SysPositionService;
 import jakarta.annotation.Resource;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author linck
@@ -44,6 +47,9 @@ public class SysPositionController implements SysPositionApi {
 
     @Resource
     private SysPositionService sysPositionService;
+
+    @Resource
+    private SysPositionPermissionService sysPositionPermissionService;
 
     @Override
     public Result<ListWithPage<SysPosition>> page(
@@ -109,6 +115,18 @@ public class SysPositionController implements SysPositionApi {
     public Result<String> updateOrder(List<SysPositionVo> sysPositionVos) {
         AssertUtil.notEmpty(sysPositionVos);
         sysPositionService.updateOrder(sysPositionVos);
+        return Result.ok();
+    }
+
+    @Override
+    public Result<List<String>> permissionIdsByPositionIds(List<String> positionIds) {
+        AssertUtil.notEmpty(positionIds);
+        return Result.ok(sysPositionPermissionService.permissionIdsByPositionIds(positionIds));
+    }
+
+    @Override
+    public Result<String> savePositionPermission(PositionPermissionSaveDto positionPermissionSaveDto) {
+        sysPositionPermissionService.savePositionPermission(positionPermissionSaveDto);
         return Result.ok();
     }
 }
