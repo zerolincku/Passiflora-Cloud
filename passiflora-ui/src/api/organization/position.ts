@@ -14,6 +14,11 @@ export type PositionRecord = {
   children?: PositionRecord[] | undefined;
 } & BaseEntity;
 
+export type positionPermissionSaveDto = {
+  positionId?: string;
+  permissionIds?: string[];
+};
+
 export interface positionPageParams
   extends Partial<PositionRecord>,
     BasePageParam {}
@@ -75,6 +80,20 @@ export function positionDisable(data: string[]) {
 export function positionEnable(data: string[]) {
   return axios.post<Result<PositionRecord>>(
     '/system-api/sysPosition/enable',
+    data
+  );
+}
+
+export function permissionIdsByPositionIds(data: string[]) {
+  return axios.post<Result<string[]>>(
+    '/system-api/sysPosition/permissionIdsByPositionIds',
+    data
+  );
+}
+
+export function savePositionPermission(data: positionPermissionSaveDto) {
+  return axios.post<Result<string>>(
+    '/system-api/sysPosition/savePositionPermission',
     data
   );
 }
