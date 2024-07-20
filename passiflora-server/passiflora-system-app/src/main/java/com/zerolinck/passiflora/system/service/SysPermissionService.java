@@ -33,6 +33,8 @@ import com.zerolinck.passiflora.model.system.mapperstruct.SysPermissionConvert;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionVo;
 import com.zerolinck.passiflora.system.mapper.SysPermissionMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,10 +53,8 @@ public class SysPermissionService
 
     private static final String LOCK_KEY = "passiflora:lock:sysPermission:";
 
-    public Page<SysPermission> page(QueryCondition<SysPermission> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+    @Nonnull
+    public Page<SysPermission> page(@Nonnull QueryCondition<SysPermission> condition) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysPermission.class),
@@ -62,8 +62,8 @@ public class SysPermissionService
         );
     }
 
-    public void add(SysPermission sysPermission) {
-        LockUtil.lockAndTransactionalLogic(
+    public void add(@Nonnull SysPermission sysPermission) {
+         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
                 .lock(
@@ -79,7 +79,7 @@ public class SysPermissionService
         );
     }
 
-    public boolean update(SysPermission sysPermission) {
+    public boolean update(@Nonnull SysPermission sysPermission) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
@@ -104,19 +104,21 @@ public class SysPermissionService
         );
     }
 
-    public List<SysPermission> listByParentId(String permissionParentId) {
+    @Nonnull
+    public List<SysPermission> listByParentId(@Nonnull String permissionParentId) {
         return baseMapper.listByParentId(permissionParentId);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> permissionIds) {
+    public int deleteByIds(@Nonnull Collection<String> permissionIds) {
         return baseMapper.deleteByIds(
             permissionIds,
             CurrentUtil.getCurrentUserId()
         );
     }
 
-    public SysPermission detail(String permissionId) {
+    @Nullable
+    public SysPermission detail(@Nonnull String permissionId) {
         SysPermission sysPermission = baseMapper.selectById(permissionId);
         if (sysPermission == null) {
             throw new BizException("无对应菜单数据，请刷新后重试");
@@ -124,6 +126,7 @@ public class SysPermissionService
         return sysPermission;
     }
 
+    @Nonnull
     public List<SysPermissionVo> menuTree() {
         // TODO 查询当前用户有权限的菜单
         Map<String, List<SysPermissionVo>> menuMap = baseMapper
@@ -157,6 +160,7 @@ public class SysPermissionService
         return topMenu;
     }
 
+    @Nonnull
     public List<SysPermissionTableVo> permissionTableTree() {
         // TODO 查询当前用户有权限的菜单
         Map<String, List<SysPermissionTableVo>> menuMap = baseMapper
@@ -189,7 +193,7 @@ public class SysPermissionService
         return topMenu;
     }
 
-    public void updateOrder(List<SysPermissionTableVo> sysPermissionTableVos) {
+    public void updateOrder(@Nonnull List<SysPermissionTableVo> sysPermissionTableVos) {
         if (CollectionUtil.isEmpty(sysPermissionTableVos)) {
             return;
         }
@@ -200,12 +204,12 @@ public class SysPermissionService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void disable(List<String> permissionIds) {
+    public void disable(@Nonnull List<String> permissionIds) {
         baseMapper.disable(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void enable(List<String> permissionIds) {
+    public void enable(@Nonnull List<String> permissionIds) {
         List<String> pathIds = new ArrayList<>();
         permissionIds.forEach(permissionId -> {
             SysPermission sysPermission = baseMapper.selectById(permissionId);
@@ -217,13 +221,14 @@ public class SysPermissionService
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
     }
 
-    List<SysPermission> listSelfAndSub(String permissionId) {
+    @Nonnull
+    public List<SysPermission> listSelfAndSub(@Nonnull String permissionId) {
         return baseMapper.listSelfAndSub(permissionId);
     }
 
     private void dealMenuTree(
-        List<SysPermissionVo> menuVos,
-        Map<String, List<SysPermissionVo>> menuMap
+        @Nonnull List<SysPermissionVo> menuVos,
+        @Nonnull Map<String, List<SysPermissionVo>> menuMap
     ) {
         for (SysPermissionVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
@@ -234,8 +239,8 @@ public class SysPermissionService
     }
 
     private void permissionTableTree(
-        List<SysPermissionTableVo> menuVos,
-        Map<String, List<SysPermissionTableVo>> menuMap
+        @Nonnull List<SysPermissionTableVo> menuVos,
+        @Nonnull Map<String, List<SysPermissionTableVo>> menuMap
     ) {
         for (SysPermissionTableVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
@@ -245,12 +250,13 @@ public class SysPermissionService
         }
     }
 
-    private void generateIadPathAndLevel(SysPermission sysPermission) {
+    private void generateIadPathAndLevel(@Nonnull SysPermission sysPermission) {
         StringBuilder codeBuffer = new StringBuilder();
         String permissionParentId = sysPermission.getPermissionParentId();
         int level = 1;
         if (!"0".equals(permissionParentId)) {
             SysPermission parentSysPermission = detail(permissionParentId);
+            assert parentSysPermission != null;
             codeBuffer
                 .append(parentSysPermission.getPermissionIdPath())
                 .append("/");

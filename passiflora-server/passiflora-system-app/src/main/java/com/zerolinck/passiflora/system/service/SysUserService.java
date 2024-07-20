@@ -35,26 +35,24 @@ import com.zerolinck.passiflora.model.system.entity.SysUser;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author linck
  * @since 2024-02-07
  */
 @Service
+@RequiredArgsConstructor
 public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
-
-    @Resource
-    private SysOrgService sysOrgService;
-
-    @Resource
-    private PassifloraProperties passifloraProperties;
+    private final SysOrgService sysOrgService;
+    private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
 

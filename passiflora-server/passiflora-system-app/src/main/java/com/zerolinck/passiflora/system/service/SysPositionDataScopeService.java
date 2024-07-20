@@ -26,10 +26,12 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.entity.SysPositionDataScope;
 import com.zerolinck.passiflora.system.mapper.SysPositionDataScopeMapper;
-import java.util.Collection;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 /**
  * @author linck
@@ -43,12 +45,10 @@ public class SysPositionDataScopeService
     private static final String LOCK_KEY =
         "passiflora:lock:sysPositionDataScope:";
 
+    @Nonnull
     public Page<SysPositionDataScope> page(
-        QueryCondition<SysPositionDataScope> condition
+        @Nonnull QueryCondition<SysPositionDataScope> condition
     ) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysPositionDataScope.class),
@@ -56,7 +56,7 @@ public class SysPositionDataScopeService
         );
     }
 
-    public void add(SysPositionDataScope sysPositionDataScope) {
+    public void add(@Nonnull SysPositionDataScope sysPositionDataScope) {
         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionDataScope>(),
@@ -68,7 +68,7 @@ public class SysPositionDataScopeService
         );
     }
 
-    public boolean update(SysPositionDataScope sysPositionDataScope) {
+    public boolean update(@Nonnull SysPositionDataScope sysPositionDataScope) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionDataScope>(),
@@ -83,11 +83,12 @@ public class SysPositionDataScopeService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> scopeIds) {
+    public int deleteByIds(@Nonnull Collection<String> scopeIds) {
         return baseMapper.deleteByIds(scopeIds, CurrentUtil.getCurrentUserId());
     }
 
-    public SysPositionDataScope detail(String scopeId) {
+    @Nonnull
+    public SysPositionDataScope detail(@Nonnull String scopeId) {
         SysPositionDataScope sysPositionDataScope = baseMapper.selectById(
             scopeId
         );

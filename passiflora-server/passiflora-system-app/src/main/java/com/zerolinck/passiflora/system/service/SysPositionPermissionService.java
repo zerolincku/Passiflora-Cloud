@@ -29,6 +29,7 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,12 +48,10 @@ public class SysPositionPermissionService
     private static final String LOCK_KEY =
         "passiflora:lock:sysPositionPermission:";
 
+    @Nonnull
     public Page<SysPositionPermission> page(
-        QueryCondition<SysPositionPermission> condition
+       @Nonnull QueryCondition<SysPositionPermission> condition
     ) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysPositionPermission.class),
@@ -60,7 +59,7 @@ public class SysPositionPermissionService
         );
     }
 
-    public void add(SysPositionPermission sysPositionPermission) {
+    public void add(@Nonnull SysPositionPermission sysPositionPermission) {
         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
@@ -72,7 +71,7 @@ public class SysPositionPermissionService
         );
     }
 
-    public boolean update(SysPositionPermission sysPositionPermission) {
+    public boolean update(@Nonnull SysPositionPermission sysPositionPermission) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
@@ -87,19 +86,20 @@ public class SysPositionPermissionService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> bindIds) {
+    public int deleteByIds(@Nonnull Collection<String> bindIds) {
         return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByPositionIds(Collection<String> positionIds) {
+    public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
         return baseMapper.deleteByPositionIds(
             positionIds,
             CurrentUtil.getCurrentUserId()
         );
     }
 
-    public SysPositionPermission detail(String bindId) {
+    @Nonnull
+    public SysPositionPermission detail(@Nonnull String bindId) {
         SysPositionPermission sysPositionPermission = baseMapper.selectById(
             bindId
         );
@@ -109,11 +109,12 @@ public class SysPositionPermissionService
         return sysPositionPermission;
     }
 
-    public List<String> permissionIdsByPositionIds(List<String> positionIds) {
+    @Nonnull
+    public List<String> permissionIdsByPositionIds(@Nonnull List<String> positionIds) {
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
-    public void savePositionPermission(PositionPermissionSaveDto positionPermissionSaveDto) {
+    public void savePositionPermission(@Nonnull PositionPermissionSaveDto positionPermissionSaveDto) {
         LockUtil.lockAndTransactionalLogic(LOCK_KEY + "sysPosition",
                 new LockWrapper<PositionPermissionSaveDto>()
                         .lock(PositionPermissionSaveDto::getPositionId, positionPermissionSaveDto.getPositionId())

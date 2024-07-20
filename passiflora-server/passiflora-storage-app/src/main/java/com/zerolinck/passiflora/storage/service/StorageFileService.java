@@ -36,20 +36,21 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import io.minio.*;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 通用文件 Service
@@ -59,14 +60,11 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StorageFileService
     extends ServiceImpl<StorageFileMapper, StorageFile> {
-
-    @Resource
-    private MinioClient minioClient;
-
-    @Resource
-    private PassifloraProperties passifloraProperties;
+    private final MinioClient minioClient;
+    private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
 

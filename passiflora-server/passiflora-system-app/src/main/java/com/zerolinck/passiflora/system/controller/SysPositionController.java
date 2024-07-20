@@ -29,7 +29,7 @@ import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
 import com.zerolinck.passiflora.system.service.SysPositionService;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,13 +43,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("sysPosition")
+@RequiredArgsConstructor
 public class SysPositionController implements SysPositionApi {
-
-    @Resource
-    private SysPositionService sysPositionService;
-
-    @Resource
-    private SysPositionPermissionService sysPositionPermissionService;
+    private final SysPositionService sysPositionService;
+    private final SysPositionPermissionService sysPositionPermissionService;
 
     @Override
     public Result<ListWithPage<SysPosition>> page(

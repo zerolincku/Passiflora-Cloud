@@ -23,7 +23,7 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -37,13 +37,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CreateBucketRunner implements ApplicationRunner {
-
-    @Resource
-    private MinioClient minioClient;
-
-    @Resource
-    private PassifloraProperties passifloraProperties;
+    private final MinioClient minioClient;
+    private final PassifloraProperties passifloraProperties;
 
     @Override
     public void run(ApplicationArguments args) {

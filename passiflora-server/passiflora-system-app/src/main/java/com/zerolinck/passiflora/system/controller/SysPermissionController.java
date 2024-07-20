@@ -28,8 +28,7 @@ import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionVo;
 import com.zerolinck.passiflora.system.service.SysPermissionService;
-import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,13 +42,9 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("sysPermission")
+@RequiredArgsConstructor
 public class SysPermissionController implements SysPermissionApi {
-
-    @Resource
-    private SysPermissionService sysPermissionService;
-
-    @Resource
-    private SysPositionPermissionService sysPositionPermissionService;
+    private final SysPermissionService sysPermissionService;
 
     @Override
     public Result<ListWithPage<SysPermission>> page(

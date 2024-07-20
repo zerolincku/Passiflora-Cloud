@@ -28,14 +28,16 @@ import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.model.system.entity.SysDictItem;
 import com.zerolinck.passiflora.system.mapper.SysDictItemMapper;
-import jakarta.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
+import jakarta.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author linck
@@ -43,18 +45,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SysDictItemService
     extends ServiceImpl<SysDictItemMapper, SysDictItem> {
-
-    @Resource
-    private SysDictService sysDictService;
-
+    private final SysDictService sysDictService;
     private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
 
-    public Page<SysDictItem> page(QueryCondition<SysDictItem> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+    @Nonnull
+    public Page<SysDictItem> page(@Nonnull QueryCondition<SysDictItem> condition) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysDictItem.class),
@@ -63,7 +61,7 @@ public class SysDictItemService
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public void add(SysDictItem sysDictItem) {
+    public void add(@Nonnull SysDictItem sysDictItem) {
         SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
 
         LockWrapper<SysDictItem> lockWrapper = new LockWrapper<SysDictItem>()
@@ -105,7 +103,7 @@ public class SysDictItemService
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public boolean update(SysDictItem sysDictItem) {
+    public boolean update(@Nonnull SysDictItem sysDictItem) {
         SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
 
         LockWrapper<SysDictItem> lockWrapper = new LockWrapper<SysDictItem>()
@@ -164,7 +162,7 @@ public class SysDictItemService
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public int deleteByIds(Collection<String> dictItemIds) {
+    public int deleteByIds(@Nonnull Collection<String> dictItemIds) {
         List<SysDictItem> sysDictItems = baseMapper.selectBatchIds(dictItemIds);
         sysDictItems.forEach(sysDictItem -> {
             if (YesOrNoEnum.YES.equals(sysDictItem.getIsSystem())) {
@@ -179,11 +177,12 @@ public class SysDictItemService
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public void deleteByDictIds(Collection<String> dictIds) {
+    public void deleteByDictIds(@Nonnull Collection<String> dictIds) {
         baseMapper.deleteByDictIds(dictIds, CurrentUtil.getCurrentUserId());
     }
 
-    public SysDictItem detail(String dictItemId) {
+    @Nonnull
+    public SysDictItem detail(@Nonnull String dictItemId) {
         SysDictItem sysDictItem = baseMapper.selectById(dictItemId);
         if (sysDictItem == null) {
             throw new BizException("无对应字典项数据，请刷新后重试");
@@ -191,18 +190,21 @@ public class SysDictItemService
         return sysDictItem;
     }
 
+    @Nonnull
     @Cacheable(value = "passiflora:dict:id", key = "#dictId")
-    public List<SysDictItem> listByDictId(String dictId) {
+    public List<SysDictItem> listByDictId(@Nonnull String dictId) {
         return baseMapper.listByDictId(dictId);
     }
 
+    @Nonnull
     @Cacheable(value = "passiflora:dict:name", key = "#dictName")
-    public List<SysDictItem> listByDictName(String dictName) {
+    public List<SysDictItem> listByDictName(@Nonnull String dictName) {
         return baseMapper.listByDictName(dictName);
     }
 
+    @Nonnull
     @Cacheable(value = "passiflora:dict:tag", key = "#dictTag")
-    public List<SysDictItem> listByDictTag(String dictTag) {
+    public List<SysDictItem> listByDictTag(@Nonnull String dictTag) {
         return baseMapper.listByDictTag(dictTag);
     }
 }

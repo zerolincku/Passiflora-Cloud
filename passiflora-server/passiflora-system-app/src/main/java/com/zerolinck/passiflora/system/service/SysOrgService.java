@@ -29,14 +29,17 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.entity.SysOrg;
 import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.mapper.SysOrgMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author linck
@@ -48,10 +51,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysOrg:";
 
-    public Page<SysOrg> page(QueryCondition<SysOrg> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+    @Nonnull
+    public Page<SysOrg> page(@Nonnull QueryCondition<SysOrg> condition) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysOrg.class),
@@ -59,8 +60,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         );
     }
 
-    public void add(SysOrg sysOrg) {
-        LockUtil.lockAndTransactionalLogic(
+    public void add(@Nonnull SysOrg sysOrg) {
+         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
                 .lock(SysOrg::getOrgName, sysOrg.getOrgName())
@@ -82,7 +83,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         );
     }
 
-    public boolean update(SysOrg sysOrg) {
+    public boolean update(@Nonnull SysOrg sysOrg) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
@@ -122,7 +123,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
 
     /** 此方法会级联删除下级机构 */
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> orgIds) {
+    public int deleteByIds(@Nonnull Collection<String> orgIds) {
         int rowCount = 0;
         for (String orgId : orgIds) {
             rowCount +=
@@ -131,7 +132,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         return rowCount;
     }
 
-    public SysOrg detail(String orgId) {
+    @Nonnull
+    public SysOrg detail(@Nonnull String orgId) {
         SysOrg sysOrg = baseMapper.selectById(orgId);
         if (sysOrg == null) {
             throw new BizException("无对应机构数据，请刷新后重试");
@@ -139,7 +141,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         return sysOrg;
     }
 
-    public Map<String, String> orgId2NameMap(List<String> orgIds) {
+    @Nonnull
+    public Map<String, String> orgId2NameMap(@Nonnull List<String> orgIds) {
         if (CollectionUtil.isEmpty(orgIds)) {
             return new HashMap<>();
         }
@@ -151,26 +154,29 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
             .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
     }
 
-    public SysOrg selectByOrgCode(String orgCode) {
+    @Nullable
+    public SysOrg selectByOrgCode(@Nonnull String orgCode) {
         return baseMapper.selectByOrgCode(orgCode);
     }
 
-    public List<SysOrgVo> listByParentId(String orgParentId) {
+    @Nonnull
+    public List<SysOrgVo> listByParentId(@Nonnull String orgParentId) {
         return baseMapper.listByParentId(orgParentId);
     }
 
+    @Nullable
     public List<SysOrgVo> orgTree() {
         List<SysOrgVo> sysOrgVos = baseMapper.listByParentId("0");
         sysOrgVos.forEach(this::recursionTree);
         return sysOrgVos;
     }
 
-    private void recursionTree(SysOrgVo sysOrgVo) {
+    private void recursionTree(@Nonnull SysOrgVo sysOrgVo) {
         sysOrgVo.setChildren(listByParentId(sysOrgVo.getOrgId()));
         sysOrgVo.getChildren().forEach(this::recursionTree);
     }
 
-    private void generateIadPathAndLevel(SysOrg sysOrg) {
+    private void generateIadPathAndLevel(@Nonnull SysOrg sysOrg) {
         StringBuilder codeBuffer = new StringBuilder();
         String orgParentId = sysOrg.getParentOrgId();
         int level = 0;

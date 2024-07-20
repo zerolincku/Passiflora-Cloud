@@ -24,10 +24,11 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysDictItemApi;
 import com.zerolinck.passiflora.model.system.entity.SysDictItem;
 import com.zerolinck.passiflora.system.service.SysDictItemService;
-import jakarta.annotation.Resource;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author linck
@@ -35,10 +36,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("sysDictItem")
+@RequiredArgsConstructor
 public class SysDictItemController implements SysDictItemApi {
-
-    @Resource
-    private SysDictItemService sysDictItemService;
+    private final SysDictItemService sysDictItemService;
 
     @Override
     public Result<ListWithPage<SysDictItem>> page(

@@ -27,14 +27,16 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.system.mapper.SysDictMapper;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author linck
@@ -50,10 +52,8 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysDict:";
 
-    public Page<SysDict> page(QueryCondition<SysDict> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+    @Nonnull
+    public Page<SysDict> page(@Nonnull QueryCondition<SysDict> condition) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysDict.class),
@@ -61,7 +61,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
         );
     }
 
-    public void add(SysDict sysDict) {
+    public void add(@Nonnull SysDict sysDict) {
         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysDict>()
@@ -76,7 +76,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public boolean update(SysDict sysDict) {
+    public boolean update(@Nonnull SysDict sysDict) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysDict>()
@@ -97,7 +97,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public int deleteByIds(Collection<String> dictIds) {
+    public int deleteByIds(@Nonnull Collection<String> dictIds) {
         List<SysDict> sysDicts = baseMapper.selectBatchIds(dictIds);
         sysDicts.forEach(sysDict -> {
             if (YesOrNoEnum.YES.equals(sysDict.getIsSystem())) {
@@ -112,7 +112,8 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
         return rowCount;
     }
 
-    public SysDict detail(String dictId) {
+    @Nonnull
+    public SysDict detail(@Nonnull String dictId) {
         SysDict sysDict = baseMapper.selectById(dictId);
         if (sysDict == null) {
             throw new BizException("无对应字典数据，请刷新后重试");
