@@ -1,5 +1,7 @@
 ### 日志 ###
 **/logs
+
+### gradle ###
 **/.gradle
 **/build
 !**/src/main/**/build/
@@ -39,3 +41,6 @@ out/
 
 **/node_modules
 **/dist
+
+### mac ###
+**/.DS_Store
