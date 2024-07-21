@@ -42,7 +42,7 @@ public class PassifloraSystemApplication {
             args
         );
         ConfigurableEnvironment environment = application.getEnvironment();
-        String env = environment.getProperty("passiflora.env");
+        String env = environment.getProperty("spring.profiles.active");
         String projectVersion = environment.getProperty(
             "passiflora.project-version"
         );
@@ -51,7 +51,7 @@ public class PassifloraSystemApplication {
         String outIp = NetUtil.findOutIp();
         log.info(
             """
-            \n项目启动成功: {} 环境 ◉‿◉
+            \n项目启动成功: {} 环境
             本地 Swagger: \t\thttp://localhost:{}{}/doc.html
             外部地址 Swagger: \thttp://{}:{}{}/doc.html
             Passiflora (C) 2024 version: {}""",

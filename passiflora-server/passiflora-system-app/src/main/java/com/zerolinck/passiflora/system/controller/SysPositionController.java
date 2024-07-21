@@ -29,12 +29,11 @@ import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
 import com.zerolinck.passiflora.system.service.SysPositionService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author linck
@@ -45,6 +44,7 @@ import java.util.List;
 @RequestMapping("sysPosition")
 @RequiredArgsConstructor
 public class SysPositionController implements SysPositionApi {
+
     private final SysPositionService sysPositionService;
     private final SysPositionPermissionService sysPositionPermissionService;
 
@@ -116,14 +116,22 @@ public class SysPositionController implements SysPositionApi {
     }
 
     @Override
-    public Result<List<String>> permissionIdsByPositionIds(List<String> positionIds) {
+    public Result<List<String>> permissionIdsByPositionIds(
+        List<String> positionIds
+    ) {
         AssertUtil.notEmpty(positionIds);
-        return Result.ok(sysPositionPermissionService.permissionIdsByPositionIds(positionIds));
+        return Result.ok(
+            sysPositionPermissionService.permissionIdsByPositionIds(positionIds)
+        );
     }
 
     @Override
-    public Result<String> savePositionPermission(PositionPermissionSaveDto positionPermissionSaveDto) {
-        sysPositionPermissionService.savePositionPermission(positionPermissionSaveDto);
+    public Result<String> savePositionPermission(
+        PositionPermissionSaveDto positionPermissionSaveDto
+    ) {
+        sysPositionPermissionService.savePositionPermission(
+            positionPermissionSaveDto
+        );
         return Result.ok();
     }
 }

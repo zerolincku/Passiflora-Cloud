@@ -41,6 +41,7 @@ import reactor.core.publisher.Mono;
 @Order(-1)
 @RequiredArgsConstructor
 public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
+
     private final ObjectMapper objectMapper;
 
     @Override

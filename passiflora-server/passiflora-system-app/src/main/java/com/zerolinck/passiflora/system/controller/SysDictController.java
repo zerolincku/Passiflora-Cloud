@@ -24,11 +24,10 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysDictApi;
 import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.system.service.SysDictService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author linck
@@ -38,6 +37,7 @@ import java.util.List;
 @RequestMapping("sysDict")
 @RequiredArgsConstructor
 public class SysDictController implements SysDictApi {
+
     private final SysDictService sysDictService;
 
     @Override

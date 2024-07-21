@@ -31,14 +31,13 @@ import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import com.zerolinck.passiflora.system.service.SysUserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author linck
@@ -48,6 +47,7 @@ import java.util.List;
 @RequestMapping("sysUser")
 @RequiredArgsConstructor
 public class SysUserController implements SysUserApi {
+
     private final SysUserService sysUserService;
 
     @Override

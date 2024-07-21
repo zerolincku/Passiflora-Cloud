@@ -35,12 +35,11 @@ import com.zerolinck.passiflora.model.system.vo.SysPermissionVo;
 import com.zerolinck.passiflora.system.mapper.SysPermissionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author linck
@@ -54,7 +53,9 @@ public class SysPermissionService
     private static final String LOCK_KEY = "passiflora:lock:sysPermission:";
 
     @Nonnull
-    public Page<SysPermission> page(@Nonnull QueryCondition<SysPermission> condition) {
+    public Page<SysPermission> page(
+        @Nonnull QueryCondition<SysPermission> condition
+    ) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysPermission.class),
@@ -63,7 +64,7 @@ public class SysPermissionService
     }
 
     public void add(@Nonnull SysPermission sysPermission) {
-         LockUtil.lockAndTransactionalLogic(
+        LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
                 .lock(
@@ -105,7 +106,9 @@ public class SysPermissionService
     }
 
     @Nonnull
-    public List<SysPermission> listByParentId(@Nonnull String permissionParentId) {
+    public List<SysPermission> listByParentId(
+        @Nonnull String permissionParentId
+    ) {
         return baseMapper.listByParentId(permissionParentId);
     }
 
@@ -117,8 +120,7 @@ public class SysPermissionService
         );
     }
 
-    @Nullable
-    public SysPermission detail(@Nonnull String permissionId) {
+    @Nullable public SysPermission detail(@Nonnull String permissionId) {
         SysPermission sysPermission = baseMapper.selectById(permissionId);
         if (sysPermission == null) {
             throw new BizException("无对应菜单数据，请刷新后重试");
@@ -193,7 +195,9 @@ public class SysPermissionService
         return topMenu;
     }
 
-    public void updateOrder(@Nonnull List<SysPermissionTableVo> sysPermissionTableVos) {
+    public void updateOrder(
+        @Nonnull List<SysPermissionTableVo> sysPermissionTableVos
+    ) {
         if (CollectionUtil.isEmpty(sysPermissionTableVos)) {
             return;
         }

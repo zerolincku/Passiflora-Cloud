@@ -29,14 +29,13 @@ import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.system.mapper.SysDictMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
+import java.util.Collection;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author linck

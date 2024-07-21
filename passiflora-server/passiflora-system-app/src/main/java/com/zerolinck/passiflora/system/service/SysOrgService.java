@@ -31,15 +31,14 @@ import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.mapper.SysOrgMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author linck
@@ -61,7 +60,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     public void add(@Nonnull SysOrg sysOrg) {
-         LockUtil.lockAndTransactionalLogic(
+        LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
                 .lock(SysOrg::getOrgName, sysOrg.getOrgName())
@@ -154,8 +153,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
             .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
     }
 
-    @Nullable
-    public SysOrg selectByOrgCode(@Nonnull String orgCode) {
+    @Nullable public SysOrg selectByOrgCode(@Nonnull String orgCode) {
         return baseMapper.selectByOrgCode(orgCode);
     }
 
@@ -164,8 +162,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         return baseMapper.listByParentId(orgParentId);
     }
 
-    @Nullable
-    public List<SysOrgVo> orgTree() {
+    @Nullable public List<SysOrgVo> orgTree() {
         List<SysOrgVo> sysOrgVos = baseMapper.listByParentId("0");
         sysOrgVos.forEach(this::recursionTree);
         return sysOrgVos;

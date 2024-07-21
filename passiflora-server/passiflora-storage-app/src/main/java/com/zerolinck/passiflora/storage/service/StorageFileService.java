@@ -37,6 +37,12 @@ import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import io.minio.*;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +50,6 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 通用文件 Service
@@ -63,6 +62,7 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class StorageFileService
     extends ServiceImpl<StorageFileMapper, StorageFile> {
+
     private final MinioClient minioClient;
     private final PassifloraProperties passifloraProperties;
 

@@ -29,15 +29,14 @@ import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.model.system.entity.SysDictItem;
 import com.zerolinck.passiflora.system.mapper.SysDictItemMapper;
 import jakarta.annotation.Nonnull;
+import java.util.Collection;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author linck
@@ -48,11 +47,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SysDictItemService
     extends ServiceImpl<SysDictItemMapper, SysDictItem> {
+
     private final SysDictService sysDictService;
     private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
 
     @Nonnull
-    public Page<SysDictItem> page(@Nonnull QueryCondition<SysDictItem> condition) {
+    public Page<SysDictItem> page(
+        @Nonnull QueryCondition<SysDictItem> condition
+    ) {
         return baseMapper.page(
             condition.page(),
             condition.searchWrapper(SysDictItem.class),

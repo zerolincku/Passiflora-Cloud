@@ -27,11 +27,10 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.entity.SysPositionDataScope;
 import com.zerolinck.passiflora.system.mapper.SysPositionDataScopeMapper;
 import jakarta.annotation.Nonnull;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 /**
  * @author linck

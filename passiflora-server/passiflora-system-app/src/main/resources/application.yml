@@ -23,7 +23,6 @@ spring:
       database: @redis.database@
       host: @redis.host@
       port: @redis.port@
-      password: @redis.password@
 
 feign:
   compression:
@@ -51,7 +50,6 @@ mybatis-plus:
       update-strategy: not_null
 
 passiflora:
-  env: @env@
   system:
     token:
       expire: 604800

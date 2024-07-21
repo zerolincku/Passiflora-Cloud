@@ -23,12 +23,11 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
+import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author linck

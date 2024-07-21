@@ -30,11 +30,10 @@ import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
 import jakarta.annotation.Nonnull;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /**
  * @author linck
@@ -50,7 +49,7 @@ public class SysPositionPermissionService
 
     @Nonnull
     public Page<SysPositionPermission> page(
-       @Nonnull QueryCondition<SysPositionPermission> condition
+        @Nonnull QueryCondition<SysPositionPermission> condition
     ) {
         return baseMapper.page(
             condition.page(),
@@ -71,7 +70,9 @@ public class SysPositionPermissionService
         );
     }
 
-    public boolean update(@Nonnull SysPositionPermission sysPositionPermission) {
+    public boolean update(
+        @Nonnull SysPositionPermission sysPositionPermission
+    ) {
         return (boolean) LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
@@ -110,35 +111,57 @@ public class SysPositionPermissionService
     }
 
     @Nonnull
-    public List<String> permissionIdsByPositionIds(@Nonnull List<String> positionIds) {
+    public List<String> permissionIdsByPositionIds(
+        @Nonnull List<String> positionIds
+    ) {
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
-    public void savePositionPermission(@Nonnull PositionPermissionSaveDto positionPermissionSaveDto) {
-        LockUtil.lockAndTransactionalLogic(LOCK_KEY + "sysPosition",
-                new LockWrapper<PositionPermissionSaveDto>()
-                        .lock(PositionPermissionSaveDto::getPositionId, positionPermissionSaveDto.getPositionId())
-                ,
-                () -> {
-                    Set<String> exitPermissionIdSet = new HashSet<>(this.permissionIdsByPositionIds(List.of(positionPermissionSaveDto.getPositionId())));
-                    Set<String> newPermissionIdSet = new HashSet<>(positionPermissionSaveDto.getPermissionIds());
-                    Set<String> needAdd = SetUtil.differenceSet2FromSet1(exitPermissionIdSet, newPermissionIdSet);
-                    Set<String> needDelete = SetUtil.differenceSet2FromSet1(newPermissionIdSet, exitPermissionIdSet);
-                    if (CollectionUtil.isNotEmpty(needDelete)) {
-                        this.deleteByIds(needDelete);
-                    }
-                    if (CollectionUtil.isNotEmpty(needAdd)) {
-                        List<SysPositionPermission> addList = new ArrayList<>();
-                        needAdd.forEach(permissionId -> {
-                            SysPositionPermission sysPositionPermission = new SysPositionPermission();
-                            sysPositionPermission.setPositionId(positionPermissionSaveDto.getPositionId());
-                            sysPositionPermission.setPermissionId(permissionId);
-                            addList.add(sysPositionPermission);
-                        });
-                        this.saveBatch(addList);
-                    }
-                    return null;
+    public void savePositionPermission(
+        @Nonnull PositionPermissionSaveDto positionPermissionSaveDto
+    ) {
+        LockUtil.lockAndTransactionalLogic(
+            LOCK_KEY + "sysPosition",
+            new LockWrapper<PositionPermissionSaveDto>()
+                .lock(
+                    PositionPermissionSaveDto::getPositionId,
+                    positionPermissionSaveDto.getPositionId()
+                ),
+            () -> {
+                Set<String> exitPermissionIdSet = new HashSet<>(
+                    this.permissionIdsByPositionIds(
+                            List.of(positionPermissionSaveDto.getPositionId())
+                        )
+                );
+                Set<String> newPermissionIdSet = new HashSet<>(
+                    positionPermissionSaveDto.getPermissionIds()
+                );
+                Set<String> needAdd = SetUtil.differenceSet2FromSet1(
+                    exitPermissionIdSet,
+                    newPermissionIdSet
+                );
+                Set<String> needDelete = SetUtil.differenceSet2FromSet1(
+                    newPermissionIdSet,
+                    exitPermissionIdSet
+                );
+                if (CollectionUtil.isNotEmpty(needDelete)) {
+                    this.deleteByIds(needDelete);
                 }
+                if (CollectionUtil.isNotEmpty(needAdd)) {
+                    List<SysPositionPermission> addList = new ArrayList<>();
+                    needAdd.forEach(permissionId -> {
+                        SysPositionPermission sysPositionPermission =
+                            new SysPositionPermission();
+                        sysPositionPermission.setPositionId(
+                            positionPermissionSaveDto.getPositionId()
+                        );
+                        sysPositionPermission.setPermissionId(permissionId);
+                        addList.add(sysPositionPermission);
+                    });
+                    this.saveBatch(addList);
+                }
+                return null;
+            }
         );
     }
 }

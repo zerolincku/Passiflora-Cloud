@@ -35,14 +35,13 @@ import com.zerolinck.passiflora.model.system.entity.SysUser;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author linck
@@ -51,6 +50,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
+
     private final SysOrgService sysOrgService;
     private final PassifloraProperties passifloraProperties;
 

@@ -25,13 +25,12 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.storage.StorageFileApi;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.storage.service.StorageFileService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * 通用文件 Controller
@@ -44,6 +43,7 @@ import java.util.List;
 @RequestMapping("storageFile")
 @RequiredArgsConstructor
 public class StorageFileController implements StorageFileApi {
+
     private final StorageFileService storageFileService;
 
     @Override

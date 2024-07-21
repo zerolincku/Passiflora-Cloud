@@ -29,11 +29,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class PassifloraProperties {
 
     /**
-     * 环境 dev or prod
-     */
-    private String env;
-
-    /**
      * 项目版本
      */
     private String projectVersion;

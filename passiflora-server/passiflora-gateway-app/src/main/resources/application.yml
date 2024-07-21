@@ -44,5 +44,4 @@ knife4j:
         context-path: /passiflora/storage-api
 
 passiflora:
-  env: @env@
   project-version: @projectVersion@

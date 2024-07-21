@@ -27,12 +27,11 @@ import com.zerolinck.passiflora.feign.system.SysOrgApi;
 import com.zerolinck.passiflora.model.system.entity.SysOrg;
 import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.service.SysOrgService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author linck
@@ -43,6 +42,7 @@ import java.util.List;
 @RequestMapping("sysOrg")
 @RequiredArgsConstructor
 public class SysOrgController implements SysOrgApi {
+
     private final SysOrgService sysOrgService;
 
     @Override

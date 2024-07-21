@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CreateBucketRunner implements ApplicationRunner {
+
     private final MinioClient minioClient;
     private final PassifloraProperties passifloraProperties;
 

@@ -7,13 +7,12 @@ environments {
         redis {
             host = "passiflora-redis"
             port = "6379"
-            password = "123456"
             database = '8'
         }
         minio {
             endpoint = 'http://passiflora-minio:9000'
-            accessKey = '2Zj1xM3B7ti9rDt8TjIR'
-            secretKey = 'yHJ08hiDHAnd3ChR6CvETti8X1dqDvxgLxW0ojwJ'
+            accessKey = 'BqzUCvFnYy8a1eECZgKR'
+            secretKey = 'zQUasocpCxHGYPZx268hl9WsSOvBQIxk0QH40Z9H'
         }
         system_app {
             database {
@@ -40,13 +39,12 @@ environments {
         redis {
             host = "passiflora-redis"
             port = "6379"
-            password = "123456"
             database = '8'
         }
         minio {
             endpoint = 'http://passiflora-minio:9000'
-            accessKey = 'U2eBKxUCW5I70Xx4D0fR'
-            secretKey = 'NDPeMlhQLO36o0R3pG9lE4syXeZInm5o6dW6VfOa'
+            accessKey = 'ahCsPaHipn934FJi9oa0'
+            secretKey = 'jFPZSumZREdr9MLbhZht0UisaivL92XTvvM8nr66'
         }
         system_app {
             database {
