@@ -35,14 +35,6 @@ allprojects {
     }
 }
 
-subprojects { subProject ->
-    if (!subProject.name.startsWith('app')) {
-        jar {
-            enabled = true
-        }
-    }
-}
-
 spotless {
     java {
         target '**/*.java'
