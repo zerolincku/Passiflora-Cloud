@@ -66,13 +66,13 @@ public class SysDictController implements SysDictApi {
 
     @Override
     public Result<SysDict> detail(String dictId) {
-        AssertUtil.notBlank(dictId);
+        AssertUtil.notBlank(dictId, "字典 ID 不能为空");
         return Result.ok(sysDictService.detail(dictId));
     }
 
     @Override
     public Result<String> delete(List<String> dictIds) {
-        AssertUtil.notEmpty(dictIds);
+        AssertUtil.notEmpty(dictIds, "字典 ID 不能为空");
         sysDictService.deleteByIds(dictIds);
         return Result.ok();
     }

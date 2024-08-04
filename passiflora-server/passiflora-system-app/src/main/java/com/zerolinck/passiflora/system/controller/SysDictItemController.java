@@ -66,32 +66,32 @@ public class SysDictItemController implements SysDictItemApi {
 
     @Override
     public Result<SysDictItem> detail(String dictItemId) {
-        AssertUtil.notBlank(dictItemId);
+        AssertUtil.notBlank(dictItemId, "字典项 ID 不能为空");
         return Result.ok(sysDictItemService.detail(dictItemId));
     }
 
     @Override
     public Result<String> delete(List<String> dictItemIds) {
-        AssertUtil.notEmpty(dictItemIds);
+        AssertUtil.notEmpty(dictItemIds, "字典项 ID 不能为空");
         sysDictItemService.deleteByIds(dictItemIds);
         return Result.ok();
     }
 
     @Override
     public Result<List<SysDictItem>> listByDictId(String dictId) {
-        AssertUtil.notBlank(dictId);
+        AssertUtil.notBlank(dictId, "字典 ID 不能为空");
         return Result.ok(sysDictItemService.listByDictId(dictId));
     }
 
     @Override
     public Result<List<SysDictItem>> listByDictName(String dictName) {
-        AssertUtil.notBlank(dictName);
+        AssertUtil.notBlank(dictName, "字典名称不能为空");
         return Result.ok(sysDictItemService.listByDictName(dictName));
     }
 
     @Override
     public Result<List<SysDictItem>> listByDictTag(String dictTag) {
-        AssertUtil.notBlank(dictTag);
+        AssertUtil.notBlank(dictTag, "字典标签不能为空");
         return Result.ok(sysDictItemService.listByDictTag(dictTag));
     }
 }

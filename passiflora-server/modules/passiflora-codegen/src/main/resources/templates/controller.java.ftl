@@ -53,13 +53,13 @@ public class ${controllerClass} implements ${apiClass} {
 
     @Override
     public Result<${entityClass}> detail(String ${table.pkFieldName}) {
-        AssertUtil.notBlank(${table.pkFieldName});
+        AssertUtil.notBlank(${table.pkFieldName}, "${table.description} ID 不能为空");
         return Result.ok(${serviceName}.detail(${table.pkFieldName}));
     }
 
     @Override
     public Result<String> delete(List<String> ${table.pkFieldName}s) {
-        AssertUtil.notEmpty(${table.pkFieldName}s);
+        AssertUtil.notEmpty(${table.pkFieldName}s, "${table.description} ID 不能为空");
         ${serviceName}.deleteByIds(${table.pkFieldName}s);
         return Result.ok();
     }

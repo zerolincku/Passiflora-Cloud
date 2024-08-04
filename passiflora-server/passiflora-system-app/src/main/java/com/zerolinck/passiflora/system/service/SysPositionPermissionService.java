@@ -26,7 +26,7 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
+import com.zerolinck.passiflora.model.system.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
 import jakarta.annotation.Nonnull;
@@ -73,7 +73,7 @@ public class SysPositionPermissionService
     public boolean update(
         @Nonnull SysPositionPermission sysPositionPermission
     ) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
             () -> {
@@ -118,23 +118,23 @@ public class SysPositionPermissionService
     }
 
     public void savePositionPermission(
-        @Nonnull PositionPermissionSaveDto positionPermissionSaveDto
+        @Nonnull PositionPermissionSaveArgs args
     ) {
         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY + "sysPosition",
-            new LockWrapper<PositionPermissionSaveDto>()
+            new LockWrapper<PositionPermissionSaveArgs>()
                 .lock(
-                    PositionPermissionSaveDto::getPositionId,
-                    positionPermissionSaveDto.getPositionId()
+                    PositionPermissionSaveArgs::getPositionId,
+                    args.getPositionId()
                 ),
             () -> {
                 Set<String> exitPermissionIdSet = new HashSet<>(
                     this.permissionIdsByPositionIds(
-                            List.of(positionPermissionSaveDto.getPositionId())
+                            List.of(args.getPositionId())
                         )
                 );
                 Set<String> newPermissionIdSet = new HashSet<>(
-                    positionPermissionSaveDto.getPermissionIds()
+                    args.getPermissionIds()
                 );
                 Set<String> needAdd = SetUtil.differenceSet2FromSet1(
                     exitPermissionIdSet,
@@ -153,7 +153,7 @@ public class SysPositionPermissionService
                         SysPositionPermission sysPositionPermission =
                             new SysPositionPermission();
                         sysPositionPermission.setPositionId(
-                            positionPermissionSaveDto.getPositionId()
+                            args.getPositionId()
                         );
                         sysPositionPermission.setPermissionId(permissionId);
                         addList.add(sysPositionPermission);

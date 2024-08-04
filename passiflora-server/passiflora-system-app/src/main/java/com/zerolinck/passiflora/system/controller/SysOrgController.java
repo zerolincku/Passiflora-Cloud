@@ -75,7 +75,7 @@ public class SysOrgController implements SysOrgApi {
 
     @Override
     public Result<SysOrg> detail(String orgId) {
-        AssertUtil.notBlank(orgId);
+        AssertUtil.notBlank(orgId, "机构 ID 不能为空");
         return Result.ok(sysOrgService.detail(orgId));
     }
 
@@ -84,7 +84,7 @@ public class SysOrgController implements SysOrgApi {
      */
     @Override
     public Result<String> delete(List<String> orgIds) {
-        AssertUtil.notEmpty(orgIds);
+        AssertUtil.notEmpty(orgIds, "机构 ID 不能为空");
         sysOrgService.deleteByIds(orgIds);
         return Result.ok();
     }

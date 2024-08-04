@@ -83,7 +83,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     public boolean update(@Nonnull SysOrg sysOrg) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
                 .lock(SysOrg::getOrgName, sysOrg.getOrgName())

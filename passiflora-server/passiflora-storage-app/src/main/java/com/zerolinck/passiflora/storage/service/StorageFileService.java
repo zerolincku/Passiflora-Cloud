@@ -36,6 +36,8 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import io.minio.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.HashSet;
@@ -68,7 +70,10 @@ public class StorageFileService
 
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
 
-    public Page<StorageFile> page(QueryCondition<StorageFile> condition) {
+    @Nonnull
+    public Page<StorageFile> page(
+        @Nullable QueryCondition<StorageFile> condition
+    ) {
         if (condition == null) {
             condition = new QueryCondition<>();
         }
@@ -92,8 +97,9 @@ public class StorageFileService
      * @param storageFile 需要参数 originalFileName，contentType, fileMd5
      * @return 空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID
      */
-    public String tryQuicklyUpload(StorageFile storageFile) {
-        return (String) LockUtil.lockAndTransactionalLogic(
+    @Nonnull
+    public String tryQuicklyUpload(@Nonnull StorageFile storageFile) {
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<StorageFile>()
                 .lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
@@ -118,10 +124,14 @@ public class StorageFileService
         );
     }
 
+    @Nonnull
     @SneakyThrows
-    public String upload(MultipartFile file, String fileName) {
+    public String upload(
+        @Nonnull MultipartFile file,
+        @Nonnull String fileName
+    ) {
         String md5Hex = DigestUtil.md5Hex(file.getBytes());
-        return (String) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<StorageFile>()
                 .lock(StorageFile::getFileMd5, md5Hex),
@@ -205,18 +215,19 @@ public class StorageFileService
         );
     }
 
-    public List<StorageFile> listByFileMd5(String fileMd5) {
+    @Nonnull
+    public List<StorageFile> listByFileMd5(@Nonnull String fileMd5) {
         return baseMapper.listByFileMd5(fileMd5);
     }
 
-    public void deleteByIds(Collection<String> fileIds) {
+    public void deleteByIds(@Nonnull Collection<String> fileIds) {
         for (String fileId : fileIds) {
             deleteById(fileId);
         }
     }
 
     @SneakyThrows
-    public void deleteById(String fileId) {
+    public void deleteById(@Nonnull String fileId) {
         if (StrUtil.isBlank(fileId)) {
             return;
         }
@@ -254,7 +265,8 @@ public class StorageFileService
         );
     }
 
-    public StorageFile detail(String fileId) {
+    @Nonnull
+    public StorageFile detail(@Nonnull String fileId) {
         StorageFile storageFile = baseMapper.selectById(fileId);
         if (storageFile == null) {
             throw new BizException("无对应通用文件数据，请刷新后重试");
@@ -263,7 +275,7 @@ public class StorageFileService
     }
 
     @SneakyThrows
-    public void downloadFile(String fileId) {
+    public void downloadFile(@Nonnull String fileId) {
         StorageFile storageFile = baseMapper.selectById(fileId);
         if (storageFile == null) {
             throw new BizException("文件消失了");
@@ -295,7 +307,7 @@ public class StorageFileService
     }
 
     @SneakyThrows
-    public void downloadZip(List<String> fileIds) {
+    public void downloadZip(@Nonnull List<String> fileIds) {
         NetUtil
             .getResponse()
             .setHeader(
@@ -328,16 +340,20 @@ public class StorageFileService
         zipOut.close();
     }
 
-    public void confirmFile(List<String> fileIds) {
+    public void confirmFile(@Nonnull List<String> fileIds) {
+        if (fileIds.isEmpty()) {
+            return;
+        }
         baseMapper.confirmFile(fileIds, CurrentUtil.getCurrentUserId());
     }
 
     /**
      * 处理压缩包文件重名问题
      */
+    @Nonnull
     private static String dealFileName(
-        StorageFile storageFile,
-        Set<String> fileNameSet
+        @Nonnull StorageFile storageFile,
+        @Nonnull Set<String> fileNameSet
     ) {
         String fileName = storageFile.getOriginalFileName();
         while (fileNameSet.contains(fileName)) {

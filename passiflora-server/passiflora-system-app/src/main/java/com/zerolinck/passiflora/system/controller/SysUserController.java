@@ -23,14 +23,14 @@ import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysUserApi;
+import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.valid.Login;
 import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.Update;
 import com.zerolinck.passiflora.system.service.SysUserService;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -58,25 +58,23 @@ public class SysUserController implements SysUserApi {
         return Result.page(sysUserService.page(orgId, condition));
     }
 
+    @Nonnull
     @Override
-    public Result<String> add(
-        @RequestBody @Validated(Insert.class) SysUser sysUser
-    ) {
-        sysUser.setUserId(null);
-        sysUserService.add(sysUser);
-        return Result.ok(sysUser.getUserId());
+    public Result<String> add(@Nonnull SysUserSaveArgs args) {
+        args.setUserId(null);
+        sysUserService.add(args);
+        return Result.ok(args.getUserId());
     }
 
+    @Nonnull
     @Override
-    public Result<String> update(
-        @RequestBody @Validated(Update.class) SysUser sysUser
-    ) {
-        sysUser.setUserPassword(null);
-        sysUser.setUserName(null);
-        sysUser.setSalt(null);
-        boolean success = sysUserService.update(sysUser);
+    public Result<String> update(@Nonnull SysUserSaveArgs args) {
+        args.setUserPassword(null);
+        args.setUserName(null);
+        args.setSalt(null);
+        boolean success = sysUserService.update(args);
         if (success) {
-            return Result.ok(sysUser.getUserId());
+            return Result.ok(args.getUserId());
         } else {
             return Result.failed(ResultCodeEnum.COMPETE_FAILED);
         }
@@ -86,13 +84,13 @@ public class SysUserController implements SysUserApi {
     public Result<SysUser> detail(
         @RequestParam(value = "userId") String userId
     ) {
-        AssertUtil.notBlank(userId);
+        AssertUtil.notBlank(userId, "用户 ID 不能为空");
         return Result.ok(sysUserService.detail(userId));
     }
 
     @Override
     public Result<String> delete(@RequestBody List<String> userIds) {
-        AssertUtil.notEmpty(userIds);
+        AssertUtil.notEmpty(userIds, "用户 ID 不能为空");
         sysUserService.deleteByIds(userIds);
         return Result.ok();
     }

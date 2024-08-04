@@ -20,7 +20,7 @@ import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
-import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
+import com.zerolinck.passiflora.model.system.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.model.valid.Insert;
@@ -102,6 +102,6 @@ public interface SysPositionApi {
     @Operation(summary = "保存职位权限")
     @PostMapping("savePositionPermission")
     Result<String> savePositionPermission(
-        @RequestBody @Validated PositionPermissionSaveDto positionPermissionSaveDto
+        @RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs
     );
 }

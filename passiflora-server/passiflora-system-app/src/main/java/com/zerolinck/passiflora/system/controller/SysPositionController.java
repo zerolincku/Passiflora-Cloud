@@ -24,7 +24,7 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysPositionApi;
-import com.zerolinck.passiflora.model.system.dto.PositionPermissionSaveDto;
+import com.zerolinck.passiflora.model.system.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.service.SysPositionPermissionService;
@@ -80,13 +80,13 @@ public class SysPositionController implements SysPositionApi {
 
     @Override
     public Result<SysPosition> detail(String positionId) {
-        AssertUtil.notBlank(positionId);
+        AssertUtil.notBlank(positionId, "职位 ID 不能为空");
         return Result.ok(sysPositionService.detail(positionId));
     }
 
     @Override
     public Result<String> delete(List<String> positionIds) {
-        AssertUtil.notEmpty(positionIds);
+        AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
         sysPositionService.deleteByIds(positionIds);
         return Result.ok();
     }
@@ -110,7 +110,6 @@ public class SysPositionController implements SysPositionApi {
 
     @Override
     public Result<String> updateOrder(List<SysPositionVo> sysPositionVos) {
-        AssertUtil.notEmpty(sysPositionVos);
         sysPositionService.updateOrder(sysPositionVos);
         return Result.ok();
     }
@@ -119,7 +118,7 @@ public class SysPositionController implements SysPositionApi {
     public Result<List<String>> permissionIdsByPositionIds(
         List<String> positionIds
     ) {
-        AssertUtil.notEmpty(positionIds);
+        AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
         return Result.ok(
             sysPositionPermissionService.permissionIdsByPositionIds(positionIds)
         );
@@ -127,11 +126,9 @@ public class SysPositionController implements SysPositionApi {
 
     @Override
     public Result<String> savePositionPermission(
-        PositionPermissionSaveDto positionPermissionSaveDto
+        PositionPermissionSaveArgs args
     ) {
-        sysPositionPermissionService.savePositionPermission(
-            positionPermissionSaveDto
-        );
+        sysPositionPermissionService.savePositionPermission(args);
         return Result.ok();
     }
 }

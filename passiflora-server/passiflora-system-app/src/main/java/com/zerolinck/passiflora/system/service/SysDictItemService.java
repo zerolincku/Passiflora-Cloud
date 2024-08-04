@@ -114,7 +114,7 @@ public class SysDictItemService
             lockWrapper.lock(SysDictItem::getValue, sysDictItem.getValue());
         }
 
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY + sysDict.getDictTag(),
             lockWrapper,
             () -> {

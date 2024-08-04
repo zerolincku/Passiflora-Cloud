@@ -68,7 +68,7 @@ public class SysPositionDataScopeService
     }
 
     public boolean update(@Nonnull SysPositionDataScope sysPositionDataScope) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPositionDataScope>(),
             () -> {

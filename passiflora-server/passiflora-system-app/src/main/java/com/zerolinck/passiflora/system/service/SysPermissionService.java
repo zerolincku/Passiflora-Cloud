@@ -81,7 +81,7 @@ public class SysPermissionService
     }
 
     public boolean update(@Nonnull SysPermission sysPermission) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
                 .lock(

@@ -31,6 +31,7 @@ import com.zerolinck.passiflora.common.util.RedisUtils;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
+import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
@@ -52,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     private final SysOrgService sysOrgService;
+    private final SysUserPositionService userPositionService;
     private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
@@ -94,32 +96,32 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             .setRecords(recordsVo);
     }
 
-    public void add(SysUser sysUser) {
-        sysUser.setSalt(BCrypt.gensalt());
-        sysUser.setUserPassword(
-            BCrypt.hashpw(sysUser.getUserPassword(), sysUser.getSalt())
+    public void add(SysUserSaveArgs args) {
+        args.setSalt(BCrypt.gensalt());
+        args.setUserPassword(
+            BCrypt.hashpw(args.getUserPassword(), args.getSalt())
         );
 
         LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysUser>()
-                .lock(SysUser::getUserName, sysUser.getUserName()),
+                .lock(SysUser::getUserName, args.getUserName()),
             () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysUser);
-                baseMapper.insert(sysUser);
+                OnlyFieldCheck.checkInsert(baseMapper, args);
+                baseMapper.insert(args);
                 return null;
             }
         );
     }
 
-    public boolean update(SysUser sysUser) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+    public boolean update(SysUserSaveArgs args) {
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysUser>()
-                .lock(SysUser::getUserName, sysUser.getUserName()),
+                .lock(SysUser::getUserName, args.getUserName()),
             () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysUser);
-                int changeRowCount = baseMapper.updateById(sysUser);
+                OnlyFieldCheck.checkUpdate(baseMapper, args);
+                int changeRowCount = baseMapper.updateById(args);
                 return changeRowCount > 0;
             }
         );

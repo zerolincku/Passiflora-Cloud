@@ -76,7 +76,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@Nonnull SysDict sysDict) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysDict>()
                 .lock(SysDict::getDictName, sysDict.getDictName())

@@ -68,7 +68,7 @@ public class SysUserPositionService
     }
 
     public boolean update(SysUserPosition sysUserPosition) {
-        return (boolean) LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lockAndTransactionalLogic(
             LOCK_KEY,
             new LockWrapper<SysUserPosition>(),
             () -> {

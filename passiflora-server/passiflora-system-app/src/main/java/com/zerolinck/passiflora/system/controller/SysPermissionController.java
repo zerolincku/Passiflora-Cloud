@@ -78,13 +78,13 @@ public class SysPermissionController implements SysPermissionApi {
 
     @Override
     public Result<SysPermission> detail(String permissionId) {
-        AssertUtil.notBlank(permissionId);
+        AssertUtil.notBlank(permissionId, "权限 ID 不能为空");
         return Result.ok(sysPermissionService.detail(permissionId));
     }
 
     @Override
     public Result<String> delete(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds);
+        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         sysPermissionService.deleteByIds(permissionIds);
         return Result.ok();
     }
@@ -103,21 +103,20 @@ public class SysPermissionController implements SysPermissionApi {
     public Result<String> updateOrder(
         List<SysPermissionTableVo> sysPermissionTableVos
     ) {
-        AssertUtil.notEmpty(sysPermissionTableVos);
         sysPermissionService.updateOrder(sysPermissionTableVos);
         return Result.ok();
     }
 
     @Override
     public Result<String> disable(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds);
+        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         sysPermissionService.disable(permissionIds);
         return Result.ok();
     }
 
     @Override
     public Result<String> enable(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds);
+        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         sysPermissionService.enable(permissionIds);
         return Result.ok();
     }

@@ -34,7 +34,6 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
@@ -60,10 +59,10 @@ public class LockUtil {
     private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE =
         new ConcurrentHashMap<>();
 
-    public static Object lockAndTransactionalLogic(
+    public static <T> T lockAndTransactionalLogic(
         String lockKey,
         LockWrapper<?> lockWrapper,
-        Supplier<?> supplier
+        Supplier<T> supplier
     ) {
         AtomicInteger lockLength = new AtomicInteger(
             lockWrapper.getColumns().size()
@@ -120,9 +119,7 @@ public class LockUtil {
                         i.getAndIncrement();
                     }
                 });
-            return transactionTemplate.execute(
-                (TransactionCallback<Object>) status -> supplier.get()
-            );
+            return transactionTemplate.execute(status -> supplier.get());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);

@@ -16,6 +16,12 @@
  */
 package com.zerolinck.passiflora.system;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +30,7 @@ import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.enums.PositionDataScopeTypeEnum;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
@@ -35,14 +42,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 /**
  * @author linck
  * @since 2024-05-14
@@ -53,6 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SysPositionControllerTest {
+
     private final ObjectMapper objectMapper;
     private final MockMvc mockMvc;
 
