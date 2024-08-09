@@ -59,9 +59,18 @@ public class LockUtil {
     private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE =
         new ConcurrentHashMap<>();
 
-    public static <T> T lockAndTransactionalLogic(
+    public static <T> T lock(
         String lockKey,
         LockWrapper<?> lockWrapper,
+        Supplier<T> supplier
+    ) {
+        return lock(lockKey, lockWrapper, false, supplier);
+    }
+
+    public static <T> T lock(
+        String lockKey,
+        LockWrapper<?> lockWrapper,
+        boolean useTransaction,
         Supplier<T> supplier
     ) {
         AtomicInteger lockLength = new AtomicInteger(
@@ -119,7 +128,9 @@ public class LockUtil {
                         i.getAndIncrement();
                     }
                 });
-            return transactionTemplate.execute(status -> supplier.get());
+            return useTransaction
+                ? transactionTemplate.execute(status -> supplier.get())
+                : supplier.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);

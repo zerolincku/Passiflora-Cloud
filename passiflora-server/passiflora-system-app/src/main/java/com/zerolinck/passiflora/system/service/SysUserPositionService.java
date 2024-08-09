@@ -56,9 +56,10 @@ public class SysUserPositionService
     }
 
     public void add(SysUserPosition sysUserPosition) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysUserPosition>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysUserPosition);
                 baseMapper.insert(sysUserPosition);
@@ -68,9 +69,10 @@ public class SysUserPositionService
     }
 
     public boolean update(SysUserPosition sysUserPosition) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysUserPosition>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysUserPosition);
                 int changeRowCount = baseMapper.updateById(sysUserPosition);

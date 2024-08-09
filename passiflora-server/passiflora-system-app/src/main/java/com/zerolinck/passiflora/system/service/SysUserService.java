@@ -102,10 +102,11 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             BCrypt.hashpw(args.getUserPassword(), args.getSalt())
         );
 
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysUser>()
                 .lock(SysUser::getUserName, args.getUserName()),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, args);
                 baseMapper.insert(args);
@@ -115,10 +116,11 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     }
 
     public boolean update(SysUserSaveArgs args) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysUser>()
                 .lock(SysUser::getUserName, args.getUserName()),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, args);
                 int changeRowCount = baseMapper.updateById(args);

@@ -61,11 +61,12 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
     }
 
     public void add(@Nonnull SysDict sysDict) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysDict>()
                 .lock(SysDict::getDictName, sysDict.getDictName())
                 .lock(SysDict::getDictTag, sysDict.getDictTag()),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysDict);
                 baseMapper.insert(sysDict);
@@ -76,11 +77,12 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@Nonnull SysDict sysDict) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysDict>()
                 .lock(SysDict::getDictName, sysDict.getDictName())
                 .lock(SysDict::getDictTag, sysDict.getDictTag()),
+            true,
             () -> {
                 SysDict dbSysDict = baseMapper.selectById(sysDict.getDictId());
                 if (YesOrNoEnum.YES.equals(dbSysDict.getIsSystem())) {

@@ -99,7 +99,7 @@ public class StorageFileService
      */
     @Nonnull
     public String tryQuicklyUpload(@Nonnull StorageFile storageFile) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<StorageFile>()
                 .lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
@@ -131,10 +131,11 @@ public class StorageFileService
         @Nonnull String fileName
     ) {
         String md5Hex = DigestUtil.md5Hex(file.getBytes());
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<StorageFile>()
                 .lock(StorageFile::getFileMd5, md5Hex),
+            true,
             () -> {
                 String bucket = passifloraProperties
                     .getStorage()
@@ -235,10 +236,11 @@ public class StorageFileService
         if (storageFile == null) {
             return;
         }
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY + "md5:",
             new LockWrapper<StorageFile>()
                 .lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
+            true,
             () -> {
                 baseMapper.deleteByIds(
                     List.of(fileId),

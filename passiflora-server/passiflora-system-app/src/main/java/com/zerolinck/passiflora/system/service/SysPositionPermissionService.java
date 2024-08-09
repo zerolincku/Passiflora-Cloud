@@ -59,9 +59,10 @@ public class SysPositionPermissionService
     }
 
     public void add(@Nonnull SysPositionPermission sysPositionPermission) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysPositionPermission);
                 baseMapper.insert(sysPositionPermission);
@@ -73,9 +74,10 @@ public class SysPositionPermissionService
     public boolean update(
         @Nonnull SysPositionPermission sysPositionPermission
     ) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPositionPermission>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysPositionPermission);
                 int changeRowCount = baseMapper.updateById(
@@ -120,7 +122,7 @@ public class SysPositionPermissionService
     public void savePositionPermission(
         @Nonnull PositionPermissionSaveArgs args
     ) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY + "sysPosition",
             new LockWrapper<PositionPermissionSaveArgs>()
                 .lock(

@@ -60,11 +60,12 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     public void add(@Nonnull SysOrg sysOrg) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
                 .lock(SysOrg::getOrgName, sysOrg.getOrgName())
                 .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
+            true,
             () -> {
                 // 同一父机构下，机构名称不能重复
                 Long count = baseMapper.selectCount(
@@ -83,11 +84,12 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     public boolean update(@Nonnull SysOrg sysOrg) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysOrg>()
                 .lock(SysOrg::getOrgName, sysOrg.getOrgName())
                 .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysOrg);
 

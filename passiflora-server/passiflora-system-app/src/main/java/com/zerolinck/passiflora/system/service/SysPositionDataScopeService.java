@@ -56,9 +56,10 @@ public class SysPositionDataScopeService
     }
 
     public void add(@Nonnull SysPositionDataScope sysPositionDataScope) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPositionDataScope>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysPositionDataScope);
                 baseMapper.insert(sysPositionDataScope);
@@ -68,9 +69,10 @@ public class SysPositionDataScopeService
     }
 
     public boolean update(@Nonnull SysPositionDataScope sysPositionDataScope) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPositionDataScope>(),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysPositionDataScope);
                 int changeRowCount = baseMapper.updateById(

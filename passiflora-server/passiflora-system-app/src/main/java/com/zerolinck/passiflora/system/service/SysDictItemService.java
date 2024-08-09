@@ -72,9 +72,10 @@ public class SysDictItemService
             lockWrapper.lock(SysDictItem::getValue, sysDictItem.getValue());
         }
 
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY + sysDict.getDictTag(),
             lockWrapper,
+            true,
             () -> {
                 Long count = baseMapper.selectCount(
                     new LambdaQueryWrapper<SysDictItem>()
@@ -114,9 +115,10 @@ public class SysDictItemService
             lockWrapper.lock(SysDictItem::getValue, sysDictItem.getValue());
         }
 
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY + sysDict.getDictTag(),
             lockWrapper,
+            true,
             () -> {
                 SysDictItem dbSysDictItem = baseMapper.selectById(
                     sysDictItem.getDictItemId()

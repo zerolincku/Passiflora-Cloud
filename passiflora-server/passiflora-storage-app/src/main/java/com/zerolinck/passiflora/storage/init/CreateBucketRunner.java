@@ -46,7 +46,7 @@ public class CreateBucketRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         String bucketName = passifloraProperties.getStorage().getBucketName();
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             "passiflora:storage:bucket:",
             new LockWrapper<StorageFile>(),
             () -> {

@@ -64,13 +64,14 @@ public class SysPermissionService
     }
 
     public void add(@Nonnull SysPermission sysPermission) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
                 .lock(
                     SysPermission::getPermissionTitle,
                     sysPermission.getPermissionTitle()
                 ),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysPermission);
                 generateIadPathAndLevel(sysPermission);
@@ -81,13 +82,14 @@ public class SysPermissionService
     }
 
     public boolean update(@Nonnull SysPermission sysPermission) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPermission>()
                 .lock(
                     SysPermission::getPermissionTitle,
                     sysPermission.getPermissionTitle()
                 ),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysPermission);
                 generateIadPathAndLevel(sysPermission);

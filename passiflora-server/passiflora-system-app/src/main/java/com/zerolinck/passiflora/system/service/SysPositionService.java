@@ -59,13 +59,14 @@ public class SysPositionService
     }
 
     public void add(SysPosition sysPosition) {
-        LockUtil.lockAndTransactionalLogic(
+        LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPosition>()
                 .lock(
                     SysPosition::getPositionName,
                     sysPosition.getPositionName()
                 ),
+            true,
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, sysPosition);
                 generateIadPathAndLevel(sysPosition);
@@ -76,13 +77,14 @@ public class SysPositionService
     }
 
     public boolean update(SysPosition sysPosition) {
-        return LockUtil.lockAndTransactionalLogic(
+        return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPosition>()
                 .lock(
                     SysPosition::getPositionName,
                     sysPosition.getPositionName()
                 ),
+            true,
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, sysPosition);
                 generateIadPathAndLevel(sysPosition);
