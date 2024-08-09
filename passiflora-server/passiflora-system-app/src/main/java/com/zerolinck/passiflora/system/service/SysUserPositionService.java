@@ -16,20 +16,21 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUserPosition;
 import com.zerolinck.passiflora.system.mapper.SysUserPositionMapper;
-import java.util.Collection;
+import jakarta.annotation.Nonnull;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author linck
@@ -42,55 +43,110 @@ public class SysUserPositionService
 
     private static final String LOCK_KEY = "passiflora:lock:sysUserPosition:";
 
-    public Page<SysUserPosition> page(
-        QueryCondition<SysUserPosition> condition
-    ) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
-        return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysUserPosition.class),
-            condition.sortWrapper(SysUserPosition.class)
-        );
-    }
-
-    public void add(SysUserPosition sysUserPosition) {
+    public void updateRelation(@Nonnull SysUserSaveArgs args) {
         LockUtil.lock(
             LOCK_KEY,
-            new LockWrapper<SysUserPosition>(),
+            new LockWrapper<SysUserPosition>()
+                .lock(SysUserPosition::getUserId, args.getUserId()),
             true,
             () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysUserPosition);
-                baseMapper.insert(sysUserPosition);
+                if (CollectionUtil.isEmpty(args.getPositionIds())) {
+                    this.deleteByUserIds(List.of(args.getUserId()));
+                    return null;
+                }
+                Set<String> existPositionIds = findByUserIds(
+                    List.of(args.getUserId())
+                )
+                    .stream()
+                    .map(SysUserPosition::getPositionId)
+                    .collect(Collectors.toSet());
+                Set<String> newPositionIds = new HashSet<>(
+                    args.getPositionIds()
+                );
+                Set<String> addPositionIds = SetUtil.differenceSet2FromSet1(
+                    existPositionIds,
+                    newPositionIds
+                );
+                Set<String> delPositionIds = SetUtil.differenceSet2FromSet1(
+                    newPositionIds,
+                    existPositionIds
+                );
+                if (CollectionUtil.isEmpty(delPositionIds)) {
+                    this.deleteByUserIdAndPositionIds(
+                            args.getUserId(),
+                            delPositionIds
+                        );
+                }
+                if (CollectionUtil.isEmpty(addPositionIds)) {
+                    List<SysUserPosition> addList = new ArrayList<>();
+                    for (String positionId : addPositionIds) {
+                        SysUserPosition position = new SysUserPosition();
+                        position.setUserId(args.getUserId());
+                        position.setPositionId(positionId);
+                        addList.add(position);
+                    }
+                    this.saveBatch(addList);
+                }
                 return null;
             }
         );
     }
 
-    public boolean update(SysUserPosition sysUserPosition) {
-        return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysUserPosition>(),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysUserPosition);
-                int changeRowCount = baseMapper.updateById(sysUserPosition);
-                return changeRowCount > 0;
-            }
+    @Nonnull
+    public List<SysUserPosition> findByUserIds(@Nonnull List<String> userIds) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectList(
+            new LambdaQueryWrapper<SysUserPosition>()
+                .eq(SysUserPosition::getUserId, userIds)
         );
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> bindIds) {
-        return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
+    @Nonnull
+    public List<SysUserPosition> findByPositionIds(
+        @Nonnull List<String> positionIds
+    ) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectList(
+            new LambdaQueryWrapper<SysUserPosition>()
+                .eq(SysUserPosition::getPositionId, positionIds)
+        );
     }
 
-    public SysUserPosition detail(String bindId) {
-        SysUserPosition sysUserPosition = baseMapper.selectById(bindId);
-        if (sysUserPosition == null) {
-            throw new BizException("无对应用户职位绑定数据，请刷新后重试");
+    public int deleteByUserIds(@Nonnull Collection<String> userIds) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return 0;
         }
-        return sysUserPosition;
+        return baseMapper.deleteByUserIds(
+            userIds,
+            CurrentUtil.getCurrentUserId()
+        );
+    }
+
+    public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return 0;
+        }
+        return baseMapper.deleteByPositionIds(
+            positionIds,
+            CurrentUtil.getCurrentUserId()
+        );
+    }
+
+    public int deleteByUserIdAndPositionIds(
+        @Nonnull String userId,
+        @Nonnull Collection<String> positionIds
+    ) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return 0;
+        }
+        return baseMapper.deleteByUserIdAndPositionIds(
+            userId,
+            positionIds,
+            CurrentUtil.getCurrentUserId()
+        );
     }
 }

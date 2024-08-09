@@ -16,12 +16,10 @@
  */
 package com.zerolinck.passiflora.system.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysUserPosition;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,15 +28,25 @@ import org.apache.ibatis.annotations.Param;
  * @since 2024-05-14
  */
 public interface SysUserPositionMapper extends BaseMapper<SysUserPosition> {
-    Page<SysUserPosition> page(
-        IPage<SysUserPosition> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysUserPosition> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysUserPosition> sortWrapper
-    );
-
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
     int deleteByIds(
-        @Param("bindIds") Collection<String> bindIds,
-        @Param("updateBy") String updateBy
+        @Nonnull @Param("bindIds") Collection<String> bindIds,
+        @Nonnull @Param("updateBy") String updateBy
+    );
+
+    int deleteByUserIds(
+        @Nonnull @Param("userIds") Collection<String> userIds,
+        @Nullable @Param("updateBy") String updateBy
+    );
+
+    int deleteByPositionIds(
+        @Nonnull @Param("positionIds") Collection<String> positionIds,
+        @Nullable @Param("updateBy") String updateBy
+    );
+
+    int deleteByUserIdAndPositionIds(
+        @Nonnull @Param("userId") String userId,
+        @Nonnull @Param("positionIds") Collection<String> positionIds,
+        @Nullable @Param("updateBy") String updateBy
     );
 }

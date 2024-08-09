@@ -110,6 +110,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             () -> {
                 OnlyFieldCheck.checkInsert(baseMapper, args);
                 baseMapper.insert(args);
+                userPositionService.updateRelation(args);
                 return null;
             }
         );
@@ -124,6 +125,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             () -> {
                 OnlyFieldCheck.checkUpdate(baseMapper, args);
                 int changeRowCount = baseMapper.updateById(args);
+                userPositionService.updateRelation(args);
                 return changeRowCount > 0;
             }
         );
@@ -131,7 +133,12 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(Collection<String> userIds) {
-        return baseMapper.deleteByIds(userIds, CurrentUtil.getCurrentUserId());
+        int count = baseMapper.deleteByIds(
+            userIds,
+            CurrentUtil.getCurrentUserId()
+        );
+        userPositionService.deleteByUserIds(userIds);
+        return count;
     }
 
     public SysUser detail(String userId) {

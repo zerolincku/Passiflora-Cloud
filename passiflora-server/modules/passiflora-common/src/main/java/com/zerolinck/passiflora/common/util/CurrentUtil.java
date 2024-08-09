@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -35,7 +36,7 @@ public class CurrentUtil {
     private static final ThreadLocal<String> tokenMap = new ThreadLocal<>();
 
     /** 获取当前登录用户 */
-    public static SysUser getCurrentUser() {
+    @Nullable public static SysUser getCurrentUser() {
         if (userMap.get() != null) {
             return userMap.get();
         }
@@ -58,7 +59,7 @@ public class CurrentUtil {
         return sysUser;
     }
 
-    public static String getCurrentUserId() {
+    @Nullable public static String getCurrentUserId() {
         SysUser currentUser = getCurrentUser();
         if (currentUser == null) {
             return null;
@@ -67,7 +68,7 @@ public class CurrentUtil {
     }
 
     /** 获取当前 token */
-    public static String getToken() {
+    @Nullable public static String getToken() {
         if (tokenMap.get() != null) {
             return tokenMap.get();
         }
