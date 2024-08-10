@@ -556,12 +556,14 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
       dataIndex: 'email',
       ellipsis: true,
       tooltip: true,
+      width: 130,
     },
     {
       title: '备注',
       dataIndex: 'remark',
       ellipsis: true,
       tooltip: true,
+      width: 130,
     },
     {
       title: '操作',
