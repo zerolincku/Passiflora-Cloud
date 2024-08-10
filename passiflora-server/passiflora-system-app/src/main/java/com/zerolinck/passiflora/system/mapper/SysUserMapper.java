@@ -31,15 +31,11 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
     Page<SysUser> page(
-        @Param("orgId") String orgId,
-        IPage<SysUser> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysUser> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysUser> sortWrapper
-    );
+            @Param("orgId") String orgId,
+            IPage<SysUser> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysUser> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysUser> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("userIds") Collection<String> userIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("userIds") Collection<String> userIds, @Param("updateBy") String updateBy);
 }

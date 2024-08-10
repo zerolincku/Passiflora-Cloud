@@ -48,11 +48,8 @@ public class EnumControllerTest {
     @Test
     @Order(1)
     public void testList() throws Exception {
-        mockMvc
-            .perform(get("/enum/OrgLevelEnum"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/enum/OrgLevelEnum"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

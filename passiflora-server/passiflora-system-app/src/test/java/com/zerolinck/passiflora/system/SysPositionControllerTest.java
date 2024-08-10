@@ -65,14 +65,9 @@ public class SysPositionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysPosition/page").contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysPosition/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -85,152 +80,90 @@ public class SysPositionControllerTest {
         sysPosition.setDataScopeType(PositionDataScopeTypeEnum.ALL);
         sysPosition.setPositionLevel(1);
         sysPosition.setPositionStatus(StatusEnum.ENABLE);
-        mockMvc
-            .perform(
-                post("/sysPosition/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysPosition))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testSysPositionId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysPosition/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysPosition)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testSysPositionId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysPosition/detail")
-                    .param("positionId", testSysPositionId)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testSysPosition =
-                objectMapper.convertValue(
-                    jsonNode.get("data"),
-                    SysPosition.class
-                );
-            });
+        mockMvc.perform(get("/sysPosition/detail").param("positionId", testSysPositionId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testSysPosition = objectMapper.convertValue(jsonNode.get("data"), SysPosition.class);
+                });
     }
 
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPosition/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testSysPosition))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPosition/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSysPosition)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(5)
     public void testPermissionTree() throws Exception {
-        mockMvc
-            .perform(get("/sysPosition/positionTree"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                positionTree =
-                objectMapper.convertValue(
-                    jsonNode.get("data"),
-                    new TypeReference<>() {}
-                );
-            });
+        mockMvc.perform(get("/sysPosition/positionTree"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    positionTree = objectMapper.convertValue(jsonNode.get("data"), new TypeReference<>() {});
+                });
     }
 
     @Test
     @Order(6)
     public void testDisable() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPosition/disable")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPositionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPosition/disable")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(7)
     public void testEnable() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPosition/enable")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPositionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPosition/enable")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(8)
     public void testUpdateOrder() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPosition/updateOrder")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(positionTree))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPosition/updateOrder")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(positionTree)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(9)
     public void testDelete() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPosition/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPositionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPosition/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

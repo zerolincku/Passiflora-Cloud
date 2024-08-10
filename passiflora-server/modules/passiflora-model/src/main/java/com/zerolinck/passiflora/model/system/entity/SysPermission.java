@@ -44,74 +44,82 @@ public class SysPermission extends BaseEntity {
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "主键", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "主键长度不能大于20"
-    )
-    @NotBlank(groups = { Update.class }, message = "主键不能为空")
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "主键长度不能大于20")
+    @NotBlank(
+            groups = {Update.class},
+            message = "主键不能为空")
     private String permissionId;
 
     @OnlyField
     @Schema(description = "标题", maxLength = 50)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 50,
-        message = "标题长度不能大于50"
-    )
-    @NotBlank(groups = { Insert.class, Update.class }, message = "标题不能为空")
+            groups = {Insert.class, Update.class},
+            max = 50,
+            message = "标题长度不能大于50")
+    @NotBlank(
+            groups = {Insert.class, Update.class},
+            message = "标题不能为空")
     private String permissionTitle;
 
     @Schema(description = "名称", maxLength = 50)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 50,
-        message = "名称长度不能大于50"
-    )
-    @NotBlank(groups = { Insert.class, Update.class }, message = "名称不能为空")
+            groups = {Insert.class, Update.class},
+            max = 50,
+            message = "名称长度不能大于50")
+    @NotBlank(
+            groups = {Insert.class, Update.class},
+            message = "名称不能为空")
     private String permissionName;
 
     @Schema(description = "图标", maxLength = 50)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 50,
-        message = "图标长度不能大于50"
-    )
+            groups = {Insert.class, Update.class},
+            max = 50,
+            message = "图标长度不能大于50")
     private String permissionIcon;
 
     @Schema(description = "上级ID", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "上级ID长度不能大于20"
-    )
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "上级ID长度不能大于20")
     private String permissionParentId;
 
     @Schema(description = "ID路径", maxLength = 200)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 200,
-        message = "ID路径长度不能大于200"
-    )
+            groups = {Insert.class, Update.class},
+            max = 200,
+            message = "ID路径长度不能大于200")
     private String permissionIdPath;
 
     @Schema(description = "排序")
     @TableField(value = "\"order\"")
-    @NotNull(groups = { Update.class }, message = "排序不能为空") private Integer order;
+    @NotNull(
+            groups = {Update.class},
+            message = "排序不能为空")
+    private Integer order;
 
     @Schema(description = "备注", maxLength = 200)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 200,
-        message = "备注长度不能大于200"
-    )
+            groups = {Insert.class, Update.class},
+            max = 200,
+            message = "备注长度不能大于200")
     private String remark;
 
     @Schema(description = "级别")
     private Integer permissionLevel;
 
     @Schema(description = "状态")
-    @NotNull(groups = { Update.class }, message = "状态不能为空") private StatusEnum permissionStatus;
+    @NotNull(
+            groups = {Update.class},
+            message = "状态不能为空")
+    private StatusEnum permissionStatus;
 
     @Schema(description = "类型")
-    @NotNull(groups = { Insert.class, Update.class }, message = "类型不能为空") private PermissionTypeEnum permissionType;
+    @NotNull(
+            groups = {Insert.class, Update.class},
+            message = "类型不能为空")
+    private PermissionTypeEnum permissionType;
 }

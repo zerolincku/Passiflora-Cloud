@@ -41,9 +41,7 @@ public class SysDictController implements SysDictApi {
     private final SysDictService sysDictService;
 
     @Override
-    public Result<ListWithPage<SysDict>> page(
-        QueryCondition<SysDict> condition
-    ) {
+    public Result<ListWithPage<SysDict>> page(QueryCondition<SysDict> condition) {
         return Result.page(sysDictService.page(condition));
     }
 

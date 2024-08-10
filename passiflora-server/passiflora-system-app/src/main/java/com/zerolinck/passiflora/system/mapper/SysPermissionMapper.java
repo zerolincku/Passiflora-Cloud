@@ -35,48 +35,27 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     Page<SysPermission> page(
-        IPage<SysPermission> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysPermission> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysPermission> sortWrapper
-    );
+            IPage<SysPermission> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysPermission> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysPermission> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("permissionIds") Collection<String> permissionIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
 
-    @Update(
-        "UPDATE sys_permission SET \"order\" = #{sysPermissionTableVo.order} WHERE" +
-        " permission_id = #{sysPermissionTableVo.permissionId} "
-    )
-    void updateOrder(
-        @Param("sysPermissionTableVo") SysPermissionTableVo sysPermissionTableVo
-    );
+    @Update("UPDATE sys_permission SET \"order\" = #{sysPermissionTableVo.order} WHERE"
+            + " permission_id = #{sysPermissionTableVo.permissionId} ")
+    void updateOrder(@Param("sysPermissionTableVo") SysPermissionTableVo sysPermissionTableVo);
 
-    void disable(
-        @Param("permissionIds") Collection<String> permissionIds,
-        @Param("updateBy") String updateBy
-    );
+    void disable(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
 
-    void enable(
-        @Param("permissionIds") Collection<String> permissionIds,
-        @Param("updateBy") String updateBy
-    );
+    void enable(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
+
+    @Select("SELECT * FROM sys_permission WHERE del_flag = 0 AND permission_parent_id = #{permissionParentId} ORDER BY"
+            + " permission_level , \"order\", permission_title")
+    List<SysPermission> listByParentId(@Param("permissionParentId") String permissionParentId);
 
     @Select(
-        "SELECT * FROM sys_permission WHERE del_flag = 0 AND permission_parent_id = #{permissionParentId} ORDER BY" +
-        " permission_level , \"order\", permission_title"
-    )
-    List<SysPermission> listByParentId(
-        @Param("permissionParentId") String permissionParentId
-    );
-
-    @Select(
-        "SELECT * FROM sys_permission WHERE del_flag = 0 AND permission_id_path like concat('%', #{permissionId}, '%') ORDER BY" +
-        " permission_level , \"order\", permission_title"
-    )
-    List<SysPermission> listSelfAndSub(
-        @Param("permissionId") String permissionId
-    );
+            "SELECT * FROM sys_permission WHERE del_flag = 0 AND permission_id_path like concat('%', #{permissionId}, '%') ORDER BY"
+                    + " permission_level , \"order\", permission_title")
+    List<SysPermission> listSelfAndSub(@Param("permissionId") String permissionId);
 }

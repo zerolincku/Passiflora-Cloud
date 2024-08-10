@@ -44,18 +44,8 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
         fillValIfNullByName("updateTime", now, metaObject, true);
         fillValIfNullByName("delFlag", 0, metaObject, true);
         if (sysUser != null) {
-            fillValIfNullByName(
-                "createBy",
-                sysUser.getUserId(),
-                metaObject,
-                true
-            );
-            fillValIfNullByName(
-                "updateBy",
-                sysUser.getUserId(),
-                metaObject,
-                true
-            );
+            fillValIfNullByName("createBy", sysUser.getUserId(), metaObject, true);
+            fillValIfNullByName("updateBy", sysUser.getUserId(), metaObject, true);
         }
     }
 
@@ -66,12 +56,7 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
         SysUser sysUser = CurrentUtil.getCurrentUser();
         fillValIfNullByName("updateTime", now, metaObject, true);
         if (sysUser != null) {
-            fillValIfNullByName(
-                "updateBy",
-                sysUser.getUserId(),
-                metaObject,
-                true
-            );
+            fillValIfNullByName("updateBy", sysUser.getUserId(), metaObject, true);
         }
     }
 
@@ -83,22 +68,14 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
      * @param metaObject MetaObject
      * @param isCover 是否覆盖原有值,避免更新操作手动入参
      */
-    private static void fillValIfNullByName(
-        String fieldName,
-        Object fieldVal,
-        MetaObject metaObject,
-        boolean isCover
-    ) {
+    private static void fillValIfNullByName(String fieldName, Object fieldVal, MetaObject metaObject, boolean isCover) {
         // 1. 没有 set 方法
         if (!metaObject.hasSetter(fieldName)) {
             return;
         }
         // 2. 如果用户有手动设置的值
         Object userSetValue = metaObject.getValue(fieldName);
-        String setValueStr = StrUtil.str(
-            userSetValue,
-            Charset.defaultCharset()
-        );
+        String setValueStr = StrUtil.str(userSetValue, Charset.defaultCharset());
         if (StrUtil.isNotBlank(setValueStr) && !isCover) {
             return;
         }

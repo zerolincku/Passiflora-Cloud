@@ -25,7 +25,5 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface SysPositionPermissionConvert {
-    SysPositionPermissionConvert INSTANCE = Mappers.getMapper(
-        SysPositionPermissionConvert.class
-    );
+    SysPositionPermissionConvert INSTANCE = Mappers.getMapper(SysPositionPermissionConvert.class);
 }

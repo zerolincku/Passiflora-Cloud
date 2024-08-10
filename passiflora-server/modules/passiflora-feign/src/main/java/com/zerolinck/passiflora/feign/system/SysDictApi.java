@@ -36,11 +36,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "字典")
 @FeignClient(
-    value = "sysDict",
-    contextId = "sysDict",
-    path = "/passiflora/system-api/sysDict",
-    configuration = FeignConfiguration.class
-)
+        value = "sysDict",
+        contextId = "sysDict",
+        path = "/passiflora/system-api/sysDict",
+        configuration = FeignConfiguration.class)
 public interface SysDictApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
@@ -52,9 +51,7 @@ public interface SysDictApi {
 
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(
-        @RequestBody @Validated(Update.class) SysDict sysDict
-    );
+    Result<String> update(@RequestBody @Validated(Update.class) SysDict sysDict);
 
     @Operation(summary = "详情")
     @GetMapping("detail")

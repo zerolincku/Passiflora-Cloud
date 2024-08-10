@@ -29,19 +29,12 @@ import org.apache.ibatis.annotations.Param;
  * @author linck
  * @since 2024-05-14
  */
-public interface SysPositionDataScopeMapper
-    extends BaseMapper<SysPositionDataScope> {
+public interface SysPositionDataScopeMapper extends BaseMapper<SysPositionDataScope> {
     Page<SysPositionDataScope> page(
-        IPage<SysPositionDataScope> page,
-        @Param(Constants.WRAPPER) QueryWrapper<
-            SysPositionDataScope
-        > searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysPositionDataScope> sortWrapper
-    );
+            IPage<SysPositionDataScope> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysPositionDataScope> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysPositionDataScope> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("scopeIds") Collection<String> scopeIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("scopeIds") Collection<String> scopeIds, @Param("updateBy") String updateBy);
 }

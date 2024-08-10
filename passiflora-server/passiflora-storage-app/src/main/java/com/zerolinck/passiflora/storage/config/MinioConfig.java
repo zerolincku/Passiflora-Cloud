@@ -32,27 +32,15 @@ public class MinioConfig {
     @Resource
     private PassifloraProperties passifloraProperties;
 
-    /**
-     * 注入minio 客户端
-     */
+    /** 注入minio 客户端 */
     @Bean
     public MinioClient minioClient() {
-        String endpoint = passifloraProperties
-            .getStorage()
-            .getMinio()
-            .getEndpoint();
-        String accessKey = passifloraProperties
-            .getStorage()
-            .getMinio()
-            .getAccessKey();
-        String secretKey = passifloraProperties
-            .getStorage()
-            .getMinio()
-            .getSecretKey();
-        return MinioClient
-            .builder()
-            .endpoint(endpoint)
-            .credentials(accessKey, secretKey)
-            .build();
+        String endpoint = passifloraProperties.getStorage().getMinio().getEndpoint();
+        String accessKey = passifloraProperties.getStorage().getMinio().getAccessKey();
+        String secretKey = passifloraProperties.getStorage().getMinio().getSecretKey();
+        return MinioClient.builder()
+                .endpoint(endpoint)
+                .credentials(accessKey, secretKey)
+                .build();
     }
 }

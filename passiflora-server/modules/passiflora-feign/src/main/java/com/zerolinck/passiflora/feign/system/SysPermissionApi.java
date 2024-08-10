@@ -41,35 +41,26 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "菜单")
 @FeignClient(
-    value = "sysPermission",
-    contextId = "sysPermission",
-    path = "/passiflora/system-api/sysPermission",
-    configuration = FeignConfiguration.class
-)
+        value = "sysPermission",
+        contextId = "sysPermission",
+        path = "/passiflora/system-api/sysPermission",
+        configuration = FeignConfiguration.class)
 public interface SysPermissionApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<SysPermission>> page(
-        QueryCondition<SysPermission> condition
-    );
+    Result<ListWithPage<SysPermission>> page(QueryCondition<SysPermission> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(
-        @RequestBody @Validated(Insert.class) SysPermission sysPermission
-    );
+    Result<String> add(@RequestBody @Validated(Insert.class) SysPermission sysPermission);
 
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(
-        @RequestBody @Validated(Update.class) SysPermission sysPermission
-    );
+    Result<String> update(@RequestBody @Validated(Update.class) SysPermission sysPermission);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<SysPermission> detail(
-        @RequestParam(value = "permissionId") String permissionId
-    );
+    Result<SysPermission> detail(@RequestParam(value = "permissionId") String permissionId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")
@@ -85,11 +76,7 @@ public interface SysPermissionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("updateOrder")
-    Result<String> updateOrder(
-        @RequestBody @Validated(Update.class) List<
-            SysPermissionTableVo
-        > sysPermissionTableVos
-    );
+    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<SysPermissionTableVo> sysPermissionTableVos);
 
     @Operation(summary = "禁用")
     @PostMapping("disable")

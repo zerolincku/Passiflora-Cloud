@@ -104,17 +104,15 @@ public class CollectionUtils {
      * @see com.google.common.collect.Maps#newHashMapWithExpectedSize
      * @since 3.4.0
      */
-    public static <K, V> HashMap<K, V> newHashMapWithExpectedSize(
-        int expectedSize
-    ) {
+    public static <K, V> HashMap<K, V> newHashMapWithExpectedSize(int expectedSize) {
         return new HashMap<>(capacity(expectedSize));
     }
 
     /**
      * 用来过渡下Jdk1.8下ConcurrentHashMap的性能bug https://bugs.openjdk.java.net/browse/JDK-8161372
      *
-     * <p>A temporary workaround for Java 8 ConcurrentHashMap#computeIfAbsent specific performance
-     * issue: JDK-8161372.</br>
+     * <p>A temporary workaround for Java 8 ConcurrentHashMap#computeIfAbsent specific performance issue:
+     * JDK-8161372.</br>
      *
      * @see <a
      *     href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
@@ -127,10 +125,7 @@ public class CollectionUtils {
      * @since 3.4.0
      */
     public static <K, V> V computeIfAbsent(
-        Map<K, V> concurrentHashMap,
-        K key,
-        Function<? super K, ? extends V> mappingFunction
-    ) {
+            Map<K, V> concurrentHashMap, K key, Function<? super K, ? extends V> mappingFunction) {
         Objects.requireNonNull(mappingFunction);
         if (isJdk8) {
             V v = concurrentHashMap.get(key);
@@ -159,8 +154,8 @@ public class CollectionUtils {
     }
 
     /**
-     * Returns a capacity that is sufficient to keep the map from being resized as long as it grows no
-     * larger than expectedSize and the load factor is >= its default (0.75).
+     * Returns a capacity that is sufficient to keep the map from being resized as long as it grows no larger than
+     * expectedSize and the load factor is >= its default (0.75).
      *
      * @see com.google.common.collect.Maps#capacity(int)
      * @since 3.4.0
@@ -168,9 +163,7 @@ public class CollectionUtils {
     private static int capacity(int expectedSize) {
         if (expectedSize < 3) {
             if (expectedSize < 0) {
-                throw new IllegalArgumentException(
-                    "expectedSize cannot be negative but was: " + expectedSize
-                );
+                throw new IllegalArgumentException("expectedSize cannot be negative but was: " + expectedSize);
             }
             return expectedSize + 1;
         }
@@ -194,15 +187,10 @@ public class CollectionUtils {
      * @param <V> value的泛型
      * @return value的泛型的集合
      */
-    public static <K, V> List<V> getCollection(
-        Map<K, V> map,
-        Iterable<K> keys
-    ) {
+    public static <K, V> List<V> getCollection(Map<K, V> map, Iterable<K> keys) {
         List<V> result = new ArrayList<>();
         if (map != null && !map.isEmpty() && keys != null) {
-            keys.forEach(key ->
-                Optional.ofNullable(map.get(key)).ifPresent(result::add)
-            );
+            keys.forEach(key -> Optional.ofNullable(map.get(key)).ifPresent(result::add));
         }
         return result;
     }
@@ -217,11 +205,7 @@ public class CollectionUtils {
      * @param <V> value的泛型
      * @return value的泛型的集合
      */
-    public static <K, V> List<V> getCollection(
-        Map<K, V> map,
-        Iterable<K> keys,
-        Comparator<V> comparator
-    ) {
+    public static <K, V> List<V> getCollection(Map<K, V> map, Iterable<K> keys, Comparator<V> comparator) {
         Objects.requireNonNull(comparator);
         List<V> result = getCollection(map, keys);
         Collections.sort(result, comparator);

@@ -79,9 +79,7 @@ public class SysOrgController implements SysOrgApi {
         return Result.ok(sysOrgService.detail(orgId));
     }
 
-    /**
-     * 此方法会级联删除下级机构
-     */
+    /** 此方法会级联删除下级机构 */
     @Override
     public Result<String> delete(List<String> orgIds) {
         AssertUtil.notEmpty(orgIds, "机构 ID 不能为空");

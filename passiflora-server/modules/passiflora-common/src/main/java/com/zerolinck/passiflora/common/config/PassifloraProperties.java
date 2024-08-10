@@ -28,9 +28,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "passiflora")
 public class PassifloraProperties {
 
-    /**
-     * 项目版本
-     */
+    /** 项目版本 */
     private String projectVersion;
 
     private System system;
@@ -49,9 +47,7 @@ public class PassifloraProperties {
         @NoArgsConstructor
         public static class Token {
 
-            /**
-             * token 过期时间，单位：s
-             */
+            /** token 过期时间，单位：s */
             private Integer expire;
         }
     }
@@ -60,25 +56,15 @@ public class PassifloraProperties {
     @NoArgsConstructor
     public static class Config {
 
-        /**
-         * 是否开启 MybatisConfig 默认配置 {@link com.zerolinck.passiflora.common.config.mybaits.MybatisConfig}
-         */
+        /** 是否开启 MybatisConfig 默认配置 {@link com.zerolinck.passiflora.common.config.mybaits.MybatisConfig} */
         private Boolean mybatis;
-        /**
-         * 是否开启全局异常捕获 {@link com.zerolinck.passiflora.common.handler.GlobalExceptionHandler}
-         */
+        /** 是否开启全局异常捕获 {@link com.zerolinck.passiflora.common.handler.GlobalExceptionHandler} */
         private Boolean exception;
-        /**
-         * 是否开启全局默认过滤器 {@link com.zerolinck.passiflora.common.config.GlobalFilter}
-         */
+        /** 是否开启全局默认过滤器 {@link com.zerolinck.passiflora.common.config.GlobalFilter} */
         private Boolean globalFilter;
-        /**
-         * 是否开启 LockUtil 初始化 {@link com.zerolinck.passiflora.common.config.LockConfig}
-         */
+        /** 是否开启 LockUtil 初始化 {@link com.zerolinck.passiflora.common.config.LockConfig} */
         private Boolean lock;
-        /**
-         * 是否开启 Cache 初始化 {@link com.zerolinck.passiflora.common.config.CacheConfig}
-         */
+        /** 是否开启 Cache 初始化 {@link com.zerolinck.passiflora.common.config.CacheConfig} */
         private Boolean cache;
     }
 
@@ -86,9 +72,7 @@ public class PassifloraProperties {
     @NoArgsConstructor
     public static class Storage {
 
-        /**
-         * 对象存储桶名称
-         */
+        /** 对象存储桶名称 */
         private String bucketName;
 
         private Minio minio;
@@ -97,17 +81,11 @@ public class PassifloraProperties {
         @NoArgsConstructor
         public static class Minio {
 
-            /**
-             * minio 地址
-             */
+            /** minio 地址 */
             private String endpoint;
-            /**
-             * minio accessKey
-             */
+            /** minio accessKey */
             private String accessKey;
-            /**
-             * minio secretKey
-             */
+            /** minio secretKey */
             private String secretKey;
         }
     }

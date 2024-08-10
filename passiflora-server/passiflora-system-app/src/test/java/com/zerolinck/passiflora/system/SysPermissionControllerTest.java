@@ -62,15 +62,9 @@ public class SysPermissionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysPermission/page")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysPermission/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -82,163 +76,98 @@ public class SysPermissionControllerTest {
         sysPermission.setPermissionName("test");
         sysPermission.setPermissionIdPath("test");
         sysPermission.setPermissionType(PermissionTypeEnum.MENU_SET);
-        mockMvc
-            .perform(
-                post("/sysPermission/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysPermission))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testSysPermissionId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysPermission/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysPermission)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testSysPermissionId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysPermission/detail")
-                    .param("permissionId", testSysPermissionId)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testSysPermission =
-                objectMapper.convertValue(
-                    jsonNode.get("data"),
-                    SysPermission.class
-                );
-            });
+        mockMvc.perform(get("/sysPermission/detail").param("permissionId", testSysPermissionId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testSysPermission = objectMapper.convertValue(jsonNode.get("data"), SysPermission.class);
+                });
     }
 
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPermission/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testSysPermission))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPermission/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSysPermission)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(5)
     public void testMenuTree() throws Exception {
-        mockMvc
-            .perform(get("/sysPermission/menuTree"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysPermission/menuTree"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(6)
     public void testPermissionTree() throws Exception {
-        mockMvc
-            .perform(get("/sysPermission/permissionTableTree"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                permissionTree =
-                objectMapper.convertValue(
-                    jsonNode.get("data"),
-                    new TypeReference<>() {}
-                );
-            });
+        mockMvc.perform(get("/sysPermission/permissionTableTree"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    permissionTree = objectMapper.convertValue(jsonNode.get("data"), new TypeReference<>() {});
+                });
     }
 
     @Test
     @Order(7)
     public void testDisable() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPermission/disable")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPermissionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPermission/disable")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(8)
     public void testEnable() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPermission/enable")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPermissionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPermission/enable")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(9)
     public void testUpdateOrder() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPermission/updateOrder")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(permissionTree))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPermission/updateOrder")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(permissionTree)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(10)
     public void testDelete() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysPermission/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysPermissionId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysPermission/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

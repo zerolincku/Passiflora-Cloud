@@ -62,8 +62,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StorageFileService
-    extends ServiceImpl<StorageFileMapper, StorageFile> {
+public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFile> {
 
     private final MinioClient minioClient;
     private final PassifloraProperties passifloraProperties;
@@ -71,24 +70,16 @@ public class StorageFileService
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
 
     @Nonnull
-    public Page<StorageFile> page(
-        @Nullable QueryCondition<StorageFile> condition
-    ) {
+    public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
         if (condition == null) {
             condition = new QueryCondition<>();
         }
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(StorageFile.class),
-            condition.sortWrapper(StorageFile.class)
-        );
+                condition.page(), condition.searchWrapper(StorageFile.class), condition.sortWrapper(StorageFile.class));
     }
 
     public List<StorageFile> listByFileIds(List<String> fileIds) {
-        return baseMapper.selectList(
-            new LambdaQueryWrapper<StorageFile>()
-                .in(StorageFile::getFileId, fileIds)
-        );
+        return baseMapper.selectList(new LambdaQueryWrapper<StorageFile>().in(StorageFile::getFileId, fileIds));
     }
 
     /**
@@ -100,120 +91,91 @@ public class StorageFileService
     @Nonnull
     public String tryQuicklyUpload(@Nonnull StorageFile storageFile) {
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<StorageFile>()
-                .lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
-            () -> {
-                List<StorageFile> storageFiles = listByFileMd5(
-                    storageFile.getFileMd5()
-                );
-                if (CollectionUtil.isEmpty(storageFiles)) {
-                    return "";
-                }
-                StorageFile dbFile = storageFiles.getFirst();
-                dbFile.setFileId(null);
-                dbFile.setFilePurpose(null);
-                dbFile.setDownloadCount(null);
-                dbFile.setLastDownloadTime(null);
-                dbFile.setFileStatus(FileStatusEnum.TEMP);
-                dbFile.setOriginalFileName(storageFile.getOriginalFileName());
-                dbFile.setContentType(storageFile.getContentType());
-                baseMapper.insert(dbFile);
-                return dbFile.getFileId();
-            }
-        );
+                LOCK_KEY,
+                new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
+                true,
+                () -> {
+                    List<StorageFile> storageFiles = listByFileMd5(storageFile.getFileMd5());
+                    if (CollectionUtil.isEmpty(storageFiles)) {
+                        return "";
+                    }
+                    StorageFile dbFile = storageFiles.getFirst();
+                    dbFile.setFileId(null);
+                    dbFile.setFilePurpose(null);
+                    dbFile.setDownloadCount(null);
+                    dbFile.setLastDownloadTime(null);
+                    dbFile.setFileStatus(FileStatusEnum.TEMP);
+                    dbFile.setOriginalFileName(storageFile.getOriginalFileName());
+                    dbFile.setContentType(storageFile.getContentType());
+                    baseMapper.insert(dbFile);
+                    return dbFile.getFileId();
+                });
     }
 
     @Nonnull
     @SneakyThrows
-    public String upload(
-        @Nonnull MultipartFile file,
-        @Nonnull String fileName
-    ) {
+    public String upload(@Nonnull MultipartFile file, @Nonnull String fileName) {
         String md5Hex = DigestUtil.md5Hex(file.getBytes());
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<StorageFile>()
-                .lock(StorageFile::getFileMd5, md5Hex),
-            true,
-            () -> {
-                String bucket = passifloraProperties
-                    .getStorage()
-                    .getBucketName();
-                StorageFile storageFile = new StorageFile();
-                storageFile.setOriginalFileName(file.getOriginalFilename());
-                if (StrUtil.isNotBlank(fileName)) {
-                    storageFile.setOriginalFileName(fileName);
-                }
-                storageFile.setContentType(file.getContentType());
-                storageFile.setFileMd5(md5Hex);
-                storageFile.setFileSize(file.getSize());
-                storageFile.setFileStatus(FileStatusEnum.TEMP);
-                String extName = FileUtil.extName(
-                    storageFile.getOriginalFileName()
-                );
-                String objectName = md5Hex + "." + extName;
-                storageFile.setBucketName(bucket);
-                storageFile.setObjectName(objectName);
-                String tryQuicklyUploadResult = tryQuicklyUpload(storageFile);
-                if (StrUtil.isNotBlank(tryQuicklyUploadResult)) {
-                    return tryQuicklyUploadResult;
-                }
-
-                // 检查文件是否已经上传
-                List<StorageFile> storageFiles = baseMapper.selectList(
-                    new LambdaQueryWrapper<StorageFile>()
-                        .eq(StorageFile::getFileMd5, md5Hex)
-                );
-                StatObjectResponse statObject = null;
-                if (!storageFiles.isEmpty()) {
-                    StorageFile dbStorageFile = storageFiles.getFirst();
-                    objectName = dbStorageFile.getObjectName();
-                    bucket = dbStorageFile.getBucketName();
-                    // 检查 minio 文件是否存在
-                    try {
-                        statObject =
-                        minioClient.statObject(
-                            StatObjectArgs
-                                .builder()
-                                .bucket(dbStorageFile.getBucketName())
-                                .object(dbStorageFile.getObjectName())
-                                .build()
-                        );
-                        log.info("文件已存在，秒传，fileMd5: {}", md5Hex);
-                    } catch (Exception e) {
-                        // 可能查询文件不存在，尝试重新覆盖文件
-                        log.warn(
-                            "minio stat 文件错误 objectName: {}, exception: {}",
-                            dbStorageFile.getObjectName(),
-                            e.getMessage()
-                        );
+                LOCK_KEY, new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, md5Hex), true, () -> {
+                    String bucket = passifloraProperties.getStorage().getBucketName();
+                    StorageFile storageFile = new StorageFile();
+                    storageFile.setOriginalFileName(file.getOriginalFilename());
+                    if (StrUtil.isNotBlank(fileName)) {
+                        storageFile.setOriginalFileName(fileName);
                     }
-                }
-
-                if (statObject == null) {
-                    try {
-                        minioClient.putObject(
-                            PutObjectArgs
-                                .builder()
-                                .bucket(bucket)
-                                .object(objectName)
-                                .stream(
-                                    file.getInputStream(),
-                                    file.getInputStream().available(),
-                                    -1
-                                )
-                                .contentType(file.getContentType())
-                                .build()
-                        );
-                    } catch (Exception e) {
-                        throw new BizException(e);
+                    storageFile.setContentType(file.getContentType());
+                    storageFile.setFileMd5(md5Hex);
+                    storageFile.setFileSize(file.getSize());
+                    storageFile.setFileStatus(FileStatusEnum.TEMP);
+                    String extName = FileUtil.extName(storageFile.getOriginalFileName());
+                    String objectName = md5Hex + "." + extName;
+                    storageFile.setBucketName(bucket);
+                    storageFile.setObjectName(objectName);
+                    String tryQuicklyUploadResult = tryQuicklyUpload(storageFile);
+                    if (StrUtil.isNotBlank(tryQuicklyUploadResult)) {
+                        return tryQuicklyUploadResult;
                     }
-                }
-                this.save(storageFile);
-                return storageFile.getFileId();
-            }
-        );
+
+                    // 检查文件是否已经上传
+                    List<StorageFile> storageFiles = baseMapper.selectList(
+                            new LambdaQueryWrapper<StorageFile>().eq(StorageFile::getFileMd5, md5Hex));
+                    StatObjectResponse statObject = null;
+                    if (!storageFiles.isEmpty()) {
+                        StorageFile dbStorageFile = storageFiles.getFirst();
+                        objectName = dbStorageFile.getObjectName();
+                        bucket = dbStorageFile.getBucketName();
+                        // 检查 minio 文件是否存在
+                        try {
+                            statObject = minioClient.statObject(StatObjectArgs.builder()
+                                    .bucket(dbStorageFile.getBucketName())
+                                    .object(dbStorageFile.getObjectName())
+                                    .build());
+                            log.info("文件已存在，秒传，fileMd5: {}", md5Hex);
+                        } catch (Exception e) {
+                            // 可能查询文件不存在，尝试重新覆盖文件
+                            log.warn(
+                                    "minio stat 文件错误 objectName: {}, exception: {}",
+                                    dbStorageFile.getObjectName(),
+                                    e.getMessage());
+                        }
+                    }
+
+                    if (statObject == null) {
+                        try {
+                            minioClient.putObject(PutObjectArgs.builder().bucket(bucket).object(objectName).stream(
+                                            file.getInputStream(),
+                                            file.getInputStream().available(),
+                                            -1)
+                                    .contentType(file.getContentType())
+                                    .build());
+                        } catch (Exception e) {
+                            throw new BizException(e);
+                        }
+                    }
+                    this.save(storageFile);
+                    return storageFile.getFileId();
+                });
     }
 
     @Nonnull
@@ -237,34 +199,24 @@ public class StorageFileService
             return;
         }
         LockUtil.lock(
-            LOCK_KEY + "md5:",
-            new LockWrapper<StorageFile>()
-                .lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
-            true,
-            () -> {
-                baseMapper.deleteByIds(
-                    List.of(fileId),
-                    CurrentUtil.getCurrentUserId()
-                );
-                Integer md5Count = baseMapper.countByFileMd5(
-                    storageFile.getFileMd5()
-                );
-                if (md5Count == 0) {
-                    try {
-                        minioClient.removeObject(
-                            RemoveObjectArgs
-                                .builder()
-                                .bucket(storageFile.getBucketName())
-                                .object(storageFile.getObjectName())
-                                .build()
-                        );
-                    } catch (Exception e) {
-                        throw new BizException(e);
+                LOCK_KEY + "md5:",
+                new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
+                true,
+                () -> {
+                    baseMapper.deleteByIds(List.of(fileId), CurrentUtil.getCurrentUserId());
+                    Integer md5Count = baseMapper.countByFileMd5(storageFile.getFileMd5());
+                    if (md5Count == 0) {
+                        try {
+                            minioClient.removeObject(RemoveObjectArgs.builder()
+                                    .bucket(storageFile.getBucketName())
+                                    .object(storageFile.getObjectName())
+                                    .build());
+                        } catch (Exception e) {
+                            throw new BizException(e);
+                        }
                     }
-                }
-                return null;
-            }
-        );
+                    return null;
+                });
     }
 
     @Nonnull
@@ -282,43 +234,30 @@ public class StorageFileService
         if (storageFile == null) {
             throw new BizException("文件消失了");
         }
-        GetObjectResponse inputStream = minioClient.getObject(
-            GetObjectArgs
-                .builder()
+        GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
                 .bucket(storageFile.getBucketName())
                 .object(storageFile.getObjectName())
-                .build()
-        );
+                .build());
         HttpServletResponse response = NetUtil.getResponse();
-        if (
-            MimeTypeUtils.APPLICATION_JSON
-                .toString()
-                .equals(storageFile.getContentType())
-        ) {
+        if (MimeTypeUtils.APPLICATION_JSON.toString().equals(storageFile.getContentType())) {
             response.setContentType(MimeTypeUtils.TEXT_PLAIN.toString());
         } else {
             response.setContentType(storageFile.getContentType());
         }
         response.setHeader(
-            Header.CONTENT_DISPOSITION.getValue(),
-            "attachment; filename=" +
-            URLEncodeUtil.encode(storageFile.getOriginalFileName())
-        );
+                Header.CONTENT_DISPOSITION.getValue(),
+                "attachment; filename=" + URLEncodeUtil.encode(storageFile.getOriginalFileName()));
         IOUtils.copy(inputStream, response.getOutputStream());
         baseMapper.incrDownCount(fileId);
     }
 
     @SneakyThrows
     public void downloadZip(@Nonnull List<String> fileIds) {
-        NetUtil
-            .getResponse()
-            .setHeader(
-                Header.CONTENT_DISPOSITION.getValue(),
-                "attachment; filename=" + URLEncodeUtil.encode("文件压缩包.zip")
-            );
-        ZipOutputStream zipOut = new ZipOutputStream(
-            NetUtil.getResponse().getOutputStream()
-        );
+        NetUtil.getResponse()
+                .setHeader(
+                        Header.CONTENT_DISPOSITION.getValue(),
+                        "attachment; filename=" + URLEncodeUtil.encode("文件压缩包.zip"));
+        ZipOutputStream zipOut = new ZipOutputStream(NetUtil.getResponse().getOutputStream());
         Set<String> fileNameSet = new HashSet<>();
         for (String fileId : fileIds) {
             StorageFile storageFile = baseMapper.selectById(fileId);
@@ -327,13 +266,10 @@ public class StorageFileService
             String fileName = dealFileName(storageFile, fileNameSet);
             fileNameSet.add(fileName);
             zipOut.putNextEntry(new ZipEntry(fileName));
-            GetObjectResponse inputStream = minioClient.getObject(
-                GetObjectArgs
-                    .builder()
+            GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(storageFile.getBucketName())
                     .object(storageFile.getObjectName())
-                    .build()
-            );
+                    .build());
             IOUtils.copy(inputStream, zipOut);
             inputStream.close();
             zipOut.closeEntry();
@@ -349,14 +285,9 @@ public class StorageFileService
         baseMapper.confirmFile(fileIds, CurrentUtil.getCurrentUserId());
     }
 
-    /**
-     * 处理压缩包文件重名问题
-     */
+    /** 处理压缩包文件重名问题 */
     @Nonnull
-    private static String dealFileName(
-        @Nonnull StorageFile storageFile,
-        @Nonnull Set<String> fileNameSet
-    ) {
+    private static String dealFileName(@Nonnull StorageFile storageFile, @Nonnull Set<String> fileNameSet) {
         String fileName = storageFile.getOriginalFileName();
         while (fileNameSet.contains(fileName)) {
             String[] fileNames = fileName.split("\\.");

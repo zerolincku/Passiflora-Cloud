@@ -36,26 +36,17 @@ public class SerializedLambda implements Serializable {
     private Object[] capturedArgs;
 
     public static SerializedLambda extract(Serializable serializable) {
-        try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos)
-        ) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(serializable);
             oos.flush();
-            try (
-                ObjectInputStream ois = new ObjectInputStream(
-                    new ByteArrayInputStream(baos.toByteArray())
-                ) {
-                    @Override
-                    protected Class<?> resolveClass(ObjectStreamClass desc)
-                        throws IOException, ClassNotFoundException {
-                        Class<?> clazz = super.resolveClass(desc);
-                        return clazz == java.lang.invoke.SerializedLambda.class
-                            ? SerializedLambda.class
-                            : clazz;
-                    }
+            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray())) {
+                @Override
+                protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+                    Class<?> clazz = super.resolveClass(desc);
+                    return clazz == java.lang.invoke.SerializedLambda.class ? SerializedLambda.class : clazz;
                 }
-            ) {
+            }) {
                 return (SerializedLambda) ois.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {

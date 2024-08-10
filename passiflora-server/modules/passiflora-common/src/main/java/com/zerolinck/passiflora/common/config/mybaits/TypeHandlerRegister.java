@@ -49,72 +49,43 @@ public class TypeHandlerRegister {
     public void init() {
         // 扫描当前项目下所有 LabelValueInterface 实现类
         Set<Class<?>> classes = ClassUtil.scanPackage(
-            "com.zerolinck",
-            aClass ->
-                LabelValueInterface.class.isAssignableFrom(aClass) &&
-                !LabelValueInterface.class.equals(aClass)
-        );
+                "com.zerolinck",
+                aClass -> LabelValueInterface.class.isAssignableFrom(aClass)
+                        && !LabelValueInterface.class.equals(aClass));
 
         sqlSessionFactory
-            .getConfiguration()
-            .getTypeHandlerRegistry()
-            .register(JsonNode.class, new JsonTypeHandler(objectMapper));
-
-        // 注册枚举类与数据库查询结果/参数的序列化与反序列化规则
-        classes.forEach(clazz ->
-            sqlSessionFactory
                 .getConfiguration()
                 .getTypeHandlerRegistry()
-                .register(
-                    clazz,
-                    new BaseTypeHandler() {
-                        @Override
-                        public void setNonNullParameter(
-                            PreparedStatement ps,
-                            int i,
-                            Object parameter,
-                            JdbcType jdbcType
-                        ) throws SQLException {
-                            ps.setInt(
-                                i,
-                                ((LabelValueInterface) parameter).getValue()
-                            );
-                        }
+                .register(JsonNode.class, new JsonTypeHandler(objectMapper));
 
-                        @Override
-                        public Object getNullableResult(
-                            ResultSet rs,
-                            String columnName
-                        ) throws SQLException {
-                            return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz,
-                                rs.getInt(columnName)
-                            );
-                        }
-
-                        @Override
-                        public Object getNullableResult(
-                            ResultSet rs,
-                            int columnIndex
-                        ) throws SQLException {
-                            return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz,
-                                rs.getInt(columnIndex)
-                            );
-                        }
-
-                        @Override
-                        public Object getNullableResult(
-                            CallableStatement cs,
-                            int columnIndex
-                        ) throws SQLException {
-                            return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz,
-                                cs.getInt(columnIndex)
-                            );
-                        }
+        // 注册枚举类与数据库查询结果/参数的序列化与反序列化规则
+        classes.forEach(clazz -> sqlSessionFactory
+                .getConfiguration()
+                .getTypeHandlerRegistry()
+                .register(clazz, new BaseTypeHandler() {
+                    @Override
+                    public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+                            throws SQLException {
+                        ps.setInt(i, ((LabelValueInterface) parameter).getValue());
                     }
-                )
-        );
+
+                    @Override
+                    public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
+                        return EnumUtil.getEnumByValue(
+                                (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnName));
+                    }
+
+                    @Override
+                    public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+                        return EnumUtil.getEnumByValue(
+                                (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnIndex));
+                    }
+
+                    @Override
+                    public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+                        return EnumUtil.getEnumByValue(
+                                (Class<? extends LabelValueInterface>) clazz, cs.getInt(columnIndex));
+                    }
+                }));
     }
 }

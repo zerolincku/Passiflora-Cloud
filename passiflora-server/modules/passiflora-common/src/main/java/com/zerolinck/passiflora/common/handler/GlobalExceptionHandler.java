@@ -42,11 +42,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
  */
 @Slf4j
 @RestControllerAdvice
-@ConditionalOnProperty(
-    prefix = "passiflora.config",
-    name = "exception",
-    havingValue = "true"
-)
+@ConditionalOnProperty(prefix = "passiflora.config", name = "exception", havingValue = "true")
 public class GlobalExceptionHandler {
 
     /** 捕获自定义异常 */
@@ -59,11 +55,8 @@ public class GlobalExceptionHandler {
     /** 捕获异常返回详细异常信息 */
     @ExceptionHandler(Exception.class)
     public Result<String> exceptionHandler(Exception e) {
-        long epochSecond = LocalDateTime
-            .now()
-            .atZone(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli();
+        long epochSecond =
+                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         String code = Long.toHexString(epochSecond).toUpperCase(Locale.ROOT);
         log.error("系统错误，错误代码: 0X{}", code, e);
         return Result.failed("系统错误，错误代码：0X" + code);
@@ -72,11 +65,8 @@ public class GlobalExceptionHandler {
     /** 捕获请求参数错误 */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Result<String> exceptionHandler(HttpMessageNotReadableException e) {
-        long epochSecond = LocalDateTime
-            .now()
-            .atZone(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli();
+        long epochSecond =
+                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         String code = Long.toHexString(epochSecond).toUpperCase(Locale.ROOT);
         log.error("系统错误，错误代码: 0X{}", code, e);
         return Result.failed(ResultCodeEnum.VALIDATE_FAILED);
@@ -90,9 +80,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Result<String> exceptionHandler(
-        HttpRequestMethodNotSupportedException e
-    ) {
+    public Result<String> exceptionHandler(HttpRequestMethodNotSupportedException e) {
         log.error("RequestMethod 不支持", e);
         return Result.failed(e.getMessage());
     }
@@ -106,15 +94,10 @@ public class GlobalExceptionHandler {
 
     /** Post参数验证异常 */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result<String> methodArgumentNotValidExceptionHandler(
-        MethodArgumentNotValidException e
-    ) {
+    public Result<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         // 将所有的错误提示使用"，"拼接起来并返回
         StringJoiner sj = new StringJoiner("，");
-        e
-            .getBindingResult()
-            .getFieldErrors()
-            .forEach(x -> sj.add(x.getDefaultMessage()));
+        e.getBindingResult().getFieldErrors().forEach(x -> sj.add(x.getDefaultMessage()));
         log.error("参数错误：{}", sj);
         return Result.validateFailed(sj.toString());
     }
@@ -123,10 +106,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     public Result<String> constraintViolationExceptionHandler(BindException e) {
         StringJoiner sj = new StringJoiner("，");
-        e
-            .getBindingResult()
-            .getFieldErrors()
-            .forEach(x -> sj.add(x.getDefaultMessage()));
+        e.getBindingResult().getFieldErrors().forEach(x -> sj.add(x.getDefaultMessage()));
         log.error("参数错误：{}", sj);
         return Result.validateFailed(sj.toString());
     }

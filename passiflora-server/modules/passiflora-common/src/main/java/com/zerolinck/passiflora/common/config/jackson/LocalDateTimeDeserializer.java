@@ -26,18 +26,14 @@ import java.time.LocalDateTime;
  * @author linck
  * @since 2024-02-06
  */
-public class LocalDateTimeDeserializer
-    extends com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer {
+public class LocalDateTimeDeserializer extends com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer {
 
     public LocalDateTimeDeserializer() {
         super(TimeUtil.NORMAL_DATE_TIME_FORMATTER);
     }
 
     @Override
-    public LocalDateTime deserialize(
-        JsonParser parser,
-        DeserializationContext context
-    ) throws IOException {
+    public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         String timeStr = parser.getText();
         return TimeUtil.commonStrDate2LocalDateTime(timeStr);
     }

@@ -36,35 +36,31 @@ public class NetUtil {
 
     /** 查询网卡 ip 地址 */
     public static String findOutIp() throws SocketException {
-        Enumeration<NetworkInterface> interfaces =
-            NetworkInterface.getNetworkInterfaces();
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         AtomicReference<String> ip = new AtomicReference<>(null);
         for (NetworkInterface face : Collections.list(interfaces)) {
             // 过滤回环接口等
             if (face.isLoopback() || !face.isUp()) continue;
 
-            face
-                .getInterfaceAddresses()
-                .stream()
-                .map(InterfaceAddress::getAddress)
-                .filter(a -> a instanceof Inet4Address && !a.isLoopbackAddress()
-                )
-                .findFirst()
-                .ifPresent(a -> ip.set(a.getHostAddress()));
+            face.getInterfaceAddresses().stream()
+                    .map(InterfaceAddress::getAddress)
+                    .filter(a -> a instanceof Inet4Address && !a.isLoopbackAddress())
+                    .findFirst()
+                    .ifPresent(a -> ip.set(a.getHostAddress()));
         }
         return ip.get();
     }
 
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes servletRequestAttributes =
-            (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
         return servletRequestAttributes.getRequest();
     }
 
     public static HttpServletResponse getResponse() {
         ServletRequestAttributes servletRequestAttributes =
-            (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
         return servletRequestAttributes.getResponse();
     }

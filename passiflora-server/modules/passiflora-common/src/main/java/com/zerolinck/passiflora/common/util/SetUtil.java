@@ -25,13 +25,8 @@ import java.util.Set;
  */
 public class SetUtil {
 
-    /**
-     * 返回 set2 相对于 set1 多出的值
-     */
-    public static Set<String> differenceSet2FromSet1(
-        Set<String> set1,
-        Set<String> set2
-    ) {
+    /** 返回 set2 相对于 set1 多出的值 */
+    public static Set<String> differenceSet2FromSet1(Set<String> set1, Set<String> set2) {
         Set<String> difference = new HashSet<>(set2);
         difference.removeAll(set1);
         return difference;

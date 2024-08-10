@@ -31,9 +31,6 @@ import org.mapstruct.factory.Mappers;
 public interface SysOrgConvert {
     SysOrgConvert INSTANCE = Mappers.getMapper(SysOrgConvert.class);
 
-    @Mapping(
-        target = "children",
-        expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())"
-    )
+    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())")
     SysOrgVo entity2Vo(SysOrg sysOrg);
 }

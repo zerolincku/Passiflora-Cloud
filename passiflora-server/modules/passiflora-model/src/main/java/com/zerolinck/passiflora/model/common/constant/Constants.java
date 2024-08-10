@@ -16,9 +16,7 @@
  */
 package com.zerolinck.passiflora.model.common.constant;
 
-/**
- * @author linck
- */
+/** @author linck */
 public interface Constants {
     String Authorization = "Authorization";
 

@@ -41,11 +41,7 @@ public class Result<T> {
 
     /** 成功返回结果 */
     public static Result<String> ok() {
-        return new Result<>(
-            ResultCodeEnum.SUCCESS.getCode(),
-            ResultCodeEnum.SUCCESS.getMessage(),
-            ""
-        );
+        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), "");
     }
 
     /**
@@ -54,19 +50,14 @@ public class Result<T> {
      * @param data 获取的数据
      */
     public static <T> Result<T> ok(T data) {
-        return new Result<>(
-            ResultCodeEnum.SUCCESS.getCode(),
-            ResultCodeEnum.SUCCESS.getMessage(),
-            data
-        );
+        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), data);
     }
 
     public static <T> Result<ListWithPage<T>> page(Page<T> data) {
         return new Result<>(
-            ResultCodeEnum.SUCCESS.getCode(),
-            ResultCodeEnum.SUCCESS.getMessage(),
-            new ListWithPage<>(data.getRecords(), data.getTotal())
-        );
+                ResultCodeEnum.SUCCESS.getCode(),
+                ResultCodeEnum.SUCCESS.getMessage(),
+                new ListWithPage<>(data.getRecords(), data.getTotal()));
     }
 
     /**
@@ -107,11 +98,7 @@ public class Result<T> {
      * @param message 提示信息
      */
     public static <T> Result<T> validateFailed(String message) {
-        return new Result<>(
-            ResultCodeEnum.VALIDATE_FAILED.getCode(),
-            message,
-            null
-        );
+        return new Result<>(ResultCodeEnum.VALIDATE_FAILED.getCode(), message, null);
     }
 
     /** 未登录返回结果 */

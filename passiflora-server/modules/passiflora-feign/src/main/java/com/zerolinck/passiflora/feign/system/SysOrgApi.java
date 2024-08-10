@@ -40,11 +40,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "机构")
 @FeignClient(
-    value = "sysOrg",
-    contextId = "sysOrg",
-    path = "/passiflora/system-api/sysOrg",
-    configuration = FeignConfiguration.class
-)
+        value = "sysOrg",
+        contextId = "sysOrg",
+        path = "/passiflora/system-api/sysOrg",
+        configuration = FeignConfiguration.class)
 public interface SysOrgApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
@@ -69,12 +68,7 @@ public interface SysOrgApi {
 
     @Operation(summary = "根据父级ID查询子机构列表")
     @GetMapping("listByParentId")
-    Result<List<SysOrgVo>> listByParentId(
-        @RequestParam(
-            required = false,
-            value = "orgParentId"
-        ) String orgParentId
-    );
+    Result<List<SysOrgVo>> listByParentId(@RequestParam(required = false, value = "orgParentId") String orgParentId);
 
     @Operation(summary = "机构树")
     @GetMapping("orgTree")

@@ -41,51 +41,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class SysPositionPermissionService
-    extends ServiceImpl<SysPositionPermissionMapper, SysPositionPermission> {
+public class SysPositionPermissionService extends ServiceImpl<SysPositionPermissionMapper, SysPositionPermission> {
 
-    private static final String LOCK_KEY =
-        "passiflora:lock:sysPositionPermission:";
+    private static final String LOCK_KEY = "passiflora:lock:sysPositionPermission:";
 
     @Nonnull
-    public Page<SysPositionPermission> page(
-        @Nonnull QueryCondition<SysPositionPermission> condition
-    ) {
+    public Page<SysPositionPermission> page(@Nonnull QueryCondition<SysPositionPermission> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysPositionPermission.class),
-            condition.sortWrapper(SysPositionPermission.class)
-        );
+                condition.page(),
+                condition.searchWrapper(SysPositionPermission.class),
+                condition.sortWrapper(SysPositionPermission.class));
     }
 
     public void add(@Nonnull SysPositionPermission sysPositionPermission) {
-        LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPositionPermission>(),
-            true,
-            () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysPositionPermission);
-                baseMapper.insert(sysPositionPermission);
-                return null;
-            }
-        );
+        LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionPermission>(), true, () -> {
+            OnlyFieldCheck.checkInsert(baseMapper, sysPositionPermission);
+            baseMapper.insert(sysPositionPermission);
+            return null;
+        });
     }
 
-    public boolean update(
-        @Nonnull SysPositionPermission sysPositionPermission
-    ) {
-        return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPositionPermission>(),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysPositionPermission);
-                int changeRowCount = baseMapper.updateById(
-                    sysPositionPermission
-                );
-                return changeRowCount > 0;
-            }
-        );
+    public boolean update(@Nonnull SysPositionPermission sysPositionPermission) {
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionPermission>(), true, () -> {
+            OnlyFieldCheck.checkUpdate(baseMapper, sysPositionPermission);
+            int changeRowCount = baseMapper.updateById(sysPositionPermission);
+            return changeRowCount > 0;
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -95,17 +76,12 @@ public class SysPositionPermissionService
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
-        return baseMapper.deleteByPositionIds(
-            positionIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nonnull
     public SysPositionPermission detail(@Nonnull String bindId) {
-        SysPositionPermission sysPositionPermission = baseMapper.selectById(
-            bindId
-        );
+        SysPositionPermission sysPositionPermission = baseMapper.selectById(bindId);
         if (sysPositionPermission == null) {
             throw new BizException("无对应系统职位菜单绑定数据，请刷新后重试");
         }
@@ -113,57 +89,36 @@ public class SysPositionPermissionService
     }
 
     @Nonnull
-    public List<String> permissionIdsByPositionIds(
-        @Nonnull List<String> positionIds
-    ) {
+    public List<String> permissionIdsByPositionIds(@Nonnull List<String> positionIds) {
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
-    public void savePositionPermission(
-        @Nonnull PositionPermissionSaveArgs args
-    ) {
+    public void savePositionPermission(@Nonnull PositionPermissionSaveArgs args) {
         LockUtil.lock(
-            LOCK_KEY + "sysPosition",
-            new LockWrapper<PositionPermissionSaveArgs>()
-                .lock(
-                    PositionPermissionSaveArgs::getPositionId,
-                    args.getPositionId()
-                ),
-            () -> {
-                Set<String> exitPermissionIdSet = new HashSet<>(
-                    this.permissionIdsByPositionIds(
-                            List.of(args.getPositionId())
-                        )
-                );
-                Set<String> newPermissionIdSet = new HashSet<>(
-                    args.getPermissionIds()
-                );
-                Set<String> needAdd = SetUtil.differenceSet2FromSet1(
-                    exitPermissionIdSet,
-                    newPermissionIdSet
-                );
-                Set<String> needDelete = SetUtil.differenceSet2FromSet1(
-                    newPermissionIdSet,
-                    exitPermissionIdSet
-                );
-                if (CollectionUtil.isNotEmpty(needDelete)) {
-                    this.deleteByIds(needDelete);
-                }
-                if (CollectionUtil.isNotEmpty(needAdd)) {
-                    List<SysPositionPermission> addList = new ArrayList<>();
-                    needAdd.forEach(permissionId -> {
-                        SysPositionPermission sysPositionPermission =
-                            new SysPositionPermission();
-                        sysPositionPermission.setPositionId(
-                            args.getPositionId()
-                        );
-                        sysPositionPermission.setPermissionId(permissionId);
-                        addList.add(sysPositionPermission);
-                    });
-                    this.saveBatch(addList);
-                }
-                return null;
-            }
-        );
+                LOCK_KEY + "sysPosition",
+                new LockWrapper<PositionPermissionSaveArgs>()
+                        .lock(PositionPermissionSaveArgs::getPositionId, args.getPositionId()),
+                true,
+                () -> {
+                    Set<String> exitPermissionIdSet =
+                            new HashSet<>(this.permissionIdsByPositionIds(List.of(args.getPositionId())));
+                    Set<String> newPermissionIdSet = new HashSet<>(args.getPermissionIds());
+                    Set<String> needAdd = SetUtil.differenceSet2FromSet1(exitPermissionIdSet, newPermissionIdSet);
+                    Set<String> needDelete = SetUtil.differenceSet2FromSet1(newPermissionIdSet, exitPermissionIdSet);
+                    if (CollectionUtil.isNotEmpty(needDelete)) {
+                        this.deleteByIds(needDelete);
+                    }
+                    if (CollectionUtil.isNotEmpty(needAdd)) {
+                        List<SysPositionPermission> addList = new ArrayList<>();
+                        needAdd.forEach(permissionId -> {
+                            SysPositionPermission sysPositionPermission = new SysPositionPermission();
+                            sysPositionPermission.setPositionId(args.getPositionId());
+                            sysPositionPermission.setPermissionId(permissionId);
+                            addList.add(sysPositionPermission);
+                        });
+                        this.saveBatch(addList);
+                    }
+                    return null;
+                });
     }
 }

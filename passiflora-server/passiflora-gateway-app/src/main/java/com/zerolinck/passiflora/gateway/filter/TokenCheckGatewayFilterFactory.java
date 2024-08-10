@@ -44,19 +44,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 public class TokenCheckGatewayFilterFactory
-    extends AbstractGatewayFilterFactory<
-        TokenCheckGatewayFilterFactory.Config
-    > {
+        extends AbstractGatewayFilterFactory<TokenCheckGatewayFilterFactory.Config> {
 
     private static final Set<Pattern> UN_CHECK_PATH = new HashSet<>();
 
     static {
-        UN_CHECK_PATH.add(
-            Pattern.compile("/passiflora/system-api/sysUser/login")
-        );
-        UN_CHECK_PATH.add(
-            Pattern.compile("/passiflora/system-api/sysUser/logout")
-        );
+        UN_CHECK_PATH.add(Pattern.compile("/passiflora/system-api/sysUser/login"));
+        UN_CHECK_PATH.add(Pattern.compile("/passiflora/system-api/sysUser/logout"));
         UN_CHECK_PATH.add(Pattern.compile("/doc\\.html"));
         UN_CHECK_PATH.add(Pattern.compile(".*/v3/api-docs"));
     }
@@ -70,40 +64,31 @@ public class TokenCheckGatewayFilterFactory
 
     @Override
     public GatewayFilter apply(Config config) {
-        return (
-            (exchange, chain) -> {
-                RequestPath path = exchange.getRequest().getPath();
-                for (Pattern pattern : UN_CHECK_PATH) {
-                    if (pattern.matcher(path.value()).matches()) {
-                        return chain.filter(exchange);
-                    }
+        return ((exchange, chain) -> {
+            RequestPath path = exchange.getRequest().getPath();
+            for (Pattern pattern : UN_CHECK_PATH) {
+                if (pattern.matcher(path.value()).matches()) {
+                    return chain.filter(exchange);
                 }
+            }
 
-                HttpHeaders headers = exchange.getRequest().getHeaders();
-                List<String> tokens = headers.get(Constants.Authorization);
-                String token = "";
-                if (CollectionUtil.isNotEmpty(tokens)) {
-                    token = tokens.getFirst();
-                }
-                return webBuilder
+            HttpHeaders headers = exchange.getRequest().getHeaders();
+            List<String> tokens = headers.get(Constants.Authorization);
+            String token = "";
+            if (CollectionUtil.isNotEmpty(tokens)) {
+                token = tokens.getFirst();
+            }
+            return webBuilder
                     .baseUrl("http://passiflora-system-app")
                     .build()
                     .get()
                     .uri("/passiflora/system-api/sysUser/checkToken")
                     .header(Constants.Authorization, token)
                     .retrieve()
-                    .bodyToMono(
-                        new ParameterizedTypeReference<Result<Boolean>>() {}
-                    )
+                    .bodyToMono(new ParameterizedTypeReference<Result<Boolean>>() {})
                     .flatMap(result -> {
-                        if (
-                            ResultCodeEnum.SUCCESS.getCode() !=
-                                result.getCode() ||
-                            !result.getData()
-                        ) {
-                            return Mono.error(
-                                new BizException(ResultCodeEnum.UNAUTHORIZED)
-                            );
+                        if (ResultCodeEnum.SUCCESS.getCode() != result.getCode() || !result.getData()) {
+                            return Mono.error(new BizException(ResultCodeEnum.UNAUTHORIZED));
                         } else {
                             return chain.filter(exchange);
                         }
@@ -114,8 +99,7 @@ public class TokenCheckGatewayFilterFactory
                         }
                         return Mono.error(new BizException(ex));
                     });
-            }
-        );
+        });
     }
 
     /** 配置参数类 */

@@ -27,9 +27,7 @@ import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author linck
- */
+/** @author linck */
 @RestController
 @RequestMapping("enum")
 public class EnumController implements EnumApi {
@@ -49,10 +47,8 @@ public class EnumController implements EnumApi {
 
     @SneakyThrows
     private void initEnum(Class<?> c) {
-        Set<Class<?>> classes1 = ClassUtil.scanPackage(
-            "com.zerolinck",
-            aClass -> c.isAssignableFrom(aClass) && !c.equals(aClass)
-        );
+        Set<Class<?>> classes1 =
+                ClassUtil.scanPackage("com.zerolinck", aClass -> c.isAssignableFrom(aClass) && !c.equals(aClass));
 
         for (Class<?> clazz : classes1) {
             Object[] enumConstants = clazz.getEnumConstants();
@@ -65,9 +61,7 @@ public class EnumController implements EnumApi {
                 if (!MAP.containsKey(clazz.getSimpleName())) {
                     MAP.put(clazz.getSimpleName(), new ArrayList<>());
                 }
-                MAP
-                    .get(clazz.getSimpleName())
-                    .add(Map.of("label", name.toString(), "value", value));
+                MAP.get(clazz.getSimpleName()).add(Map.of("label", name.toString(), "value", value));
             }
         }
     }

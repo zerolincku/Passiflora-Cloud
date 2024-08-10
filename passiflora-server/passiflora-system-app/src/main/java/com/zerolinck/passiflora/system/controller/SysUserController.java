@@ -51,10 +51,7 @@ public class SysUserController implements SysUserApi {
     private final SysUserService sysUserService;
 
     @Override
-    public Result<ListWithPage<SysUserVo>> page(
-        String orgId,
-        QueryCondition<SysUser> condition
-    ) {
+    public Result<ListWithPage<SysUserVo>> page(String orgId, QueryCondition<SysUser> condition) {
         return Result.page(sysUserService.page(orgId, condition));
     }
 
@@ -81,9 +78,7 @@ public class SysUserController implements SysUserApi {
     }
 
     @Override
-    public Result<SysUser> detail(
-        @RequestParam(value = "userId") String userId
-    ) {
+    public Result<SysUser> detail(@RequestParam(value = "userId") String userId) {
         AssertUtil.notBlank(userId, "用户 ID 不能为空");
         return Result.ok(sysUserService.detail(userId));
     }
@@ -96,9 +91,7 @@ public class SysUserController implements SysUserApi {
     }
 
     @Override
-    public Result<String> login(
-        @RequestBody @Validated(Login.class) SysUser sysUser
-    ) {
+    public Result<String> login(@RequestBody @Validated(Login.class) SysUser sysUser) {
         return Result.ok(sysUserService.login(sysUser));
     }
 
@@ -110,9 +103,8 @@ public class SysUserController implements SysUserApi {
 
     @Override
     public Result<SysUser> currentUserInfo() {
-        SysUserInfo sysUserInfo = SysUserConvert.INSTANCE.entity2info(
-            sysUserService.getById(CurrentUtil.getCurrentUserId())
-        );
+        SysUserInfo sysUserInfo =
+                SysUserConvert.INSTANCE.entity2info(sysUserService.getById(CurrentUtil.getCurrentUserId()));
         // FIXME mock data
         sysUserInfo.getMenu().add("workplace");
         sysUserInfo.getMenu().add("user");

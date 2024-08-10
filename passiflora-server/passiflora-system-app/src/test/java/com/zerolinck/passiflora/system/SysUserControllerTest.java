@@ -59,14 +59,9 @@ public class SysUserControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysUser/page").contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysUser/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -77,57 +72,40 @@ public class SysUserControllerTest {
         sysUser.setRealName("test");
         sysUser.setUserPassword("test");
         sysUser.setOrgId("test");
-        mockMvc
-            .perform(
-                post("/sysUser/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysUser))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testUserId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysUser/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testUserId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
         System.out.println();
     }
 
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc
-            .perform(get("/sysUser/detail").param("userId", testUserId))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testUser =
-                objectMapper.convertValue(jsonNode.get("data"), SysUser.class);
-            });
+        mockMvc.perform(get("/sysUser/detail").param("userId", testUserId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testUser = objectMapper.convertValue(jsonNode.get("data"), SysUser.class);
+                });
         System.out.println();
     }
 
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysUser/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testUser))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysUser/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -135,83 +113,48 @@ public class SysUserControllerTest {
     public void testLogin() throws Exception {
         testUser.setUserName("test");
         testUser.setUserPassword("test");
-        mockMvc
-            .perform(
-                post("/sysUser/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testUser))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testToken =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysUser/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testToken = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
     @Order(6)
     public void testCheckToken() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysUser/checkToken")
-                    .header(Constants.Authorization, testToken)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysUser/checkToken").header(Constants.Authorization, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(7)
     public void testCurrentUserInfo() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysUser/currentUserInfo")
-                    .header(Constants.Authorization, testToken)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysUser/currentUserInfo").header(Constants.Authorization, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(8)
     public void testLogout() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysUser/logout")
-                    .header(Constants.Authorization, testToken)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysUser/logout").header(Constants.Authorization, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(9)
     public void testDelete() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysUser/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testUserId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysUser/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testUserId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

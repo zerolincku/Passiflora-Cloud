@@ -26,7 +26,5 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 @SuppressWarnings("all")
 public interface SysUserPositionConvert {
-    SysUserPositionConvert INSTANCE = Mappers.getMapper(
-        SysUserPositionConvert.class
-    );
+    SysUserPositionConvert INSTANCE = Mappers.getMapper(SysUserPositionConvert.class);
 }

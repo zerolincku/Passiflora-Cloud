@@ -33,28 +33,22 @@ public class PassifloraGatewayApplication {
 
     @SneakyThrows
     public static void main(String[] args) {
-        ConfigurableApplicationContext application = SpringApplication.run(
-            PassifloraGatewayApplication.class,
-            args
-        );
+        ConfigurableApplicationContext application = SpringApplication.run(PassifloraGatewayApplication.class, args);
         ConfigurableEnvironment environment = application.getEnvironment();
-        String projectVersion = environment.getProperty(
-            "passiflora.project-version"
-        );
+        String projectVersion = environment.getProperty("passiflora.project-version");
         String env = environment.getProperty("spring.profiles.active");
         String port = environment.getProperty("server.port");
         String outIp = NetUtil.findOutIp();
         log.info(
-            """
+                """
             \n项目启动成功: {} 环境
             本地聚合 Swagger: \t\thttp://localhost:{}/doc.html
             外部地址聚合 Swagger: \thttp://{}:{}/doc.html
             Passiflora (C) 2024 version: {}""",
-            env,
-            port,
-            outIp,
-            port,
-            projectVersion
-        );
+                env,
+                port,
+                outIp,
+                port,
+                projectVersion);
     }
 }

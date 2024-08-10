@@ -32,36 +32,30 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @SpringBootApplication
 @MapperScan("com.zerolinck.**.mapper")
 @EnableConfigurationProperties(PassifloraProperties.class)
-@EnableFeignClients(basePackages = { "com.zerolinck.passiflora.feign.**" })
+@EnableFeignClients(basePackages = {"com.zerolinck.passiflora.feign.**"})
 public class PassifloraSystemApplication {
 
     @SneakyThrows
     public static void main(String[] args) {
-        ConfigurableApplicationContext application = SpringApplication.run(
-            PassifloraSystemApplication.class,
-            args
-        );
+        ConfigurableApplicationContext application = SpringApplication.run(PassifloraSystemApplication.class, args);
         ConfigurableEnvironment environment = application.getEnvironment();
         String env = environment.getProperty("spring.profiles.active");
-        String projectVersion = environment.getProperty(
-            "passiflora.project-version"
-        );
+        String projectVersion = environment.getProperty("passiflora.project-version");
         String port = environment.getProperty("server.port");
         String path = environment.getProperty("server.servlet.context-path");
         String outIp = NetUtil.findOutIp();
         log.info(
-            """
+                """
             \n项目启动成功: {} 环境
             本地 Swagger: \t\thttp://localhost:{}{}/doc.html
             外部地址 Swagger: \thttp://{}:{}{}/doc.html
             Passiflora (C) 2024 version: {}""",
-            env,
-            port,
-            path,
-            outIp,
-            port,
-            path,
-            projectVersion
-        );
+                env,
+                port,
+                path,
+                outIp,
+                port,
+                path,
+                projectVersion);
     }
 }

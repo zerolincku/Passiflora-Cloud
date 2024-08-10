@@ -34,11 +34,9 @@ public class ShadowLambdaMeta implements LambdaMeta {
     public Class<?> getInstantiatedClass() {
         String instantiatedMethodType = lambda.getInstantiatedMethodType();
         String instantiatedType = instantiatedMethodType
-            .substring(2, instantiatedMethodType.indexOf(StringPool.SEMICOLON))
-            .replace(StringPool.SLASH, StringPool.DOT);
+                .substring(2, instantiatedMethodType.indexOf(StringPool.SEMICOLON))
+                .replace(StringPool.SLASH, StringPool.DOT);
         return ClassUtils.toClassConfident(
-            instantiatedType,
-            lambda.getCapturingClass().getClassLoader()
-        );
+                instantiatedType, lambda.getCapturingClass().getClassLoader());
     }
 }

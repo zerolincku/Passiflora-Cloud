@@ -27,16 +27,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GatewayConfiguration {
 
     @Bean
-    public GlobalExceptionHandler globalExceptionHandler(
-        ObjectMapper objectMapper
-    ) {
+    public GlobalExceptionHandler globalExceptionHandler(ObjectMapper objectMapper) {
         return new GlobalExceptionHandler(objectMapper);
     }
 
     @Bean
-    public WebClient.Builder webClientBuilder(
-        LoadBalancedExchangeFilterFunction balancedExchangeFilterFunction
-    ) {
+    public WebClient.Builder webClientBuilder(LoadBalancedExchangeFilterFunction balancedExchangeFilterFunction) {
         return WebClient.builder().filter(balancedExchangeFilterFunction);
     }
 }

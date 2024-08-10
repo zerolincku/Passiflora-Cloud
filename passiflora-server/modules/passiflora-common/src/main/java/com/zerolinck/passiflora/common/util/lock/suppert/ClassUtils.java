@@ -43,11 +43,10 @@ public final class ClassUtils {
 
     /** 代理 class 的名称 */
     private static final List<String> PROXY_CLASS_NAMES = Arrays.asList(
-        "net.sf.cglib.proxy.Factory", // cglib
-        "org.springframework.cglib.proxy.Factory",
-        "javassist.util.proxy.ProxyObject", // javassist
-        "org.apache.ibatis.javassist.util.proxy.ProxyObject"
-    );
+            "net.sf.cglib.proxy.Factory", // cglib
+            "org.springframework.cglib.proxy.Factory",
+            "javassist.util.proxy.ProxyObject", // javassist
+            "org.apache.ibatis.javassist.util.proxy.ProxyObject");
 
     private ClassUtils() {}
 
@@ -114,19 +113,11 @@ public final class ClassUtils {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
-        } catch (
-            InstantiationException
-            | IllegalAccessException
-            | InvocationTargetException
-            | NoSuchMethodException e
-        ) {
-            throw new RuntimeException(
-                String.format(
-                    "实例化对象时出现错误,请尝试给 %s 添加无参的构造方法",
-                    clazz.getName()
-                ),
-                e
-            );
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException e) {
+            throw new RuntimeException(String.format("实例化对象时出现错误,请尝试给 %s 添加无参的构造方法", clazz.getName()), e);
         }
     }
 
@@ -159,24 +150,15 @@ public final class ClassUtils {
      * @return
      * @since 3.4.3
      */
-    public static Class<?> toClassConfident(
-        String name,
-        ClassLoader classLoader
-    ) {
+    public static Class<?> toClassConfident(String name, ClassLoader classLoader) {
         try {
             return loadClass(name, getClassLoaders(classLoader));
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(
-                "找不到指定的class！请仅在明确确定会有 class 的时候，调用该方法",
-                e
-            );
+            throw new RuntimeException("找不到指定的class！请仅在明确确定会有 class 的时候，调用该方法", e);
         }
     }
 
-    private static Class<?> loadClass(
-        String className,
-        ClassLoader[] classLoaders
-    ) throws ClassNotFoundException {
+    private static Class<?> loadClass(String className, ClassLoader[] classLoaders) throws ClassNotFoundException {
         for (ClassLoader classLoader : classLoaders) {
             if (classLoader != null) {
                 try {
@@ -190,8 +172,7 @@ public final class ClassUtils {
     }
 
     /**
-     * Determine the name of the package of the given class, e.g. "java.lang" for the {@code
-     * java.lang.String} class.
+     * Determine the name of the package of the given class, e.g. "java.lang" for the {@code java.lang.String} class.
      *
      * @param clazz the class
      * @return the package name, or the empty String if the class is defined in the default package
@@ -202,35 +183,27 @@ public final class ClassUtils {
     }
 
     /**
-     * Determine the name of the package of the given fully-qualified class name, e.g. "java.lang" for
-     * the {@code java.lang.String} class name.
+     * Determine the name of the package of the given fully-qualified class name, e.g. "java.lang" for the
+     * {@code java.lang.String} class name.
      *
      * @param fqClassName the fully-qualified class name
      * @return the package name, or the empty String if the class is defined in the default package
      */
     public static String getPackageName(String fqClassName) {
         Assert.notNull(fqClassName, "Class name must not be null");
-        int lastDotIndex = fqClassName.lastIndexOf(
-            com.baomidou.mybatisplus.core.toolkit.StringPool.DOT
-        );
-        return (
-            lastDotIndex != -1
-                ? fqClassName.substring(0, lastDotIndex)
-                : StringPool.EMPTY
-        );
+        int lastDotIndex = fqClassName.lastIndexOf(com.baomidou.mybatisplus.core.toolkit.StringPool.DOT);
+        return (lastDotIndex != -1 ? fqClassName.substring(0, lastDotIndex) : StringPool.EMPTY);
     }
 
     /**
-     * Return the default ClassLoader to use: typically the thread context ClassLoader, if available;
-     * the ClassLoader that loaded the ClassUtils class will be used as fallback.
+     * Return the default ClassLoader to use: typically the thread context ClassLoader, if available; the ClassLoader
+     * that loaded the ClassUtils class will be used as fallback.
      *
-     * <p>Call this method if you intend to use the thread context ClassLoader in a scenario where you
-     * clearly prefer a non-null ClassLoader reference: for example, for class path resource loading
-     * (but not necessarily for {@code Class.forName}, which accepts a {@code null} ClassLoader
-     * reference as well).
+     * <p>Call this method if you intend to use the thread context ClassLoader in a scenario where you clearly prefer a
+     * non-null ClassLoader reference: for example, for class path resource loading (but not necessarily for
+     * {@code Class.forName}, which accepts a {@code null} ClassLoader reference as well).
      *
-     * @return the default ClassLoader (only {@code null} if even the system ClassLoader isn't
-     *     accessible)
+     * @return the default ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
      * @see Thread#getContextClassLoader()
      * @see ClassLoader#getSystemClassLoader()
      * @since 3.3.2

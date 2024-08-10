@@ -57,14 +57,9 @@ public class SysOrgControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysOrg/page").contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysOrg/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -75,95 +70,63 @@ public class SysOrgControllerTest {
         sysOrg.setOrgCode("test");
         sysOrg.setOrgLevel(1);
         sysOrg.setOrgType(1);
-        mockMvc
-            .perform(
-                post("/sysOrg/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysOrg))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testSysOrgId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysOrg/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysOrg)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testSysOrgId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc
-            .perform(get("/sysOrg/detail").param("orgId", testSysOrgId))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testSysOrg =
-                objectMapper.convertValue(jsonNode.get("data"), SysOrg.class);
-            });
+        mockMvc.perform(get("/sysOrg/detail").param("orgId", testSysOrgId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testSysOrg = objectMapper.convertValue(jsonNode.get("data"), SysOrg.class);
+                });
     }
 
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysOrg/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testSysOrg))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysOrg/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSysOrg)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysOrg/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysOrgId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysOrg/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysOrgId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(6)
     public void testListByParentId() throws Exception {
-        mockMvc
-            .perform(get("/sysOrg/listByParentId"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysOrg/listByParentId"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(7)
     public void testOrgTree() throws Exception {
-        mockMvc
-            .perform(get("/sysOrg/orgTree"))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysOrg/orgTree"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

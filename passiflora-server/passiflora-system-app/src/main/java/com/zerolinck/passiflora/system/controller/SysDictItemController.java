@@ -41,9 +41,7 @@ public class SysDictItemController implements SysDictItemApi {
     private final SysDictItemService sysDictItemService;
 
     @Override
-    public Result<ListWithPage<SysDictItem>> page(
-        QueryCondition<SysDictItem> condition
-    ) {
+    public Result<ListWithPage<SysDictItem>> page(QueryCondition<SysDictItem> condition) {
         return Result.page(sysDictItemService.page(condition));
     }
 

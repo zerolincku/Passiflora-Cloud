@@ -49,9 +49,7 @@ public class SysPositionController implements SysPositionApi {
     private final SysPositionPermissionService sysPositionPermissionService;
 
     @Override
-    public Result<ListWithPage<SysPosition>> page(
-        QueryCondition<SysPosition> condition
-    ) {
+    public Result<ListWithPage<SysPosition>> page(QueryCondition<SysPosition> condition) {
         return Result.page(sysPositionService.page(condition));
     }
 
@@ -115,19 +113,13 @@ public class SysPositionController implements SysPositionApi {
     }
 
     @Override
-    public Result<List<String>> permissionIdsByPositionIds(
-        List<String> positionIds
-    ) {
+    public Result<List<String>> permissionIdsByPositionIds(List<String> positionIds) {
         AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
-        return Result.ok(
-            sysPositionPermissionService.permissionIdsByPositionIds(positionIds)
-        );
+        return Result.ok(sysPositionPermissionService.permissionIdsByPositionIds(positionIds));
     }
 
     @Override
-    public Result<String> savePositionPermission(
-        PositionPermissionSaveArgs args
-    ) {
+    public Result<String> savePositionPermission(PositionPermissionSaveArgs args) {
         sysPositionPermissionService.savePositionPermission(args);
         return Result.ok();
     }

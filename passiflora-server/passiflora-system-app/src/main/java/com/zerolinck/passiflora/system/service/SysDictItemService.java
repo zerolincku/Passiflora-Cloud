@@ -45,123 +45,90 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SysDictItemService
-    extends ServiceImpl<SysDictItemMapper, SysDictItem> {
+public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictItem> {
 
     private final SysDictService sysDictService;
     private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
 
     @Nonnull
-    public Page<SysDictItem> page(
-        @Nonnull QueryCondition<SysDictItem> condition
-    ) {
+    public Page<SysDictItem> page(@Nonnull QueryCondition<SysDictItem> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysDictItem.class),
-            condition.sortWrapper(SysDictItem.class)
-        );
+                condition.page(), condition.searchWrapper(SysDictItem.class), condition.sortWrapper(SysDictItem.class));
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void add(@Nonnull SysDictItem sysDictItem) {
         SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
 
-        LockWrapper<SysDictItem> lockWrapper = new LockWrapper<SysDictItem>()
-            .lock(SysDictItem::getLabel, sysDictItem.getLabel());
+        LockWrapper<SysDictItem> lockWrapper =
+                new LockWrapper<SysDictItem>().lock(SysDictItem::getLabel, sysDictItem.getLabel());
         if (YesOrNoEnum.NO.equals(sysDict.getValueIsOnly())) {
             lockWrapper.lock(SysDictItem::getValue, sysDictItem.getValue());
         }
 
-        LockUtil.lock(
-            LOCK_KEY + sysDict.getDictTag(),
-            lockWrapper,
-            true,
-            () -> {
-                Long count = baseMapper.selectCount(
-                    new LambdaQueryWrapper<SysDictItem>()
-                        .eq(SysDictItem::getLabel, sysDictItem.getLabel())
-                        .eq(SysDictItem::getDictId, sysDictItem.getDictId())
-                );
+        LockUtil.lock(LOCK_KEY + sysDict.getDictTag(), lockWrapper, true, () -> {
+            Long count = baseMapper.selectCount(new LambdaQueryWrapper<SysDictItem>()
+                    .eq(SysDictItem::getLabel, sysDictItem.getLabel())
+                    .eq(SysDictItem::getDictId, sysDictItem.getDictId()));
+            if (count > 0) {
+                throw new BizException("字典项标签重复，请重新填写");
+            }
+
+            SysDict dict = sysDictService.getById(sysDictItem.getDictId());
+            if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
+                count = baseMapper.selectCount(new LambdaQueryWrapper<SysDictItem>()
+                        .eq(SysDictItem::getValue, sysDictItem.getValue())
+                        .eq(SysDictItem::getDictId, sysDictItem.getDictId()));
                 if (count > 0) {
                     throw new BizException("字典项标签重复，请重新填写");
                 }
-
-                SysDict dict = sysDictService.getById(sysDictItem.getDictId());
-                if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                    count =
-                    baseMapper.selectCount(
-                        new LambdaQueryWrapper<SysDictItem>()
-                            .eq(SysDictItem::getValue, sysDictItem.getValue())
-                            .eq(SysDictItem::getDictId, sysDictItem.getDictId())
-                    );
-                    if (count > 0) {
-                        throw new BizException("字典项标签重复，请重新填写");
-                    }
-                }
-
-                baseMapper.insert(sysDictItem);
-                return null;
             }
-        );
+
+            baseMapper.insert(sysDictItem);
+            return null;
+        });
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@Nonnull SysDictItem sysDictItem) {
         SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
 
-        LockWrapper<SysDictItem> lockWrapper = new LockWrapper<SysDictItem>()
-            .lock(SysDictItem::getLabel, sysDictItem.getLabel());
+        LockWrapper<SysDictItem> lockWrapper =
+                new LockWrapper<SysDictItem>().lock(SysDictItem::getLabel, sysDictItem.getLabel());
         if (YesOrNoEnum.NO.equals(sysDict.getValueIsOnly())) {
             lockWrapper.lock(SysDictItem::getValue, sysDictItem.getValue());
         }
 
-        return LockUtil.lock(
-            LOCK_KEY + sysDict.getDictTag(),
-            lockWrapper,
-            true,
-            () -> {
-                SysDictItem dbSysDictItem = baseMapper.selectById(
-                    sysDictItem.getDictItemId()
-                );
-                if (YesOrNoEnum.YES.equals(sysDictItem.getIsSystem())) {
-                    throw new BizException("系统内置数据，不允许修改");
-                }
-
-                if (
-                    sysDictItem.getLabel() != null &&
-                    !sysDictItem.getLabel().equals(dbSysDictItem.getLabel())
-                ) {
-                    Long count = baseMapper.selectCount(
-                        new LambdaQueryWrapper<SysDictItem>()
-                            .eq(SysDictItem::getLabel, sysDictItem.getLabel())
-                            .eq(SysDictItem::getDictId, sysDictItem.getDictId())
-                            .ne(SysDictItem::getDictId, sysDictItem.getDictId())
-                    );
-                    if (count > 0) {
-                        throw new BizException("字典值名称重复，请重新填写");
-                    }
-                }
-
-                SysDict dict = sysDictService.getById(sysDictItem.getDictId());
-                if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                    Long count = baseMapper.selectCount(
-                        new LambdaQueryWrapper<SysDictItem>()
-                            .eq(SysDictItem::getValue, sysDictItem.getValue())
-                            .eq(SysDictItem::getDictId, sysDictItem.getDictId())
-                            .ne(
-                                SysDictItem::getDictItemId,
-                                sysDictItem.getDictItemId()
-                            )
-                    );
-                    if (count > 0) {
-                        throw new BizException("字典项标签重复，请重新填写");
-                    }
-                }
-
-                int changeRowCount = baseMapper.updateById(sysDictItem);
-                return changeRowCount > 0;
+        return LockUtil.lock(LOCK_KEY + sysDict.getDictTag(), lockWrapper, true, () -> {
+            SysDictItem dbSysDictItem = baseMapper.selectById(sysDictItem.getDictItemId());
+            if (YesOrNoEnum.YES.equals(sysDictItem.getIsSystem())) {
+                throw new BizException("系统内置数据，不允许修改");
             }
-        );
+
+            if (sysDictItem.getLabel() != null && !sysDictItem.getLabel().equals(dbSysDictItem.getLabel())) {
+                Long count = baseMapper.selectCount(new LambdaQueryWrapper<SysDictItem>()
+                        .eq(SysDictItem::getLabel, sysDictItem.getLabel())
+                        .eq(SysDictItem::getDictId, sysDictItem.getDictId())
+                        .ne(SysDictItem::getDictId, sysDictItem.getDictId()));
+                if (count > 0) {
+                    throw new BizException("字典值名称重复，请重新填写");
+                }
+            }
+
+            SysDict dict = sysDictService.getById(sysDictItem.getDictId());
+            if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
+                Long count = baseMapper.selectCount(new LambdaQueryWrapper<SysDictItem>()
+                        .eq(SysDictItem::getValue, sysDictItem.getValue())
+                        .eq(SysDictItem::getDictId, sysDictItem.getDictId())
+                        .ne(SysDictItem::getDictItemId, sysDictItem.getDictItemId()));
+                if (count > 0) {
+                    throw new BizException("字典项标签重复，请重新填写");
+                }
+            }
+
+            int changeRowCount = baseMapper.updateById(sysDictItem);
+            return changeRowCount > 0;
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -173,10 +140,7 @@ public class SysDictItemService
                 throw new BizException("系统内置数据，不允许删除");
             }
         });
-        return baseMapper.deleteByIds(
-            dictItemIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByIds(dictItemIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)

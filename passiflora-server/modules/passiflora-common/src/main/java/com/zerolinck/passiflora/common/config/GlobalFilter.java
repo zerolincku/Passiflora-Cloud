@@ -31,19 +31,12 @@ import org.springframework.core.annotation.Order;
 @Slf4j
 @WebFilter("/*")
 @Order(Integer.MIN_VALUE)
-@ConditionalOnProperty(
-    prefix = "passiflora.config",
-    name = "globalFilter",
-    havingValue = "true"
-)
+@ConditionalOnProperty(prefix = "passiflora.config", name = "globalFilter", havingValue = "true")
 public class GlobalFilter implements Filter {
 
     @Override
-    public void doFilter(
-        ServletRequest servletRequest,
-        ServletResponse servletResponse,
-        FilterChain filterChain
-    ) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         CurrentUtil.clear();
         filterChain.doFilter(servletRequest, servletResponse);
     }

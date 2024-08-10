@@ -43,23 +43,22 @@ public class SysPosition extends BaseEntity {
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "职位ID", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "职位ID长度不能大于20"
-    )
-    @NotBlank(groups = { Update.class }, message = "职位ID不能为空")
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "职位ID长度不能大于20")
+    @NotBlank(
+            groups = {Update.class},
+            message = "职位ID不能为空")
     private String positionId;
 
     @Schema(description = "职位名称", maxLength = 100)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 100,
-        message = "职位名称长度不能大于100"
-    )
+            groups = {Insert.class, Update.class},
+            max = 100,
+            message = "职位名称长度不能大于100")
     @NotBlank(
-        groups = { Insert.class, Update.class },
-        message = "职位名称不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "职位名称不能为空")
     private String positionName;
 
     @Schema(description = "职位级别")
@@ -67,17 +66,15 @@ public class SysPosition extends BaseEntity {
 
     @Schema(description = "父职位ID", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "父职位ID长度不能大于20"
-    )
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "父职位ID长度不能大于20")
     private String parentPositionId;
 
     @Schema(description = "数据范围类型")
     @NotNull(
-        groups = { Insert.class, Update.class },
-        message = "数据范围类型不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "数据范围类型不能为空")
     private PositionDataScopeTypeEnum dataScopeType;
 
     @Schema(description = "职位ID路径", maxLength = 200)
@@ -85,12 +82,14 @@ public class SysPosition extends BaseEntity {
 
     @Schema(description = "职位状态")
     @NotNull(
-        groups = { Insert.class, Update.class },
-        message = "职位状态不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "职位状态不能为空")
     private StatusEnum positionStatus;
 
     @Schema(description = "排序")
     @TableField(value = "\"order\"")
-    @NotNull(groups = { Update.class }, message = "排序不能为空") private Integer order;
+    @NotNull(
+            groups = {Update.class},
+            message = "排序不能为空")
+    private Integer order;
 }

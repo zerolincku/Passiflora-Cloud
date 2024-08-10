@@ -26,7 +26,5 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 @SuppressWarnings("all")
 public interface SysPositionDataScopeConvert {
-    SysPositionDataScopeConvert INSTANCE = Mappers.getMapper(
-        SysPositionDataScopeConvert.class
-    );
+    SysPositionDataScopeConvert INSTANCE = Mappers.getMapper(SysPositionDataScopeConvert.class);
 }

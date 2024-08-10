@@ -39,15 +39,12 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class SysUserPositionService
-    extends ServiceImpl<SysUserPositionMapper, SysUserPosition> {
+public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, SysUserPosition> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysUserPosition:";
 
     @Nonnull
-    public List<SysUserPositionVo> selectByUserIds(
-        @Nonnull Collection<String> userIds
-    ) {
+    public List<SysUserPositionVo> selectByUserIds(@Nonnull Collection<String> userIds) {
         if (CollectionUtil.isEmpty(userIds)) {
             return Collections.emptyList();
         }
@@ -56,51 +53,35 @@ public class SysUserPositionService
 
     public void updateRelation(@Nonnull SysUserSaveArgs args) {
         LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysUserPosition>()
-                .lock(SysUserPosition::getUserId, args.getUserId()),
-            true,
-            () -> {
-                if (CollectionUtil.isEmpty(args.getPositionIds())) {
-                    this.deleteByUserIds(List.of(args.getUserId()));
-                    return null;
-                }
-                Set<String> existPositionIds = findByUserIds(
-                    List.of(args.getUserId())
-                )
-                    .stream()
-                    .map(SysUserPosition::getPositionId)
-                    .collect(Collectors.toSet());
-                Set<String> newPositionIds = new HashSet<>(
-                    args.getPositionIds()
-                );
-                Set<String> addPositionIds = SetUtil.differenceSet2FromSet1(
-                    existPositionIds,
-                    newPositionIds
-                );
-                Set<String> delPositionIds = SetUtil.differenceSet2FromSet1(
-                    newPositionIds,
-                    existPositionIds
-                );
-                if (CollectionUtil.isNotEmpty(delPositionIds)) {
-                    this.deleteByUserIdAndPositionIds(
-                            args.getUserId(),
-                            delPositionIds
-                        );
-                }
-                if (CollectionUtil.isNotEmpty(addPositionIds)) {
-                    List<SysUserPosition> addList = new ArrayList<>();
-                    for (String positionId : addPositionIds) {
-                        SysUserPosition position = new SysUserPosition();
-                        position.setUserId(args.getUserId());
-                        position.setPositionId(positionId);
-                        addList.add(position);
+                LOCK_KEY,
+                new LockWrapper<SysUserPosition>().lock(SysUserPosition::getUserId, args.getUserId()),
+                true,
+                () -> {
+                    if (CollectionUtil.isEmpty(args.getPositionIds())) {
+                        this.deleteByUserIds(List.of(args.getUserId()));
+                        return null;
                     }
-                    this.saveBatch(addList);
-                }
-                return null;
-            }
-        );
+                    Set<String> existPositionIds = findByUserIds(List.of(args.getUserId())).stream()
+                            .map(SysUserPosition::getPositionId)
+                            .collect(Collectors.toSet());
+                    Set<String> newPositionIds = new HashSet<>(args.getPositionIds());
+                    Set<String> addPositionIds = SetUtil.differenceSet2FromSet1(existPositionIds, newPositionIds);
+                    Set<String> delPositionIds = SetUtil.differenceSet2FromSet1(newPositionIds, existPositionIds);
+                    if (CollectionUtil.isNotEmpty(delPositionIds)) {
+                        this.deleteByUserIdAndPositionIds(args.getUserId(), delPositionIds);
+                    }
+                    if (CollectionUtil.isNotEmpty(addPositionIds)) {
+                        List<SysUserPosition> addList = new ArrayList<>();
+                        for (String positionId : addPositionIds) {
+                            SysUserPosition position = new SysUserPosition();
+                            position.setUserId(args.getUserId());
+                            position.setPositionId(positionId);
+                            addList.add(position);
+                        }
+                        this.saveBatch(addList);
+                    }
+                    return null;
+                });
     }
 
     @Nonnull
@@ -108,56 +89,36 @@ public class SysUserPositionService
         if (CollectionUtil.isEmpty(userIds)) {
             return Collections.emptyList();
         }
-        return baseMapper.selectList(
-            new LambdaQueryWrapper<SysUserPosition>()
-                .in(SysUserPosition::getUserId, userIds)
-        );
+        return baseMapper.selectList(new LambdaQueryWrapper<SysUserPosition>().in(SysUserPosition::getUserId, userIds));
     }
 
     @Nonnull
-    public List<SysUserPosition> findByPositionIds(
-        @Nonnull List<String> positionIds
-    ) {
+    public List<SysUserPosition> findByPositionIds(@Nonnull List<String> positionIds) {
         if (CollectionUtil.isEmpty(positionIds)) {
             return Collections.emptyList();
         }
         return baseMapper.selectList(
-            new LambdaQueryWrapper<SysUserPosition>()
-                .eq(SysUserPosition::getPositionId, positionIds)
-        );
+                new LambdaQueryWrapper<SysUserPosition>().eq(SysUserPosition::getPositionId, positionIds));
     }
 
     public int deleteByUserIds(@Nonnull Collection<String> userIds) {
         if (CollectionUtil.isEmpty(userIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIds(
-            userIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
     public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
         if (CollectionUtil.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByPositionIds(
-            positionIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
-    public int deleteByUserIdAndPositionIds(
-        @Nonnull String userId,
-        @Nonnull Collection<String> positionIds
-    ) {
+    public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nonnull Collection<String> positionIds) {
         if (CollectionUtil.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIdAndPositionIds(
-            userId,
-            positionIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByUserIdAndPositionIds(userId, positionIds, CurrentUtil.getCurrentUserId());
     }
 }

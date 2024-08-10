@@ -24,8 +24,5 @@ package com.zerolinck.passiflora.common.util.lock.suppert.reflect;
  * @since 2021-09-03
  */
 public interface IGenericTypeResolver {
-    Class<?>[] resolveTypeArguments(
-        final Class<?> clazz,
-        final Class<?> genericIfc
-    );
+    Class<?>[] resolveTypeArguments(final Class<?> clazz, final Class<?> genericIfc);
 }

@@ -31,19 +31,11 @@ public final class PropertyNamer {
             name = name.substring(3);
         } else {
             throw new RuntimeException(
-                "Error parsing property name '" +
-                name +
-                "'.  Didn't start with 'is', 'get' or 'set'."
-            );
+                    "Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
         }
 
-        if (
-            name.length() == 1 ||
-            (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))
-        ) {
-            name =
-            name.substring(0, 1).toLowerCase(Locale.ENGLISH) +
-            name.substring(1);
+        if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
+            name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
         }
 
         return name;
@@ -54,10 +46,7 @@ public final class PropertyNamer {
     }
 
     public static boolean isGetter(String name) {
-        return (
-            (name.startsWith("get") && name.length() > 3) ||
-            (name.startsWith("is") && name.length() > 2)
-        );
+        return ((name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2));
     }
 
     public static boolean isSetter(String name) {

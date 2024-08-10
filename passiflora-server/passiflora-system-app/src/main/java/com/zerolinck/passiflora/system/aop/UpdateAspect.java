@@ -34,11 +34,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateAspect {
 
-    @Before(
-        "execution(*" +
-        " com.zerolinck.passiflora.system.*.*Controller.update(com.zerolinck.passiflora.model.common.BaseEntity+))" +
-        " && args(entity)"
-    )
+    @Before("execution(*"
+            + " com.zerolinck.passiflora.system.*.*Controller.update(com.zerolinck.passiflora.model.common.BaseEntity+))"
+            + " && args(entity)")
     public void beforeUpdate(JoinPoint joinPoint, BaseEntity entity) {
         if (log.isDebugEnabled()) {
             log.debug("UpdateAspect 前置处理，置空 createAt 和 createBy");

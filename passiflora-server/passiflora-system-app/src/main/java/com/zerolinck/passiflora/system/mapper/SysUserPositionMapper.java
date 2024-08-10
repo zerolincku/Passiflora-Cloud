@@ -30,29 +30,20 @@ import org.apache.ibatis.annotations.Param;
  * @since 2024-05-14
  */
 public interface SysUserPositionMapper extends BaseMapper<SysUserPosition> {
-    List<SysUserPositionVo> selectByUserIds(
-        @Nonnull @Param("userIds") Collection<String> userIds
-    );
+    List<SysUserPositionVo> selectByUserIds(@Nonnull @Param("userIds") Collection<String> userIds);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Nonnull @Param("bindIds") Collection<String> bindIds,
-        @Nonnull @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Nonnull @Param("bindIds") Collection<String> bindIds, @Nonnull @Param("updateBy") String updateBy);
 
     int deleteByUserIds(
-        @Nonnull @Param("userIds") Collection<String> userIds,
-        @Nullable @Param("updateBy") String updateBy
-    );
+            @Nonnull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);
 
     int deleteByPositionIds(
-        @Nonnull @Param("positionIds") Collection<String> positionIds,
-        @Nullable @Param("updateBy") String updateBy
-    );
+            @Nonnull @Param("positionIds") Collection<String> positionIds,
+            @Nullable @Param("updateBy") String updateBy);
 
     int deleteByUserIdAndPositionIds(
-        @Nonnull @Param("userId") String userId,
-        @Nonnull @Param("positionIds") Collection<String> positionIds,
-        @Nullable @Param("updateBy") String updateBy
-    );
+            @Nonnull @Param("userId") String userId,
+            @Nonnull @Param("positionIds") Collection<String> positionIds,
+            @Nullable @Param("updateBy") String updateBy);
 }

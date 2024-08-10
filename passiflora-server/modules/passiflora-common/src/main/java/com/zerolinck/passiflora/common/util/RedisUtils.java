@@ -36,9 +36,7 @@ public class RedisUtils {
 
     private static RedisTemplate<String, Object> redisTemplate;
 
-    public static void setRedisTemplate(
-        RedisTemplate<String, Object> redisTemplate
-    ) {
+    public static void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         RedisUtils.redisTemplate = redisTemplate;
     }
 
@@ -105,9 +103,7 @@ public class RedisUtils {
             if (key.length == 1) {
                 redisTemplate.delete(key[0]);
             } else {
-                redisTemplate.delete(
-                    (Collection<String>) CollectionUtils.arrayToList(key)
-                );
+                redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
             }
         }
     }
@@ -150,9 +146,7 @@ public class RedisUtils {
     public static boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
-                redisTemplate
-                    .opsForValue()
-                    .set(key, value, time, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             } else {
                 set(key, value);
             }
@@ -235,11 +229,7 @@ public class RedisUtils {
      * @param time 时间(秒)
      * @return true成功 false失败
      */
-    public static boolean hmset(
-        String key,
-        Map<String, Object> map,
-        long time
-    ) {
+    public static boolean hmset(String key, Map<String, Object> map, long time) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
             if (time > 0) {
@@ -279,12 +269,7 @@ public class RedisUtils {
      * @param time 时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
-    public static boolean hset(
-        String key,
-        String item,
-        Object value,
-        long time
-    ) {
+    public static boolean hset(String key, String item, Object value, long time) {
         try {
             redisTemplate.opsForHash().put(key, item, value);
             if (time > 0) {

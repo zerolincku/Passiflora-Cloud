@@ -52,76 +52,41 @@ public class JacksonConfig {
     @SuppressWarnings("unchecked")
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         Map<Class<?>, JsonSerializer<?>> serializers = new HashMap<>();
-        serializers.put(
-            LocalDateTime.class,
-            new LocalDateTimeSerializer(TimeUtil.NORMAL_DATE_TIME_FORMATTER)
-        );
-        serializers.put(
-            LocalDate.class,
-            new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER)
-        );
-        serializers.put(
-            LocalTime.class,
-            new LocalTimeSerializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND)
-        );
+        serializers.put(LocalDateTime.class, new LocalDateTimeSerializer(TimeUtil.NORMAL_DATE_TIME_FORMATTER));
+        serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER));
+        serializers.put(LocalTime.class, new LocalTimeSerializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
 
         // NameValue 序列化配置
-        serializers.put(
-            LabelValueInterface.class,
-            new JsonSerializer<LabelValueInterface>() {
-                @Override
-                public void serialize(
-                    LabelValueInterface value,
-                    JsonGenerator jsonGenerator,
-                    SerializerProvider serializers
-                ) throws IOException {
-                    jsonGenerator.writeObject(value.getValue());
-                }
+        serializers.put(LabelValueInterface.class, new JsonSerializer<LabelValueInterface>() {
+            @Override
+            public void serialize(
+                    LabelValueInterface value, JsonGenerator jsonGenerator, SerializerProvider serializers)
+                    throws IOException {
+                jsonGenerator.writeObject(value.getValue());
             }
-        );
+        });
 
         Map<Class<?>, JsonDeserializer<?>> deserializers = new HashMap<>();
         deserializers.put(LocalDateTime.class, new LocalDateTimeDeserializer());
-        deserializers.put(
-            LocalDate.class,
-            new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER)
-        );
-        deserializers.put(
-            LocalTime.class,
-            new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND)
-        );
+        deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER));
+        deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
 
         // 扫描当前项目下所有 LabelValueInterface 实现类
         Set<Class<?>> classes = ClassUtil.scanPackage(
-            "com.zerolinck",
-            aClass ->
-                LabelValueInterface.class.isAssignableFrom(aClass) &&
-                !LabelValueInterface.class.equals(aClass)
-        );
+                "com.zerolinck",
+                aClass -> LabelValueInterface.class.isAssignableFrom(aClass)
+                        && !LabelValueInterface.class.equals(aClass));
 
         // 自动注册枚举反序列化规则
-        classes.forEach(clazz ->
-            deserializers.put(
-                clazz,
-                new JsonDeserializer() {
-                    @Override
-                    public Object deserialize(
-                        JsonParser jsonParser,
-                        DeserializationContext ctxt
-                    ) throws IOException {
-                        Integer value = jsonParser.getIntValue();
-                        return EnumUtil.getEnumByValue(
-                            (Class<? extends LabelValueInterface>) clazz,
-                            value
-                        );
-                    }
-                }
-            )
-        );
+        classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer() {
+            @Override
+            public Object deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+                Integer value = jsonParser.getIntValue();
+                return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
+            }
+        }));
 
-        return builder ->
-            builder
-                .locale(Locale.CHINA)
+        return builder -> builder.locale(Locale.CHINA)
                 .timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()))
                 .serializersByType(serializers)
                 .deserializersByType(deserializers);

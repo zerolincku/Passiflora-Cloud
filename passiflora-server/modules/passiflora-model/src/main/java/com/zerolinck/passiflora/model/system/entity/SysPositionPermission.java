@@ -39,34 +39,31 @@ public class SysPositionPermission extends BaseEntity {
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "主键", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "主键长度不能大于20"
-    )
-    @NotBlank(groups = { Update.class }, message = "主键不能为空")
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "主键长度不能大于20")
+    @NotBlank(
+            groups = {Update.class},
+            message = "主键不能为空")
     private String bindId;
 
     @Schema(description = "职位ID", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "职位ID长度不能大于20"
-    )
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "职位ID长度不能大于20")
     @NotBlank(
-        groups = { Insert.class, Update.class },
-        message = "职位ID不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "职位ID不能为空")
     private String positionId;
 
     @Schema(description = "菜单ID", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "菜单ID长度不能大于20"
-    )
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "菜单ID长度不能大于20")
     @NotBlank(
-        groups = { Insert.class, Update.class },
-        message = "菜单ID不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "菜单ID不能为空")
     private String permissionId;
 }

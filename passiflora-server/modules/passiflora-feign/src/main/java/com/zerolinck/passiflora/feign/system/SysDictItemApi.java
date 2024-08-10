@@ -39,35 +39,26 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "字典项")
 @FeignClient(
-    value = "sysDictItem",
-    contextId = "sysDictItem",
-    path = "/passiflora/system-api/sysDictItem",
-    configuration = FeignConfiguration.class
-)
+        value = "sysDictItem",
+        contextId = "sysDictItem",
+        path = "/passiflora/system-api/sysDictItem",
+        configuration = FeignConfiguration.class)
 public interface SysDictItemApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<SysDictItem>> page(
-        QueryCondition<SysDictItem> condition
-    );
+    Result<ListWithPage<SysDictItem>> page(QueryCondition<SysDictItem> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(
-        @RequestBody @Validated(Insert.class) SysDictItem sysDictItem
-    );
+    Result<String> add(@RequestBody @Validated(Insert.class) SysDictItem sysDictItem);
 
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(
-        @RequestBody @Validated(Update.class) SysDictItem sysDictItem
-    );
+    Result<String> update(@RequestBody @Validated(Update.class) SysDictItem sysDictItem);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<SysDictItem> detail(
-        @RequestParam(value = "dictItemId") String dictItemId
-    );
+    Result<SysDictItem> detail(@RequestParam(value = "dictItemId") String dictItemId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")
@@ -75,19 +66,13 @@ public interface SysDictItemApi {
 
     @Operation(summary = "根据字典ID查询")
     @GetMapping("listByDictId")
-    Result<List<SysDictItem>> listByDictId(
-        @RequestParam(value = "dictId") String dictId
-    );
+    Result<List<SysDictItem>> listByDictId(@RequestParam(value = "dictId") String dictId);
 
     @Operation(summary = "根据字典名称查询")
     @GetMapping("listByDictName")
-    Result<List<SysDictItem>> listByDictName(
-        @RequestParam(value = "dictName") String dictName
-    );
+    Result<List<SysDictItem>> listByDictName(@RequestParam(value = "dictName") String dictName);
 
     @Operation(summary = "根据字典标识查询")
     @GetMapping("listByDictTag")
-    Result<List<SysDictItem>> listByDictTag(
-        @RequestParam(value = "dictTag") String dictTag
-    );
+    Result<List<SysDictItem>> listByDictTag(@RequestParam(value = "dictTag") String dictTag);
 }

@@ -35,8 +35,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Lazy(false)
-public class SpringContextHolder
-    implements ApplicationContextAware, DisposableBean {
+public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     /** -- GETTER -- 取得存储在静态变量中的ApplicationContext. */
     @Getter
@@ -62,10 +61,7 @@ public class SpringContextHolder
     /** 清除SpringContextHolder中的ApplicationContext为Null. */
     public static void clearHolder() {
         if (log.isDebugEnabled()) {
-            log.debug(
-                "清除SpringContextHolder中的ApplicationContext:" +
-                applicationContext
-            );
+            log.debug("清除SpringContextHolder中的ApplicationContext:" + applicationContext);
         }
         applicationContext = null;
     }

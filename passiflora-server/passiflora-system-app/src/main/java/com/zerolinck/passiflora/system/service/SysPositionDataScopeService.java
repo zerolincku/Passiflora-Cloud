@@ -38,49 +38,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class SysPositionDataScopeService
-    extends ServiceImpl<SysPositionDataScopeMapper, SysPositionDataScope> {
+public class SysPositionDataScopeService extends ServiceImpl<SysPositionDataScopeMapper, SysPositionDataScope> {
 
-    private static final String LOCK_KEY =
-        "passiflora:lock:sysPositionDataScope:";
+    private static final String LOCK_KEY = "passiflora:lock:sysPositionDataScope:";
 
     @Nonnull
-    public Page<SysPositionDataScope> page(
-        @Nonnull QueryCondition<SysPositionDataScope> condition
-    ) {
+    public Page<SysPositionDataScope> page(@Nonnull QueryCondition<SysPositionDataScope> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysPositionDataScope.class),
-            condition.sortWrapper(SysPositionDataScope.class)
-        );
+                condition.page(),
+                condition.searchWrapper(SysPositionDataScope.class),
+                condition.sortWrapper(SysPositionDataScope.class));
     }
 
     public void add(@Nonnull SysPositionDataScope sysPositionDataScope) {
-        LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPositionDataScope>(),
-            true,
-            () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysPositionDataScope);
-                baseMapper.insert(sysPositionDataScope);
-                return null;
-            }
-        );
+        LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionDataScope>(), true, () -> {
+            OnlyFieldCheck.checkInsert(baseMapper, sysPositionDataScope);
+            baseMapper.insert(sysPositionDataScope);
+            return null;
+        });
     }
 
     public boolean update(@Nonnull SysPositionDataScope sysPositionDataScope) {
-        return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPositionDataScope>(),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysPositionDataScope);
-                int changeRowCount = baseMapper.updateById(
-                    sysPositionDataScope
-                );
-                return changeRowCount > 0;
-            }
-        );
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionDataScope>(), true, () -> {
+            OnlyFieldCheck.checkUpdate(baseMapper, sysPositionDataScope);
+            int changeRowCount = baseMapper.updateById(sysPositionDataScope);
+            return changeRowCount > 0;
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -90,9 +73,7 @@ public class SysPositionDataScopeService
 
     @Nonnull
     public SysPositionDataScope detail(@Nonnull String scopeId) {
-        SysPositionDataScope sysPositionDataScope = baseMapper.selectById(
-            scopeId
-        );
+        SysPositionDataScope sysPositionDataScope = baseMapper.selectById(scopeId);
         if (sysPositionDataScope == null) {
             throw new BizException("无对应职位数据权限数据，请刷新后重试");
         }

@@ -41,35 +41,26 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "职位")
 @FeignClient(
-    value = "sysPosition",
-    contextId = "sysPosition",
-    path = "/passiflora/system-api/sysPosition",
-    configuration = FeignConfiguration.class
-)
+        value = "sysPosition",
+        contextId = "sysPosition",
+        path = "/passiflora/system-api/sysPosition",
+        configuration = FeignConfiguration.class)
 public interface SysPositionApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<SysPosition>> page(
-        QueryCondition<SysPosition> condition
-    );
+    Result<ListWithPage<SysPosition>> page(QueryCondition<SysPosition> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(
-        @RequestBody @Validated(Insert.class) SysPosition sysPosition
-    );
+    Result<String> add(@RequestBody @Validated(Insert.class) SysPosition sysPosition);
 
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(
-        @RequestBody @Validated(Update.class) SysPosition sysPosition
-    );
+    Result<String> update(@RequestBody @Validated(Update.class) SysPosition sysPosition);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<SysPosition> detail(
-        @RequestParam(value = "positionId") String positionId
-    );
+    Result<SysPosition> detail(@RequestParam(value = "positionId") String positionId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")
@@ -89,19 +80,14 @@ public interface SysPositionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("updateOrder")
-    Result<String> updateOrder(
-        @RequestBody @Validated(Update.class) List<SysPositionVo> sysPositionVos
-    );
+    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<SysPositionVo> sysPositionVos);
 
     @Operation(summary = "根据职位ids获取权限ids")
     @PostMapping("permissionIdsByPositionIds")
-    Result<List<String>> permissionIdsByPositionIds(
-        @RequestBody List<String> positionIds
-    );
+    Result<List<String>> permissionIdsByPositionIds(@RequestBody List<String> positionIds);
 
     @Operation(summary = "保存职位权限")
     @PostMapping("savePositionPermission")
     Result<String> savePositionPermission(
-        @RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs
-    );
+            @RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs);
 }

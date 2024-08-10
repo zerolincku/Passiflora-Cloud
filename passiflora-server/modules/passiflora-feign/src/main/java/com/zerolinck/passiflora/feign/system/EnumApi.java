@@ -31,16 +31,13 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @since 2023-12-13
  */
 @FeignClient(
-    value = "enum",
-    contextId = "enum",
-    path = "/passiflora/system-api/enum",
-    configuration = FeignConfiguration.class
-)
+        value = "enum",
+        contextId = "enum",
+        path = "/passiflora/system-api/enum",
+        configuration = FeignConfiguration.class)
 @Tag(name = "枚举查询")
 public interface EnumApi {
     @Operation(summary = "查询")
     @GetMapping("/{enumName}")
-    Result<List<Map<String, Object>>> get(
-        @PathVariable("enumName") String enumName
-    );
+    Result<List<Map<String, Object>>> get(@PathVariable("enumName") String enumName);
 }

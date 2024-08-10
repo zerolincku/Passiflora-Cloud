@@ -45,23 +45,17 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class SysPositionService
-    extends ServiceImpl<SysPositionMapper, SysPosition> {
+public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPosition> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysPosition:";
 
     @Nonnull
-    public Page<SysPosition> page(
-        @Nullable QueryCondition<SysPosition> condition
-    ) {
+    public Page<SysPosition> page(@Nullable QueryCondition<SysPosition> condition) {
         if (condition == null) {
             condition = new QueryCondition<>();
         }
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysPosition.class),
-            condition.sortWrapper(SysPosition.class)
-        );
+                condition.page(), condition.searchWrapper(SysPosition.class), condition.sortWrapper(SysPosition.class));
     }
 
     @Nonnull
@@ -69,54 +63,39 @@ public class SysPositionService
         if (CollectionUtil.isEmpty(ids)) {
             return Collections.emptyList();
         }
-        return baseMapper.selectList(
-            new LambdaQueryWrapper<SysPosition>()
-                .in(SysPosition::getPositionId, ids)
-        );
+        return baseMapper.selectList(new LambdaQueryWrapper<SysPosition>().in(SysPosition::getPositionId, ids));
     }
 
     public void add(@Nonnull SysPosition sysPosition) {
         LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPosition>()
-                .lock(
-                    SysPosition::getPositionName,
-                    sysPosition.getPositionName()
-                ),
-            true,
-            () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysPosition);
-                generateIadPathAndLevel(sysPosition);
-                baseMapper.insert(sysPosition);
-                return null;
-            }
-        );
+                LOCK_KEY,
+                new LockWrapper<SysPosition>().lock(SysPosition::getPositionName, sysPosition.getPositionName()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkInsert(baseMapper, sysPosition);
+                    generateIadPathAndLevel(sysPosition);
+                    baseMapper.insert(sysPosition);
+                    return null;
+                });
     }
 
     public boolean update(@Nonnull SysPosition sysPosition) {
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPosition>()
-                .lock(
-                    SysPosition::getPositionName,
-                    sysPosition.getPositionName()
-                ),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysPosition);
-                generateIadPathAndLevel(sysPosition);
-                int changeRowCount = baseMapper.updateById(sysPosition);
-                // 子机构数据变更
-                List<SysPositionVo> positionVoList = baseMapper.listByParentId(
-                    sysPosition.getPositionId()
-                );
-                positionVoList.forEach(positionVo -> {
-                    generateIadPathAndLevel(positionVo);
-                    baseMapper.updateById(positionVo);
+                LOCK_KEY,
+                new LockWrapper<SysPosition>().lock(SysPosition::getPositionName, sysPosition.getPositionName()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkUpdate(baseMapper, sysPosition);
+                    generateIadPathAndLevel(sysPosition);
+                    int changeRowCount = baseMapper.updateById(sysPosition);
+                    // 子机构数据变更
+                    List<SysPositionVo> positionVoList = baseMapper.listByParentId(sysPosition.getPositionId());
+                    positionVoList.forEach(positionVo -> {
+                        generateIadPathAndLevel(positionVo);
+                        baseMapper.updateById(positionVo);
+                    });
+                    return changeRowCount > 0;
                 });
-                return changeRowCount > 0;
-            }
-        );
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -124,10 +103,7 @@ public class SysPositionService
         if (CollectionUtil.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(
-            positionIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nonnull
@@ -162,9 +138,7 @@ public class SysPositionService
         List<String> pathIds = new ArrayList<>();
         positionIds.forEach(positionId -> {
             SysPosition sysPosition = baseMapper.selectById(positionId);
-            String[] positionIdList = sysPosition
-                .getPositionIdPath()
-                .split("/");
+            String[] positionIdList = sysPosition.getPositionIdPath().split("/");
             Collections.addAll(pathIds, positionIdList);
         });
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
@@ -181,9 +155,7 @@ public class SysPositionService
     }
 
     private void recursionTree(@Nonnull SysPositionVo sysPositionVo) {
-        sysPositionVo.setChildren(
-            baseMapper.listByParentId(sysPositionVo.getPositionId())
-        );
+        sysPositionVo.setChildren(baseMapper.listByParentId(sysPositionVo.getPositionId()));
         sysPositionVo.getChildren().forEach(this::recursionTree);
     }
 

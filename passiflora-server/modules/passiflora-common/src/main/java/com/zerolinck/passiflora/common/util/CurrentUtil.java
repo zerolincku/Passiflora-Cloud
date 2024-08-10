@@ -41,9 +41,7 @@ public class CurrentUtil {
             return userMap.get();
         }
         String token = NetUtil.getRequest().getHeader(Constants.Authorization);
-        Set<String> keys = RedisUtils.keys(
-            RedisPrefix.TOKEN_KEY + "*:" + token
-        );
+        Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + token);
         if (keys == null || keys.isEmpty()) {
             return null;
         }
@@ -51,9 +49,7 @@ public class CurrentUtil {
         if (o == null) {
             return null;
         }
-        ObjectMapper objectMapper = SpringContextHolder.getBean(
-            ObjectMapper.class
-        );
+        ObjectMapper objectMapper = SpringContextHolder.getBean(ObjectMapper.class);
         SysUser sysUser = objectMapper.convertValue(o, SysUser.class);
         userMap.set(sysUser);
         return sysUser;

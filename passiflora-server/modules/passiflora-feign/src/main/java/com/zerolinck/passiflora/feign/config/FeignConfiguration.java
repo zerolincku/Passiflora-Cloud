@@ -45,9 +45,6 @@ public class FeignConfiguration implements RequestInterceptor {
         String traceId = request.getHeader("traceId");
         requestTemplate.header(Constants.Authorization, authorization);
         requestTemplate.header(Constants.traceId, traceId);
-        requestTemplate.header(
-            "req-from",
-            SpringUtil.getProperty("spring.application.name")
-        );
+        requestTemplate.header("req-from", SpringUtil.getProperty("spring.application.name"));
     }
 }

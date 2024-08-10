@@ -31,14 +31,10 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SysDictMapper extends BaseMapper<SysDict> {
     Page<SysDict> page(
-        IPage<SysDict> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysDict> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysDict> sortWrapper
-    );
+            IPage<SysDict> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysDict> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysDict> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("dictIds") Collection<String> dictIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy);
 }

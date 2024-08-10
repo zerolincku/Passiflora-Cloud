@@ -34,35 +34,20 @@ import org.apache.ibatis.annotations.Select;
  */
 public interface SysOrgMapper extends BaseMapper<SysOrg> {
     Page<SysOrg> page(
-        IPage<SysOrg> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysOrg> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysOrg> sortWrapper
-    );
+            IPage<SysOrg> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysOrg> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysOrg> sortWrapper);
 
-    /**
-     * 使用更新删除，保证 update_by 和 update_time 正确
-     */
-    int deleteByIds(
-        @Param("orgIds") Collection<String> orgIds,
-        @Param("updateBy") String updateBy
-    );
+    /** 使用更新删除，保证 update_by 和 update_time 正确 */
+    int deleteByIds(@Param("orgIds") Collection<String> orgIds, @Param("updateBy") String updateBy);
 
-    /**
-     * 此方法会级联删除下级机构
-     */
-    int deleteById(
-        @Param("orgId") String orgId,
-        @Param("updateBy") String updateBy
-    );
+    /** 此方法会级联删除下级机构 */
+    int deleteById(@Param("orgId") String orgId, @Param("updateBy") String updateBy);
 
-    @Select(
-        "SELECT * FROM sys_org WHERE del_flag = 0 AND org_code = #{orgCode}"
-    )
+    @Select("SELECT * FROM sys_org WHERE del_flag = 0 AND org_code = #{orgCode}")
     SysOrg selectByOrgCode(@Param("orgCode") String orgCode);
 
-    @Select(
-        "SELECT * FROM sys_org WHERE del_flag = 0 AND parent_org_id = #{orgParentId} ORDER BY" +
-        " org_level, \"order\", org_name"
-    )
+    @Select("SELECT * FROM sys_org WHERE del_flag = 0 AND parent_org_id = #{orgParentId} ORDER BY"
+            + " org_level, \"order\", org_name")
     List<SysOrgVo> listByParentId(@Param("orgParentId") String orgParentId);
 }

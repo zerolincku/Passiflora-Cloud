@@ -47,9 +47,7 @@ public class SysPermissionController implements SysPermissionApi {
     private final SysPermissionService sysPermissionService;
 
     @Override
-    public Result<ListWithPage<SysPermission>> page(
-        QueryCondition<SysPermission> condition
-    ) {
+    public Result<ListWithPage<SysPermission>> page(QueryCondition<SysPermission> condition) {
         return Result.page(sysPermissionService.page(condition));
     }
 
@@ -100,9 +98,7 @@ public class SysPermissionController implements SysPermissionApi {
     }
 
     @Override
-    public Result<String> updateOrder(
-        List<SysPermissionTableVo> sysPermissionTableVos
-    ) {
+    public Result<String> updateOrder(List<SysPermissionTableVo> sysPermissionTableVos) {
         sysPermissionService.updateOrder(sysPermissionTableVos);
         return Result.ok();
     }

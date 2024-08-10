@@ -42,32 +42,25 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "用户")
 @FeignClient(
-    value = "sysUser",
-    contextId = "sysUser",
-    path = "/passiflora/system-api/sysUser",
-    configuration = FeignConfiguration.class
-)
+        value = "sysUser",
+        contextId = "sysUser",
+        path = "/passiflora/system-api/sysUser",
+        configuration = FeignConfiguration.class)
 public interface SysUserApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
     Result<ListWithPage<SysUserVo>> page(
-        @RequestParam(value = "orgId", required = false) String orgId,
-        QueryCondition<SysUser> condition
-    );
+            @RequestParam(value = "orgId", required = false) String orgId, QueryCondition<SysUser> condition);
 
     @Nonnull
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(
-        @Nonnull @RequestBody @Validated(Insert.class) SysUserSaveArgs sysUser
-    );
+    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) SysUserSaveArgs sysUser);
 
     @Nonnull
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(
-        @Nonnull @RequestBody @Validated(Update.class) SysUserSaveArgs sysUser
-    );
+    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) SysUserSaveArgs sysUser);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
@@ -77,10 +70,7 @@ public interface SysUserApi {
     @PostMapping("delete")
     Result<String> delete(List<String> userIds);
 
-    @Operation(
-        summary = "登录",
-        description = "需要参数：userName，userPassword"
-    )
+    @Operation(summary = "登录", description = "需要参数：userName，userPassword")
     @PostMapping("login")
     Result<String> login(SysUser sysUser);
 
@@ -94,6 +84,7 @@ public interface SysUserApi {
 
     /**
      * 网关校验 Token 有效性调用
+     *
      * @return true-有效，false-无效
      */
     @Operation(summary = "验证token")

@@ -46,12 +46,7 @@ public class Table {
 
     private boolean extentBase;
 
-    public Table(
-        String tableName,
-        String description,
-        List<Column> originColumnList,
-        List<Column> columnList
-    ) {
+    public Table(String tableName, String description, List<Column> originColumnList, List<Column> columnList) {
         this.tableName = tableName;
         this.description = description;
         this.originColumnList = originColumnList;

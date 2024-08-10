@@ -35,10 +35,7 @@ public class IdeaProxyLambdaMeta implements LambdaMeta {
             Field field = handler.getClass().getDeclaredField("val$target");
             field.setAccessible(true);
             MethodHandle dmh = (MethodHandle) field.get(handler);
-            Executable executable = MethodHandles.reflectAs(
-                Executable.class,
-                dmh
-            );
+            Executable executable = MethodHandles.reflectAs(Executable.class, dmh);
             clazz = executable.getDeclaringClass();
             name = executable.getName();
         } catch (IllegalAccessException | NoSuchFieldException e) {

@@ -50,87 +50,51 @@ public class LockUtil {
     @Setter
     private static TransactionTemplate transactionTemplate;
 
-    private static final Map<String, LambdaMeta> LAMBDA_META_CACHE =
-        new ConcurrentHashMap<>();
+    private static final Map<String, LambdaMeta> LAMBDA_META_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, Map<String, String>> FIELD_NAME_CACHE =
-        new ConcurrentHashMap<>();
+    private static final Map<Class<?>, Map<String, String>> FIELD_NAME_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE =
-        new ConcurrentHashMap<>();
+    private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE = new ConcurrentHashMap<>();
 
-    public static <T> T lock(
-        String lockKey,
-        LockWrapper<?> lockWrapper,
-        Supplier<T> supplier
-    ) {
+    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, Supplier<T> supplier) {
         return lock(lockKey, lockWrapper, false, supplier);
     }
 
-    public static <T> T lock(
-        String lockKey,
-        LockWrapper<?> lockWrapper,
-        boolean useTransaction,
-        Supplier<T> supplier
-    ) {
-        AtomicInteger lockLength = new AtomicInteger(
-            lockWrapper.getColumns().size()
-        );
-        lockWrapper
-            .getEntityListLock()
-            .forEach((clazz, list) -> lockLength.addAndGet(list.size()));
+    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, boolean useTransaction, Supplier<T> supplier) {
+        AtomicInteger lockLength = new AtomicInteger(lockWrapper.getColumns().size());
+        lockWrapper.getEntityListLock().forEach((clazz, list) -> lockLength.addAndGet(list.size()));
         RLock[] locks = new RLock[lockLength.get()];
 
         try {
             AtomicInteger i = new AtomicInteger();
-            for (
-                ;
-                i.get() < lockWrapper.getColumns().size();
-                i.getAndIncrement()
-            ) {
-                String fieldName = getFieldName(
-                    lockWrapper.getColumns().get(i.get())
-                );
-                locks[i.get()] =
-                redissonClient.getFairLock(
-                    lockKey +
-                    fieldName +
-                    ":" +
-                    lockWrapper.getColumnValues().get(i.get())
-                );
+            for (; i.get() < lockWrapper.getColumns().size(); i.getAndIncrement()) {
+                String fieldName = getFieldName(lockWrapper.getColumns().get(i.get()));
+                locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName
+                        + ":"
+                        + lockWrapper.getColumnValues().get(i.get()));
                 locks[i.get()].tryLock(10, 60, TimeUnit.SECONDS);
             }
-            lockWrapper
-                .getEntityListLock()
-                .forEach((function, entityList) -> {
-                    Method method = getMethod(function);
-                    for (Object entity : entityList) {
-                        String fieldName = getFieldName(function);
-                        Object value;
-                        try {
-                            value = method.invoke(entity);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        locks[i.get()] =
-                        redissonClient.getFairLock(
-                            lockKey + fieldName + ":" + value
-                        );
-                        try {
-                            locks[i.get()].tryLock(10, 60, TimeUnit.SECONDS);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            throw new BizException(
-                                e,
-                                ResultCodeEnum.COMPETE_FAILED
-                            );
-                        }
-                        i.getAndIncrement();
+            lockWrapper.getEntityListLock().forEach((function, entityList) -> {
+                Method method = getMethod(function);
+                for (Object entity : entityList) {
+                    String fieldName = getFieldName(function);
+                    Object value;
+                    try {
+                        value = method.invoke(entity);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                });
-            return useTransaction
-                ? transactionTemplate.execute(status -> supplier.get())
-                : supplier.get();
+                    locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName + ":" + value);
+                    try {
+                        locks[i.get()].tryLock(10, 60, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
+                    }
+                    i.getAndIncrement();
+                }
+            });
+            return useTransaction ? transactionTemplate.execute(status -> supplier.get()) : supplier.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
@@ -149,39 +113,23 @@ public class LockUtil {
 
     private static String getFieldName(SFunction<?, ?> column) {
         if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
-            LAMBDA_META_CACHE.put(
-                column.toString(),
-                LambdaUtils.extract(column)
-            );
+            LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
         }
         LambdaMeta meta = LAMBDA_META_CACHE.get(column.toString());
         if (!FIELD_NAME_CACHE.containsKey(meta.getInstantiatedClass())) {
             FIELD_NAME_CACHE.put(meta.getInstantiatedClass(), new HashMap<>());
         }
-        if (
-            !FIELD_NAME_CACHE
-                .get(meta.getInstantiatedClass())
-                .containsKey(meta.getImplMethodName())
-        ) {
-            String fieldName = PropertyNamer.methodToProperty(
-                meta.getImplMethodName()
-            );
-            FIELD_NAME_CACHE
-                .get(meta.getInstantiatedClass())
-                .put(meta.getImplMethodName(), fieldName);
+        if (!FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).containsKey(meta.getImplMethodName())) {
+            String fieldName = PropertyNamer.methodToProperty(meta.getImplMethodName());
+            FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).put(meta.getImplMethodName(), fieldName);
         }
-        return FIELD_NAME_CACHE
-            .get(meta.getInstantiatedClass())
-            .get(meta.getImplMethodName());
+        return FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).get(meta.getImplMethodName());
     }
 
     @SneakyThrows
     private static Method getMethod(SFunction<?, ?> column) {
         if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
-            LAMBDA_META_CACHE.put(
-                column.toString(),
-                LambdaUtils.extract(column)
-            );
+            LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
         }
         LambdaMeta meta = LAMBDA_META_CACHE.get(column.toString());
         Class<?> instantiatedClass = meta.getInstantiatedClass();
@@ -190,12 +138,7 @@ public class LockUtil {
             METHOD_CACHE.put(instantiatedClass, new HashMap<>());
         }
         if (!METHOD_CACHE.get(instantiatedClass).containsKey(implMethodName)) {
-            METHOD_CACHE
-                .get(instantiatedClass)
-                .put(
-                    implMethodName,
-                    instantiatedClass.getMethod(implMethodName)
-                );
+            METHOD_CACHE.get(instantiatedClass).put(implMethodName, instantiatedClass.getMethod(implMethodName));
         }
         return METHOD_CACHE.get(instantiatedClass).get(implMethodName);
     }

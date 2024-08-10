@@ -26,53 +26,34 @@ import java.util.regex.Pattern;
  */
 public class TimeUtil {
 
-    private static final Pattern NORMAL = Pattern.compile(
-        "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
-    );
+    private static final Pattern NORMAL = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
 
-    private static final Pattern NO_SECOND = Pattern.compile(
-        "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$"
-    );
-    private static final Pattern NO_MINUTS = Pattern.compile(
-        "^\\d{4}-\\d{2}-\\d{2} \\d{2}$"
-    );
-    private static final Pattern NO_HOUR = Pattern.compile(
-        "^\\d{4}-\\d{2}-\\d{2}$"
-    );
+    private static final Pattern NO_SECOND = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$");
+    private static final Pattern NO_MINUTS = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}$");
+    private static final Pattern NO_HOUR = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
     public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER_NO_SECOND =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER_NO_MINUTS =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
 
-    public static final DateTimeFormatter NORMAL_DATE_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter NORMAL_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static final DateTimeFormatter NORMAL_TIME_FORMATTER_NO_SECOND =
-        DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter NORMAL_TIME_FORMATTER_NO_SECOND = DateTimeFormatter.ofPattern("HH:mm");
 
     public static LocalDateTime commonStrDate2LocalDateTime(String dateStr) {
         if (NORMAL.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER);
         } else if (NO_SECOND.matcher(dateStr).matches()) {
-            return LocalDateTime.parse(
-                dateStr,
-                NORMAL_DATE_TIME_FORMATTER_NO_SECOND
-            );
+            return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_SECOND);
         } else if (NO_MINUTS.matcher(dateStr).matches()) {
-            return LocalDateTime.parse(
-                dateStr,
-                NORMAL_DATE_TIME_FORMATTER_NO_MINUTS
-            );
+            return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);
         } else if (NO_HOUR.matcher(dateStr).matches()) {
-            return LocalDateTime.parse(
-                dateStr + " 00",
-                NORMAL_DATE_TIME_FORMATTER_NO_MINUTS
-            );
+            return LocalDateTime.parse(dateStr + " 00", NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);
         }
         throw new RuntimeException("时间参数错误: " + dateStr);
     }

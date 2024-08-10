@@ -39,10 +39,9 @@ public class PostgresDbService implements DbService {
     @Override
     @SneakyThrows
     public Table getTableInfo(String tableName) {
-        List<Entity> result = Db
-            .use()
-            .query(
-                """
+        List<Entity> result = Db.use()
+                .query(
+                        """
                 SELECT A
                     .attname AS COLUMN_NAME,
                     format_type ( A.atttypid, A.atttypmod ) AS field_type,
@@ -62,18 +61,16 @@ public class PostgresDbService implements DbService {
                     C.relname = ?\s
                     AND A.attnum > 0;
                 """,
-                tableName,
-                tableName
-            );
+                        tableName,
+                        tableName);
         // 标识是否应该继承 BaseEntity
-        Dict baseFlag = Dict
-            .create()
-            .set("create_by", 0)
-            .set("update_by", 0)
-            .set("create_time", 0)
-            .set("update_time", 0)
-            .set("del_flag", 0)
-            .set("version", 0);
+        Dict baseFlag = Dict.create()
+                .set("create_by", 0)
+                .set("update_by", 0)
+                .set("create_time", 0)
+                .set("update_time", 0)
+                .set("del_flag", 0)
+                .set("version", 0);
         AtomicInteger baseFlagNum = new AtomicInteger();
         result.forEach(entity -> {
             if (baseFlag.containsKey(entity.get("column_name", ""))) {
@@ -88,13 +85,9 @@ public class PostgresDbService implements DbService {
         result.forEach(entity -> {
             Column column = new Column();
             column.setColumnName(entity.get("column_name", ""));
-            column.setFieldName(
-                StrUtil.toCamelCase(entity.get("column_name", ""))
-            );
+            column.setFieldName(StrUtil.toCamelCase(entity.get("column_name", "")));
             column.setColumnType(entity.get("field_type", ""));
-            column.setFieldType(
-                TypeConvert.columnType2FieldType(entity.get("field_type", ""))
-            );
+            column.setFieldType(TypeConvert.columnType2FieldType(entity.get("field_type", "")));
             column.setNullable(entity.get("nullable", true));
             column.setPk(entity.get("pk", false));
             column.setLength(entity.get("length", -1));
@@ -105,30 +98,24 @@ public class PostgresDbService implements DbService {
                 pkColumnName.set(column.getColumnName());
             }
             originColumnList.add(column);
-            if (
-                baseFlagNum.get() == baseFlag.size() &&
-                baseFlag.containsKey(entity.get("column_name", ""))
-            ) {
+            if (baseFlagNum.get() == baseFlag.size() && baseFlag.containsKey(entity.get("column_name", ""))) {
                 return;
             }
             columnList.add(column);
         });
 
-        List<Entity> tableInfo = Db
-            .use()
-            .query("SELECT obj_description(?::regclass);", tableName);
+        List<Entity> tableInfo = Db.use().query("SELECT obj_description(?::regclass);", tableName);
         String tableDesc = "";
         for (Entity t : tableInfo) {
             tableDesc = t.get("obj_description", "");
         }
         return new Table(
-            tableName,
-            pkFiledName.get(),
-            pkColumnName.get(),
-            tableDesc,
-            originColumnList,
-            columnList,
-            baseFlagNum.get() == baseFlag.size()
-        );
+                tableName,
+                pkFiledName.get(),
+                pkColumnName.get(),
+                tableDesc,
+                originColumnList,
+                columnList,
+                baseFlagNum.get() == baseFlag.size());
     }
 }

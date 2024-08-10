@@ -46,31 +46,21 @@ public class CreateBucketRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         String bucketName = passifloraProperties.getStorage().getBucketName();
-        LockUtil.lock(
-            "passiflora:storage:bucket:",
-            new LockWrapper<StorageFile>(),
-            () -> {
-                try {
-                    boolean bucketExists = minioClient.bucketExists(
-                        BucketExistsArgs.builder().bucket(bucketName).build()
-                    );
-                    if (log.isDebugEnabled()) {
-                        log.debug(
-                            "bucket: {}, 是否存在: {}",
-                            bucketName,
-                            bucketExists
-                        );
-                    }
-                    if (!bucketExists) {
-                        minioClient.makeBucket(
-                            MakeBucketArgs.builder().bucket(bucketName).build()
-                        );
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<StorageFile>(), true, () -> {
+            try {
+                boolean bucketExists = minioClient.bucketExists(
+                        BucketExistsArgs.builder().bucket(bucketName).build());
+                if (log.isDebugEnabled()) {
+                    log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
                 }
-                return null;
+                if (!bucketExists) {
+                    minioClient.makeBucket(
+                            MakeBucketArgs.builder().bucket(bucketName).build());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        );
+            return null;
+        });
     }
 }

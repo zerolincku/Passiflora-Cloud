@@ -29,13 +29,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum FileStatusEnum implements LabelValueInterface {
-    /**
-     * 文件上传默认为临时文件，临时文件在到达设置的时间期限后，将会被删除
-     */
+    /** 文件上传默认为临时文件，临时文件在到达设置的时间期限后，将会被删除 */
     TEMP("临时文件", 0),
-    /**
-     * 被其他服务确认引用，会转换为正式文件
-     */
+    /** 被其他服务确认引用，会转换为正式文件 */
     CONFIRMED("正式文件", 1);
 
     private final String label;

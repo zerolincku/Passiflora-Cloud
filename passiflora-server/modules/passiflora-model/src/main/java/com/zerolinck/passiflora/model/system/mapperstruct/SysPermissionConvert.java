@@ -30,14 +30,9 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 @SuppressWarnings("all")
 public interface SysPermissionConvert {
-    SysPermissionConvert INSTANCE = Mappers.getMapper(
-        SysPermissionConvert.class
-    );
+    SysPermissionConvert INSTANCE = Mappers.getMapper(SysPermissionConvert.class);
 
-    @Mapping(
-        target = "children",
-        expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())"
-    )
+    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())")
     @Mapping(target = "name", source = "permissionName")
     @Mapping(target = "meta.title", source = "permissionTitle")
     @Mapping(target = "meta.icon", source = "permissionIcon")
@@ -45,9 +40,6 @@ public interface SysPermissionConvert {
     @Mapping(target = "meta.permissionType", source = "permissionType")
     SysPermissionVo entity2vo(SysPermission menu);
 
-    @Mapping(
-        target = "children",
-        expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())"
-    )
+    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())")
     SysPermissionTableVo entity2tableVo(SysPermission menu);
 }

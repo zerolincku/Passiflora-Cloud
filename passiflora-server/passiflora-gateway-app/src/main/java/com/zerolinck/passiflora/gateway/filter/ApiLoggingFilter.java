@@ -44,31 +44,20 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
     private static final String X_FORWARDED_FOR = "X-Forwarded-For";
 
     @Override
-    public Mono<Void> filter(
-        ServerWebExchange exchange,
-        GatewayFilterChain chain
-    ) {
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
         return chain.filter(exchange).then(logRequest(exchange));
     }
 
     private Mono<Void> logRequest(ServerWebExchange exchange) {
-        return logRequestSummary(exchange)
-            .flatMap(clientIpAddress ->
-                logRequestDetails(exchange, clientIpAddress)
-            );
+        return logRequestSummary(exchange).flatMap(clientIpAddress -> logRequestDetails(exchange, clientIpAddress));
     }
 
     private Mono<String> logRequestSummary(ServerWebExchange exchange) {
         return Mono.fromSupplier(() -> {
             ServerHttpRequest request = exchange.getRequest();
             if (log.isDebugEnabled()) {
-                log.debug(
-                    "Received request: {}:{} {}",
-                    request.getMethod(),
-                    request.getURI(),
-                    request.getHeaders()
-                );
+                log.debug("Received request: {}:{} {}", request.getMethod(), request.getURI(), request.getHeaders());
             }
             return resolveClientIpAddress(request);
         });
@@ -80,32 +69,25 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
             if (log.isDebugEnabled()) {
                 log.debug("X-Forwarded-For 未配置");
             }
-            clientIpAddress =
-            Objects.requireNonNull(request.getRemoteAddress()).getHostString();
+            clientIpAddress = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
         } else {
             clientIpAddress = clientIpAddress.split(",")[0];
         }
         return clientIpAddress;
     }
 
-    private Mono<Void> logRequestDetails(
-        ServerWebExchange exchange,
-        String clientIpAddress
-    ) {
+    private Mono<Void> logRequestDetails(ServerWebExchange exchange, String clientIpAddress) {
         return Mono.fromRunnable(() -> {
             Long startTime = exchange.getAttribute(START_TIME);
             if (startTime != null) {
                 Long executionTime = System.currentTimeMillis() - startTime;
-                HttpStatusCode statusCode = exchange
-                    .getResponse()
-                    .getStatusCode();
+                HttpStatusCode statusCode = exchange.getResponse().getStatusCode();
                 log.info(
-                    "Request from {} to {} returned with status {} in {} ms",
-                    clientIpAddress,
-                    exchange.getRequest().getURI(),
-                    statusCode,
-                    executionTime
-                );
+                        "Request from {} to {} returned with status {} in {} ms",
+                        clientIpAddress,
+                        exchange.getRequest().getURI(),
+                        statusCode,
+                        executionTime);
             }
         });
     }

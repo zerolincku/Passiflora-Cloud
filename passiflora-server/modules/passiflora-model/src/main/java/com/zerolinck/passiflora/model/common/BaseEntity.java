@@ -55,5 +55,8 @@ public class BaseEntity {
 
     @Version
     @Schema(description = "乐观锁版本", hidden = true)
-    @NotNull(groups = { Update.class }, message = "version不能为空") private Long version;
+    @NotNull(
+            groups = {Update.class},
+            message = "version不能为空")
+    private Long version;
 }

@@ -34,20 +34,14 @@ public class FileRenderServiceImpl implements RenderService {
 
     @Override
     public void render(Render render) {
-        TemplateEngine engine = TemplateUtil.createEngine(
-            new TemplateConfig(
-                "templates",
-                TemplateConfig.ResourceMode.CLASSPATH
-            )
-        );
+        TemplateEngine engine =
+                TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate(render.getTemplate());
         String result = template.render(render.getData());
         String currentDirectory = System.getProperty("user.dir");
         String dirPath = String.format(currentDirectory + render.getPath());
-        String filePath = String.format(
-            (dirPath + render.getFileName()),
-            render.getData().get("entityClass")
-        );
+        String filePath =
+                String.format((dirPath + render.getFileName()), render.getData().get("entityClass"));
         if (!FileUtil.exist(dirPath)) {
             FileUtil.mkdir(dirPath);
         }

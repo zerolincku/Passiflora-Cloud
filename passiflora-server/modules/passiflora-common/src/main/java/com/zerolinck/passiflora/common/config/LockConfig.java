@@ -30,11 +30,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  * @since 2024-05-13
  */
 @Configuration
-@ConditionalOnProperty(
-    prefix = "passiflora.config",
-    name = "lock",
-    havingValue = "true"
-)
+@ConditionalOnProperty(prefix = "passiflora.config", name = "lock", havingValue = "true")
 public class LockConfig {
 
     @Resource
@@ -42,11 +38,7 @@ public class LockConfig {
 
     @PostConstruct
     public void init() {
-        LockUtil.setRedissonClient(
-            applicationContext.getBean(RedissonClient.class)
-        );
-        LockUtil.setTransactionTemplate(
-            applicationContext.getBean(TransactionTemplate.class)
-        );
+        LockUtil.setRedissonClient(applicationContext.getBean(RedissonClient.class));
+        LockUtil.setTransactionTemplate(applicationContext.getBean(TransactionTemplate.class));
     }
 }

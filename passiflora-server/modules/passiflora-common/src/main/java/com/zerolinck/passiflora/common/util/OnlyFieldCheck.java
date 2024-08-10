@@ -52,9 +52,7 @@ public class OnlyFieldCheck {
                 continue;
             }
 
-            Long count = baseMapper.selectCount(
-                new QueryWrapper<>().eq(field.getFieldName(), fieldValue)
-            );
+            Long count = baseMapper.selectCount(new QueryWrapper<>().eq(field.getFieldName(), fieldValue));
             if (count > 0) {
                 String message;
                 if (StrUtil.isNotBlank(field.getMessage())) {
@@ -80,14 +78,11 @@ public class OnlyFieldCheck {
                 continue;
             }
 
-            Long count = baseMapper.selectCount(
-                new QueryWrapper<>()
+            Long count = baseMapper.selectCount(new QueryWrapper<>()
                     .eq(field.getFieldName(), fieldValue)
                     .ne(
-                        StrUtil.toUnderlineCase(field.getIdField().getName()),
-                        field.getIdField().get(entity)
-                    )
-            );
+                            StrUtil.toUnderlineCase(field.getIdField().getName()),
+                            field.getIdField().get(entity)));
             if (count > 0) {
                 String message;
                 if (StrUtil.isNotBlank(field.getMessage())) {
@@ -124,12 +119,7 @@ public class OnlyFieldCheck {
                     desc = schema.description();
                 }
                 CheckField checkField = new CheckField(
-                    field,
-                    idField,
-                    StrUtil.toUnderlineCase(field.getName()),
-                    desc,
-                    annotation.message()
-                );
+                        field, idField, StrUtil.toUnderlineCase(field.getName()), desc, annotation.message());
                 result.add(checkField);
             }
             map.put(entity.getClass(), result);

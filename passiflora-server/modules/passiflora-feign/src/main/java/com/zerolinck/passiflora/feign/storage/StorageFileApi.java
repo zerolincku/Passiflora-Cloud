@@ -37,17 +37,14 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Tag(name = "通用文件")
 @FeignClient(
-    value = "storageFile",
-    contextId = "storageFile",
-    path = "/passiflora/storage-api/storageFile",
-    configuration = FeignConfiguration.class
-)
+        value = "storageFile",
+        contextId = "storageFile",
+        path = "/passiflora/storage-api/storageFile",
+        configuration = FeignConfiguration.class)
 public interface StorageFileApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<StorageFile>> page(
-        QueryCondition<StorageFile> condition
-    );
+    Result<ListWithPage<StorageFile>> page(QueryCondition<StorageFile> condition);
 
     @Operation(summary = "根据文件ids获取列表")
     @PostMapping("listByFileIds")
@@ -58,19 +55,17 @@ public interface StorageFileApi {
      * @return 空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID
      */
     @Operation(
-        summary = "尝试文件秒传",
-        description = "需要参数 originalFileName，contentType, fileMd5。\n" +
-        "返回空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID"
-    )
+            summary = "尝试文件秒传",
+            description =
+                    "需要参数 originalFileName，contentType, fileMd5。\n" + "返回空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID")
     @PostMapping("tryQuicklyUpload")
     Result<String> tryQuicklyUpload(@RequestBody StorageFile storageFile);
 
     @Operation(summary = "文件上传")
     @PostMapping("upload")
     Result<String> upload(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam(value = "fileName", required = false) String fileName
-    );
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "fileName", required = false) String fileName);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
@@ -88,10 +83,7 @@ public interface StorageFileApi {
     @PostMapping(value = "/downloadZip")
     void downloadZip(@RequestBody List<String> fileIds);
 
-    @Operation(
-        summary = "确认文件使用",
-        description = "文件由临时文件转换为正式文件"
-    )
+    @Operation(summary = "确认文件使用", description = "文件由临时文件转换为正式文件")
     @PostMapping(value = "/confirmFile")
     Result<String> confirmFile(@RequestBody List<String> fileIds);
 }

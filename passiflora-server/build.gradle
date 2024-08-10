@@ -41,8 +41,7 @@ spotless {
         importOrder()
         removeUnusedImports()
         cleanthat()
-        // https://github.com/jhipster/prettier-java
-        prettier(['prettier': '3.0.3', 'prettier-plugin-java': '2.3.0']).config(['parser': 'java', 'tabWidth': 4, 'charset': 'utf-8', 'end_of_line': 'lf', 'plugins': ['prettier-plugin-java']])
+        palantirJavaFormat().formatJavadoc(true)
         formatAnnotations()
         licenseHeader '/* \n' +
                 ' * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>\n' +

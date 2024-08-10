@@ -53,73 +53,61 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     @Nonnull
     public Page<SysOrg> page(@Nonnull QueryCondition<SysOrg> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysOrg.class),
-            condition.sortWrapper(SysOrg.class)
-        );
+                condition.page(), condition.searchWrapper(SysOrg.class), condition.sortWrapper(SysOrg.class));
     }
 
     public void add(@Nonnull SysOrg sysOrg) {
         LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysOrg>()
-                .lock(SysOrg::getOrgName, sysOrg.getOrgName())
-                .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
-            true,
-            () -> {
-                // 同一父机构下，机构名称不能重复
-                Long count = baseMapper.selectCount(
-                    new LambdaQueryWrapper<SysOrg>()
-                        .eq(SysOrg::getOrgName, sysOrg.getOrgName())
-                        .eq(SysOrg::getParentOrgId, sysOrg.getParentOrgId())
-                );
-                if (count > 0) {
-                    throw new BizException("机构名称重复，请重新填写");
-                }
-                generateIadPathAndLevel(sysOrg);
-                baseMapper.insert(sysOrg);
-                return null;
-            }
-        );
+                LOCK_KEY,
+                new LockWrapper<SysOrg>()
+                        .lock(SysOrg::getOrgName, sysOrg.getOrgName())
+                        .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
+                true,
+                () -> {
+                    // 同一父机构下，机构名称不能重复
+                    Long count = baseMapper.selectCount(new LambdaQueryWrapper<SysOrg>()
+                            .eq(SysOrg::getOrgName, sysOrg.getOrgName())
+                            .eq(SysOrg::getParentOrgId, sysOrg.getParentOrgId()));
+                    if (count > 0) {
+                        throw new BizException("机构名称重复，请重新填写");
+                    }
+                    generateIadPathAndLevel(sysOrg);
+                    baseMapper.insert(sysOrg);
+                    return null;
+                });
     }
 
     public boolean update(@Nonnull SysOrg sysOrg) {
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysOrg>()
-                .lock(SysOrg::getOrgName, sysOrg.getOrgName())
-                .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysOrg);
+                LOCK_KEY,
+                new LockWrapper<SysOrg>()
+                        .lock(SysOrg::getOrgName, sysOrg.getOrgName())
+                        .lock(SysOrg::getOrgCode, sysOrg.getOrgCode()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkUpdate(baseMapper, sysOrg);
 
-                // 同一父机构下，机构名称不能重复
-                SysOrg dbSysOrg = baseMapper.selectById(sysOrg.getOrgId());
-                if (
-                    sysOrg.getOrgName() != null &&
-                    !dbSysOrg.getOrgName().equals(sysOrg.getOrgName())
-                ) {
-                    Long count = baseMapper.selectCount(
-                        new LambdaQueryWrapper<SysOrg>()
-                            .eq(SysOrg::getOrgName, sysOrg.getOrgName())
-                            .eq(SysOrg::getParentOrgId, sysOrg.getParentOrgId())
-                            .ne(SysOrg::getOrgId, sysOrg.getOrgId())
-                    );
-                    if (count > 0) {
-                        throw new BizException("机构名称重复，请重新填写");
+                    // 同一父机构下，机构名称不能重复
+                    SysOrg dbSysOrg = baseMapper.selectById(sysOrg.getOrgId());
+                    if (sysOrg.getOrgName() != null && !dbSysOrg.getOrgName().equals(sysOrg.getOrgName())) {
+                        Long count = baseMapper.selectCount(new LambdaQueryWrapper<SysOrg>()
+                                .eq(SysOrg::getOrgName, sysOrg.getOrgName())
+                                .eq(SysOrg::getParentOrgId, sysOrg.getParentOrgId())
+                                .ne(SysOrg::getOrgId, sysOrg.getOrgId()));
+                        if (count > 0) {
+                            throw new BizException("机构名称重复，请重新填写");
+                        }
                     }
-                }
-                generateIadPathAndLevel(sysOrg);
-                int changeRowCount = baseMapper.updateById(sysOrg);
-                // 子机构数据变更
-                List<SysOrgVo> sysOrgList = listByParentId(sysOrg.getOrgId());
-                sysOrgList.forEach(org -> {
-                    generateIadPathAndLevel(org);
-                    baseMapper.updateById(org);
+                    generateIadPathAndLevel(sysOrg);
+                    int changeRowCount = baseMapper.updateById(sysOrg);
+                    // 子机构数据变更
+                    List<SysOrgVo> sysOrgList = listByParentId(sysOrg.getOrgId());
+                    sysOrgList.forEach(org -> {
+                        generateIadPathAndLevel(org);
+                        baseMapper.updateById(org);
+                    });
+                    return changeRowCount > 0;
                 });
-                return changeRowCount > 0;
-            }
-        );
     }
 
     /** 此方法会级联删除下级机构 */
@@ -127,8 +115,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     public int deleteByIds(@Nonnull Collection<String> orgIds) {
         int rowCount = 0;
         for (String orgId : orgIds) {
-            rowCount +=
-            baseMapper.deleteById(orgId, CurrentUtil.getCurrentUserId());
+            rowCount += baseMapper.deleteById(orgId, CurrentUtil.getCurrentUserId());
         }
         return rowCount;
     }
@@ -147,12 +134,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         if (CollectionUtil.isEmpty(orgIds)) {
             return new HashMap<>();
         }
-        return baseMapper
-            .selectList(
-                new LambdaQueryWrapper<SysOrg>().in(SysOrg::getOrgId, orgIds)
-            )
-            .stream()
-            .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
+        return baseMapper.selectList(new LambdaQueryWrapper<SysOrg>().in(SysOrg::getOrgId, orgIds)).stream()
+                .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
     }
 
     @Nullable public SysOrg selectByOrgCode(@Nonnull String orgCode) {

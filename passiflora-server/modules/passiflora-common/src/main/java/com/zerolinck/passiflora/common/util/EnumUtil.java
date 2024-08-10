@@ -24,33 +24,23 @@ import com.zerolinck.passiflora.model.common.LabelValueInterface;
  */
 public class EnumUtil {
 
-    public static LabelValueInterface getEnumByValue(
-        Class<? extends LabelValueInterface> clazz,
-        Object value
-    ) {
+    public static LabelValueInterface getEnumByValue(Class<? extends LabelValueInterface> clazz, Object value) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getValue().equals(value)) {
                 return nameValue;
             }
         }
-        throw new RuntimeException(
-            clazz.getSimpleName() + " 无此value: " + value
-        );
+        throw new RuntimeException(clazz.getSimpleName() + " 无此value: " + value);
     }
 
-    public static LabelValueInterface getEnumByName(
-        Class<? extends LabelValueInterface> clazz,
-        Object name
-    ) {
+    public static LabelValueInterface getEnumByName(Class<? extends LabelValueInterface> clazz, Object name) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getLabel().equals(name)) {
                 return nameValue;
             }
         }
-        throw new RuntimeException(
-            clazz.getSimpleName() + " 无此name: " + name
-        );
+        throw new RuntimeException(clazz.getSimpleName() + " 无此name: " + name);
     }
 }

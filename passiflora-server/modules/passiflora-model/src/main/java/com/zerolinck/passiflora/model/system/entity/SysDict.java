@@ -41,45 +41,41 @@ public class SysDict extends BaseEntity {
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "主键ID", maxLength = 20)
     @Length(
-        groups = { Update.class },
-        max = 20,
-        message = "主键ID长度不能大于20"
-    )
-    @NotBlank(groups = { Update.class }, message = "主键ID不能为空")
+            groups = {Update.class},
+            max = 20,
+            message = "主键ID长度不能大于20")
+    @NotBlank(
+            groups = {Update.class},
+            message = "主键ID不能为空")
     private String dictId;
 
     @OnlyField
     @Schema(description = "字典名称", maxLength = 20)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 20,
-        message = "字典名称长度不能大于20"
-    )
+            groups = {Insert.class, Update.class},
+            max = 20,
+            message = "字典名称长度不能大于20")
     @NotBlank(
-        groups = { Insert.class, Update.class },
-        message = "字典名称不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "字典名称不能为空")
     private String dictName;
 
     @OnlyField
     @Schema(description = "字典标识", maxLength = 100)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 100,
-        message = "字典标识长度不能大于100"
-    )
+            groups = {Insert.class, Update.class},
+            max = 100,
+            message = "字典标识长度不能大于100")
     @NotBlank(
-        groups = { Insert.class, Update.class },
-        message = "字典标识不能为空"
-    )
+            groups = {Insert.class, Update.class},
+            message = "字典标识不能为空")
     private String dictTag;
 
     @Schema(description = "描述", maxLength = 200)
     @Length(
-        groups = { Insert.class, Update.class },
-        max = 200,
-        message = "描述长度不能大于200"
-    )
+            groups = {Insert.class, Update.class},
+            max = 200,
+            message = "描述长度不能大于200")
     private String remark;
 
     @Schema(description = "是否系统内置")

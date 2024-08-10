@@ -38,55 +38,32 @@ import org.springframework.data.redis.serializer.*;
  */
 @Configuration
 @EnableCaching
-@ConditionalOnProperty(
-    prefix = "passiflora.config",
-    name = "cache",
-    havingValue = "true"
-)
+@ConditionalOnProperty(prefix = "passiflora.config", name = "cache", havingValue = "true")
 public class CacheConfig {
 
     @Bean
-    public CacheManager cacheManager(
-        RedisConnectionFactory redisConnectionFactory,
-        ObjectMapper objectMapper
-    ) {
-        RedisCacheConfiguration redisCacheConfiguration =
-            RedisCacheConfiguration.defaultCacheConfig();
-        redisCacheConfiguration =
-        redisCacheConfiguration
-            // 设置分隔符
-            .computePrefixWith(name -> name + ":")
-            // 设置key序列化器
-            .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    new StringRedisSerializer()
-                )
-            )
-            // 设置value序列化器
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    new GenericJackson2JsonRedisSerializer(objectMapper)
-                )
-            )
-            .entryTtl(Duration.ofDays(7));
-        return RedisCacheManager
-            .builder(
-                RedisCacheWriter.nonLockingRedisCacheWriter(
-                    redisConnectionFactory
-                )
-            )
-            .cacheDefaults(redisCacheConfiguration)
-            .build();
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        redisCacheConfiguration = redisCacheConfiguration
+                // 设置分隔符
+                .computePrefixWith(name -> name + ":")
+                // 设置key序列化器
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                // 设置value序列化器
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                        new GenericJackson2JsonRedisSerializer(objectMapper)))
+                .entryTtl(Duration.ofDays(7));
+        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(
-        RedisConnectionFactory factory,
-        ObjectMapper objectMapper
-    ) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory, ObjectMapper objectMapper) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         Jackson2JsonRedisSerializer<Object> jsonRedisSerializer =
-            new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
+                new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setHashKeySerializer(RedisSerializer.string());
         redisTemplate.setValueSerializer(jsonRedisSerializer);

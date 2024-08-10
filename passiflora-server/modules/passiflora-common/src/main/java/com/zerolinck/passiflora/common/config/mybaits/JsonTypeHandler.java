@@ -42,12 +42,8 @@ public class JsonTypeHandler extends BaseTypeHandler<JsonNode> {
     }
 
     @Override
-    public void setNonNullParameter(
-        PreparedStatement ps,
-        int i,
-        JsonNode parameter,
-        JdbcType jdbcType
-    ) throws SQLException {
+    public void setNonNullParameter(PreparedStatement ps, int i, JsonNode parameter, JdbcType jdbcType)
+            throws SQLException {
         jsonObject.setType("json");
         jsonObject.setValue(parameter.toString());
         ps.setObject(i, jsonObject);
@@ -67,13 +63,7 @@ public class JsonTypeHandler extends BaseTypeHandler<JsonNode> {
 
     @SneakyThrows
     @Override
-    public JsonNode getNullableResult(
-        CallableStatement callableStatement,
-        int i
-    ) {
-        return objectMapper.readValue(
-            callableStatement.getString(i),
-            JsonNode.class
-        );
+    public JsonNode getNullableResult(CallableStatement callableStatement, int i) {
+        return objectMapper.readValue(callableStatement.getString(i), JsonNode.class);
     }
 }

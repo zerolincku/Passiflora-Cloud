@@ -35,45 +35,25 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface SysPositionMapper extends BaseMapper<SysPosition> {
     Page<SysPosition> page(
-        IPage<SysPosition> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysPosition> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysPosition> sortWrapper
-    );
+            IPage<SysPosition> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysPosition> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysPosition> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("positionIds") Collection<String> positionIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
-    @Select(
-        "SELECT * FROM sys_position WHERE del_flag = 0 AND position_name = #{positionName}"
-    )
-    SysPosition selectByPositionName(
-        @Param("positionName") String positionName
-    );
+    @Select("SELECT * FROM sys_position WHERE del_flag = 0 AND position_name = #{positionName}")
+    SysPosition selectByPositionName(@Param("positionName") String positionName);
 
-    @Select(
-        "SELECT * FROM sys_position WHERE del_flag = 0 AND parent_position_id = #{positionParentId} ORDER BY" +
-        " position_level , \"order\", position_name"
-    )
-    List<SysPositionVo> listByParentId(
-        @Param("positionParentId") String positionParentId
-    );
+    @Select("SELECT * FROM sys_position WHERE del_flag = 0 AND parent_position_id = #{positionParentId} ORDER BY"
+            + " position_level , \"order\", position_name")
+    List<SysPositionVo> listByParentId(@Param("positionParentId") String positionParentId);
 
-    void disable(
-        @Param("positionIds") Collection<String> positionIds,
-        @Param("updateBy") String updateBy
-    );
+    void disable(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
-    void enable(
-        @Param("positionIds") Collection<String> positionIds,
-        @Param("updateBy") String updateBy
-    );
+    void enable(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
-    @Update(
-        "UPDATE sys_position SET \"order\" = #{sysPositionVo.order} WHERE" +
-        " position_id = #{sysPositionVo.positionId} "
-    )
+    @Update("UPDATE sys_position SET \"order\" = #{sysPositionVo.order} WHERE"
+            + " position_id = #{sysPositionVo.positionId} ")
     void updateOrder(@Param("sysPositionVo") SysPositionVo sysPositionVo);
 }

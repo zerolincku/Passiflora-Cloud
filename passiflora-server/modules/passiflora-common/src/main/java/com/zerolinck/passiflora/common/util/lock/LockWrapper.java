@@ -38,8 +38,7 @@ public class LockWrapper<T> {
     private List<Object> columnValues = new ArrayList<>();
 
     @Getter
-    private Map<SFunction<T, ?>, List<? extends T>> entityListLock =
-        new HashMap<>();
+    private Map<SFunction<T, ?>, List<? extends T>> entityListLock = new HashMap<>();
 
     public LockWrapper<T> lock(SFunction<T, ?> column, String columnValue) {
         if (columnValue == null) {
@@ -50,10 +49,7 @@ public class LockWrapper<T> {
         return this;
     }
 
-    public LockWrapper<T> lock(
-        SFunction<T, ?> column,
-        List<? extends T> entityList
-    ) {
+    public LockWrapper<T> lock(SFunction<T, ?> column, List<? extends T> entityList) {
         if (CollectionUtil.isEmpty(entityList)) {
             return this;
         }

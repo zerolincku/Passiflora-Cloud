@@ -33,36 +33,23 @@ import org.apache.ibatis.annotations.Select;
  */
 public interface SysDictItemMapper extends BaseMapper<SysDictItem> {
     Page<SysDictItem> page(
-        IPage<SysDictItem> page,
-        @Param(Constants.WRAPPER) QueryWrapper<SysDictItem> searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysDictItem> sortWrapper
-    );
+            IPage<SysDictItem> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysDictItem> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysDictItem> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("dictItemIds") Collection<String> dictItemIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("dictItemIds") Collection<String> dictItemIds, @Param("updateBy") String updateBy);
 
-    int deleteByDictIds(
-        @Param("dictIds") Collection<String> dictIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByDictIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy);
 
-    @Select(
-        "SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = #{dictId}"
-    )
+    @Select("SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = #{dictId}")
     List<SysDictItem> listByDictId(@Param("dictId") String dictId);
 
-    @Select(
-        "SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from" +
-        " sys_dict WHERE dict_name = #{dictName})"
-    )
+    @Select("SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from"
+            + " sys_dict WHERE dict_name = #{dictName})")
     List<SysDictItem> listByDictName(@Param("dictName") String dictName);
 
-    @Select(
-        "SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from" +
-        " sys_dict WHERE dict_tag = #{dictTag})"
-    )
+    @Select("SELECT * FROM sys_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from"
+            + " sys_dict WHERE dict_tag = #{dictTag})")
     List<SysDictItem> listByDictTag(@Param("dictTag") String dictTag);
 }

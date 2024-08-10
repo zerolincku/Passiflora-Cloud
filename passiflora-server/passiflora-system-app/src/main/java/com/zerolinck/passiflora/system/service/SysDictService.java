@@ -54,46 +54,41 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
     @Nonnull
     public Page<SysDict> page(@Nonnull QueryCondition<SysDict> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysDict.class),
-            condition.sortWrapper(SysDict.class)
-        );
+                condition.page(), condition.searchWrapper(SysDict.class), condition.sortWrapper(SysDict.class));
     }
 
     public void add(@Nonnull SysDict sysDict) {
         LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysDict>()
-                .lock(SysDict::getDictName, sysDict.getDictName())
-                .lock(SysDict::getDictTag, sysDict.getDictTag()),
-            true,
-            () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysDict);
-                baseMapper.insert(sysDict);
-                return null;
-            }
-        );
+                LOCK_KEY,
+                new LockWrapper<SysDict>()
+                        .lock(SysDict::getDictName, sysDict.getDictName())
+                        .lock(SysDict::getDictTag, sysDict.getDictTag()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkInsert(baseMapper, sysDict);
+                    baseMapper.insert(sysDict);
+                    return null;
+                });
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@Nonnull SysDict sysDict) {
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysDict>()
-                .lock(SysDict::getDictName, sysDict.getDictName())
-                .lock(SysDict::getDictTag, sysDict.getDictTag()),
-            true,
-            () -> {
-                SysDict dbSysDict = baseMapper.selectById(sysDict.getDictId());
-                if (YesOrNoEnum.YES.equals(dbSysDict.getIsSystem())) {
-                    throw new BizException("系统内置数据，不允许修改");
-                }
+                LOCK_KEY,
+                new LockWrapper<SysDict>()
+                        .lock(SysDict::getDictName, sysDict.getDictName())
+                        .lock(SysDict::getDictTag, sysDict.getDictTag()),
+                true,
+                () -> {
+                    SysDict dbSysDict = baseMapper.selectById(sysDict.getDictId());
+                    if (YesOrNoEnum.YES.equals(dbSysDict.getIsSystem())) {
+                        throw new BizException("系统内置数据，不允许修改");
+                    }
 
-                OnlyFieldCheck.checkUpdate(baseMapper, sysDict);
-                int changeRowCount = baseMapper.updateById(sysDict);
-                return changeRowCount > 0;
-            }
-        );
+                    OnlyFieldCheck.checkUpdate(baseMapper, sysDict);
+                    int changeRowCount = baseMapper.updateById(sysDict);
+                    return changeRowCount > 0;
+                });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,10 +100,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
                 throw new BizException("系统内置数据，不允许删除");
             }
         });
-        int rowCount = baseMapper.deleteByIds(
-            dictIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        int rowCount = baseMapper.deleteByIds(dictIds, CurrentUtil.getCurrentUserId());
         sysDictItemService.deleteByDictIds(dictIds);
         return rowCount;
     }

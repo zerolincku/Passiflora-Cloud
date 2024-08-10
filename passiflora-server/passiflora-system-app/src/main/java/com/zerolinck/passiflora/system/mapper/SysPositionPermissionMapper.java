@@ -30,28 +30,16 @@ import org.apache.ibatis.annotations.Param;
  * @author linck
  * @since 2024-05-06
  */
-public interface SysPositionPermissionMapper
-    extends BaseMapper<SysPositionPermission> {
+public interface SysPositionPermissionMapper extends BaseMapper<SysPositionPermission> {
     Page<SysPositionPermission> page(
-        IPage<SysPositionPermission> page,
-        @Param(Constants.WRAPPER) QueryWrapper<
-            SysPositionPermission
-        > searchWrapper,
-        @Param("sortWrapper") QueryWrapper<SysPositionPermission> sortWrapper
-    );
+            IPage<SysPositionPermission> page,
+            @Param(Constants.WRAPPER) QueryWrapper<SysPositionPermission> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<SysPositionPermission> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-        @Param("bindIds") Collection<String> bindIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByIds(@Param("bindIds") Collection<String> bindIds, @Param("updateBy") String updateBy);
 
-    int deleteByPositionIds(
-        @Param("positionIds") Collection<String> positionIds,
-        @Param("updateBy") String updateBy
-    );
+    int deleteByPositionIds(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
-    List<String> permissionIdsByPositionIds(
-        @Param("positionIds") List<String> positionIds
-    );
+    List<String> permissionIdsByPositionIds(@Param("positionIds") List<String> positionIds);
 }

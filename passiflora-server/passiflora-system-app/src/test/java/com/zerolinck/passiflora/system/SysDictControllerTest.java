@@ -60,27 +60,17 @@ public class SysDictControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDict/page").contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysDict/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(2)
     public void testItemPage() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDictItem/page").contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysDictItem/page").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
@@ -89,23 +79,15 @@ public class SysDictControllerTest {
         SysDict sysDict = new SysDict();
         sysDict.setDictName("test");
         sysDict.setDictTag("test");
-        mockMvc
-            .perform(
-                post("/sysDict/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysDict))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testSysDictId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysDict/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysDict)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testSysDictId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
@@ -115,170 +97,104 @@ public class SysDictControllerTest {
         sysDictItem.setDictId(testSysDictId);
         sysDictItem.setLabel("test");
         sysDictItem.setValue("test");
-        mockMvc
-            .perform(
-                post("/sysDictItem/add")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(sysDictItem))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result ->
-                testSysDictItemId =
-                objectMapper
-                    .readTree(result.getResponse().getContentAsString())
-                    .get("data")
-                    .asText()
-            );
+        mockMvc.perform(post("/sysDictItem/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sysDictItem)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> testSysDictItemId = objectMapper
+                        .readTree(result.getResponse().getContentAsString())
+                        .get("data")
+                        .asText());
     }
 
     @Test
     @Order(5)
     public void testDetailItem() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDictItem/detail")
-                    .param("dictItemId", testSysDictItemId)
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testSysDictItem =
-                objectMapper.convertValue(
-                    jsonNode.get("data"),
-                    SysDictItem.class
-                );
-            });
+        mockMvc.perform(get("/sysDictItem/detail").param("dictItemId", testSysDictItemId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testSysDictItem = objectMapper.convertValue(jsonNode.get("data"), SysDictItem.class);
+                });
     }
 
     @Test
     @Order(6)
     public void testUpdateItem() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysDictItem/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testSysDictItem))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysDictItem/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSysDictItem)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(7)
     public void testDeleteItem() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysDictItem/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysDictItemId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysDictItem/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysDictItemId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(8)
     public void testDetail() throws Exception {
-        mockMvc
-            .perform(get("/sysDict/detail").param("dictId", testSysDictId))
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            )
-            .andDo(result -> {
-                String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                testSysDict =
-                objectMapper.convertValue(jsonNode.get("data"), SysDict.class);
-            });
+        mockMvc.perform(get("/sysDict/detail").param("dictId", testSysDictId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andDo(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    JsonNode jsonNode = objectMapper.readTree(responseBody);
+                    testSysDict = objectMapper.convertValue(jsonNode.get("data"), SysDict.class);
+                });
     }
 
     @Test
     @Order(9)
     public void testUpdate() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysDict/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testSysDict))
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysDict/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSysDict)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(10)
     public void testDelete() throws Exception {
-        mockMvc
-            .perform(
-                post("/sysDict/delete")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            new String[] { testSysDictId }
-                        )
-                    )
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(post("/sysDict/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new String[] {testSysDictId})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(11)
     public void testListByDictId() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDictItem/listByDictId")
-                    .param("dictId", "1778631179896446977")
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysDictItem/listByDictId").param("dictId", "1778631179896446977"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(12)
     public void testListByDictName() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDictItem/listByDictName").param("dictName", "机构类型")
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysDictItem/listByDictName").param("dictName", "机构类型"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 
     @Test
     @Order(13)
     public void testListByDictTag() throws Exception {
-        mockMvc
-            .perform(
-                get("/sysDictItem/listByDictTag").param("dictTag", "orgType")
-            )
-            .andExpect(status().isOk())
-            .andExpect(
-                jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode()))
-            );
+        mockMvc.perform(get("/sysDictItem/listByDictTag").param("dictTag", "orgType"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
 }

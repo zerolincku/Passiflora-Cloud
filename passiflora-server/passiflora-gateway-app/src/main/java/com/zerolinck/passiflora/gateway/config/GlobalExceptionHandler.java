@@ -58,29 +58,19 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         return handleException(request, response, throwable)
-            .flatMap(result ->
-                response.writeWith(
-                    Mono.fromSupplier(() -> {
-                        DataBufferFactory bufferFactory =
-                            response.bufferFactory();
-                        try {
-                            return bufferFactory.wrap(
-                                objectMapper.writeValueAsBytes(result)
-                            );
-                        } catch (JsonProcessingException e) {
-                            log.error("Error writing response", e);
-                            return bufferFactory.wrap(new byte[0]);
-                        }
-                    })
-                )
-            );
+                .flatMap(result -> response.writeWith(Mono.fromSupplier(() -> {
+                    DataBufferFactory bufferFactory = response.bufferFactory();
+                    try {
+                        return bufferFactory.wrap(objectMapper.writeValueAsBytes(result));
+                    } catch (JsonProcessingException e) {
+                        log.error("Error writing response", e);
+                        return bufferFactory.wrap(new byte[0]);
+                    }
+                })));
     }
 
     private Mono<Result<String>> handleException(
-        ServerHttpRequest request,
-        ServerHttpResponse response,
-        Throwable throwable
-    ) {
+            ServerHttpRequest request, ServerHttpResponse response, Throwable throwable) {
         if (throwable instanceof ResponseStatusException e) {
             response.setStatusCode(e.getStatusCode());
             logException(request, e);
@@ -101,23 +91,11 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
     private void logException(ServerHttpRequest request, Throwable throwable) {
         if (throwable instanceof BizException) {
-            log.warn(
-                "Business exception: path={}, exception={}",
-                request.getPath(),
-                throwable.getMessage()
-            );
+            log.warn("Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());
         } else if (throwable instanceof NoResourceFoundException) {
-            log.warn(
-                "NoResourceFoundException: path={}, exception={}",
-                request.getPath(),
-                throwable.getMessage()
-            );
+            log.warn("NoResourceFoundException: path={}, exception={}", request.getPath(), throwable.getMessage());
         } else {
-            log.error(
-                "Unexpected exception: path={}",
-                request.getPath(),
-                throwable
-            );
+            log.error("Unexpected exception: path={}", request.getPath(), throwable);
         }
     }
 }

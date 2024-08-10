@@ -30,26 +30,20 @@ import org.springframework.context.annotation.Configuration;
  * @since 2024-02-07
  */
 @Configuration
-@ConditionalOnProperty(
-    prefix = "passiflora.config",
-    name = "mybatis",
-    havingValue = "true"
-)
+@ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")
 public class MybatisConfig {
 
     /** 添加分页插件 */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(
-            new PaginationInnerInterceptor(DbType.POSTGRE_SQL)
-        );
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
         return interceptor;
     }
 
     /**
-     * 乐观锁插件 整数类型下 newVersion = oldVersion + 1 newVersion 会回写到 entity 中 仅支持 updateById(id) 与
-     * update(entity, wrapper) 方法 在 update(entity, wrapper) 方法下, wrapper 不能复用!!!
+     * 乐观锁插件 整数类型下 newVersion = oldVersion + 1 newVersion 会回写到 entity 中 仅支持 updateById(id) 与 update(entity, wrapper) 方法
+     * 在 update(entity, wrapper) 方法下, wrapper 不能复用!!!
      */
     @Bean
     public MybatisPlusInterceptor optimisticLockerInnerInterceptor() {

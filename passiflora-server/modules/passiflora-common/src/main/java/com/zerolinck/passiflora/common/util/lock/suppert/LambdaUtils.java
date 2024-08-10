@@ -40,16 +40,11 @@ public final class LambdaUtils {
             Method method = func.getClass().getDeclaredMethod("writeReplace");
             method.setAccessible(true);
             return new ReflectLambdaMeta(
-                (SerializedLambda) method.invoke(func),
-                func.getClass().getClassLoader()
-            );
+                    (SerializedLambda) method.invoke(func), func.getClass().getClassLoader());
         } catch (Throwable e) {
             // 3. 反射失败使用序列化的方式读取
             return new ShadowLambdaMeta(
-                com.zerolinck.passiflora.common.util.lock.suppert.SerializedLambda.extract(
-                    func
-                )
-            );
+                    com.zerolinck.passiflora.common.util.lock.suppert.SerializedLambda.extract(func));
         }
     }
 }

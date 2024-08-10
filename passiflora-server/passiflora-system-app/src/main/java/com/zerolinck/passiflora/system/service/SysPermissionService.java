@@ -47,79 +47,60 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class SysPermissionService
-    extends ServiceImpl<SysPermissionMapper, SysPermission> {
+public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPermission> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysPermission:";
 
     @Nonnull
-    public Page<SysPermission> page(
-        @Nonnull QueryCondition<SysPermission> condition
-    ) {
+    public Page<SysPermission> page(@Nonnull QueryCondition<SysPermission> condition) {
         return baseMapper.page(
-            condition.page(),
-            condition.searchWrapper(SysPermission.class),
-            condition.sortWrapper(SysPermission.class)
-        );
+                condition.page(),
+                condition.searchWrapper(SysPermission.class),
+                condition.sortWrapper(SysPermission.class));
     }
 
     public void add(@Nonnull SysPermission sysPermission) {
         LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPermission>()
-                .lock(
-                    SysPermission::getPermissionTitle,
-                    sysPermission.getPermissionTitle()
-                ),
-            true,
-            () -> {
-                OnlyFieldCheck.checkInsert(baseMapper, sysPermission);
-                generateIadPathAndLevel(sysPermission);
-                baseMapper.insert(sysPermission);
-                return null;
-            }
-        );
+                LOCK_KEY,
+                new LockWrapper<SysPermission>()
+                        .lock(SysPermission::getPermissionTitle, sysPermission.getPermissionTitle()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkInsert(baseMapper, sysPermission);
+                    generateIadPathAndLevel(sysPermission);
+                    baseMapper.insert(sysPermission);
+                    return null;
+                });
     }
 
     public boolean update(@Nonnull SysPermission sysPermission) {
         return LockUtil.lock(
-            LOCK_KEY,
-            new LockWrapper<SysPermission>()
-                .lock(
-                    SysPermission::getPermissionTitle,
-                    sysPermission.getPermissionTitle()
-                ),
-            true,
-            () -> {
-                OnlyFieldCheck.checkUpdate(baseMapper, sysPermission);
-                generateIadPathAndLevel(sysPermission);
-                int changeRowCount = baseMapper.updateById(sysPermission);
-                // 子权限数据变更
-                List<SysPermission> permissionList = listByParentId(
-                    sysPermission.getPermissionId()
-                );
-                permissionList.forEach(permission -> {
-                    generateIadPathAndLevel(permission);
-                    baseMapper.updateById(permission);
+                LOCK_KEY,
+                new LockWrapper<SysPermission>()
+                        .lock(SysPermission::getPermissionTitle, sysPermission.getPermissionTitle()),
+                true,
+                () -> {
+                    OnlyFieldCheck.checkUpdate(baseMapper, sysPermission);
+                    generateIadPathAndLevel(sysPermission);
+                    int changeRowCount = baseMapper.updateById(sysPermission);
+                    // 子权限数据变更
+                    List<SysPermission> permissionList = listByParentId(sysPermission.getPermissionId());
+                    permissionList.forEach(permission -> {
+                        generateIadPathAndLevel(permission);
+                        baseMapper.updateById(permission);
+                    });
+                    return changeRowCount > 0;
                 });
-                return changeRowCount > 0;
-            }
-        );
     }
 
     @Nonnull
-    public List<SysPermission> listByParentId(
-        @Nonnull String permissionParentId
-    ) {
+    public List<SysPermission> listByParentId(@Nonnull String permissionParentId) {
         return baseMapper.listByParentId(permissionParentId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nonnull Collection<String> permissionIds) {
-        return baseMapper.deleteByIds(
-            permissionIds,
-            CurrentUtil.getCurrentUserId()
-        );
+        return baseMapper.deleteByIds(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nullable public SysPermission detail(@Nonnull String permissionId) {
@@ -134,27 +115,16 @@ public class SysPermissionService
     public List<SysPermissionVo> menuTree() {
         // TODO 查询当前用户有权限的菜单
         Map<String, List<SysPermissionVo>> menuMap = baseMapper
-            .selectList(
-                new LambdaQueryWrapper<SysPermission>()
-                    .eq(SysPermission::getPermissionStatus, StatusEnum.ENABLE)
-                    .in(
-                        SysPermission::getPermissionType,
-                        List.of(
-                            PermissionTypeEnum.MENU_SET,
-                            PermissionTypeEnum.MENU
-                        )
-                    )
-                    .orderByAsc(SysPermission::getPermissionLevel)
-                    .orderByAsc(SysPermission::getOrder)
-            )
-            .stream()
-            .map(SysPermissionConvert.INSTANCE::entity2vo)
-            .collect(
-                Collectors.groupingBy(
-                    SysPermissionVo::getPermissionParentId,
-                    Collectors.toList()
-                )
-            );
+                .selectList(new LambdaQueryWrapper<SysPermission>()
+                        .eq(SysPermission::getPermissionStatus, StatusEnum.ENABLE)
+                        .in(
+                                SysPermission::getPermissionType,
+                                List.of(PermissionTypeEnum.MENU_SET, PermissionTypeEnum.MENU))
+                        .orderByAsc(SysPermission::getPermissionLevel)
+                        .orderByAsc(SysPermission::getOrder))
+                .stream()
+                .map(SysPermissionConvert.INSTANCE::entity2vo)
+                .collect(Collectors.groupingBy(SysPermissionVo::getPermissionParentId, Collectors.toList()));
         // 顶层菜单
         List<SysPermissionVo> topMenu = menuMap.get("0");
         if (CollectionUtil.isEmpty(topMenu)) {
@@ -168,26 +138,17 @@ public class SysPermissionService
     public List<SysPermissionTableVo> permissionTableTree() {
         // TODO 查询当前用户有权限的菜单
         Map<String, List<SysPermissionTableVo>> menuMap = baseMapper
-            .selectList(
-                new LambdaQueryWrapper<SysPermission>()
-                    .in(
-                        SysPermission::getPermissionType,
-                        List.of(
-                            PermissionTypeEnum.MENU_SET,
-                            PermissionTypeEnum.MENU
-                        )
-                    )
-                    .orderByAsc(SysPermission::getPermissionLevel)
-                    .orderByAsc(SysPermission::getOrder)
-            )
-            .stream()
-            .map(SysPermissionConvert.INSTANCE::entity2tableVo)
-            .collect(
-                Collectors.groupingBy(
-                    com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo::getPermissionParentId,
-                    Collectors.toList()
-                )
-            );
+                .selectList(new LambdaQueryWrapper<SysPermission>()
+                        .in(
+                                SysPermission::getPermissionType,
+                                List.of(PermissionTypeEnum.MENU_SET, PermissionTypeEnum.MENU))
+                        .orderByAsc(SysPermission::getPermissionLevel)
+                        .orderByAsc(SysPermission::getOrder))
+                .stream()
+                .map(SysPermissionConvert.INSTANCE::entity2tableVo)
+                .collect(Collectors.groupingBy(
+                        com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo::getPermissionParentId,
+                        Collectors.toList()));
         // 顶层菜单
         List<SysPermissionTableVo> topMenu = menuMap.get("0");
         if (CollectionUtil.isEmpty(topMenu)) {
@@ -197,9 +158,7 @@ public class SysPermissionService
         return topMenu;
     }
 
-    public void updateOrder(
-        @Nonnull List<SysPermissionTableVo> sysPermissionTableVos
-    ) {
+    public void updateOrder(@Nonnull List<SysPermissionTableVo> sysPermissionTableVos) {
         if (CollectionUtil.isEmpty(sysPermissionTableVos)) {
             return;
         }
@@ -219,9 +178,7 @@ public class SysPermissionService
         List<String> pathIds = new ArrayList<>();
         permissionIds.forEach(permissionId -> {
             SysPermission sysPermission = baseMapper.selectById(permissionId);
-            String[] permissionIdList = sysPermission
-                .getPermissionIdPath()
-                .split("/");
+            String[] permissionIdList = sysPermission.getPermissionIdPath().split("/");
             Collections.addAll(pathIds, permissionIdList);
         });
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
@@ -233,9 +190,7 @@ public class SysPermissionService
     }
 
     private void dealMenuTree(
-        @Nonnull List<SysPermissionVo> menuVos,
-        @Nonnull Map<String, List<SysPermissionVo>> menuMap
-    ) {
+            @Nonnull List<SysPermissionVo> menuVos, @Nonnull Map<String, List<SysPermissionVo>> menuMap) {
         for (SysPermissionVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));
@@ -245,9 +200,7 @@ public class SysPermissionService
     }
 
     private void permissionTableTree(
-        @Nonnull List<SysPermissionTableVo> menuVos,
-        @Nonnull Map<String, List<SysPermissionTableVo>> menuMap
-    ) {
+            @Nonnull List<SysPermissionTableVo> menuVos, @Nonnull Map<String, List<SysPermissionTableVo>> menuMap) {
         for (SysPermissionTableVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));
@@ -263,9 +216,7 @@ public class SysPermissionService
         if (!"0".equals(permissionParentId)) {
             SysPermission parentSysPermission = detail(permissionParentId);
             assert parentSysPermission != null;
-            codeBuffer
-                .append(parentSysPermission.getPermissionIdPath())
-                .append("/");
+            codeBuffer.append(parentSysPermission.getPermissionIdPath()).append("/");
             level = parentSysPermission.getPermissionLevel() + 1;
         }
         codeBuffer.append(sysPermission.getPermissionId());

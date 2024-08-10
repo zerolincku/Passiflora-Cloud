@@ -43,188 +43,102 @@ public class GenerateCode {
         render(tableNames, moduleName, contextPath, overwrite);
     }
 
-    private static void render(
-        List<String> tableNames,
-        String moduleName,
-        String contextPath,
-        boolean overwrite
-    ) {
+    private static void render(List<String> tableNames, String moduleName, String contextPath, boolean overwrite) {
         tableNames.forEach(tableName -> {
-            Map<Object, Object> dict = getInfo(
-                tableName,
-                moduleName,
-                contextPath
-            );
+            Map<Object, Object> dict = getInfo(tableName, moduleName, contextPath);
             RenderService renderService = new FileRenderServiceImpl();
-            renderService.render(
-                new Render(
+            renderService.render(new Render(
                     overwrite,
                     "entity.java.ftl",
                     "/%s.java",
-                    "/passiflora-server/modules/passiflora-model/src/main/java/com/zerolinck/passiflora/model/" +
-                    moduleName +
-                    "/entity",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/modules/passiflora-model/src/main/java/com/zerolinck/passiflora/model/"
+                            + moduleName
+                            + "/entity",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "convert.java.ftl",
                     "/%sConvert.java",
-                    "/passiflora-server/modules/passiflora-model/src/main/java/com/zerolinck/passiflora/model/" +
-                    moduleName +
-                    "/mapperstruct",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/modules/passiflora-model/src/main/java/com/zerolinck/passiflora/model/"
+                            + moduleName
+                            + "/mapperstruct",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "api.java.ftl",
                     "/%sApi.java",
-                    "/passiflora-server/modules/passiflora-feign/src/main/java/com/zerolinck/passiflora/feign/" +
-                    moduleName,
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/modules/passiflora-feign/src/main/java/com/zerolinck/passiflora/feign/"
+                            + moduleName,
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "controller.java.ftl",
                     "/%sController.java",
-                    "/passiflora-server/passiflora-" +
-                    moduleName +
-                    "-app/src/main/java/com/zerolinck/passiflora/" +
-                    moduleName +
-                    "/controller",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/passiflora-" + moduleName
+                            + "-app/src/main/java/com/zerolinck/passiflora/"
+                            + moduleName
+                            + "/controller",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "service.java.ftl",
                     "/%sService.java",
-                    "/passiflora-server/passiflora-" +
-                    moduleName +
-                    "-app/src/main/java/com/zerolinck/passiflora/" +
-                    moduleName +
-                    "/service",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/passiflora-" + moduleName
+                            + "-app/src/main/java/com/zerolinck/passiflora/"
+                            + moduleName
+                            + "/service",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "mapper.java.ftl",
                     "/%sMapper.java",
-                    "/passiflora-server/passiflora-" +
-                    moduleName +
-                    "-app/src/main/java/com/zerolinck/passiflora/" +
-                    moduleName +
-                    "/mapper",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/passiflora-" + moduleName
+                            + "-app/src/main/java/com/zerolinck/passiflora/"
+                            + moduleName
+                            + "/mapper",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "mapper.xml.ftl",
                     "/%sMapper.xml",
-                    "/passiflora-server/passiflora-" +
-                    moduleName +
-                    "-app/src/main/java/com/zerolinck/passiflora/" +
-                    moduleName +
-                    "/mapper/xml",
-                    dict
-                )
-            );
-            renderService.render(
-                new Render(
+                    "/passiflora-server/passiflora-" + moduleName
+                            + "-app/src/main/java/com/zerolinck/passiflora/"
+                            + moduleName
+                            + "/mapper/xml",
+                    dict));
+            renderService.render(new Render(
                     overwrite,
                     "test.java.ftl",
                     "/%sControllerTest.java",
-                    "/passiflora-server/passiflora-" +
-                    moduleName +
-                    "-app/src/test/java/com/zerolinck/passiflora/" +
-                    moduleName,
-                    dict
-                )
-            );
+                    "/passiflora-server/passiflora-" + moduleName
+                            + "-app/src/test/java/com/zerolinck/passiflora/"
+                            + moduleName,
+                    dict));
         });
     }
 
-    private static Map<Object, Object> getInfo(
-        String tableName,
-        String moduleName,
-        String contextPath
-    ) {
+    private static Map<Object, Object> getInfo(String tableName, String moduleName, String contextPath) {
         Table table = new PostgresDbService().getTableInfo(tableName);
-        return MapUtil
-            .builder()
-            .put("contextPath", contextPath)
-            .put("table", table)
-            .put("tableName", tableName)
-            .put("moduleName", moduleName)
-            .put("date", TimeUtil.getDateStrNow())
-            .put("entityName", StrUtil.toCamelCase(table.getTableName()))
-            .put(
-                "serviceName",
-                StrUtil.toCamelCase(table.getTableName() + "_" + "service")
-            )
-            .put(
-                "mapperName",
-                StrUtil.toCamelCase(table.getTableName() + "_" + "mapper")
-            )
-            .put(
-                "controllerName",
-                StrUtil.toCamelCase(table.getTableName() + "_" + "controller")
-            )
-            .put(
-                "apiName",
-                StrUtil.toCamelCase(table.getTableName() + "_" + "api")
-            )
-            .put(
-                "convertName",
-                StrUtil.toCamelCase(table.getTableName() + "_" + "convert")
-            )
-            .put(
-                "entityClass",
-                StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName()))
-            )
-            .put(
-                "serviceClass",
-                StrUtil.upperFirst(
-                    StrUtil.toCamelCase(table.getTableName() + "_" + "service")
-                )
-            )
-            .put(
-                "mapperClass",
-                StrUtil.upperFirst(
-                    StrUtil.toCamelCase(table.getTableName() + "_" + "mapper")
-                )
-            )
-            .put(
-                "controllerClass",
-                StrUtil.upperFirst(
-                    StrUtil.toCamelCase(
-                        table.getTableName() + "_" + "controller"
-                    )
-                )
-            )
-            .put(
-                "apiClass",
-                StrUtil.upperFirst(
-                    StrUtil.toCamelCase(table.getTableName() + "_" + "api")
-                )
-            )
-            .put(
-                "convertClass",
-                StrUtil.upperFirst(
-                    StrUtil.toCamelCase(table.getTableName() + "_" + "convert")
-                )
-            )
-            .build();
+        return MapUtil.builder()
+                .put("contextPath", contextPath)
+                .put("table", table)
+                .put("tableName", tableName)
+                .put("moduleName", moduleName)
+                .put("date", TimeUtil.getDateStrNow())
+                .put("entityName", StrUtil.toCamelCase(table.getTableName()))
+                .put("serviceName", StrUtil.toCamelCase(table.getTableName() + "_" + "service"))
+                .put("mapperName", StrUtil.toCamelCase(table.getTableName() + "_" + "mapper"))
+                .put("controllerName", StrUtil.toCamelCase(table.getTableName() + "_" + "controller"))
+                .put("apiName", StrUtil.toCamelCase(table.getTableName() + "_" + "api"))
+                .put("convertName", StrUtil.toCamelCase(table.getTableName() + "_" + "convert"))
+                .put("entityClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())))
+                .put("serviceClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "service")))
+                .put("mapperClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "mapper")))
+                .put(
+                        "controllerClass",
+                        StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "controller")))
+                .put("apiClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "api")))
+                .put("convertClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "convert")))
+                .build();
     }
 }
