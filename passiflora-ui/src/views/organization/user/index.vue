@@ -232,6 +232,17 @@
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
+            <template #positionsNames="{ record }">
+              <a-tag v-if="record.positionNames.length">{{ record.positionNames[0] }}</a-tag>
+              <a-popover v-if="record.positionNames.length > 1">
+                <a-tag class="ml-1.5">+{{ record.positionNames.length - 1 }}</a-tag>
+                <template #content>
+                  <div v-for="(item, index) in record.positionNames" :key="item">
+                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{ item }}</a-tag>
+                  </div>
+                </template>
+              </a-popover>
+            </template>
             <template #gender="{ record }">
               {{
                 getLabelByValue(
@@ -539,7 +550,8 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
     {
       title: '职位',
       dataIndex: 'positionNames',
-      width: 130,
+      slotName: 'positionsNames',
+      width: 150,
     },
     {
       title: '出生日期',
