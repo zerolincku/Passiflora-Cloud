@@ -24,6 +24,7 @@ export type UserRecord = {
   salt?: string;
   avatarFile?: string;
   orgId?: string;
+  positionIds?: string;
   orgName?: string;
 } & BaseEntity;
 

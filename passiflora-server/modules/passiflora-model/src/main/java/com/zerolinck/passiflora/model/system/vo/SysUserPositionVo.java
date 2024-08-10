@@ -16,28 +16,18 @@
  */
 package com.zerolinck.passiflora.model.system.vo;
 
-import com.zerolinck.passiflora.model.system.entity.SysUser;
-import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.ArrayList;
-import java.util.Collection;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * @author linck
- * @since 2024-04-29
+ * @author 林常坤
+ * @since 2024-08-10
  */
 @Data
-@Schema(description = "用户")
-@EqualsAndHashCode(callSuper = true)
-public class SysUserVo extends SysUser {
+public class SysUserPositionVo {
 
-    @Schema(description = "机构名称")
-    private String orgName = "";
+    private String userId;
 
-    @Schema(description = "职位ID集合")
-    private Collection<String> positionIds = new ArrayList<>();
+    private String positionId;
 
-    @Schema(description = "职位名称集合")
-    private Collection<String> positionNames = new ArrayList<>();
+    private String positionName;
 }

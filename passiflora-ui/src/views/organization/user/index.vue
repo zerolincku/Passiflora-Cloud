@@ -303,6 +303,19 @@
               :allow-search="true"
             />
           </a-form-item>
+          <a-form-item field="positionIds" label="职位" required>
+            <a-tree-select
+                v-model="editFormModel.positionIds"
+                placeholder="请选择职位"
+                size="large"
+                :filter-tree-node="filterPositionTreeNode"
+                :data="positionTreeModel"
+                :field-names="positionTreeFieldNames"
+                :allow-clear="true"
+                :allow-search="true"
+                :multiple="true"
+            />
+          </a-form-item>
           <a-form-item field="phoneNum" label="电话号码" required>
             <a-input
               v-model="editFormModel.phoneNum"
@@ -347,41 +360,25 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, reactive, watch, nextTick, onMounted } from 'vue';
-  import useLoading from '@/hooks/loading';
-  import {
-    userPage,
-    UserRecord,
-    userPageParams,
-    userDelete,
-    userAdd,
-    userUpdate,
-    userDetail,
-  } from '@/api/organization/user';
-  import { Pagination } from '@/types/global';
-  import type {
-    TableColumnData,
-    TableRowSelection,
-  } from '@arco-design/web-vue/es/table/interface';
-  import cloneDeep from 'lodash/cloneDeep';
-  import Sortable from 'sortablejs';
-  import { useDictStore } from '@/store';
-  import { DictItemRecord } from '@/api/system/dict';
-  import { getLabelByValue } from '@/utils/dict';
-  import {
-    orgAdd,
-    OrgRecord,
-    orgTree,
-    orgUpdate,
-  } from '@/api/organization/org';
-  import { rowSelection } from '@/utils';
-  import { IconPlus } from '@arco-design/web-vue/es/icon';
-  import { Message } from '@arco-design/web-vue';
-  import { isEmpty } from 'lodash';
-  import icon from '@/components/icon';
-  import { log } from 'echarts/types/src/util/log';
+import {computed, nextTick, onMounted, reactive, ref, watch} from 'vue';
+import useLoading from '@/hooks/loading';
+import {userAdd, userDelete, userPage, userPageParams, UserRecord, userUpdate,} from '@/api/organization/user';
+import {Pagination} from '@/types/global';
+import type {TableColumnData, TableRowSelection,} from '@arco-design/web-vue/es/table/interface';
+import cloneDeep from 'lodash/cloneDeep';
+import Sortable from 'sortablejs';
+import {useDictStore} from '@/store';
+import {DictItemRecord} from '@/api/system/dict';
+import {getLabelByValue} from '@/utils/dict';
+import {OrgRecord, orgTree,} from '@/api/organization/org';
+import {rowSelection} from '@/utils';
+import {IconPlus} from '@arco-design/web-vue/es/icon';
+import {Message} from '@arco-design/web-vue';
+import {isEmpty} from 'lodash';
+import icon from '@/components/icon';
+import {PositionRecord, positionTree} from "@/api/organization/position";
 
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
+type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   type Column = TableColumnData & { checked?: true };
 
   const scrollPercent = {
@@ -461,14 +458,26 @@
   };
 
   const orgTreeModel = ref<OrgRecord[]>([]);
+  const positionTreeModel = ref<PositionRecord[]>([]);
   const orgTreeFieldNames = {
     key: 'orgId',
     title: 'orgName',
+  };
+  const positionTreeFieldNames = {
+    key: 'positionId',
+    title: 'positionName',
   };
   const filterOrgTreeNode = (inputText: string, node: OrgRecord) => {
     return (
       (node.orgName as string).toLowerCase().indexOf(inputText.toLowerCase()) >
       -1
+    );
+  };
+
+  const filterPositionTreeNode = (inputText: string, node: PositionRecord) => {
+    return (
+        (node.positionName as string).toLowerCase().indexOf(inputText.toLowerCase()) >
+        -1
     );
   };
 
@@ -528,6 +537,11 @@
       width: 130,
     },
     {
+      title: '职位',
+      dataIndex: 'positionNames',
+      width: 130,
+    },
+    {
       title: '出生日期',
       dataIndex: 'dateOfBirth',
       width: 120,
@@ -562,6 +576,7 @@
   onMounted(async () => {
     genderOptions.value = await useDictStore().getDictItems('gender', true);
     await refreshOrgTree();
+    await refreshPositionTree();
   });
 
   const refreshOrgTree = async () => {
@@ -569,6 +584,11 @@
     orgTreeModel.value = data.data;
     calculateOrg(orgTreeModel.value);
   };
+
+const refreshPositionTree = async () => {
+  const { data } = await positionTree('');
+  positionTreeModel.value = data.data;
+};
 
   const treeExpandStatusChange = () => {
     if (treeExpandIcon.value === 'icon-expand') {

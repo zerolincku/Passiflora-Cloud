@@ -18,7 +18,8 @@ package com.zerolinck.passiflora.model.system.vo;
 
 import com.zerolinck.passiflora.model.system.entity.SysUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,7 +32,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SysUserInfo extends SysUser {
 
-    private List<String> permission;
+    private Collection<String> permission = new ArrayList<>();
 
-    private List<String> menu;
+    private Collection<String> menu = new ArrayList<>();
 }

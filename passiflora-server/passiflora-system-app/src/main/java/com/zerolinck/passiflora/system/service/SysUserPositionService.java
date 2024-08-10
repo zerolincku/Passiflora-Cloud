@@ -25,6 +25,7 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUserPosition;
+import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysUserPositionMapper;
 import jakarta.annotation.Nonnull;
 import java.util.*;
@@ -42,6 +43,16 @@ public class SysUserPositionService
     extends ServiceImpl<SysUserPositionMapper, SysUserPosition> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysUserPosition:";
+
+    @Nonnull
+    public List<SysUserPositionVo> selectByUserIds(
+        @Nonnull Collection<String> userIds
+    ) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectByUserIds(userIds);
+    }
 
     public void updateRelation(@Nonnull SysUserSaveArgs args) {
         LockUtil.lock(
@@ -71,13 +82,13 @@ public class SysUserPositionService
                     newPositionIds,
                     existPositionIds
                 );
-                if (CollectionUtil.isEmpty(delPositionIds)) {
+                if (CollectionUtil.isNotEmpty(delPositionIds)) {
                     this.deleteByUserIdAndPositionIds(
                             args.getUserId(),
                             delPositionIds
                         );
                 }
-                if (CollectionUtil.isEmpty(addPositionIds)) {
+                if (CollectionUtil.isNotEmpty(addPositionIds)) {
                     List<SysUserPosition> addList = new ArrayList<>();
                     for (String positionId : addPositionIds) {
                         SysUserPosition position = new SysUserPosition();
@@ -99,7 +110,7 @@ public class SysUserPositionService
         }
         return baseMapper.selectList(
             new LambdaQueryWrapper<SysUserPosition>()
-                .eq(SysUserPosition::getUserId, userIds)
+                .in(SysUserPosition::getUserId, userIds)
         );
     }
 

@@ -34,12 +34,11 @@ import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
+import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +54,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     private final SysOrgService sysOrgService;
     private final SysUserPositionService userPositionService;
     private final PassifloraProperties passifloraProperties;
+    private final SysUserPositionService sysUserPositionService;
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
 
@@ -75,6 +75,17 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         Map<String, String> orgId2NameMap = sysOrgService.orgId2NameMap(
             page.getRecords().stream().map(SysUser::getOrgId).toList()
         );
+        Map<String, List<SysUserPositionVo>> userPositionMap =
+            sysUserPositionService
+                .selectByUserIds(
+                    page
+                        .getRecords()
+                        .stream()
+                        .map(SysUser::getUserId)
+                        .collect(Collectors.toSet())
+                )
+                .stream()
+                .collect(Collectors.groupingBy(SysUserPositionVo::getUserId));
 
         List<SysUserVo> recordsVo = page
             .getRecords()
@@ -83,7 +94,28 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
                 SysUserVo sysUserVo = SysUserConvert.INSTANCE.entity2vo(
                     sysUser
                 );
+                // 填充机构信息
                 sysUserVo.setOrgName(orgId2NameMap.get(sysUser.getOrgId()));
+
+                // 填充职位信息
+                List<SysUserPositionVo> positionVoList =
+                    userPositionMap.getOrDefault(
+                        sysUser.getUserId(),
+                        new ArrayList<>()
+                    );
+                sysUserVo.setPositionIds(
+                    positionVoList
+                        .stream()
+                        .map(SysUserPositionVo::getPositionId)
+                        .collect(Collectors.toList())
+                );
+                sysUserVo.setPositionNames(
+                    positionVoList
+                        .stream()
+                        .map(SysUserPositionVo::getPositionName)
+                        .collect(Collectors.toList())
+                );
+
                 return sysUserVo;
             })
             .toList();

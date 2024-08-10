@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.system.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -28,6 +29,8 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysPositionMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +50,10 @@ public class SysPositionService
 
     private static final String LOCK_KEY = "passiflora:lock:sysPosition:";
 
-    public Page<SysPosition> page(QueryCondition<SysPosition> condition) {
+    @Nonnull
+    public Page<SysPosition> page(
+        @Nullable QueryCondition<SysPosition> condition
+    ) {
         if (condition == null) {
             condition = new QueryCondition<>();
         }
@@ -58,7 +64,18 @@ public class SysPositionService
         );
     }
 
-    public void add(SysPosition sysPosition) {
+    @Nonnull
+    public List<SysPosition> listByIds(@Nullable List<String> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectList(
+            new LambdaQueryWrapper<SysPosition>()
+                .in(SysPosition::getPositionId, ids)
+        );
+    }
+
+    public void add(@Nonnull SysPosition sysPosition) {
         LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPosition>()
@@ -76,7 +93,7 @@ public class SysPositionService
         );
     }
 
-    public boolean update(SysPosition sysPosition) {
+    public boolean update(@Nonnull SysPosition sysPosition) {
         return LockUtil.lock(
             LOCK_KEY,
             new LockWrapper<SysPosition>()
@@ -103,14 +120,18 @@ public class SysPositionService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> positionIds) {
+    public int deleteByIds(@Nullable Collection<String> positionIds) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return 0;
+        }
         return baseMapper.deleteByIds(
             positionIds,
             CurrentUtil.getCurrentUserId()
         );
     }
 
-    public SysPosition detail(String positionId) {
+    @Nonnull
+    public SysPosition detail(@Nonnull String positionId) {
         SysPosition sysPosition = baseMapper.selectById(positionId);
         if (sysPosition == null) {
             throw new BizException("无对应数据，请刷新后重试");
@@ -118,6 +139,7 @@ public class SysPositionService
         return sysPosition;
     }
 
+    @Nonnull
     public List<SysPositionVo> positionTree() {
         List<SysPositionVo> sysPositionVos = baseMapper.listByParentId("0");
         sysPositionVos.forEach(this::recursionTree);
@@ -125,12 +147,18 @@ public class SysPositionService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void disable(List<String> positionIds) {
+    public void disable(@Nullable List<String> positionIds) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return;
+        }
         baseMapper.disable(positionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void enable(List<String> positionIds) {
+    public void enable(@Nullable List<String> positionIds) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return;
+        }
         List<String> pathIds = new ArrayList<>();
         positionIds.forEach(positionId -> {
             SysPosition sysPosition = baseMapper.selectById(positionId);
@@ -142,7 +170,7 @@ public class SysPositionService
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
     }
 
-    public void updateOrder(List<SysPositionVo> sysPositionVos) {
+    public void updateOrder(@Nullable List<SysPositionVo> sysPositionVos) {
         if (CollectionUtil.isEmpty(sysPositionVos)) {
             return;
         }
@@ -152,14 +180,14 @@ public class SysPositionService
         }
     }
 
-    private void recursionTree(SysPositionVo sysPositionVo) {
+    private void recursionTree(@Nonnull SysPositionVo sysPositionVo) {
         sysPositionVo.setChildren(
             baseMapper.listByParentId(sysPositionVo.getPositionId())
         );
         sysPositionVo.getChildren().forEach(this::recursionTree);
     }
 
-    private void generateIadPathAndLevel(SysPosition sysPosition) {
+    private void generateIadPathAndLevel(@Nonnull SysPosition sysPosition) {
         StringBuilder codeBuffer = new StringBuilder();
         String positionParentId = sysPosition.getParentPositionId();
         int level = 0;

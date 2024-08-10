@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -23,23 +25,28 @@ import java.util.List;
 @FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityName}", configuration = FeignConfiguration.class)
 public interface ${apiClass} {
 
+    @Nonnull
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<${entityClass}>> page(QueryCondition<${entityClass}> condition);
+    Result<ListWithPage<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition);
 
+    @Nonnull
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@RequestBody @Validated(Insert.class) ${entityClass} ${entityName});
+    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) ${entityClass} ${entityName});
 
+    @Nonnull
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@RequestBody @Validated(Update.class) ${entityClass} ${entityName});
+    Result<String> update(@Nullable @RequestBody @Validated(Update.class) ${entityClass} ${entityName});
 
+    @Nonnull
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<${entityClass}> detail(@RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
+    Result<${entityClass}> detail(@Nullable @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
 
+    @Nonnull
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> ${table.pkFieldName}s);
+    Result<String> delete(@Nullable @RequestBody List<String> ${table.pkFieldName}s);
 }

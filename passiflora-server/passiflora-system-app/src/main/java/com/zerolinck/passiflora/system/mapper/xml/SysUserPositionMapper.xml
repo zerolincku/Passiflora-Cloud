@@ -7,6 +7,18 @@
         bind_id, user_id, position_id, create_by, update_by, create_time, update_time, del_flag, version
     </sql>
 
+    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.system.vo.SysUserPositionVo">
+        SELECT a.user_id, b.position_id, b.position_name FROM
+         (SELECT user_id, position_id
+            FROM sys_user_position
+            WHERE user_id IN
+            <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        ) as a
+        INNER JOIN sys_position as b ON a.position_id = b.position_id
+    </select>
+
     <delete id="deleteByIds">
         UPDATE sys_user_position SET update_time = now(),
                                 update_by = #{updateBy},

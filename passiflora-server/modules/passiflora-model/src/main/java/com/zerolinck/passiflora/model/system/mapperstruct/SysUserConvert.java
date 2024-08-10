@@ -33,16 +33,12 @@ public interface SysUserConvert {
     SysUserConvert INSTANCE = Mappers.getMapper(SysUserConvert.class);
 
     @Mapping(target = "orgName", ignore = true)
+    @Mapping(target = "positionIds", ignore = true)
+    @Mapping(target = "positionNames", ignore = true)
     SysUserVo entity2vo(SysUser sysUser);
 
-    @Mapping(
-        target = "permission",
-        expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())"
-    )
-    @Mapping(
-        target = "menu",
-        expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())"
-    )
+    @Mapping(target = "permission", ignore = true)
+    @Mapping(target = "menu", ignore = true)
     @Mapping(target = "salt", ignore = true)
     @Mapping(target = "userPassword", ignore = true)
     SysUserInfo entity2info(SysUser sysUser);

@@ -18,9 +18,11 @@ package com.zerolinck.passiflora.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zerolinck.passiflora.model.system.entity.SysUserPosition;
+import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -28,6 +30,10 @@ import org.apache.ibatis.annotations.Param;
  * @since 2024-05-14
  */
 public interface SysUserPositionMapper extends BaseMapper<SysUserPosition> {
+    List<SysUserPositionVo> selectByUserIds(
+        @Nonnull @Param("userIds") Collection<String> userIds
+    );
+
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
     int deleteByIds(
         @Nonnull @Param("bindIds") Collection<String> bindIds,
