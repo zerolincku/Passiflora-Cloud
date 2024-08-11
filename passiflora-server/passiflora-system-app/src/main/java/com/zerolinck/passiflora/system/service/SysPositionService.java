@@ -31,10 +31,11 @@ import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author linck
@@ -66,7 +67,7 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                 true,
                 () -> {
                     OnlyFieldCheck.checkInsert(baseMapper, sysPosition);
-                    generateIadPathAndLevel(sysPosition);
+                    generateIdPathAndLevel(sysPosition);
                     baseMapper.insert(sysPosition);
                     return null;
                 });
@@ -79,12 +80,12 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                 true,
                 () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, sysPosition);
-                    generateIadPathAndLevel(sysPosition);
+                    generateIdPathAndLevel(sysPosition);
                     int changeRowCount = baseMapper.updateById(sysPosition);
                     // 子机构数据变更
                     List<SysPositionVo> positionVoList = baseMapper.listByParentId(sysPosition.getPositionId());
                     positionVoList.forEach(positionVo -> {
-                        generateIadPathAndLevel(positionVo);
+                        generateIdPathAndLevel(positionVo);
                         baseMapper.updateById(positionVo);
                     });
                     return changeRowCount > 0;
@@ -152,7 +153,7 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
         sysPositionVo.getChildren().forEach(this::recursionTree);
     }
 
-    private void generateIadPathAndLevel(@Nonnull SysPosition sysPosition) {
+    private void generateIdPathAndLevel(@Nonnull SysPosition sysPosition) {
         StringBuilder codeBuffer = new StringBuilder();
         String positionParentId = sysPosition.getParentPositionId();
         int level = 0;
