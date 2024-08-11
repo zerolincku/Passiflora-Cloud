@@ -23,13 +23,16 @@ import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author linck
@@ -54,36 +57,41 @@ public interface StorageFileApi {
      * @param storageFile 需要参数 originalFileName，contentType, fileMd5
      * @return 空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID
      */
+    @Nonnull
     @Operation(
             summary = "尝试文件秒传",
             description =
                     "需要参数 originalFileName，contentType, fileMd5。\n" + "返回空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID")
     @PostMapping("tryQuicklyUpload")
-    Result<String> tryQuicklyUpload(@RequestBody StorageFile storageFile);
+    Result<String> tryQuicklyUpload(@Nonnull @RequestBody StorageFile storageFile);
 
+    @Nonnull
     @Operation(summary = "文件上传")
     @PostMapping("upload")
     Result<String> upload(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "fileName", required = false) String fileName);
+            @Nonnull @RequestParam("file") MultipartFile file,
+            @Nullable @RequestParam(value = "fileName", required = false) String fileName);
 
+    @Nonnull
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<StorageFile> detail(@RequestParam(value = "fileId") String fileId);
+    Result<StorageFile> detail(@Nonnull @RequestParam(value = "fileId") String fileId);
 
+    @Nonnull
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> fileIds);
+    Result<String> delete(@Nonnull @RequestBody List<String> fileIds);
 
     @Operation(summary = "文件下载")
     @GetMapping(value = "/downloadFile")
-    void downloadFile(@RequestParam("fileId") String fileId);
+    void downloadFile(@Nonnull @RequestParam("fileId") String fileId);
 
     @Operation(summary = "文件批量下载")
     @PostMapping(value = "/downloadZip")
-    void downloadZip(@RequestBody List<String> fileIds);
+    void downloadZip(@Nonnull @RequestBody List<String> fileIds);
 
+    @Nonnull
     @Operation(summary = "确认文件使用", description = "文件由临时文件转换为正式文件")
     @PostMapping(value = "/confirmFile")
-    Result<String> confirmFile(@RequestBody List<String> fileIds);
+    Result<String> confirmFile(@Nonnull @RequestBody List<String> fileIds);
 }
