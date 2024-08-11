@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.system.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -27,7 +28,9 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.entity.SysPositionDataScope;
 import com.zerolinck.passiflora.system.mapper.SysPositionDataScopeMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +46,8 @@ public class SysPositionDataScopeService extends ServiceImpl<SysPositionDataScop
     private static final String LOCK_KEY = "passiflora:lock:sysPositionDataScope:";
 
     @Nonnull
-    public Page<SysPositionDataScope> page(@Nonnull QueryCondition<SysPositionDataScope> condition) {
+    public Page<SysPositionDataScope> page(@Nullable QueryCondition<SysPositionDataScope> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
                 condition.searchWrapper(SysPositionDataScope.class),
@@ -67,7 +71,10 @@ public class SysPositionDataScopeService extends ServiceImpl<SysPositionDataScop
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nonnull Collection<String> scopeIds) {
+    public int deleteByIds(@Nullable Collection<String> scopeIds) {
+        if (CollectionUtil.isEmpty(scopeIds)) {
+            return 0;
+        }
         return baseMapper.deleteByIds(scopeIds, CurrentUtil.getCurrentUserId());
     }
 

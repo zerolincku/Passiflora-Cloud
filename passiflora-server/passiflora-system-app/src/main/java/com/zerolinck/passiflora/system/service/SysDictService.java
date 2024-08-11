@@ -28,9 +28,11 @@ import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.system.mapper.SysDictMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
@@ -52,7 +54,8 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
     private static final String LOCK_KEY = "passiflora:lock:sysDict:";
 
     @Nonnull
-    public Page<SysDict> page(@Nonnull QueryCondition<SysDict> condition) {
+    public Page<SysDict> page(@Nullable QueryCondition<SysDict> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(SysDict.class), condition.sortWrapper(SysDict.class));
     }

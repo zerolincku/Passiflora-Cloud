@@ -31,10 +31,7 @@ import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,18 +48,14 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
 
     @Nonnull
     public Page<SysPosition> page(@Nullable QueryCondition<SysPosition> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(SysPosition.class), condition.sortWrapper(SysPosition.class));
     }
 
     @Nonnull
     public List<SysPosition> listByIds(@Nullable List<String> ids) {
-        if (CollectionUtil.isEmpty(ids)) {
-            return Collections.emptyList();
-        }
+        ids = Objects.requireNonNullElse(ids, Collections.emptyList());
         return baseMapper.selectList(new LambdaQueryWrapper<SysPosition>().in(SysPosition::getPositionId, ids));
     }
 

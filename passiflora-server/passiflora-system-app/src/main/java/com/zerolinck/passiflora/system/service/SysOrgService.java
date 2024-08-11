@@ -31,10 +31,7 @@ import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.mapper.SysOrgMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,7 +48,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     private static final String LOCK_KEY = "passiflora:lock:sysOrg:";
 
     @Nonnull
-    public Page<SysOrg> page(@Nonnull QueryCondition<SysOrg> condition) {
+    public Page<SysOrg> page(@Nullable QueryCondition<SysOrg> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(SysOrg.class), condition.sortWrapper(SysOrg.class));
     }

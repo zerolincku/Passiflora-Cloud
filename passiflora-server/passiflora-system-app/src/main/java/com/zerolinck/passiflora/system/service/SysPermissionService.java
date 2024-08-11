@@ -52,7 +52,8 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     private static final String LOCK_KEY = "passiflora:lock:sysPermission:";
 
     @Nonnull
-    public Page<SysPermission> page(@Nonnull QueryCondition<SysPermission> condition) {
+    public Page<SysPermission> page(@Nullable QueryCondition<SysPermission> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
                 condition.searchWrapper(SysPermission.class),
@@ -99,7 +100,10 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nonnull Collection<String> permissionIds) {
+    public int deleteByIds(@Nullable Collection<String> permissionIds) {
+        if (CollectionUtil.isEmpty(permissionIds)) {
+            return 0;
+        }
         return baseMapper.deleteByIds(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
@@ -158,7 +162,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
         return topMenu;
     }
 
-    public void updateOrder(@Nonnull List<SysPermissionTableVo> sysPermissionTableVos) {
+    public void updateOrder(@Nullable List<SysPermissionTableVo> sysPermissionTableVos) {
         if (CollectionUtil.isEmpty(sysPermissionTableVos)) {
             return;
         }
@@ -169,12 +173,18 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void disable(@Nonnull List<String> permissionIds) {
+    public void disable(@Nullable List<String> permissionIds) {
+        if (CollectionUtil.isEmpty(permissionIds)) {
+            return;
+        }
         baseMapper.disable(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void enable(@Nonnull List<String> permissionIds) {
+    public void enable(@Nullable List<String> permissionIds) {
+        if (CollectionUtil.isEmpty(permissionIds)) {
+            return;
+        }
         List<String> pathIds = new ArrayList<>();
         permissionIds.forEach(permissionId -> {
             SysPermission sysPermission = baseMapper.selectById(permissionId);
@@ -190,7 +200,10 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     private void dealMenuTree(
-            @Nonnull List<SysPermissionVo> menuVos, @Nonnull Map<String, List<SysPermissionVo>> menuMap) {
+            @Nullable List<SysPermissionVo> menuVos, @Nonnull Map<String, List<SysPermissionVo>> menuMap) {
+        if (CollectionUtil.isEmpty(menuVos)) {
+            return;
+        }
         for (SysPermissionVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));
@@ -200,7 +213,10 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     private void permissionTableTree(
-            @Nonnull List<SysPermissionTableVo> menuVos, @Nonnull Map<String, List<SysPermissionTableVo>> menuMap) {
+            @Nullable List<SysPermissionTableVo> menuVos, @Nonnull Map<String, List<SysPermissionTableVo>> menuMap) {
+        if (CollectionUtil.isEmpty(menuVos)) {
+            return;
+        }
         for (SysPermissionTableVo menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));

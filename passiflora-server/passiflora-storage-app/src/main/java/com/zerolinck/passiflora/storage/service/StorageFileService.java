@@ -39,10 +39,7 @@ import io.minio.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
@@ -71,9 +68,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     @Nonnull
     public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(StorageFile.class), condition.sortWrapper(StorageFile.class));
     }

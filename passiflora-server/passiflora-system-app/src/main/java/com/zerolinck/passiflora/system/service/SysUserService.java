@@ -37,6 +37,8 @@ import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -58,10 +60,9 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
 
-    public Page<SysUserVo> page(String orgId, QueryCondition<SysUser> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+    @Nonnull
+    public Page<SysUserVo> page(@Nonnull String orgId, @Nullable QueryCondition<SysUser> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         Page<SysUser> page = baseMapper.page(
                 orgId, condition.page(), condition.searchWrapper(SysUser.class), condition.sortWrapper(SysUser.class));
 
@@ -96,7 +97,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         return new Page<SysUserVo>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(recordsVo);
     }
 
-    public void add(SysUserSaveArgs args) {
+    public void add(@Nonnull SysUserSaveArgs args) {
         args.setSalt(BCrypt.gensalt());
         args.setUserPassword(BCrypt.hashpw(args.getUserPassword(), args.getSalt()));
 
@@ -108,7 +109,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         });
     }
 
-    public boolean update(SysUserSaveArgs args) {
+    public boolean update(@Nonnull SysUserSaveArgs args) {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<SysUser>().lock(SysUser::getUserName, args.getUserName()), true, () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, args);
@@ -119,13 +120,17 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(Collection<String> userIds) {
+    public int deleteByIds(@Nullable Collection<String> userIds) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return 0;
+        }
         int count = baseMapper.deleteByIds(userIds, CurrentUtil.getCurrentUserId());
         userPositionService.deleteByUserIds(userIds);
         return count;
     }
 
-    public SysUser detail(String userId) {
+    @Nonnull
+    public SysUser detail(@Nonnull String userId) {
         SysUser sysUser = baseMapper.selectById(userId);
         if (sysUser == null) {
             throw new BizException("无对应用户数据，请刷新后重试");
@@ -133,7 +138,8 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         return sysUser;
     }
 
-    public String login(SysUser sysUser) {
+    @Nonnull
+    public String login(@Nonnull SysUser sysUser) {
         SysUser dbSysUser =
                 baseMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, sysUser.getUserName()));
         if (dbSysUser == null) {

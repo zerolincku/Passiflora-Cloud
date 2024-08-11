@@ -30,6 +30,7 @@ import com.zerolinck.passiflora.model.system.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,8 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
     private static final String LOCK_KEY = "passiflora:lock:sysPositionPermission:";
 
     @Nonnull
-    public Page<SysPositionPermission> page(@Nonnull QueryCondition<SysPositionPermission> condition) {
+    public Page<SysPositionPermission> page(@Nullable QueryCondition<SysPositionPermission> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
                 condition.searchWrapper(SysPositionPermission.class),
@@ -70,12 +72,18 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nonnull Collection<String> bindIds) {
+    public int deleteByIds(@Nullable Collection<String> bindIds) {
+        if (CollectionUtil.isEmpty(bindIds)) {
+            return 0;
+        }
         return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
+    public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
+        if (CollectionUtil.isEmpty(positionIds)) {
+            return 0;
+        }
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
@@ -89,7 +97,8 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
     }
 
     @Nonnull
-    public List<String> permissionIdsByPositionIds(@Nonnull List<String> positionIds) {
+    public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
+        positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 

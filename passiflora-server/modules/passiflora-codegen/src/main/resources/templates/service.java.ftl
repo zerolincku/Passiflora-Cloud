@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -38,9 +39,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
 
     @Nonnull
     public Page<${entityClass}> page(@Nullable QueryCondition<${entityClass}> condition) {
-        if (condition == null) {
-            condition = new QueryCondition<>();
-        }
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(condition.page(), condition.searchWrapper(${entityClass}.class), condition.sortWrapper(${entityClass}.class));
     }
 

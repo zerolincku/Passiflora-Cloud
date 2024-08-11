@@ -28,6 +28,7 @@ import com.zerolinck.passiflora.model.system.entity.SysUserPosition;
 import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysUserPositionMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,8 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
     private static final String LOCK_KEY = "passiflora:lock:sysUserPosition:";
 
     @Nonnull
-    public List<SysUserPositionVo> selectByUserIds(@Nonnull Collection<String> userIds) {
-        if (CollectionUtil.isEmpty(userIds)) {
-            return Collections.emptyList();
-        }
+    public List<SysUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {
+        userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
         return baseMapper.selectByUserIds(userIds);
     }
 
@@ -85,37 +84,33 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
     }
 
     @Nonnull
-    public List<SysUserPosition> findByUserIds(@Nonnull List<String> userIds) {
-        if (CollectionUtil.isEmpty(userIds)) {
-            return Collections.emptyList();
-        }
+    public List<SysUserPosition> findByUserIds(@Nullable List<String> userIds) {
+        userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
         return baseMapper.selectList(new LambdaQueryWrapper<SysUserPosition>().in(SysUserPosition::getUserId, userIds));
     }
 
     @Nonnull
-    public List<SysUserPosition> findByPositionIds(@Nonnull List<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
-            return Collections.emptyList();
-        }
+    public List<SysUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
+        positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return baseMapper.selectList(
                 new LambdaQueryWrapper<SysUserPosition>().eq(SysUserPosition::getPositionId, positionIds));
     }
 
-    public int deleteByUserIds(@Nonnull Collection<String> userIds) {
+    public int deleteByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtil.isEmpty(userIds)) {
             return 0;
         }
         return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
-    public int deleteByPositionIds(@Nonnull Collection<String> positionIds) {
+    public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtil.isEmpty(positionIds)) {
             return 0;
         }
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
-    public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nonnull Collection<String> positionIds) {
+    public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nullable Collection<String> positionIds) {
         if (CollectionUtil.isEmpty(positionIds)) {
             return 0;
         }

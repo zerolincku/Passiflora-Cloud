@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.system.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,8 +30,10 @@ import com.zerolinck.passiflora.model.system.entity.SysDict;
 import com.zerolinck.passiflora.model.system.entity.SysDictItem;
 import com.zerolinck.passiflora.system.mapper.SysDictItemMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -51,7 +54,8 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
     private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
 
     @Nonnull
-    public Page<SysDictItem> page(@Nonnull QueryCondition<SysDictItem> condition) {
+    public Page<SysDictItem> page(@Nullable QueryCondition<SysDictItem> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(SysDictItem.class), condition.sortWrapper(SysDictItem.class));
     }
@@ -145,7 +149,10 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public void deleteByDictIds(@Nonnull Collection<String> dictIds) {
+    public void deleteByDictIds(@Nullable Collection<String> dictIds) {
+        if (CollectionUtil.isEmpty(dictIds)) {
+            return;
+        }
         baseMapper.deleteByDictIds(dictIds, CurrentUtil.getCurrentUserId());
     }
 
