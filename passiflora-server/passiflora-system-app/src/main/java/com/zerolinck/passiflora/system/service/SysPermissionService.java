@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -35,11 +34,13 @@ import com.zerolinck.passiflora.model.system.vo.SysPermissionVo;
 import com.zerolinck.passiflora.system.mapper.SysPermissionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author linck
@@ -101,18 +102,15 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> permissionIds) {
-        if (CollectionUtil.isEmpty(permissionIds)) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
             return 0;
         }
         return baseMapper.deleteByIds(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nullable public SysPermission detail(@Nonnull String permissionId) {
-        SysPermission sysPermission = baseMapper.selectById(permissionId);
-        if (sysPermission == null) {
-            throw new BizException("无对应菜单数据，请刷新后重试");
-        }
-        return sysPermission;
+    @Nonnull
+    public Optional<SysPermission> detail(@Nonnull String permissionId) {
+        return Optional.ofNullable(baseMapper.selectById(permissionId));
     }
 
     @Nonnull
@@ -131,7 +129,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
                 .collect(Collectors.groupingBy(SysPermissionVo::getPermissionParentId, Collectors.toList()));
         // 顶层菜单
         List<SysPermissionVo> topMenu = menuMap.get("0");
-        if (CollectionUtil.isEmpty(topMenu)) {
+        if (CollectionUtils.isEmpty(topMenu)) {
             return new ArrayList<>();
         }
         dealMenuTree(topMenu, menuMap);
@@ -155,7 +153,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
                         Collectors.toList()));
         // 顶层菜单
         List<SysPermissionTableVo> topMenu = menuMap.get("0");
-        if (CollectionUtil.isEmpty(topMenu)) {
+        if (CollectionUtils.isEmpty(topMenu)) {
             return new ArrayList<>();
         }
         permissionTableTree(topMenu, menuMap);
@@ -163,7 +161,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     public void updateOrder(@Nullable List<SysPermissionTableVo> sysPermissionTableVos) {
-        if (CollectionUtil.isEmpty(sysPermissionTableVos)) {
+        if (CollectionUtils.isEmpty(sysPermissionTableVos)) {
             return;
         }
         for (SysPermissionTableVo sysPermissionTableVo : sysPermissionTableVos) {
@@ -174,7 +172,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     @Transactional(rollbackFor = Exception.class)
     public void disable(@Nullable List<String> permissionIds) {
-        if (CollectionUtil.isEmpty(permissionIds)) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
             return;
         }
         baseMapper.disable(permissionIds, CurrentUtil.getCurrentUserId());
@@ -182,7 +180,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     @Transactional(rollbackFor = Exception.class)
     public void enable(@Nullable List<String> permissionIds) {
-        if (CollectionUtil.isEmpty(permissionIds)) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
             return;
         }
         List<String> pathIds = new ArrayList<>();
@@ -195,13 +193,38 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     @Nonnull
+    @SuppressWarnings("unused")
     public List<SysPermission> listSelfAndSub(@Nonnull String permissionId) {
         return baseMapper.listSelfAndSub(permissionId);
     }
 
+    /**
+     * 根据职位ID查询权限
+     *
+     * @param positionId 职位ID
+     * @since 2024-08-12
+     */
+    @Nonnull
+    @SuppressWarnings("unused")
+    List<SysPermission> listByPositionIds(@Nonnull String positionId) {
+        return baseMapper.listByPositionId(positionId);
+    }
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId 用户ID
+     * @since 2024-08-12
+     */
+    @Nonnull
+    @SuppressWarnings("unused")
+    List<SysPermission> listByUserIds(@Nonnull String userId) {
+        return baseMapper.listByUserId(userId);
+    }
+
     private void dealMenuTree(
             @Nullable List<SysPermissionVo> menuVos, @Nonnull Map<String, List<SysPermissionVo>> menuMap) {
-        if (CollectionUtil.isEmpty(menuVos)) {
+        if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
         for (SysPermissionVo menu : menuVos) {
@@ -214,7 +237,7 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     private void permissionTableTree(
             @Nullable List<SysPermissionTableVo> menuVos, @Nonnull Map<String, List<SysPermissionTableVo>> menuMap) {
-        if (CollectionUtil.isEmpty(menuVos)) {
+        if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
         for (SysPermissionTableVo menu : menuVos) {
@@ -230,7 +253,8 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
         String permissionParentId = sysPermission.getPermissionParentId();
         int level = 1;
         if (!"0".equals(permissionParentId)) {
-            SysPermission parentSysPermission = detail(permissionParentId);
+            SysPermission parentSysPermission = detail(permissionParentId)
+                    .orElseThrow(() -> new BizException("权限数据错误，%s无上级权限", sysPermission.getPermissionName()));
             assert parentSysPermission != null;
             codeBuffer.append(parentSysPermission.getPermissionIdPath()).append("/");
             level = parentSysPermission.getPermissionLevel() + 1;

@@ -19,6 +19,7 @@ package com.zerolinck.passiflora.system.controller;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysDictItemApi;
@@ -65,7 +66,9 @@ public class SysDictItemController implements SysDictItemApi {
     @Override
     public Result<SysDictItem> detail(String dictItemId) {
         AssertUtil.notBlank(dictItemId, "字典项 ID 不能为空");
-        return Result.ok(sysDictItemService.detail(dictItemId));
+        return Result.ok(sysDictItemService
+                .detail(dictItemId)
+                .orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     @Override

@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
@@ -29,10 +28,12 @@ import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysUserPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Service;
+
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /**
  * @author linck
@@ -56,7 +57,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                 new LockWrapper<SysUserPosition>().lock(SysUserPosition::getUserId, args.getUserId()),
                 true,
                 () -> {
-                    if (CollectionUtil.isEmpty(args.getPositionIds())) {
+                    if (CollectionUtils.isEmpty(args.getPositionIds())) {
                         this.deleteByUserIds(List.of(args.getUserId()));
                         return null;
                     }
@@ -66,10 +67,10 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                     Set<String> newPositionIds = new HashSet<>(args.getPositionIds());
                     Set<String> addPositionIds = SetUtil.differenceSet2FromSet1(existPositionIds, newPositionIds);
                     Set<String> delPositionIds = SetUtil.differenceSet2FromSet1(newPositionIds, existPositionIds);
-                    if (CollectionUtil.isNotEmpty(delPositionIds)) {
+                    if (CollectionUtils.isNotEmpty(delPositionIds)) {
                         this.deleteByUserIdAndPositionIds(args.getUserId(), delPositionIds);
                     }
-                    if (CollectionUtil.isNotEmpty(addPositionIds)) {
+                    if (CollectionUtils.isNotEmpty(addPositionIds)) {
                         List<SysUserPosition> addList = new ArrayList<>();
                         for (String positionId : addPositionIds) {
                             SysUserPosition position = new SysUserPosition();
@@ -90,28 +91,31 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
     }
 
     @Nonnull
+    @SuppressWarnings("unused")
     public List<SysUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return baseMapper.selectList(
                 new LambdaQueryWrapper<SysUserPosition>().eq(SysUserPosition::getPositionId, positionIds));
     }
 
+    @SuppressWarnings("unused")
     public int deleteByUserIds(@Nullable Collection<String> userIds) {
-        if (CollectionUtil.isEmpty(userIds)) {
+        if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
         return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
+    @SuppressWarnings("unused")
     public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nullable Collection<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
         return baseMapper.deleteByUserIdAndPositionIds(userId, positionIds, CurrentUtil.getCurrentUserId());

@@ -11,12 +11,13 @@
         SELECT a.user_id, b.position_id, b.position_name FROM
          (SELECT user_id, position_id
             FROM sys_user_position
-            WHERE user_id IN
+            WHERE del_flag = 0 AND user_id IN
             <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
                 #{id}
             </foreach>
         ) as a
         INNER JOIN sys_position as b ON a.position_id = b.position_id
+        WHERE b.del_flag = 0
     </select>
 
     <delete id="deleteByIds">

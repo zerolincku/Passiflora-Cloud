@@ -16,10 +16,10 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -34,8 +34,10 @@ import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,12 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
     private final SysDictService sysDictService;
     private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
 
+    /**
+     * 分页查询
+     *
+     * @param condition 搜索条件
+     * @since 2024-08-12
+     */
     @Nonnull
     public Page<SysDictItem> page(@Nullable QueryCondition<SysDictItem> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
@@ -62,7 +70,9 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void add(@Nonnull SysDictItem sysDictItem) {
-        SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
+        SysDict sysDict = sysDictService
+                .detail(sysDictItem.getDictId())
+                .orElseThrow(() -> new BizException(ResultCodeEnum.INVALID_PARAM_FAILED, "无此字典"));
 
         LockWrapper<SysDictItem> lockWrapper =
                 new LockWrapper<SysDictItem>().lock(SysDictItem::getLabel, sysDictItem.getLabel());
@@ -95,7 +105,9 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@Nonnull SysDictItem sysDictItem) {
-        SysDict sysDict = sysDictService.detail(sysDictItem.getDictId());
+        SysDict sysDict = sysDictService
+                .detail(sysDictItem.getDictId())
+                .orElseThrow(() -> new BizException(ResultCodeEnum.INVALID_PARAM_FAILED, "无此字典"));
 
         LockWrapper<SysDictItem> lockWrapper =
                 new LockWrapper<SysDictItem>().lock(SysDictItem::getLabel, sysDictItem.getLabel());
@@ -150,19 +162,15 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void deleteByDictIds(@Nullable Collection<String> dictIds) {
-        if (CollectionUtil.isEmpty(dictIds)) {
+        if (CollectionUtils.isEmpty(dictIds)) {
             return;
         }
         baseMapper.deleteByDictIds(dictIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nonnull
-    public SysDictItem detail(@Nonnull String dictItemId) {
-        SysDictItem sysDictItem = baseMapper.selectById(dictItemId);
-        if (sysDictItem == null) {
-            throw new BizException("无对应字典项数据，请刷新后重试");
-        }
-        return sysDictItem;
+    public Optional<SysDictItem> detail(@Nonnull String dictItemId) {
+        return Optional.ofNullable(baseMapper.selectById(dictItemId));
     }
 
     @Nonnull

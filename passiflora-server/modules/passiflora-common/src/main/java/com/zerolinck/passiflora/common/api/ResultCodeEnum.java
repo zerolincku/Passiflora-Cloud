@@ -24,14 +24,18 @@ package com.zerolinck.passiflora.common.api;
 public enum ResultCodeEnum implements IErrorCode {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
-    NO_STATUS_VALUE(501, "没有对应的状态"),
-    NO_RESULT_VALUE(502, "没有对应的结果"),
-    VALIDATE_FAILED(503, "参数检验失败"),
     /** 加锁失败 */
-    COMPETE_FAILED(504, "操作失败，请刷新重试"),
+    COMPETE_FAILED(50001, "操作失败，请刷新重试"),
+
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     FORBIDDEN(403, "没有相关权限"),
-    NOT_FOUND(404, "404 NOT FOUND");
+    NOT_FOUND(404, "404 NOT FOUND"),
+
+    NO_STATUS_VALUE(40001, "没有对应的状态"),
+    NO_MATCH_DATA(40002, "没有对应的数据"),
+    VALIDATE_FAILED(40003, "参数检验失败"),
+    INVALID_PARAM_FAILED(40004, "参数错误"),
+    ;
 
     private final int code;
     private final String message;
@@ -47,6 +51,7 @@ public enum ResultCodeEnum implements IErrorCode {
      * @param code 状态码
      * @return 枚举对象
      */
+    @SuppressWarnings("unused")
     public static ResultCodeEnum getByCode(int code) {
         for (ResultCodeEnum resultEnum : ResultCodeEnum.values()) {
             if (code == resultEnum.getCode()) {

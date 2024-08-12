@@ -15,19 +15,30 @@ import java.util.Collection;
 /**
  * ${table.description} Mybatis Mapper
  *
- * @author linck
+ * @author ${author}
  * @since ${date}
  */
 public interface ${mapperClass} extends BaseMapper<${entityClass}> {
 
+    /**
+     * 分页查询
+     *
+     * @param page 分页条件
+     * @param searchWrapper 搜索条件
+     * @param sortWrapper 排序条件
+     * @since ${date}
+     */
     @Nonnull
     Page<${entityClass}> page(@Nonnull IPage<${entityClass}> page,
             @Nonnull @Param(Constants.WRAPPER) QueryWrapper<${entityClass}> searchWrapper,
             @Nonnull @Param("sortWrapper") QueryWrapper<${entityClass}> sortWrapper);
 
     /**
-    * 使用更新删除，保证 update_by 和 update_time 正确
-    */
+     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
+     *
+     * @param ${table.pkFieldName}s ${table.description}主键集合
+     * @since ${date}
+     */
     int deleteByIds(@Nonnull @Param("${table.pkFieldName}s") Collection<String> ${table.pkFieldName}s,
                     @Nonnull @Param("updateBy") String updateBy);
 }

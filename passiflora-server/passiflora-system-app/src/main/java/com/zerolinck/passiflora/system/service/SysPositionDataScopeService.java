@@ -16,10 +16,8 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -31,7 +29,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,18 +72,14 @@ public class SysPositionDataScopeService extends ServiceImpl<SysPositionDataScop
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> scopeIds) {
-        if (CollectionUtil.isEmpty(scopeIds)) {
+        if (CollectionUtils.isEmpty(scopeIds)) {
             return 0;
         }
         return baseMapper.deleteByIds(scopeIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nonnull
-    public SysPositionDataScope detail(@Nonnull String scopeId) {
-        SysPositionDataScope sysPositionDataScope = baseMapper.selectById(scopeId);
-        if (sysPositionDataScope == null) {
-            throw new BizException("无对应职位数据权限数据，请刷新后重试");
-        }
-        return sysPositionDataScope;
+    public Optional<SysPositionDataScope> detail(@Nonnull String scopeId) {
+        return Optional.ofNullable(baseMapper.selectById(scopeId));
     }
 }

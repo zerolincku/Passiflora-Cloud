@@ -16,13 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util.lock;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * @author linck
@@ -50,7 +50,7 @@ public class LockWrapper<T> {
     }
 
     public LockWrapper<T> lock(SFunction<T, ?> column, List<? extends T> entityList) {
-        if (CollectionUtil.isEmpty(entityList)) {
+        if (CollectionUtils.isEmpty(entityList)) {
             return this;
         }
         entityListLock.put(column, entityList);

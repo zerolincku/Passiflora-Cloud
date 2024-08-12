@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.system.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysPermissionApi;
@@ -31,6 +31,7 @@ import com.zerolinck.passiflora.system.service.SysPermissionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +55,7 @@ public class SysPermissionController implements SysPermissionApi {
     @Override
     public Result<String> add(SysPermission sysPermission) {
         sysPermission.setPermissionId(IdWorker.getIdStr());
-        if (StrUtil.isBlank(sysPermission.getPermissionParentId())) {
+        if (StringUtils.isBlank(sysPermission.getPermissionParentId())) {
             sysPermission.setPermissionParentId("0");
         }
         sysPermissionService.add(sysPermission);
@@ -64,7 +65,7 @@ public class SysPermissionController implements SysPermissionApi {
     @Override
     public Result<String> update(SysPermission sysPermission) {
         boolean success = sysPermissionService.update(sysPermission);
-        if (StrUtil.isBlank(sysPermission.getPermissionParentId())) {
+        if (StringUtils.isBlank(sysPermission.getPermissionParentId())) {
             sysPermission.setPermissionParentId("0");
         }
         if (success) {
@@ -77,7 +78,9 @@ public class SysPermissionController implements SysPermissionApi {
     @Override
     public Result<SysPermission> detail(String permissionId) {
         AssertUtil.notBlank(permissionId, "权限 ID 不能为空");
-        return Result.ok(sysPermissionService.detail(permissionId));
+        return Result.ok(sysPermissionService
+                .detail(permissionId)
+                .orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     @Override

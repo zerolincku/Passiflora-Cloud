@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * ${table.description} Entity
  *
- * @author linck
+ * @author ${author}
  * @since ${date}
  */
 @Data

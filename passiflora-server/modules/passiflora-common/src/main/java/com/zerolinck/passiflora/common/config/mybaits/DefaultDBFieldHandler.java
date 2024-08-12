@@ -23,6 +23,7 @@ import com.zerolinck.passiflora.model.system.entity.SysUser;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.springframework.util.ClassUtils;
@@ -76,7 +77,7 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
         // 2. 如果用户有手动设置的值
         Object userSetValue = metaObject.getValue(fieldName);
         String setValueStr = StrUtil.str(userSetValue, Charset.defaultCharset());
-        if (StrUtil.isNotBlank(setValueStr) && !isCover) {
+        if (StringUtils.isNotBlank(setValueStr) && !isCover) {
             return;
         }
         if (fieldVal == null) {

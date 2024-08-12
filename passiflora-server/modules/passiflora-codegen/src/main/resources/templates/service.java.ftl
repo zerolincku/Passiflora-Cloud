@@ -1,6 +1,6 @@
 package com.zerolinck.passiflora.${moduleName}.service;
 
-import cn.hutool.core.collection.CollectionUtil;
+import org.apache.commons.collections4.CollectionUtilss;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,15 +20,12 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.Collection;
-import java.util.concurrent.TimeUnit;
-
+import java.util.*;
 
 /**
  * ${table.description} Service
  *
- * @author linck
+ * @author ${author}
  * @since ${date}
  */
 @Slf4j
@@ -37,12 +34,24 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
     
     private static final String LOCK_KEY = "passiflora:lock:${entityName}:";
 
+    /**
+     * 分页查询
+     *
+     * @param condition 搜索条件
+     * @since ${date}
+     */
     @Nonnull
     public Page<${entityClass}> page(@Nullable QueryCondition<${entityClass}> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(condition.page(), condition.searchWrapper(${entityClass}.class), condition.sortWrapper(${entityClass}.class));
     }
 
+    /**
+     * 新增${table.description}
+     *
+     * @param ${entityName} ${table.description}
+     * @since ${date}
+     */
     public void add(@Nonnull ${entityClass} ${entityName}) {
         LockUtil.lock(LOCK_KEY,
                 new LockWrapper<${entityClass}>(), true,
@@ -54,6 +63,12 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         );
     }
 
+    /**
+     * 更新${table.description}
+     *
+     * @param ${entityName} ${table.description}
+     * @since ${date}
+     */
     public boolean update(@Nonnull ${entityClass} ${entityName}) {
         return (boolean) LockUtil.lock(LOCK_KEY,
                 new LockWrapper<${entityClass}>(), true,
@@ -65,21 +80,29 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         );
     }
 
+    /**
+     * 删除${table.description}
+     *
+     * @param ${table.pkFieldName}s ${table.description}ID集合
+     * @since ${date}
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> ${table.pkFieldName}s) {
-        if (CollectionUtil.isEmpty(${table.pkFieldName}s) {
+        if (CollectionUtils.isEmpty(${table.pkFieldName}s) {
             return 0;
         }
         return baseMapper.deleteByIds(${table.pkFieldName}s, CurrentUtil.getCurrentUserId());
     }
 
+    /**
+     * ${table.description}详情
+     *
+     * @param ${table.pkFieldName} ${table.description}ID
+     * @since ${date}
+     */
     @Nonnull
-    public ${entityClass} detail(@Nonnull String ${table.pkFieldName}) {
-        ${entityClass} ${entityName} = baseMapper.selectById(${table.pkFieldName});
-        if (${entityName} == null) {
-            throw new BizException("无对应${table.description}数据，请刷新后重试");
-        }
-        return ${entityName};
+    public Optional<${entityClass}> detail(@Nonnull String ${table.pkFieldName}) {
+        return Optional.ofNullable(baseMapper.selectById(${table.pkFieldName}));
     }
             
 }

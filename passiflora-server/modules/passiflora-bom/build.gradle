@@ -31,7 +31,9 @@ dependencies {
         api 'org.redisson:redisson-spring-boot-starter:3.27.2'
         api 'org.redisson:redisson:3.27.2'
         api 'io.minio:minio:8.5.10'
-
+        api 'org.apache.commons:commons-lang3:3.16.0'
+        api 'org.apache.commons:commons-collections4:4.4'
+        api 'com.google.guava:guava:33.2.1-jre'
     }
 }
 

@@ -33,6 +33,7 @@ import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
@@ -109,11 +110,7 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
     }
 
     @Nonnull
-    public SysDict detail(@Nonnull String dictId) {
-        SysDict sysDict = baseMapper.selectById(dictId);
-        if (sysDict == null) {
-            throw new BizException("无对应字典数据，请刷新后重试");
-        }
-        return sysDict;
+    public Optional<SysDict> detail(@Nonnull String dictId) {
+        return Optional.ofNullable(baseMapper.selectById(dictId));
     }
 }

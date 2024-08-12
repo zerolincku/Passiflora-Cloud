@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -42,6 +41,7 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -121,7 +121,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> userIds) {
-        if (CollectionUtil.isEmpty(userIds)) {
+        if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
         int count = baseMapper.deleteByIds(userIds, CurrentUtil.getCurrentUserId());
@@ -130,12 +130,8 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     }
 
     @Nonnull
-    public SysUser detail(@Nonnull String userId) {
-        SysUser sysUser = baseMapper.selectById(userId);
-        if (sysUser == null) {
-            throw new BizException("无对应用户数据，请刷新后重试");
-        }
-        return sysUser;
+    public Optional<SysUser> detail(@Nonnull String userId) {
+        return Optional.ofNullable(baseMapper.selectById(userId));
     }
 
     @Nonnull
@@ -158,7 +154,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     public void logout() {
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
-        if (CollectionUtil.isEmpty(keys)) {
+        if (CollectionUtils.isEmpty(keys)) {
             return;
         }
         keys.forEach(RedisUtils::del);
@@ -166,7 +162,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
 
     public Boolean checkToken() {
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
-        if (CollectionUtil.isEmpty(keys)) {
+        if (CollectionUtils.isEmpty(keys)) {
             return Boolean.FALSE;
         }
         keys.forEach(key -> RedisUtils.expire(

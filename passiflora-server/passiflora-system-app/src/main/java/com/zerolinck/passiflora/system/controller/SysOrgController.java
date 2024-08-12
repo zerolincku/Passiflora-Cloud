@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.system.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysOrgApi;
@@ -30,6 +30,7 @@ import com.zerolinck.passiflora.system.service.SysOrgService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +54,7 @@ public class SysOrgController implements SysOrgApi {
     @Override
     public Result<String> add(SysOrg sysOrg) {
         sysOrg.setOrgId(IdWorker.getIdStr());
-        if (StrUtil.isBlank(sysOrg.getParentOrgId())) {
+        if (StringUtils.isBlank(sysOrg.getParentOrgId())) {
             sysOrg.setParentOrgId("0");
         }
         sysOrgService.add(sysOrg);
@@ -62,7 +63,7 @@ public class SysOrgController implements SysOrgApi {
 
     @Override
     public Result<String> update(SysOrg sysOrg) {
-        if (StrUtil.isBlank(sysOrg.getParentOrgId())) {
+        if (StringUtils.isBlank(sysOrg.getParentOrgId())) {
             sysOrg.setParentOrgId("0");
         }
         boolean success = sysOrgService.update(sysOrg);
@@ -76,7 +77,7 @@ public class SysOrgController implements SysOrgApi {
     @Override
     public Result<SysOrg> detail(String orgId) {
         AssertUtil.notBlank(orgId, "机构 ID 不能为空");
-        return Result.ok(sysOrgService.detail(orgId));
+        return Result.ok(sysOrgService.detail(orgId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     /** 此方法会级联删除下级机构 */
@@ -89,7 +90,7 @@ public class SysOrgController implements SysOrgApi {
 
     @Override
     public Result<List<SysOrgVo>> listByParentId(String orgParentId) {
-        if (StrUtil.isBlank(orgParentId)) {
+        if (StringUtils.isBlank(orgParentId)) {
             orgParentId = "0";
         }
         return Result.ok(sysOrgService.listByParentId(orgParentId));

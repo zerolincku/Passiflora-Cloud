@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -31,11 +30,13 @@ import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.mapper.SysOrgMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author linck
@@ -119,24 +120,22 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     @Nonnull
-    public SysOrg detail(@Nonnull String orgId) {
-        SysOrg sysOrg = baseMapper.selectById(orgId);
-        if (sysOrg == null) {
-            throw new BizException("无对应机构数据，请刷新后重试");
-        }
-        return sysOrg;
+    public Optional<SysOrg> detail(@Nonnull String orgId) {
+        return Optional.ofNullable(baseMapper.selectById(orgId));
     }
 
     @Nonnull
     public Map<String, String> orgId2NameMap(@Nonnull List<String> orgIds) {
-        if (CollectionUtil.isEmpty(orgIds)) {
+        if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
         }
         return baseMapper.selectList(new LambdaQueryWrapper<SysOrg>().in(SysOrg::getOrgId, orgIds)).stream()
                 .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
     }
 
-    @Nullable public SysOrg selectByOrgCode(@Nonnull String orgCode) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public SysOrg selectByOrgCode(@Nonnull String orgCode) {
         return baseMapper.selectByOrgCode(orgCode);
     }
 
@@ -161,7 +160,8 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
         String orgParentId = sysOrg.getParentOrgId();
         int level = 0;
         if (!"0".equals(orgParentId)) {
-            SysOrg parentOrg = detail(orgParentId);
+            SysOrg parentOrg =
+                    detail(orgParentId).orElseThrow(() -> new BizException("机构数据错误，%s无上级机构", sysOrg.getOrgName()));
             codeBuffer.append(parentOrg.getOrgIdPath()).append("/");
             level = parentOrg.getOrgLevel() + 1;
         }

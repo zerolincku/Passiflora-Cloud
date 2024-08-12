@@ -19,6 +19,7 @@ package com.zerolinck.passiflora.system.controller;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -80,7 +81,8 @@ public class SysUserController implements SysUserApi {
     @Override
     public Result<SysUser> detail(@RequestParam(value = "userId") String userId) {
         AssertUtil.notBlank(userId, "用户 ID 不能为空");
-        return Result.ok(sysUserService.detail(userId));
+        return Result.ok(
+                sysUserService.detail(userId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     @Override

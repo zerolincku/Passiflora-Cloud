@@ -3,6 +3,7 @@ package com.zerolinck.passiflora.${moduleName}.controller;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * ${table.description} Controller
  *
- * @author linck
+ * @author ${author}
  * @since ${date}
  */
 @Slf4j
@@ -60,7 +61,8 @@ public class ${controllerClass} implements ${apiClass} {
     @Override
     public Result<${entityClass}> detail(@Nonnull String ${table.pkFieldName}) {
         AssertUtil.notBlank(${table.pkFieldName}, "${table.description} ID 不能为空");
-        return Result.ok(${serviceName}.detail(${table.pkFieldName}));
+        return Result.ok(
+                ${serviceName}.detail(${table.pkFieldName}).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     @Nonnull

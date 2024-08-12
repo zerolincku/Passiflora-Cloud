@@ -31,6 +31,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author linck
@@ -55,7 +56,7 @@ public class OnlyFieldCheck {
             Long count = baseMapper.selectCount(new QueryWrapper<>().eq(field.getFieldName(), fieldValue));
             if (count > 0) {
                 String message;
-                if (StrUtil.isNotBlank(field.getMessage())) {
+                if (StringUtils.isNotBlank(field.getMessage())) {
                     message = field.getMessage();
                 } else {
                     message = field.getFieldDesc() + "已存在，请重新填写";
@@ -85,7 +86,7 @@ public class OnlyFieldCheck {
                             field.getIdField().get(entity)));
             if (count > 0) {
                 String message;
-                if (StrUtil.isNotBlank(field.getMessage())) {
+                if (StringUtils.isNotBlank(field.getMessage())) {
                     message = field.getMessage();
                 } else {
                     message = field.getFieldDesc() + "已存在，请重新填写";

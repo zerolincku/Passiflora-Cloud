@@ -16,10 +16,8 @@
  */
 package com.zerolinck.passiflora.storage.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.URLEncodeUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.Header;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -45,6 +43,8 @@ import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
@@ -91,7 +91,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 true,
                 () -> {
                     List<StorageFile> storageFiles = listByFileMd5(storageFile.getFileMd5());
-                    if (CollectionUtil.isEmpty(storageFiles)) {
+                    if (CollectionUtils.isEmpty(storageFiles)) {
                         return "";
                     }
                     StorageFile dbFile = storageFiles.getFirst();
@@ -116,7 +116,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     String bucket = passifloraProperties.getStorage().getBucketName();
                     StorageFile storageFile = new StorageFile();
                     storageFile.setOriginalFileName(file.getOriginalFilename());
-                    if (StrUtil.isNotBlank(fileName)) {
+                    if (StringUtils.isNotBlank(fileName)) {
                         storageFile.setOriginalFileName(fileName);
                     }
                     storageFile.setContentType(file.getContentType());
@@ -128,7 +128,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     storageFile.setBucketName(bucket);
                     storageFile.setObjectName(objectName);
                     String tryQuicklyUploadResult = tryQuicklyUpload(storageFile);
-                    if (StrUtil.isNotBlank(tryQuicklyUploadResult)) {
+                    if (StringUtils.isNotBlank(tryQuicklyUploadResult)) {
                         return tryQuicklyUploadResult;
                     }
 
@@ -186,7 +186,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     @SneakyThrows
     public void deleteById(@Nonnull String fileId) {
-        if (StrUtil.isBlank(fileId)) {
+        if (StringUtils.isBlank(fileId)) {
             return;
         }
         StorageFile storageFile = baseMapper.selectById(fileId);

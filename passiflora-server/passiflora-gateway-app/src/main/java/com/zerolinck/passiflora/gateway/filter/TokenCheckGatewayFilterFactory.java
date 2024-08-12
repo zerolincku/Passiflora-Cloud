@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.gateway.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -28,6 +27,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -75,7 +75,7 @@ public class TokenCheckGatewayFilterFactory
             HttpHeaders headers = exchange.getRequest().getHeaders();
             List<String> tokens = headers.get(Constants.Authorization);
             String token = "";
-            if (CollectionUtil.isNotEmpty(tokens)) {
+            if (CollectionUtils.isNotEmpty(tokens)) {
                 token = tokens.getFirst();
             }
             return webBuilder

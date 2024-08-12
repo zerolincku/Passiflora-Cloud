@@ -6,7 +6,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * ${table.description} MapStruct Convert
  *
- * @author linck
+ * @author ${author}
  * @since 2024-03-26
  */
 @Mapper

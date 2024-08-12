@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -58,4 +59,10 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
             "SELECT * FROM sys_permission WHERE del_flag = 0 AND permission_id_path like concat('%', #{permissionId}, '%') ORDER BY"
                     + " permission_level , \"order\", permission_title")
     List<SysPermission> listSelfAndSub(@Param("permissionId") String permissionId);
+
+    @Nonnull
+    List<SysPermission> listByPositionId(@Nonnull @Param("positionId") String positionId);
+
+    @Nonnull
+    List<SysPermission> listByUserId(@Nonnull @Param("userId") String userId);
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author linck
+ * @author ${author}
  * @since ${date}
  */
 @Tag(name = "${table.description}")

@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.common.exception;
 
+import com.google.common.base.Strings;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import lombok.Getter;
 
@@ -55,6 +56,11 @@ public class BizException extends RuntimeException {
         this.code = ResultCodeEnum.FAILED.getCode();
     }
 
+    public BizException(String message, Object... params) {
+        super(Strings.lenientFormat(message, params));
+        this.code = ResultCodeEnum.FAILED.getCode();
+    }
+
     /**
      * 自定义异常
      *
@@ -71,6 +77,11 @@ public class BizException extends RuntimeException {
      */
     public BizException(ResultCodeEnum resultCodeEnum, String message) {
         super(message);
+        this.code = resultCodeEnum.getCode();
+    }
+
+    public BizException(ResultCodeEnum resultCodeEnum, String message, Object... params) {
+        super(Strings.lenientFormat(message, params));
         this.code = resultCodeEnum.getCode();
     }
 }

@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -32,6 +31,7 @@ import com.zerolinck.passiflora.system.mapper.SysPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +47,12 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
 
     private static final String LOCK_KEY = "passiflora:lock:sysPosition:";
 
+    /**
+     * 分页查询
+     *
+     * @param condition 搜索条件
+     * @since 2024-08-12
+     */
     @Nonnull
     public Page<SysPosition> page(@Nullable QueryCondition<SysPosition> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
@@ -54,12 +60,25 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                 condition.page(), condition.searchWrapper(SysPosition.class), condition.sortWrapper(SysPosition.class));
     }
 
+    /**
+     * 根据职位ID集合查询数据
+     *
+     * @param positionIds 职位集合
+     * @since 2024-08-12
+     */
     @Nonnull
-    public List<SysPosition> listByIds(@Nullable List<String> ids) {
-        ids = Objects.requireNonNullElse(ids, Collections.emptyList());
-        return baseMapper.selectList(new LambdaQueryWrapper<SysPosition>().in(SysPosition::getPositionId, ids));
+    @SuppressWarnings("unused")
+    public List<SysPosition> listByIds(@Nullable List<String> positionIds) {
+        positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
+        return baseMapper.selectList(new LambdaQueryWrapper<SysPosition>().in(SysPosition::getPositionId, positionIds));
     }
 
+    /**
+     * 新增职位
+     *
+     * @param sysPosition 新增职位
+     * @since 2024-08-12
+     */
     public void add(@Nonnull SysPosition sysPosition) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -73,6 +92,12 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                 });
     }
 
+    /**
+     * 更新职位
+     *
+     * @param sysPosition 更新职位
+     * @since 2024-08-12
+     */
     public boolean update(@Nonnull SysPosition sysPosition) {
         return LockUtil.lock(
                 LOCK_KEY,
@@ -92,23 +117,36 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                 });
     }
 
+    /**
+     * 根据职位ID集合删除数据
+     *
+     * @param positionIds 职位ID集合
+     * @since 2024-08-12
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
         return baseMapper.deleteByIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
+    /**
+     * 查询详情
+     *
+     * @param positionId 职位ID
+     * @since 2024-08-12
+     */
     @Nonnull
-    public SysPosition detail(@Nonnull String positionId) {
-        SysPosition sysPosition = baseMapper.selectById(positionId);
-        if (sysPosition == null) {
-            throw new BizException("无对应数据，请刷新后重试");
-        }
-        return sysPosition;
+    public Optional<SysPosition> detail(@Nonnull String positionId) {
+        return Optional.ofNullable(baseMapper.selectById(positionId));
     }
 
+    /**
+     * 获取职位树
+     *
+     * @since 2024-08-12
+     */
     @Nonnull
     public List<SysPositionVo> positionTree() {
         List<SysPositionVo> sysPositionVos = baseMapper.listByParentId("0");
@@ -116,17 +154,29 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
         return sysPositionVos;
     }
 
+    /**
+     * 禁用职位，会关联禁用下级职位
+     *
+     * @param positionIds 职位ID集合
+     * @since 2024-08-12
+     */
     @Transactional(rollbackFor = Exception.class)
     public void disable(@Nullable List<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return;
         }
         baseMapper.disable(positionIds, CurrentUtil.getCurrentUserId());
     }
 
+    /**
+     * 启用职位，会关联启动上级职位
+     *
+     * @param positionIds 职位ID集合
+     * @since 2024-08-12
+     */
     @Transactional(rollbackFor = Exception.class)
     public void enable(@Nullable List<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return;
         }
         List<String> pathIds = new ArrayList<>();
@@ -138,8 +188,14 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
     }
 
+    /**
+     * 更新职位排序
+     *
+     * @param sysPositionVos 职位数数据
+     * @since 2024-08-12
+     */
     public void updateOrder(@Nullable List<SysPositionVo> sysPositionVos) {
-        if (CollectionUtil.isEmpty(sysPositionVos)) {
+        if (CollectionUtils.isEmpty(sysPositionVos)) {
             return;
         }
         for (SysPositionVo sysPositionTableVo : sysPositionVos) {
@@ -148,17 +204,30 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
         }
     }
 
+    /**
+     * 递归处理职位树
+     *
+     * @param sysPositionVo 职位
+     * @since 2024-08-12
+     */
     private void recursionTree(@Nonnull SysPositionVo sysPositionVo) {
         sysPositionVo.setChildren(baseMapper.listByParentId(sysPositionVo.getPositionId()));
         sysPositionVo.getChildren().forEach(this::recursionTree);
     }
 
+    /**
+     * 生成职位 idPath 和 level 字段
+     *
+     * @param sysPosition 职位
+     * @since 2024-08-12
+     */
     private void generateIdPathAndLevel(@Nonnull SysPosition sysPosition) {
         StringBuilder codeBuffer = new StringBuilder();
         String positionParentId = sysPosition.getParentPositionId();
         int level = 0;
         if (!"0".equals(positionParentId)) {
-            SysPosition parentOrg = detail(positionParentId);
+            SysPosition parentOrg = detail(positionParentId)
+                    .orElseThrow(() -> new BizException("职位数据错误，%s无上级职位", sysPosition.getPositionName()));
             codeBuffer.append(parentOrg.getPositionIdPath()).append("/");
             level = parentOrg.getPositionLevel() + 1;
         }

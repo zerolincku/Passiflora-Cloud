@@ -16,10 +16,8 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -31,10 +29,12 @@ import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author linck
@@ -73,27 +73,24 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
 
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> bindIds) {
-        if (CollectionUtil.isEmpty(bindIds)) {
+        if (CollectionUtils.isEmpty(bindIds)) {
             return 0;
         }
         return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
     }
 
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
-        if (CollectionUtil.isEmpty(positionIds)) {
+        if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
     @Nonnull
-    public SysPositionPermission detail(@Nonnull String bindId) {
-        SysPositionPermission sysPositionPermission = baseMapper.selectById(bindId);
-        if (sysPositionPermission == null) {
-            throw new BizException("无对应系统职位菜单绑定数据，请刷新后重试");
-        }
-        return sysPositionPermission;
+    public Optional<SysPositionPermission> detail(@Nonnull String bindId) {
+        return Optional.ofNullable(baseMapper.selectById(bindId));
     }
 
     @Nonnull
@@ -114,10 +111,10 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
                     Set<String> newPermissionIdSet = new HashSet<>(args.getPermissionIds());
                     Set<String> needAdd = SetUtil.differenceSet2FromSet1(exitPermissionIdSet, newPermissionIdSet);
                     Set<String> needDelete = SetUtil.differenceSet2FromSet1(newPermissionIdSet, exitPermissionIdSet);
-                    if (CollectionUtil.isNotEmpty(needDelete)) {
+                    if (CollectionUtils.isNotEmpty(needDelete)) {
                         this.deleteByIds(needDelete);
                     }
-                    if (CollectionUtil.isNotEmpty(needAdd)) {
+                    if (CollectionUtils.isNotEmpty(needAdd)) {
                         List<SysPositionPermission> addList = new ArrayList<>();
                         needAdd.forEach(permissionId -> {
                             SysPositionPermission sysPositionPermission = new SysPositionPermission();

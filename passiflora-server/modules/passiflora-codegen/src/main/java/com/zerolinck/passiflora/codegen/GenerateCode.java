@@ -39,13 +39,15 @@ public class GenerateCode {
         List<String> tableNames = List.of("storage_file");
         String moduleName = "storage";
         String contextPath = "/passiflora/storage-api";
+        String author = "林常坤";
         boolean overwrite = true;
-        render(tableNames, moduleName, contextPath, overwrite);
+        render(tableNames, moduleName, contextPath, overwrite, author);
     }
 
-    private static void render(List<String> tableNames, String moduleName, String contextPath, boolean overwrite) {
+    private static void render(
+            List<String> tableNames, String moduleName, String contextPath, boolean overwrite, String author) {
         tableNames.forEach(tableName -> {
-            Map<Object, Object> dict = getInfo(tableName, moduleName, contextPath);
+            Map<Object, Object> dict = getInfo(tableName, moduleName, contextPath, author);
             RenderService renderService = new FileRenderServiceImpl();
             renderService.render(new Render(
                     overwrite,
@@ -117,9 +119,10 @@ public class GenerateCode {
         });
     }
 
-    private static Map<Object, Object> getInfo(String tableName, String moduleName, String contextPath) {
+    private static Map<Object, Object> getInfo(String tableName, String moduleName, String contextPath, String author) {
         Table table = new PostgresDbService().getTableInfo(tableName);
         return MapUtil.builder()
+                .put("author", author)
                 .put("contextPath", contextPath)
                 .put("table", table)
                 .put("tableName", tableName)

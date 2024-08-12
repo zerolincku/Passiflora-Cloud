@@ -31,4 +31,7 @@ dependencies {
     api 'org.springframework.data:spring-data-redis'
     api 'com.baomidou:mybatis-plus-extension'
     api 'org.redisson:redisson'
+    api 'org.apache.commons:commons-lang3'
+    api 'org.apache.commons:commons-collections4'
+    api 'com.google.guava:guava'
 }

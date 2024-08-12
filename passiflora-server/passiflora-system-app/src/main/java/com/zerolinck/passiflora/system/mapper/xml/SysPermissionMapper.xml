@@ -23,6 +23,27 @@
         </if>
     </select>
 
+    <select id="listByPositionId" resultType="com.zerolinck.passiflora.model.system.entity.SysPermission">
+        SELECT b.* from (
+            SELECT permission_id from sys_position_permission
+            WHERE del_flag = 0
+            AND position_id = #{positionId}
+        ) as a INNER JOIN sys_permission as b ON a.permission_id = b.permission_id
+        WHERE b.del_flag = 0
+    </select>
+
+    <select id="listByUserId" resultType="com.zerolinck.passiflora.model.system.entity.SysPermission">
+        SELECT d.* FROM (
+            SELECT b.permission_id from (
+                SELECT position_id from sys_user_position
+                WHERE del_flag = 0
+                AND user_id = #{userId}
+            ) as a INNER JOIN sys_position_permission as b ON a.position_id = b.position_id
+            WHERE b.del_flag = 0
+    ) as c INNER JOIN sys_permission as d ON c.permission_id = d.permission_id
+    WHERE d.del_flag = 0
+    </select>
+
     <delete id="deleteByIds">
         UPDATE sys_permission SET update_time = now(),
                                 update_by = #{updateBy},

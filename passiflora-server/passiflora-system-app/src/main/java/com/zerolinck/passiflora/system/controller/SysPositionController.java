@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.system.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysPositionApi;
@@ -32,6 +32,7 @@ import com.zerolinck.passiflora.system.service.SysPositionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,7 +57,7 @@ public class SysPositionController implements SysPositionApi {
     @Override
     public Result<String> add(SysPosition sysPosition) {
         sysPosition.setPositionId(IdWorker.getIdStr());
-        if (StrUtil.isBlank(sysPosition.getParentPositionId())) {
+        if (StringUtils.isBlank(sysPosition.getParentPositionId())) {
             sysPosition.setParentPositionId("0");
         }
         sysPositionService.add(sysPosition);
@@ -65,7 +66,7 @@ public class SysPositionController implements SysPositionApi {
 
     @Override
     public Result<String> update(SysPosition sysPosition) {
-        if (StrUtil.isBlank(sysPosition.getParentPositionId())) {
+        if (StringUtils.isBlank(sysPosition.getParentPositionId())) {
             sysPosition.setParentPositionId("0");
         }
         boolean success = sysPositionService.update(sysPosition);
@@ -79,7 +80,9 @@ public class SysPositionController implements SysPositionApi {
     @Override
     public Result<SysPosition> detail(String positionId) {
         AssertUtil.notBlank(positionId, "职位 ID 不能为空");
-        return Result.ok(sysPositionService.detail(positionId));
+        return Result.ok(sysPositionService
+                .detail(positionId)
+                .orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
     }
 
     @Override
