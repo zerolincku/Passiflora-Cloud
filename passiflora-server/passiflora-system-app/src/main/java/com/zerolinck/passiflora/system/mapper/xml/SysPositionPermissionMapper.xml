@@ -8,7 +8,7 @@
     </sql>
 
     <select id="page" resultType="com.zerolinck.passiflora.model.system.entity.SysPositionPermission">
-        SELECT * FROM sys_position_menu
+        SELECT * FROM sys_position_permission
         <where>
             del_flag = 0
             <if test="ew.sqlSegment != null and ew.sqlSegment != ''">
@@ -24,7 +24,7 @@
     </select>
 
     <delete id="deleteByIds">
-        UPDATE sys_position_menu SET update_time = now(),
+        UPDATE sys_position_permission SET update_time = now(),
                                 update_by = #{updateBy},
                                 del_flag = 1
         WHERE bind_id IN
@@ -34,7 +34,7 @@
     </delete>
 
     <delete id="deleteByPositionIds">
-        UPDATE sys_position_menu SET update_time = now(),
+        UPDATE sys_position_permission SET update_time = now(),
                                 update_by = #{updateBy},
                                 del_flag = 1
         WHERE position_id IN

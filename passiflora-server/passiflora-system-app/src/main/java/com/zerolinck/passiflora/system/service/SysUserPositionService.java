@@ -28,12 +28,11 @@ import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.system.mapper.SysUserPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author linck
@@ -65,8 +64,8 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                             .map(SysUserPosition::getPositionId)
                             .collect(Collectors.toSet());
                     Set<String> newPositionIds = new HashSet<>(args.getPositionIds());
-                    Set<String> addPositionIds = SetUtil.differenceSet2FromSet1(existPositionIds, newPositionIds);
-                    Set<String> delPositionIds = SetUtil.differenceSet2FromSet1(newPositionIds, existPositionIds);
+                    Set<String> addPositionIds = SetUtil.set2MoreOutSet1(existPositionIds, newPositionIds);
+                    Set<String> delPositionIds = SetUtil.set2MoreOutSet1(newPositionIds, existPositionIds);
                     if (CollectionUtils.isNotEmpty(delPositionIds)) {
                         this.deleteByUserIdAndPositionIds(args.getUserId(), delPositionIds);
                     }

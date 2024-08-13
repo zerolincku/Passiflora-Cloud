@@ -33,6 +33,7 @@ dependencies {
         api 'io.minio:minio:8.5.10'
         api 'org.apache.commons:commons-lang3:3.16.0'
         api 'org.apache.commons:commons-collections4:4.4'
+        api 'commons-codec:commons-codec:1.17.1'
         api 'com.google.guava:guava:33.2.1-jre'
     }
 }

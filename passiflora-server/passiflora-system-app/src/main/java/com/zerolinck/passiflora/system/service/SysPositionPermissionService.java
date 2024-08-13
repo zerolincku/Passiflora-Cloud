@@ -18,10 +18,7 @@ package com.zerolinck.passiflora.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.SetUtil;
+import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.system.args.PositionPermissionSaveArgs;
@@ -29,12 +26,11 @@ import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
 import com.zerolinck.passiflora.system.mapper.SysPositionPermissionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /**
  * @author linck
@@ -109,10 +105,10 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
                     Set<String> exitPermissionIdSet =
                             new HashSet<>(this.permissionIdsByPositionIds(List.of(args.getPositionId())));
                     Set<String> newPermissionIdSet = new HashSet<>(args.getPermissionIds());
-                    Set<String> needAdd = SetUtil.differenceSet2FromSet1(exitPermissionIdSet, newPermissionIdSet);
-                    Set<String> needDelete = SetUtil.differenceSet2FromSet1(newPermissionIdSet, exitPermissionIdSet);
+                    Set<String> needAdd = SetUtil.set2MoreOutSet1(exitPermissionIdSet, newPermissionIdSet);
+                    Set<String> needDelete = SetUtil.set2MoreOutSet1(newPermissionIdSet, exitPermissionIdSet);
                     if (CollectionUtils.isNotEmpty(needDelete)) {
-                        this.deleteByIds(needDelete);
+                        ProxyUtil.proxy(this.getClass()).deleteByIds(needDelete);
                     }
                     if (CollectionUtils.isNotEmpty(needAdd)) {
                         List<SysPositionPermission> addList = new ArrayList<>();
@@ -122,7 +118,7 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
                             sysPositionPermission.setPermissionId(permissionId);
                             addList.add(sysPositionPermission);
                         });
-                        this.saveBatch(addList);
+                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
                     return null;
                 });

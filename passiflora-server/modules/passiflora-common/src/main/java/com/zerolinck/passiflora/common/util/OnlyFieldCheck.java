@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,6 +43,7 @@ public class OnlyFieldCheck {
     private static final Map<Class<?>, List<CheckField>> map = new HashMap<>();
 
     @SneakyThrows
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void checkInsert(BaseMapper baseMapper, Object entity) {
         checkCache(entity);
         List<CheckField> fields = map.get(entity.getClass());
@@ -67,6 +69,7 @@ public class OnlyFieldCheck {
     }
 
     @SneakyThrows
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void checkUpdate(BaseMapper baseMapper, Object entity) {
         checkCache(entity);
         List<CheckField> fields = map.get(entity.getClass());
@@ -128,6 +131,7 @@ public class OnlyFieldCheck {
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckField {
 

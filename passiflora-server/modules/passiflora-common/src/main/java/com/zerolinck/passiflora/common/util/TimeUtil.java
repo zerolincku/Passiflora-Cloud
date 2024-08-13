@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import jakarta.annotation.Nonnull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
@@ -45,7 +46,8 @@ public class TimeUtil {
 
     public static final DateTimeFormatter NORMAL_TIME_FORMATTER_NO_SECOND = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static LocalDateTime commonStrDate2LocalDateTime(String dateStr) {
+    @Nonnull
+    public static LocalDateTime commonStrDate2LocalDateTime(@Nonnull String dateStr) {
         if (NORMAL.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER);
         } else if (NO_SECOND.matcher(dateStr).matches()) {
@@ -58,6 +60,7 @@ public class TimeUtil {
         throw new RuntimeException("时间参数错误: " + dateStr);
     }
 
+    @Nonnull
     public static String getDateStrNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }

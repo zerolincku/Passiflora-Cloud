@@ -16,17 +16,13 @@
  */
 package com.zerolinck.passiflora.system.service;
 
-import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.RedisUtils;
+import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
@@ -98,8 +94,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     }
 
     public void add(@Nonnull SysUserSaveArgs args) {
-        args.setSalt(BCrypt.gensalt());
-        args.setUserPassword(BCrypt.hashpw(args.getUserPassword(), args.getSalt()));
+        args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysUser>().lock(SysUser::getUserName, args.getUserName()), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, args);
@@ -141,7 +136,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         if (dbSysUser == null) {
             throw new BizException("账号或密码错误");
         }
-        if (!BCrypt.checkpw(sysUser.getUserPassword(), dbSysUser.getUserPassword())) {
+        if (!PwdUtil.verifyPassword(sysUser.getUserPassword(), dbSysUser.getUserPassword())) {
             throw new BizException("账号或密码错误");
         }
         String token = IdWorker.getIdStr();

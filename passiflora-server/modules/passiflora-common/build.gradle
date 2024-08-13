@@ -33,5 +33,6 @@ dependencies {
     api 'org.redisson:redisson'
     api 'org.apache.commons:commons-lang3'
     api 'org.apache.commons:commons-collections4'
+    api 'commons-codec:commons-codec:1.17.1'
     api 'com.google.guava:guava'
 }

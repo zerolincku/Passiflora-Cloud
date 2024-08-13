@@ -1,7 +1,6 @@
 package com.zerolinck.passiflora.${moduleName}.service;
 
 import org.apache.commons.collections4.CollectionUtilss;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.CurrentUtil;

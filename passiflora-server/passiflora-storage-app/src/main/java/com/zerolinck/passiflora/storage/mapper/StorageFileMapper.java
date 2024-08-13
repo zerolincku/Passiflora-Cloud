@@ -24,12 +24,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * 通用文件 Mybatis Mapper
@@ -46,7 +45,8 @@ public interface StorageFileMapper extends BaseMapper<StorageFile> {
             @Nonnull @Param("sortWrapper") QueryWrapper<StorageFile> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Nonnull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
+    int deleteByIds(
+            @Nonnull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
 
     @Select("SELECT * FROM storage_file WHERE file_md5 = #{fileMd5} AND del_flag = 0")
     List<StorageFile> listByFileMd5(@Nonnull @Param("fileMd5") String fileMd5);

@@ -30,13 +30,12 @@ import com.zerolinck.passiflora.model.system.vo.SysOrgVo;
 import com.zerolinck.passiflora.system.mapper.SysOrgMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author linck
@@ -133,8 +132,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
                 .collect(Collectors.toMap(SysOrg::getOrgId, SysOrg::getOrgName));
     }
 
-    @Nullable
-    @SuppressWarnings("unused")
+    @Nullable @SuppressWarnings("unused")
     public SysOrg selectByOrgCode(@Nonnull String orgCode) {
         return baseMapper.selectByOrgCode(orgCode);
     }
