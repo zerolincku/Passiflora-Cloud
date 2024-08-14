@@ -14,13 +14,11 @@ configurations {
 ext {
     // 默认是开发环境；切换生产环境使用 gradle -Denv=prod
     environment = System.getProperty("env", "dev")
-    print('使用 ' + environment + ' 环境编译')
+    print('> 使用 ' + environment + ' 环境编译')
     configFile = file('../config.groovy')
     configMap = new ConfigSlurper(environment).parse(configFile.toURI().toURL()).toProperties()
-    configMap['projectVersion'] = project.version
-    configMap['env'] = environment
-    configMap['isProd'] = (environment == 'prod') ? 'true' : 'false'
-    configMap['isDev'] = (environment == 'dev') ? 'true' : 'false'
+    configMap.put('projectVersion', project.version)
+    configMap.put('env', project.environment)
 }
 
 dependencies {
@@ -41,7 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // 非开发环境，排除 Swagger UI
-    if (configMap['isDev'] == 'true') {
+    if (configMap['env'] == 'dev') {
         implementation 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter'
     } else {
         implementation('com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter') {

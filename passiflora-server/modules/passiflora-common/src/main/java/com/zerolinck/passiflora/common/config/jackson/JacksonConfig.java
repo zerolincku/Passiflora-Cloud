@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.common.config.jackson;
 
-import cn.hutool.core.util.ClassUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -30,6 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
+import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -71,11 +71,7 @@ public class JacksonConfig {
         deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER));
         deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
 
-        // 扫描当前项目下所有 LabelValueInterface 实现类
-        Set<Class<?>> classes = ClassUtil.scanPackage(
-                "com.zerolinck",
-                aClass -> LabelValueInterface.class.isAssignableFrom(aClass)
-                        && !LabelValueInterface.class.equals(aClass));
+        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
 
         // 自动注册枚举反序列化规则
         classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer() {

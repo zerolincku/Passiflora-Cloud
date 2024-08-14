@@ -52,5 +52,4 @@ public class PwdUtil {
         String salt = hashPwd.substring(0, 10);
         return hashPwd.equals(salt + DigestUtils.sha1Hex(salt + password));
     }
-
 }

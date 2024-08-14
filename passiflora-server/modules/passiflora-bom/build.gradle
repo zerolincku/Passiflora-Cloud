@@ -9,7 +9,6 @@ dependencies {
         api 'info.picocli:picocli:4.7.5'
         api 'org.postgresql:postgresql:42.2.27'
         api 'org.projectlombok:lombok:1.18.30'
-        api 'cn.hutool:hutool-all:5.8.27'
         api 'cn.hutool:hutool-core:5.8.27'
         api 'cn.hutool:hutool-db:5.8.27'
         api 'cn.hutool:hutool-extra:5.8.27'

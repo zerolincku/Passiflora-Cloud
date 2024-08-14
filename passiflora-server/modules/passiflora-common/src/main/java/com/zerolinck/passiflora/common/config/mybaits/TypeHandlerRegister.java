@@ -16,10 +16,10 @@
  */
 package com.zerolinck.passiflora.common.config.mybaits;
 
-import cn.hutool.core.util.ClassUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.util.EnumUtil;
+import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -48,10 +48,7 @@ public class TypeHandlerRegister {
     @SuppressWarnings("unchecked")
     public void init() {
         // 扫描当前项目下所有 LabelValueInterface 实现类
-        Set<Class<?>> classes = ClassUtil.scanPackage(
-                "com.zerolinck",
-                aClass -> LabelValueInterface.class.isAssignableFrom(aClass)
-                        && !LabelValueInterface.class.equals(aClass));
+        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
 
         sqlSessionFactory
                 .getConfiguration()
