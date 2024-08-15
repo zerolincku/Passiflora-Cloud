@@ -1,3 +1,4 @@
+---
 dev:
   nacos:
     serverAddr: "passiflora-nacos:8848"
