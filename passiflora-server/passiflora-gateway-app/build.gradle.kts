@@ -1,6 +1,6 @@
 plugins {
-    id("java")
-    id("org.springframework.boot") version "3.3.0"
+    java
+    id("org.springframework.boot") version Version.springBootVersion
 }
 
 configurations.all {
@@ -30,7 +30,7 @@ dependencies {
 
     // 非开发环境，排除 Swagger UI
     if (configMap.get("env") == "dev") {
-        implementation("com.github.xiaoymin:knife4j-gateway-spring-boot-starter:4.4.0")
+        implementation("com.github.xiaoymin:knife4j-gateway-spring-boot-starter")
     }
 }
 

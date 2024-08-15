@@ -31,8 +31,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    // 非开发环境，排除 Swagger UI
-    if (configMap["env"] == "dev") {
+    // 非开发环境，排除 Swagger(UI
+    if(configMap["env"] == "dev") {
         implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
     } else {
         implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter") {
@@ -44,19 +44,23 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
 
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
 
     implementation("org.redisson:redisson-spring-boot-starter")
     implementation("com.baomidou:mybatis-plus-boot-starter")
     implementation("cn.hutool:hutool-crypto")
+    implementation("cn.hutool:hutool-http")
     implementation("org.postgresql:postgresql")
 
     // liquibase
     liquibaseRuntime("org.liquibase:liquibase-core")
-    liquibaseRuntime("org.liquibase:liquibase-groovy-dsl")
+    liquibaseRuntime("org.liquibase:liquibase-kotlin-dsl")
     liquibaseRuntime("info.picocli:picocli")
     liquibaseRuntime("org.postgresql:postgresql")
+
+    implementation("io.minio:minio")
 }
 
 tasks {
@@ -84,9 +88,9 @@ tasks {
         activities.register("main") {
             this.arguments = mapOf(
                 "changeLogFile" to "src/main/resources/db/main.xml",
-                "url" to configMap["system_app_database_url"],
-                "username" to configMap["system_app_database_username"],
-                "password" to configMap["system_app_database_username"],
+                "url" to configMap["storage_app_database_url"],
+                "username" to configMap["storage_app_database_username"],
+                "password" to configMap["storage_app_database_username"],
                 "logLevel" to "info"
             )
         }
