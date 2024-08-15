@@ -39,6 +39,11 @@ spotless {
         formatAnnotations()
         licenseHeader(header)
     }
+    yaml {
+        target("**/application*.yml")
+        jackson()
+        prettier()
+    }
 }
 
 tasks.compileJava { dependsOn("spotlessApply") }

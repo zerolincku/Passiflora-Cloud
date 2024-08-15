@@ -13,9 +13,9 @@ spring:
       discovery:
         server-addr: ${nacos_serverAddr}
   datasource:
+    url: ${storage_app.database.url}
     username: ${storage_app_database_username}
     password: ${storage_app_database_password}
-    url: ${storage_app.database.url}
     driver-class-name: org.postgresql.Driver
   data:
     redis:

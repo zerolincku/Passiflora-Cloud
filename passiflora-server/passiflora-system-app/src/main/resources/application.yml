@@ -3,7 +3,6 @@ server:
   servlet:
     context-path: /passiflora/system-api
 
-
 spring:
   application:
     name: passiflora-system-app
@@ -14,9 +13,9 @@ spring:
       discovery:
         server-addr: ${nacos_serverAddr}
   datasource:
-    username:  ${system_app_database_username}
-    password:  ${system_app_database_password}
     url: ${system_app_database_url}
+    username: ${system_app_database_username}
+    password: ${system_app_database_password}
     driver-class-name: org.postgresql.Driver
   data:
     redis:
