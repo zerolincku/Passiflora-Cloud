@@ -53,8 +53,6 @@ dependencies {
     implementation("org.postgresql:postgresql")
 
     // liquibase
-    implementation("org.liquibase:liquibase-core")
-    implementation("org.liquibase:liquibase-groovy-dsl")
     liquibaseRuntime("org.liquibase:liquibase-core")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl")
     liquibaseRuntime("info.picocli:picocli")
