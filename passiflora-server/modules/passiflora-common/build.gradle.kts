@@ -33,6 +33,6 @@ dependencies {
     api("org.apache.commons:commons-lang3")
     api("org.apache.commons:commons-collections4")
     api("commons-codec:commons-codec")
-    api("commons-io:commons-io:2.16.1")
+    api("commons-io:commons-io")
     api("com.google.guava:guava")
 }
