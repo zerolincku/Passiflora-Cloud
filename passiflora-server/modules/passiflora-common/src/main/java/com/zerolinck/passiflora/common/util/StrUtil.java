@@ -18,24 +18,20 @@ package com.zerolinck.passiflora.common.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /** @author 林常坤 on 2024/08/16 */
 public class StrUtil {
 
-    public static String str(Object obj, Charset charset) {
-        if (null == obj) {
-            return null;
-        }
-
-        if (obj instanceof String) {
-            return (String) obj;
-        } else if (obj instanceof byte[] bytes) {
-            return str(bytes, charset);
-        } else if (obj instanceof Byte[] bytes) {
-            return str(bytes, charset);
-        } else if (obj instanceof ByteBuffer byteBuffer) {
-            return str(byteBuffer, charset);
-        }
-        return obj.toString();
+    @Nullable public static String str(@Nullable Object obj, @Nonnull Charset charset) {
+        return switch (obj) {
+            case null -> null;
+            case String s -> s;
+            case byte[] bytes -> str(bytes, charset);
+            case Byte[] bytes -> str(bytes, charset);
+            case ByteBuffer byteBuffer -> str(byteBuffer, charset);
+            default -> obj.toString();
+        };
     }
 }

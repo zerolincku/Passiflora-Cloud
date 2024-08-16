@@ -25,6 +25,7 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.annotation.Nonnull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -35,6 +36,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class NetUtil {
 
     /** 查询网卡 ip 地址 */
+    @Nonnull
     public static String findOutIp() throws SocketException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         AtomicReference<String> ip = new AtomicReference<>(null);
@@ -51,6 +53,7 @@ public class NetUtil {
         return ip.get();
     }
 
+    @Nonnull
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -58,10 +61,12 @@ public class NetUtil {
         return servletRequestAttributes.getRequest();
     }
 
+    @Nonnull
     public static HttpServletResponse getResponse() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
+        assert servletRequestAttributes.getResponse() != null;
         return servletRequestAttributes.getResponse();
     }
 }

@@ -18,6 +18,8 @@ package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.common.exception.BizException;
 import java.util.Collection;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author linck
@@ -25,25 +27,25 @@ import java.util.Collection;
  */
 public class AssertUtil {
 
-    public static void notEmpty(Collection<?> collection, String message) {
+    public static void notEmpty(@Nullable Collection<?> collection, @Nonnull String message) {
         if (collection == null || collection.isEmpty()) {
             throw new BizException(message);
         }
     }
 
-    public static void notBlank(CharSequence charSequence, String message) {
+    public static void notBlank(@Nullable CharSequence charSequence, @Nonnull String message) {
         if (charSequence == null || charSequence.isEmpty()) {
             throw new BizException(message);
         }
     }
 
-    public static void notNull(Object object, String message) {
+    public static void notNull(@Nullable Object object, @Nonnull String message) {
         if (object == null) {
             throw new BizException(message);
         }
     }
 
-    public static void notNull(Object object, String message, Object... args) {
+    public static void notNull(@Nullable Object object, @Nonnull String message, @Nonnull Object... args) {
         if (object == null) {
             throw new BizException(message, args);
         }

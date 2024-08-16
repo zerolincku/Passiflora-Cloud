@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
+import javax.annotation.Nonnull;
 
 /**
  * @author linck
@@ -24,7 +25,9 @@ import com.zerolinck.passiflora.model.common.LabelValueInterface;
  */
 public class EnumUtil {
 
-    public static LabelValueInterface getEnumByValue(Class<? extends LabelValueInterface> clazz, Object value) {
+    @Nonnull
+    public static LabelValueInterface getEnumByValue(
+            @Nonnull Class<? extends LabelValueInterface> clazz, @Nonnull Object value) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getValue().equals(value)) {
@@ -34,7 +37,9 @@ public class EnumUtil {
         throw new RuntimeException(clazz.getSimpleName() + " 无此value: " + value);
     }
 
-    public static LabelValueInterface getEnumByName(Class<? extends LabelValueInterface> clazz, Object name) {
+    @Nonnull
+    public static LabelValueInterface getEnumByName(
+            @Nonnull Class<? extends LabelValueInterface> clazz, @Nonnull Object name) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getLabel().equals(name)) {

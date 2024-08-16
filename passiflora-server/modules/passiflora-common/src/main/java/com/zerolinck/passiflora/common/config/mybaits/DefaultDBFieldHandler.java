@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +76,7 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
         }
         // 2. 如果用户有手动设置的值
         Object userSetValue = metaObject.getValue(fieldName);
-        String setValueStr = StrUtil.str(userSetValue, Charset.defaultCharset());
+        String setValueStr = StrUtil.str(userSetValue, StandardCharsets.UTF_8);
         if (StringUtils.isNotBlank(setValueStr) && !isCover) {
             return;
         }
