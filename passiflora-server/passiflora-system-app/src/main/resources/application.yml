@@ -7,21 +7,21 @@ spring:
   application:
     name: passiflora-system-app
   profiles:
-    active: ${env}
+    active: @env@
   cloud:
     nacos:
       discovery:
-        server-addr: ${nacos_serverAddr}
+        server-addr: @nacos.serverAddr@
   datasource:
-    url: ${system_app_database_url}
-    username: ${system_app_database_username}
-    password: ${system_app_database_password}
+    url: @system_app.database.url@
+    username: @system_app.database.username@
+    password: @system_app.database.password@
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      database: ${redis_database}
-      host: ${redis_host}
-      port: ${redis_port}
+      database: @redis.database@
+      host: @redis.host@
+      port: @redis.port@
 
 feign:
   compression:
@@ -58,4 +58,4 @@ passiflora:
     globalFilter: true
     lock: true
     cache: true
-  project-version: ${projectVersion}
+  project-version: @projectVersion@

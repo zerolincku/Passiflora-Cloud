@@ -7,21 +7,21 @@ spring:
   application:
     name: passiflora-storage-app
   profiles:
-    active: ${env}
+    active: @env@
   cloud:
     nacos:
       discovery:
-        server-addr: ${nacos_serverAddr}
+        server-addr: @nacos.serverAddr@
   datasource:
-    url: ${storage_app_database_url}
-    username: ${storage_app_database_username}
-    password: ${storage_app_database_password}
+    url: @storage_app.database.url@
+    username: @storage_app.database.username@
+    password: @storage_app.database.password@
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      database: ${redis_database}
-      host: ${redis_host}
-      port: ${redis_port}
+      database: @redis.database@
+      host: @redis.host@
+      port: @redis.port@
 
 feign:
   compression:
@@ -55,11 +55,11 @@ passiflora:
     globalFilter: true
     lock: true
     cache: true
-  project-version: ${projectVersion}
+  project-version: @projectVersion@
 
   storage:
     bucket-name: passiflora
     minio:
-      endpoint: ${minio_endpoint}
-      access-key: ${minio_accessKey}
-      secret-key: ${minio_secretKey}
+      endpoint: @minio.endpoint@
+      access-key: @minio.accessKey@
+      secret-key: @minio.secretKey@

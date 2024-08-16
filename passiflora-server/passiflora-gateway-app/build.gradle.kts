@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     java
     id("org.springframework.boot") version Version.springBootVersion
@@ -39,7 +41,6 @@ tasks {
         enabled = false
     }
     processResources {
-        include("**/*.yml")
-        expand(configMap)
+        filter<ReplaceTokens>("tokens" to configMap)
     }
 }

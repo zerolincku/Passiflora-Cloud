@@ -34,14 +34,9 @@ spotless {
         target("**/*.java")
         importOrder()
         removeUnusedImports()
-        cleanthat()
         palantirJavaFormat().formatJavadoc(true)
         formatAnnotations()
         licenseHeader(header)
-    }
-    yaml {
-        target("**/application*.yml")
-        prettier()
     }
 }
 

@@ -33,7 +33,7 @@
             <root level="info">
                 <appender-ref ref="Console" />
             </root>
-            <logger name="com.zerolinck.passiflora.system.mapper" level="debug"/>
+            <logger name="com.zerolinck.passiflora.system.mapper" level="info"/>
         </loggers>
     </springProfile>
 

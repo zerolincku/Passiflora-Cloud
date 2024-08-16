@@ -13,7 +13,7 @@ fun configMap(path: String, env: String, projectVersion: String): MutableMap<Str
 
 fun processConfigMap(configMap: MutableMap<String, String>, map: Map<String, Any>, parentKey: String = "") {
     map.forEach { key, value ->
-        val keyWithPrefix = if (parentKey.isEmpty()) key else "${parentKey}_${key}"
+        val keyWithPrefix = if (parentKey.isEmpty()) key else "${parentKey}.${key}"
         when (value) {
             is Map<*, *> -> {
                 // 如果值是Map，则递归调用processMap

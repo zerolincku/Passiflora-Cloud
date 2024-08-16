@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     java
     jacoco
@@ -61,8 +63,8 @@ dependencies {
 
 tasks {
     processResources {
-        include("**/*.yml")
-        expand(configMap)
+        exclude("db/**")
+        filter<ReplaceTokens>("tokens" to configMap)
     }
     compileJava {
         doLast {
@@ -84,9 +86,9 @@ tasks {
         activities.register("main") {
             this.arguments = mapOf(
                 "changeLogFile" to "src/main/resources/db/main.yml",
-                "url" to configMap["system_app_database_url"],
-                "username" to configMap["system_app_database_username"],
-                "password" to configMap["system_app_database_username"],
+                "url" to configMap["system_app.database.url"],
+                "username" to configMap["system_app.database.username"],
+                "password" to configMap["system_app.database.password"],
                 "logLevel" to "info"
             )
         }
