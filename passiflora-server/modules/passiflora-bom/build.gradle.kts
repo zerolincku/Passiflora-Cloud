@@ -5,8 +5,8 @@ plugins {
 dependencies {
     constraints {
         api("commons-httpclient:commons-httpclient:3.1")
-        api("org.liquibase:liquibase-core:4.25.1")
-        api("org.liquibase:liquibase-groovy-dsl:3.0.3")
+        api("org.liquibase:liquibase-core:4.29.1")
+        api("org.liquibase:liquibase-groovy-dsl:4.0.0")
         api("info.picocli:picocli:4.7.5")
         api("org.postgresql:postgresql:42.2.27")
         api("org.projectlombok:lombok:1.18.30")

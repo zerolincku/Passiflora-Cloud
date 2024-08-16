@@ -56,7 +56,7 @@ dependencies {
 
     // liquibase
     liquibaseRuntime("org.liquibase:liquibase-core")
-    liquibaseRuntime("org.liquibase:liquibase-kotlin-dsl")
+    liquibaseRuntime("org.liquibase:liquibase-groovy-dsl")
     liquibaseRuntime("info.picocli:picocli")
     liquibaseRuntime("org.postgresql:postgresql")
 
@@ -87,7 +87,7 @@ tasks {
     liquibase {
         activities.register("main") {
             this.arguments = mapOf(
-                "changeLogFile" to "src/main/resources/db/main.xml",
+                "changeLogFile" to "src/main/resources/db/main.yml",
                 "url" to configMap["storage_app_database_url"],
                 "username" to configMap["storage_app_database_username"],
                 "password" to configMap["storage_app_database_username"],
