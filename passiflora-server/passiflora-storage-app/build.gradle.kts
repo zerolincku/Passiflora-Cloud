@@ -50,8 +50,6 @@ dependencies {
 
     implementation("org.redisson:redisson-spring-boot-starter")
     implementation("com.baomidou:mybatis-plus-boot-starter")
-    implementation("cn.hutool:hutool-crypto")
-    implementation("cn.hutool:hutool-http")
     implementation("org.postgresql:postgresql")
 
     // liquibase

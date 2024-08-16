@@ -22,13 +22,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cn.hutool.crypto.digest.DigestUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -91,7 +91,7 @@ public class StorageFileControllerTest {
         StorageFile storageFile = new StorageFile();
         storageFile.setOriginalFileName("quickTest.txt");
         storageFile.setContentType("text/plain");
-        storageFile.setFileMd5(DigestUtil.md5Hex(file.getBytes()));
+        storageFile.setFileMd5(DigestUtils.md5Hex(file.getBytes()));
         mockMvc.perform(post("/storageFile/tryQuicklyUpload")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(storageFile)))

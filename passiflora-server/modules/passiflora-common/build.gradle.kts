@@ -20,7 +20,6 @@ dependencies {
     compileOnlyApi("com.fasterxml.jackson.core:jackson-databind")
     compileOnlyApi("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     compileOnlyApi("com.fasterxml.jackson.core:jackson-core")
-    compileOnlyApi("cn.hutool:hutool-core")
     compileOnlyApi("org.springframework.boot:spring-boot-autoconfigure")
     compileOnlyApi("org.springframework:spring-web")
     compileOnlyApi("org.apache.tomcat.embed:tomcat-embed-core")
@@ -34,5 +33,6 @@ dependencies {
     api("org.apache.commons:commons-lang3")
     api("org.apache.commons:commons-collections4")
     api("commons-codec:commons-codec")
+    api("commons-io:commons-io:2.16.1")
     api("com.google.guava:guava")
 }

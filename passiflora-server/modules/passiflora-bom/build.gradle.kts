@@ -10,11 +10,6 @@ dependencies {
         api("info.picocli:picocli:4.7.5")
         api("org.postgresql:postgresql:42.2.27")
         api("org.projectlombok:lombok:1.18.30")
-        api("cn.hutool:hutool-core:5.8.27")
-        api("cn.hutool:hutool-db:5.8.27")
-        api("cn.hutool:hutool-extra:5.8.27")
-        api("cn.hutool:hutool-crypto:5.8.27")
-        api("cn.hutool:hutool-http:5.8.27")
         api("org.mapstruct:mapstruct:1.5.5.Final")
         api("org.mapstruct:mapstruct-processor:1.5.5.Final")
         api("org.projectlombok:lombok-mapstruct-binding:0.2.0")
@@ -35,6 +30,7 @@ dependencies {
         api("org.apache.commons:commons-lang3:3.16.0")
         api("org.apache.commons:commons-collections4:4.4")
         api("commons-codec:commons-codec:1.17.1")
+        api("commons-io:commons-io:2.16.1")
         api("com.google.guava:guava:33.2.1-jre")
     }
 }

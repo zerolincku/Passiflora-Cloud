@@ -20,7 +20,6 @@ dependencies {
 
     api("org.springframework.cloud:spring-cloud-openfeign-core")
     api("io.swagger.core.v3:swagger-annotations-jakarta")
-    api("cn.hutool:hutool-extra")
     api("io.github.openfeign:feign-core")
     implementation("org.apache.tomcat.embed:tomcat-embed-core")
 }

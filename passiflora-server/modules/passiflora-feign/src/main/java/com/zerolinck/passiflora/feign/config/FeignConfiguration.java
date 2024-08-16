@@ -16,8 +16,8 @@
  */
 package com.zerolinck.passiflora.feign.config;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.zerolinck.passiflora.common.util.NetUtil;
+import com.zerolinck.passiflora.common.util.SpringContextHolder;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import feign.Logger;
 import feign.RequestInterceptor;
@@ -45,6 +45,6 @@ public class FeignConfiguration implements RequestInterceptor {
         String traceId = request.getHeader("traceId");
         requestTemplate.header(Constants.Authorization, authorization);
         requestTemplate.header(Constants.traceId, traceId);
-        requestTemplate.header("req-from", SpringUtil.getProperty("spring.application.name"));
+        requestTemplate.header("req-from", SpringContextHolder.getProperty("spring.application.name"));
     }
 }

@@ -16,10 +16,10 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.google.common.base.CaseFormat;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.valid.OnlyField;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -85,7 +85,9 @@ public class OnlyFieldCheck {
             Long count = baseMapper.selectCount(new QueryWrapper<>()
                     .eq(field.getFieldName(), fieldValue)
                     .ne(
-                            StrUtil.toUnderlineCase(field.getIdField().getName()),
+                            CaseFormat.LOWER_CAMEL.to(
+                                    CaseFormat.LOWER_UNDERSCORE,
+                                    field.getIdField().getName()),
                             field.getIdField().get(entity)));
             if (count > 0) {
                 String message;
@@ -123,7 +125,11 @@ public class OnlyFieldCheck {
                     desc = schema.description();
                 }
                 CheckField checkField = new CheckField(
-                        field, idField, StrUtil.toUnderlineCase(field.getName()), desc, annotation.message());
+                        field,
+                        idField,
+                        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName()),
+                        desc,
+                        annotation.message());
                 result.add(checkField);
             }
             map.put(entity.getClass(), result);

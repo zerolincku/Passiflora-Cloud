@@ -16,9 +16,9 @@
  */
 package com.zerolinck.passiflora.common.config.mybaits;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;

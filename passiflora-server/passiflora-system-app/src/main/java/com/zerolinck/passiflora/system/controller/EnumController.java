@@ -16,8 +16,8 @@
  */
 package com.zerolinck.passiflora.system.controller;
 
-import cn.hutool.core.util.ClassUtil;
 import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.feign.system.EnumApi;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import jakarta.annotation.PostConstruct;
@@ -47,10 +47,9 @@ public class EnumController implements EnumApi {
 
     @SneakyThrows
     private void initEnum(Class<?> c) {
-        Set<Class<?>> classes1 =
-                ClassUtil.scanPackage("com.zerolinck", aClass -> c.isAssignableFrom(aClass) && !c.equals(aClass));
+        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
 
-        for (Class<?> clazz : classes1) {
+        for (Class<?> clazz : classes) {
             Object[] enumConstants = clazz.getEnumConstants();
             // 遍历枚举实例
             for (Object enumInstance : enumConstants) {

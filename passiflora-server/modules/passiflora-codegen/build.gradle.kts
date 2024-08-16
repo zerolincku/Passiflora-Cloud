@@ -15,8 +15,8 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
 
     runtimeOnly("org.postgresql:postgresql")
-    implementation("cn.hutool:hutool-db")
-    implementation("cn.hutool:hutool-extra")
+    implementation("cn.hutool:hutool-db:5.8.27")
+    implementation("cn.hutool:hutool-extra:5.8.27")
     implementation("org.freemarker:freemarker")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.core:jackson-core")

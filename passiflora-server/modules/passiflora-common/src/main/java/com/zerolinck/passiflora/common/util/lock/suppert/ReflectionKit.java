@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.common.util.lock.suppert;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
-import cn.hutool.core.lang.Assert;
+import com.zerolinck.passiflora.common.util.AssertUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -65,7 +65,7 @@ public final class ReflectionKit {
         Map<String, Field> fieldMaps = getFieldMap(cls);
         try {
             Field field = fieldMaps.get(fieldName);
-            Assert.notNull(field, "Error: NoSuchField in %s for %s.  Cause:", cls.getSimpleName(), fieldName);
+            AssertUtil.notNull(field, "Error: NoSuchField in %s for %s.  Cause:", cls.getSimpleName(), fieldName);
             field.setAccessible(true);
             return field.get(entity);
         } catch (ReflectiveOperationException e) {
@@ -164,7 +164,7 @@ public final class ReflectionKit {
      */
     @Deprecated
     public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
-        Assert.notNull(clazz, "Class must not be null");
+        AssertUtil.notNull(clazz, "Class must not be null");
         return (clazz.isPrimitive() || PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(clazz));
     }
 

@@ -29,6 +29,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // 非开发环境，排除 Swagger UI
@@ -49,7 +50,6 @@ dependencies {
 
     implementation("org.redisson:redisson-spring-boot-starter")
     implementation("com.baomidou:mybatis-plus-boot-starter")
-    implementation("cn.hutool:hutool-crypto")
     implementation("org.postgresql:postgresql")
 
     // liquibase

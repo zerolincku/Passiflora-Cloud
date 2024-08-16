@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.common.util;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,12 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     @Nonnull
     public static <T> T getBean(@Nonnull Class<T> requiredType) {
         return applicationContext.getBean(requiredType);
+    }
+
+    @Nullable public static String getProperty(String key) {
+        return null == applicationContext
+                ? null
+                : applicationContext.getEnvironment().getProperty(key);
     }
 
     /** 清除SpringContextHolder中的ApplicationContext为Null. */

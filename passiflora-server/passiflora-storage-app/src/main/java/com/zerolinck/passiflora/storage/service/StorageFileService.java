@@ -16,10 +16,6 @@
  */
 package com.zerolinck.passiflora.storage.service;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.net.URLEncodeUtil;
-import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.http.Header;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,6 +26,7 @@ import com.zerolinck.passiflora.common.util.NetUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.common.constant.Header;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
@@ -43,7 +40,10 @@ import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
@@ -65,6 +65,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
+    private static final URLCodec urlCodec = new URLCodec();
 
     @Nonnull
     public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
@@ -110,7 +111,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     @Nonnull
     @SneakyThrows
     public String upload(@Nonnull MultipartFile file, @Nonnull String fileName) {
-        String md5Hex = DigestUtil.md5Hex(file.getBytes());
+        String md5Hex = DigestUtils.md5Hex(file.getBytes());
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, md5Hex), true, () -> {
                     String bucket = passifloraProperties.getStorage().getBucketName();
@@ -123,7 +124,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     storageFile.setFileMd5(md5Hex);
                     storageFile.setFileSize(file.getSize());
                     storageFile.setFileStatus(FileStatusEnum.TEMP);
-                    String extName = FileUtil.extName(storageFile.getOriginalFileName());
+                    String extName = FilenameUtils.getExtension(storageFile.getOriginalFileName());
                     String objectName = md5Hex + "." + extName;
                     storageFile.setBucketName(bucket);
                     storageFile.setObjectName(objectName);
@@ -241,7 +242,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         }
         response.setHeader(
                 Header.CONTENT_DISPOSITION.getValue(),
-                "attachment; filename=" + URLEncodeUtil.encode(storageFile.getOriginalFileName()));
+                "attachment; filename=" + urlCodec.encode(storageFile.getOriginalFileName()));
         IOUtils.copy(inputStream, response.getOutputStream());
         baseMapper.incrDownCount(fileId);
     }
@@ -250,8 +251,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     public void downloadZip(@Nonnull List<String> fileIds) {
         NetUtil.getResponse()
                 .setHeader(
-                        Header.CONTENT_DISPOSITION.getValue(),
-                        "attachment; filename=" + URLEncodeUtil.encode("文件压缩包.zip"));
+                        Header.CONTENT_DISPOSITION.getValue(), "attachment; filename=" + urlCodec.encode("文件压缩包.zip"));
         ZipOutputStream zipOut = new ZipOutputStream(NetUtil.getResponse().getOutputStream());
         Set<String> fileNameSet = new HashSet<>();
         for (String fileId : fileIds) {
