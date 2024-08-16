@@ -17,9 +17,12 @@
 package com.zerolinck.passiflora.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Set;
 
@@ -59,6 +62,15 @@ public class CurrentUtil {
         SysUser currentUser = getCurrentUser();
         if (currentUser == null) {
             return null;
+        }
+        return currentUser.getUserId();
+    }
+
+    @Nonnull
+    public static String requireCurrentUserId() {
+        SysUser currentUser = getCurrentUser();
+        if (currentUser == null) {
+            throw new BizException(ResultCodeEnum.UNAUTHORIZED);
         }
         return currentUser.getUserId();
     }

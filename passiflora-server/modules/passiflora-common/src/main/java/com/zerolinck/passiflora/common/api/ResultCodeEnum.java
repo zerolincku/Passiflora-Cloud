@@ -27,7 +27,7 @@ public enum ResultCodeEnum implements IErrorCode {
     /** 加锁失败 */
     COMPETE_FAILED(50001, "操作失败，请刷新重试"),
 
-    UNAUTHORIZED(401, "暂未登录或token已经过期"),
+    UNAUTHORIZED(401, "登录凭证过期"),
     FORBIDDEN(403, "没有相关权限"),
     NOT_FOUND(404, "404 NOT FOUND"),
 

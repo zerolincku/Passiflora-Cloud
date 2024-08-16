@@ -21,12 +21,10 @@ import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysUserApi;
 import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
-import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.valid.Login;
 import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
@@ -104,19 +102,8 @@ public class SysUserController implements SysUserApi {
     }
 
     @Override
-    public Result<SysUser> currentUserInfo() {
-        SysUserInfo sysUserInfo =
-                SysUserConvert.INSTANCE.entity2info(sysUserService.getById(CurrentUtil.getCurrentUserId()));
-        // FIXME mock data
-        sysUserInfo.getMenu().add("workplace");
-        sysUserInfo.getMenu().add("user");
-        sysUserInfo.getMenu().add("system");
-        sysUserInfo.getMenu().add("dict");
-        sysUserInfo.getMenu().add("organization");
-        sysUserInfo.getMenu().add("org");
-        sysUserInfo.getMenu().add("permission");
-        sysUserInfo.getMenu().add("position");
-        return Result.ok(sysUserInfo);
+    public Result<SysUserInfo> currentUserInfo() {
+        return Result.ok(sysUserService.currentUserInfo());
     }
 
     @Override

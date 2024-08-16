@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.*;
@@ -27,8 +28,11 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
+import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
+import com.zerolinck.passiflora.model.system.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
+import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
 import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
@@ -38,6 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +58,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     private final SysUserPositionService userPositionService;
     private final PassifloraProperties passifloraProperties;
     private final SysUserPositionService sysUserPositionService;
+    private final SysPermissionService sysPermissionService;
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
 
@@ -127,6 +133,28 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     @Nonnull
     public Optional<SysUser> detail(@Nonnull String userId) {
         return Optional.ofNullable(baseMapper.selectById(userId));
+    }
+
+    @Nonnull
+    public SysUserInfo currentUserInfo() {
+        String userId = CurrentUtil.getCurrentUserId();
+        SysUser sysUser = this.getById(userId);
+        if (StringUtils.isBlank(userId) || Objects.isNull(sysUser)) {
+            throw new BizException(ResultCodeEnum.UNAUTHORIZED);
+        }
+
+        SysUserInfo sysUserInfo = SysUserConvert.INSTANCE.entity2info(sysUser);
+        List<SysPermission> permissionList = sysPermissionService.listByUserIds(userId);
+
+        permissionList.forEach(sysPermission -> {
+            if (PermissionTypeEnum.MENU.equals(sysPermission.getPermissionType())
+                    || PermissionTypeEnum.MENU_SET.equals(sysPermission.getPermissionType())) {
+                sysUserInfo.getMenu().add(sysPermission.getPermissionName());
+            } else {
+                sysUserInfo.getPermission().add(sysPermission.getPermissionName());
+            }
+        });
+        return sysUserInfo;
     }
 
     @Nonnull

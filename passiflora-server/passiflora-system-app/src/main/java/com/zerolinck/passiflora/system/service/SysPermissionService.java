@@ -25,6 +25,7 @@ import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.enums.PermissionTypeEnum;
@@ -114,16 +115,10 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     @Nonnull
     public List<SysPermissionVo> menuTree() {
-        // TODO 查询当前用户有权限的菜单
-        Map<String, List<SysPermissionVo>> menuMap = baseMapper
-                .selectList(new LambdaQueryWrapper<SysPermission>()
-                        .eq(SysPermission::getPermissionStatus, StatusEnum.ENABLE)
-                        .in(
-                                SysPermission::getPermissionType,
-                                List.of(PermissionTypeEnum.MENU_SET, PermissionTypeEnum.MENU))
-                        .orderByAsc(SysPermission::getPermissionLevel)
-                        .orderByAsc(SysPermission::getOrder))
-                .stream()
+        Map<String, List<SysPermissionVo>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
+                .filter(permission -> PermissionTypeEnum.MENU.equals(permission.getPermissionType())
+                        || PermissionTypeEnum.MENU_SET.equals(permission.getPermissionType()))
+                .filter(permission -> StatusEnum.ENABLE.equals(permission.getPermissionStatus()))
                 .map(SysPermissionConvert.INSTANCE::entity2vo)
                 .collect(Collectors.groupingBy(SysPermissionVo::getPermissionParentId, Collectors.toList()));
         // 顶层菜单
@@ -137,19 +132,12 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
 
     @Nonnull
     public List<SysPermissionTableVo> permissionTableTree() {
-        // TODO 查询当前用户有权限的菜单
-        Map<String, List<SysPermissionTableVo>> menuMap = baseMapper
-                .selectList(new LambdaQueryWrapper<SysPermission>()
-                        .in(
-                                SysPermission::getPermissionType,
-                                List.of(PermissionTypeEnum.MENU_SET, PermissionTypeEnum.MENU))
-                        .orderByAsc(SysPermission::getPermissionLevel)
-                        .orderByAsc(SysPermission::getOrder))
-                .stream()
-                .map(SysPermissionConvert.INSTANCE::entity2tableVo)
-                .collect(Collectors.groupingBy(
-                        com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo::getPermissionParentId,
-                        Collectors.toList()));
+        Map<String, List<SysPermissionTableVo>> menuMap =
+                this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
+                        .map(SysPermissionConvert.INSTANCE::entity2tableVo)
+                        .collect(Collectors.groupingBy(
+                                com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo::getPermissionParentId,
+                                Collectors.toList()));
         // 顶层菜单
         List<SysPermissionTableVo> topMenu = menuMap.get("0");
         if (CollectionUtils.isEmpty(topMenu)) {
@@ -218,6 +206,12 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     @Nonnull
     @SuppressWarnings("unused")
     List<SysPermission> listByUserIds(@Nonnull String userId) {
+        if (Constants.SUPER_ADMIN_ID.equals(userId)) {
+            return baseMapper.selectList(new LambdaQueryWrapper<SysPermission>()
+                    .orderByAsc(SysPermission::getPermissionLevel)
+                    .orderByAsc(SysPermission::getOrder)
+                    .orderByAsc(SysPermission::getPermissionTitle));
+        }
         return baseMapper.listByUserId(userId);
     }
 

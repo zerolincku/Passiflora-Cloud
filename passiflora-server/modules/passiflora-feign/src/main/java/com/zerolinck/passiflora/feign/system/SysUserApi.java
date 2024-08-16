@@ -22,6 +22,7 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUser;
+import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
@@ -80,7 +81,7 @@ public interface SysUserApi {
 
     @Operation(summary = "获取当前登录用户信息")
     @GetMapping("currentUserInfo")
-    Result<SysUser> currentUserInfo();
+    Result<SysUserInfo> currentUserInfo();
 
     /**
      * 网关校验 Token 有效性调用

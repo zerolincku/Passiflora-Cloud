@@ -21,4 +21,6 @@ public interface Constants {
     String Authorization = "Authorization";
 
     String traceId = "traceId";
+
+    String SUPER_ADMIN_ID = "1";
 }
