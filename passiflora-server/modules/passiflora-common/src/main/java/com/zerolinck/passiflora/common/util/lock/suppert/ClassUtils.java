@@ -56,6 +56,7 @@ public final class ClassUtils {
      * @param type 类型
      * @return 如果是原生布尔或者包装类型布尔，均返回 true
      */
+    @SuppressWarnings("unused")
     public static boolean isBoolean(Class<?> type) {
         return type == boolean.class || Boolean.class == type;
     }
@@ -94,6 +95,7 @@ public final class ClassUtils {
      * @param object 对象
      * @return 返回对象的 user class
      */
+    @SuppressWarnings("unused")
     public static Class<?> getUserClass(Object object) {
         AssertUtil.notNull(object, "Instance must not be null");
         return getUserClass(object.getClass());
@@ -129,7 +131,7 @@ public final class ClassUtils {
      * @return 实例
      * @since 3.3.2
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unused"})
     public static <T> T newInstance(String clazzName) {
         return (T) newInstance(toClassConfident(clazzName));
     }
@@ -144,12 +146,6 @@ public final class ClassUtils {
         return toClassConfident(name, null);
     }
 
-    /**
-     * @param name
-     * @param classLoader
-     * @return
-     * @since 3.4.3
-     */
     public static Class<?> toClassConfident(String name, ClassLoader classLoader) {
         try {
             return loadClass(name, getClassLoaders(classLoader));

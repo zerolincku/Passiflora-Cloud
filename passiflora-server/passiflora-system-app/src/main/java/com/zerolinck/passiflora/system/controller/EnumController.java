@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.system.controller;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.feign.system.EnumApi;
-import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -37,7 +36,7 @@ public class EnumController implements EnumApi {
     @SneakyThrows
     @PostConstruct
     public void init() {
-        initEnum(LabelValueInterface.class);
+        initEnum();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class EnumController implements EnumApi {
     }
 
     @SneakyThrows
-    private void initEnum(Class<?> c) {
+    private void initEnum() {
         Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
 
         for (Class<?> clazz : classes) {

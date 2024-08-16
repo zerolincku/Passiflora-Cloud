@@ -38,6 +38,7 @@ public class EnumUtil {
     }
 
     @Nonnull
+    @SuppressWarnings("unused")
     public static LabelValueInterface getEnumByName(
             @Nonnull Class<? extends LabelValueInterface> clazz, @Nonnull Object name) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
