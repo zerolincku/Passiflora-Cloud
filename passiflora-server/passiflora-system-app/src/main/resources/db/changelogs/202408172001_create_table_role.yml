@@ -5,6 +5,7 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: sys_role
+            remarks: 角色
             columns:
               - column:
                   name: role_id
