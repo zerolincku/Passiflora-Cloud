@@ -36,11 +36,11 @@ public class GenerateCode {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> tableNames = List.of("sys_role", "sys_user_role");
+        List<String> tableNames = List.of("sys_role_permission");
         String moduleName = "system";
         String contextPath = "/passiflora/system-api";
         String author = "林常坤";
-        boolean overwrite = true;
+        boolean overwrite = false;
         render(tableNames, moduleName, contextPath, overwrite, author);
     }
 
