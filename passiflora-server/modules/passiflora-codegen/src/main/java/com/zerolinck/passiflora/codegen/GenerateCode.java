@@ -36,9 +36,9 @@ public class GenerateCode {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> tableNames = List.of("storage_file");
-        String moduleName = "storage";
-        String contextPath = "/passiflora/storage-api";
+        List<String> tableNames = List.of("sys_role", "sys_user_role");
+        String moduleName = "system";
+        String contextPath = "/passiflora/system-api";
         String author = "林常坤";
         boolean overwrite = true;
         render(tableNames, moduleName, contextPath, overwrite, author);

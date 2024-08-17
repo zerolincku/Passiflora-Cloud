@@ -38,15 +38,15 @@ public interface ${apiClass} {
     @Nonnull
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nullable @RequestBody @Validated(Update.class) ${entityClass} ${entityName});
+    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) ${entityClass} ${entityName});
 
     @Nonnull
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<${entityClass}> detail(@Nullable @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
+    Result<${entityClass}> detail(@Nonnull @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
 
     @Nonnull
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@Nullable @RequestBody List<String> ${table.pkFieldName}s);
+    Result<String> delete(@Nonnull @RequestBody List<String> ${table.pkFieldName}s);
 }

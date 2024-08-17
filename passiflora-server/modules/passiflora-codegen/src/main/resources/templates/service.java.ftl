@@ -1,6 +1,6 @@
 package com.zerolinck.passiflora.${moduleName}.service;
 
-import org.apache.commons.collections4.CollectionUtilss;
+import org.apache.commons.collections4.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
@@ -15,7 +15,6 @@ import com.zerolinck.passiflora.common.exception.BizException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +68,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      * @since ${date}
      */
     public boolean update(@Nonnull ${entityClass} ${entityName}) {
-        return (boolean) LockUtil.lock(LOCK_KEY,
+        return LockUtil.lock(LOCK_KEY,
                 new LockWrapper<${entityClass}>(), true,
                 () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, ${entityName});
@@ -87,7 +86,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> ${table.pkFieldName}s) {
-        if (CollectionUtils.isEmpty(${table.pkFieldName}s) {
+        if (CollectionUtils.isEmpty(${table.pkFieldName}s)) {
             return 0;
         }
         return baseMapper.deleteByIds(${table.pkFieldName}s, CurrentUtil.getCurrentUserId());
