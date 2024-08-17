@@ -198,7 +198,19 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
     }
 
     /**
-     * 根据用户ID查询权限
+     * 根据角色ID查询权限
+     *
+     * @param roleId 角色ID
+     * @author 林常坤 on 2024/8/17
+     */
+    @Nonnull
+    @SuppressWarnings("unused")
+    List<SysPermission> listByRoleId(@Nonnull String roleId) {
+        return baseMapper.listByRoleId(roleId);
+    }
+
+    /**
+     * 根据用户ID查询权限，包含职位关联和角色关联
      *
      * @param userId 用户ID
      * @since 2024-08-12

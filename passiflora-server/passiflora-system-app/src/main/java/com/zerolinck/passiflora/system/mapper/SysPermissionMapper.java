@@ -64,5 +64,8 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     List<SysPermission> listByPositionId(@Nonnull @Param("positionId") String positionId);
 
     @Nonnull
+    List<SysPermission> listByRoleId(@Nonnull @Param("roleId") String roleId);
+
+    @Nonnull
     List<SysPermission> listByUserId(@Nonnull @Param("userId") String userId);
 }

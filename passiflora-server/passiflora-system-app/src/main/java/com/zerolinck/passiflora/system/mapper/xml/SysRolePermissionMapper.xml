@@ -33,4 +33,28 @@
         </foreach>
     </delete>
 
+    <delete id="deleteByRoleIds">
+        UPDATE sys_role_permission SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE role_id IN
+        <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="permissionIdsByRoleIds" resultType="java.lang.String">
+        SELECT permission_id from sys_permission
+        WHERE permission_status = 1
+        AND del_flag = 0
+        AND permission_id IN (
+        SELECT  permission_id from sys_role_permission
+        WHERE del_flag = 0
+        AND role_id IN
+        <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </select>
 </mapper>

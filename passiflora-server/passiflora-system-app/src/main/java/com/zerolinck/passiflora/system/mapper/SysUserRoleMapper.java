@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysUserRole;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
@@ -54,5 +55,5 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      * @param ids 用户角色绑定主键集合
      * @since 2024-08-17
      */
-    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nonnull @Param("updateBy") String updateBy);
+    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 }

@@ -23,7 +23,9 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysRolePermission;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -54,5 +56,12 @@ public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
      * @param bindIds 角色权限主键集合
      * @since 2024-08-17
      */
-    int deleteByIds(@Nonnull @Param("bindIds") Collection<String> bindIds, @Nonnull @Param("updateBy") String updateBy);
+    int deleteByIds(
+            @Nonnull @Param("bindIds") Collection<String> bindIds, @Nullable @Param("updateBy") String updateBy);
+
+    int deleteByRoleIds(
+            @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+
+    @Nonnull
+    List<String> permissionIdsByRoleIds(@Nonnull @Param("roleIds") List<String> roleIds);
 }

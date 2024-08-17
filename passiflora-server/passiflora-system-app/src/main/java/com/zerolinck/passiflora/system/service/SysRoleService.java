@@ -97,7 +97,7 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(roleIds, CurrentUtil.requireCurrentUserId());
+        return baseMapper.deleteByIds(roleIds, CurrentUtil.getCurrentUserId());
     }
 
     /**

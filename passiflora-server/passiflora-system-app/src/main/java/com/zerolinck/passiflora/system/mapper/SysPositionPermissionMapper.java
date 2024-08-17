@@ -22,6 +22,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysPositionPermission;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -37,9 +39,13 @@ public interface SysPositionPermissionMapper extends BaseMapper<SysPositionPermi
             @Param("sortWrapper") QueryWrapper<SysPositionPermission> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Param("bindIds") Collection<String> bindIds, @Param("updateBy") String updateBy);
+    int deleteByIds(
+            @Nonnull @Param("bindIds") Collection<String> bindIds, @Nullable @Param("updateBy") String updateBy);
 
-    int deleteByPositionIds(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
+    int deleteByPositionIds(
+            @Nonnull @Param("positionIds") Collection<String> positionIds,
+            @Nullable @Param("updateBy") String updateBy);
 
-    List<String> permissionIdsByPositionIds(@Param("positionIds") List<String> positionIds);
+    @Nonnull
+    List<String> permissionIdsByPositionIds(@Nonnull @Param("positionIds") List<String> positionIds);
 }

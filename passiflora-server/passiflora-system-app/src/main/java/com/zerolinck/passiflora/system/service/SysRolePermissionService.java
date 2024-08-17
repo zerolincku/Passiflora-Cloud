@@ -112,4 +112,19 @@ public class SysRolePermissionService extends ServiceImpl<SysRolePermissionMappe
     public Optional<SysRolePermission> detail(@Nonnull String bindId) {
         return Optional.ofNullable(baseMapper.selectById(bindId));
     }
+
+    public int deleteByRoleIds(@Nullable Collection<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return 0;
+        }
+        return baseMapper.deleteByRoleIds(roleIds, CurrentUtil.getCurrentUserId());
+    }
+
+    @Nonnull
+    public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.permissionIdsByRoleIds(roleIds);
+    }
 }
