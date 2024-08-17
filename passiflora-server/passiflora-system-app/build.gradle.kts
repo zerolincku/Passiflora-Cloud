@@ -11,8 +11,8 @@ configurations.all {
     exclude("org.springframework.boot", "spring-boot-starter-logging")
 }
 
-val env = System.getProperty("env", "dev")
-println("> 使用 ${env} 环境编译")
+val env: String = System.getProperty("env", "dev")
+println("> 使用 $env 环境编译")
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
