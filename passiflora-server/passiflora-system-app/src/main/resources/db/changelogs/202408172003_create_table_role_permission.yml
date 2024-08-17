@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202408172003_create_table_role_permission.yml
+      author: linck
+      changes:
+        - createTable:
+            tableName: sys_role_permission
+            remarks: 角色权限
+            columns:
+              - column:
+                  name: bind_id
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                  remarks: 主键
+              - column:
+                  name: role_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  remarks: 角色ID
+              - column:
+                  name: permission_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  remarks: 权限ID
+              - column:
+                  name: create_by
+                  type: varchar(20)
+                  remarks: 创建用户id
+              - column:
+                  name: update_by
+                  type: varchar(20)
+                  remarks: 更新用户id
+              - column:
+                  name: create_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: timestamp(6)
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: del_flag
+                  type: int2
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 删除标识
+              - column:
+                  name: version
+                  type: int8
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+                  remarks: 乐观锁版本
