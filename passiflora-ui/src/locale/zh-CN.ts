@@ -22,6 +22,7 @@ export default {
   'menu.system': '系统管理',
   'menu.system.dict': '字典管理',
   'menu.system.permission': '权限管理',
+  'menu.system.role': '角色管理',
   'menu.organization.position': '职位管理',
   'menu.organization': '组织管理',
   'menu.organization.user': '用户管理',

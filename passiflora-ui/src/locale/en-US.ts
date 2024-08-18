@@ -23,6 +23,7 @@ export default {
   'menu.system.dict': 'Dict management',
   'menu.system.permission': 'Permission management',
   'menu.organization.position': 'Position management',
+  'menu.system.role': 'Role management',
   'menu.organization': 'Organizational management',
   'menu.organization.user': 'User management',
   'menu.organization.org': 'Org management',

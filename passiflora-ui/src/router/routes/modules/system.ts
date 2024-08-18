@@ -30,6 +30,15 @@ const SYSTEM: AppRouteRecordRaw = {
         requiresAuth: true,
       },
     },
+    {
+      path: 'role',
+      name: 'role',
+      component: () => import('@/views/system/role/index.vue'),
+      meta: {
+        locale: 'menu.system.role',
+        requiresAuth: true,
+      },
+    },
   ],
 };
 
