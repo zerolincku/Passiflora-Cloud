@@ -60,8 +60,8 @@ export interface BaseEntity {
 }
 
 export interface BasePageParam {
-  current: number;
-  pageSize: number;
+  current?: number;
+  pageSize?: number;
 }
 
 export type SizeProps = 'mini' | 'small' | 'medium' | 'large';

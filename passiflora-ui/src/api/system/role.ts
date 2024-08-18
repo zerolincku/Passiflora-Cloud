@@ -30,6 +30,18 @@ export function rolePage(params: rolePageParams) {
   );
 }
 
+export function roleList(params: rolePageParams) {
+  return axios.get<Result<RoleRecord[]>>(
+      '/system-api/sysRole/list',
+      {
+        params,
+        paramsSerializer: (obj) => {
+          return qs.stringify(obj);
+        },
+      }
+  );
+}
+
 export function roleAdd(data: RoleRecord) {
   return axios.post<Result<string>>('/system-api/sysRole/add', data);
 }

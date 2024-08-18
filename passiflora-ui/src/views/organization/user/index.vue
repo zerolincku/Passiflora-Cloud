@@ -243,6 +243,17 @@
                 </template>
               </a-popover>
             </template>
+            <template #roleNames="{ record }">
+              <a-tag v-if="record.roleNames.length">{{ record.roleNames[0] }}</a-tag>
+              <a-popover v-if="record.roleNames.length > 1">
+                <a-tag class="ml-1.5">+{{ record.roleNames.length - 1 }}</a-tag>
+                <template #content>
+                  <div v-for="(item, index) in record.roleNames" :key="item">
+                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{ item }}</a-tag>
+                  </div>
+                </template>
+              </a-popover>
+            </template>
             <template #gender="{ record }">
               {{
                 getLabelByValue(
@@ -327,6 +338,18 @@
                 :multiple="true"
             />
           </a-form-item>
+          <a-form-item field="positionIds" label="角色" required>
+            <a-select
+                v-model="editFormModel.roleIds"
+                placeholder="请选择角色"
+                size="large"
+                :options="roleListModel"
+                :field-names="roleFieldNames"
+                :allow-clear="true"
+                :allow-search="true"
+                :multiple="true"
+            />
+          </a-form-item>
           <a-form-item field="phoneNum" label="电话号码" required>
             <a-input
               v-model="editFormModel.phoneNum"
@@ -388,6 +411,7 @@ import {Message} from '@arco-design/web-vue';
 import {isEmpty} from 'lodash';
 import icon from '@/components/icon';
 import {PositionRecord, positionTree} from "@/api/organization/position";
+import {roleList, rolePageParams, RoleRecord} from "@/api/system/role";
 
 type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   type Column = TableColumnData & { checked?: true };
@@ -470,6 +494,7 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
 
   const orgTreeModel = ref<OrgRecord[]>([]);
   const positionTreeModel = ref<PositionRecord[]>([]);
+  const roleListModel = ref<RoleRecord[]>([]);
   const orgTreeFieldNames = {
     key: 'orgId',
     title: 'orgName',
@@ -477,6 +502,10 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const positionTreeFieldNames = {
     key: 'positionId',
     title: 'positionName',
+  };
+  const roleFieldNames = {
+    label: 'roleName',
+    value: 'roleId',
   };
   const filterOrgTreeNode = (inputText: string, node: OrgRecord) => {
     return (
@@ -554,6 +583,12 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
       width: 150,
     },
     {
+      title: '角色',
+      dataIndex: 'roleNames',
+      slotName: 'roleNames',
+      width: 150,
+    },
+    {
       title: '出生日期',
       dataIndex: 'dateOfBirth',
       width: 120,
@@ -591,6 +626,7 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
     genderOptions.value = await useDictStore().getDictItems('gender', true);
     await refreshOrgTree();
     await refreshPositionTree();
+    await refreshRoleList();
   });
 
   const refreshOrgTree = async () => {
@@ -599,9 +635,15 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
     calculateOrg(orgTreeModel.value);
   };
 
-const refreshPositionTree = async () => {
-  const { data } = await positionTree('');
-  positionTreeModel.value = data.data;
+  const refreshPositionTree = async () => {
+    const { data } = await positionTree('');
+    positionTreeModel.value = data.data;
+  };
+
+const refreshRoleList = async () => {
+  const param: rolePageParams = {};
+  const { data } = await roleList(param);
+  roleListModel.value = data.data;
 };
 
   const treeExpandStatusChange = () => {
@@ -633,7 +675,7 @@ const refreshPositionTree = async () => {
     try {
       const { data } = await userPage(params);
       renderData.value = data.data.list;
-      pagination.current = params.current;
+      pagination.current = params.current as number;
       pagination.total = data.data.total;
     } catch (err) {
       // you can report use errorHandler or other

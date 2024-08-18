@@ -4,6 +4,54 @@
     <a-grid class="inner-container" :cols="24" :col-gap="16" :row-gap="16">
       <a-grid-item class="h-full" :span="24">
         <a-card class="general-card h-full" title="查询表格">
+          <a-row>
+            <a-col :flex="1">
+              <a-form
+                  :model="searchForm"
+                  :label-col-props="{ span: 6 }"
+                  :wrapper-col-props="{ span: 18 }"
+                  label-align="left"
+              >
+                <a-row :gutter="16">
+                  <a-col :span="6">
+                    <a-form-item field="dictName" :hide-label="true">
+                      <a-input
+                          v-model="searchForm['like[roleName]']"
+                          placeholder="请输入角色名称"
+                          @press-enter="search"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-form-item field="dictTag" :hide-label="true">
+                      <a-input
+                          v-model="searchForm['like[roleCode]']"
+                          placeholder="请输入角色标签"
+                          @press-enter="search"
+                      />
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+              </a-form>
+            </a-col>
+            <a-divider class="h-9" direction="vertical" />
+            <a-col :flex="'36px'" class="text-right">
+              <a-space direction="horizontal" :size="18">
+                <a-button type="primary" @click="search">
+                  <template #icon>
+                    <icon-search />
+                  </template>
+                  查询
+                </a-button>
+                <a-button @click="reset">
+                  <template #icon>
+                    <icon-refresh />
+                  </template>
+                  重置
+                </a-button>
+              </a-space>
+            </a-col>
+          </a-row>
           <a-divider class="mt-0" />
           <a-row class="mb-4">
             <a-col :span="12">
@@ -105,14 +153,6 @@
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
-            <template #dataScopeType="{ record }">
-              {{
-                getLabelByValue(
-                  dataScopeTypeOptions as EnumRecord[],
-                  record.dataScopeType
-                )
-              }}
-            </template>
             <template #roleStatus="{ record }">
               <span
                 v-if="record.roleStatus === 1"
@@ -377,12 +417,8 @@
   };
 
   const roleStatusOptions = ref<EnumRecord[] | undefined>([]);
-  const dataScopeTypeOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
     roleStatusOptions.value = await useEnumStore().getEnums('StatusEnum');
-    dataScopeTypeOptions.value = await useEnumStore().getEnums(
-      'RoleDataScopeTypeEnum'
-    );
     await fetchData();
   });
 

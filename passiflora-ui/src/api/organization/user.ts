@@ -25,6 +25,7 @@ export type UserRecord = {
   avatarFile?: string;
   orgId?: string;
   positionIds?: string;
+  roleIds?: string;
   orgName?: string;
 } & BaseEntity;
 
