@@ -28,6 +28,7 @@ import com.zerolinck.passiflora.system.mapper.SysRoleMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysRole:";
+
+    private final SysRolePermissionService sysRolePermissionService;
 
     /**
      * 分页查询
@@ -97,7 +101,9 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(roleIds, CurrentUtil.getCurrentUserId());
+        int changeRowNum = baseMapper.deleteByIds(roleIds, CurrentUtil.getCurrentUserId());
+        sysRolePermissionService.deleteByRoleIds(roleIds);
+        return changeRowNum;
     }
 
     /**

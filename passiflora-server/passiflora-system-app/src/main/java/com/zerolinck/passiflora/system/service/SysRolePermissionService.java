@@ -18,11 +18,10 @@ package com.zerolinck.passiflora.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.system.args.RolePermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysRolePermission;
 import com.zerolinck.passiflora.system.mapper.SysRolePermissionMapper;
 import jakarta.annotation.Nonnull;
@@ -113,6 +112,7 @@ public class SysRolePermissionService extends ServiceImpl<SysRolePermissionMappe
         return Optional.ofNullable(baseMapper.selectById(bindId));
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public int deleteByRoleIds(@Nullable Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
@@ -126,5 +126,33 @@ public class SysRolePermissionService extends ServiceImpl<SysRolePermissionMappe
             return Collections.emptyList();
         }
         return baseMapper.permissionIdsByRoleIds(roleIds);
+    }
+
+    public void saveRolePermission(@Nonnull RolePermissionSaveArgs args) {
+        LockUtil.lock(
+                LOCK_KEY,
+                new LockWrapper<RolePermissionSaveArgs>().lock(RolePermissionSaveArgs::getRoleId, args.getRoleId()),
+                true,
+                () -> {
+                    Set<String> exitPermissionIdSet =
+                            new HashSet<>(this.permissionIdsByRoleIds(List.of(args.getRoleId())));
+                    Set<String> newPermissionIdSet = new HashSet<>(args.getPermissionIds());
+                    Set<String> needAdd = SetUtil.set2MoreOutSet1(exitPermissionIdSet, newPermissionIdSet);
+                    Set<String> needDelete = SetUtil.set2MoreOutSet1(newPermissionIdSet, exitPermissionIdSet);
+                    if (CollectionUtils.isNotEmpty(needDelete)) {
+                        ProxyUtil.proxy(this.getClass()).deleteByIds(needDelete);
+                    }
+                    if (CollectionUtils.isNotEmpty(needAdd)) {
+                        List<SysRolePermission> addList = new ArrayList<>();
+                        needAdd.forEach(permissionId -> {
+                            SysRolePermission sysRolePermission = new SysRolePermission();
+                            sysRolePermission.setRoleId(args.getRoleId());
+                            sysRolePermission.setPermissionId(permissionId);
+                            addList.add(sysRolePermission);
+                        });
+                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                    }
+                    return null;
+                });
     }
 }

@@ -9,10 +9,10 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import com.zerolinck.passiflora.${moduleName}.service.${serviceClass};
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,10 +27,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("${entityName}")
+@RequiredArgsConstructor
 public class ${controllerClass} implements ${apiClass} {
 
-    @Resource
-    private ${serviceClass} ${serviceName};
+    private final ${serviceClass} ${serviceName};
 
     @Nonnull
     @Override

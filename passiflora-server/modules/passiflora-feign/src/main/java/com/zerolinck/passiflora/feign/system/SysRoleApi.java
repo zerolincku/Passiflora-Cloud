@@ -20,6 +20,7 @@ import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
+import com.zerolinck.passiflora.model.system.args.RolePermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysRole;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
@@ -68,4 +69,12 @@ public interface SysRoleApi {
     @Operation(summary = "删除")
     @PostMapping("delete")
     Result<String> delete(@Nonnull @RequestBody List<String> roleIds);
+
+    @Operation(summary = "根据角色ids获取权限ids")
+    @PostMapping("permissionIdsByRoleIds")
+    Result<List<String>> permissionIdsByRoleIds(@RequestBody List<String> roleIds);
+
+    @Operation(summary = "保存角色权限")
+    @PostMapping("saveRolePermission")
+    Result<String> saveRolePermission(@RequestBody @Validated RolePermissionSaveArgs args);
 }

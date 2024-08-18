@@ -23,12 +23,14 @@ import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.system.SysRoleApi;
+import com.zerolinck.passiflora.model.system.args.RolePermissionSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysRole;
+import com.zerolinck.passiflora.system.service.SysRolePermissionService;
 import com.zerolinck.passiflora.system.service.SysRoleService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.annotation.Resource;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,10 +44,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("sysRole")
+@RequiredArgsConstructor
 public class SysRoleController implements SysRoleApi {
 
-    @Resource
-    private SysRoleService sysRoleService;
+    private final SysRoleService sysRoleService;
+    private final SysRolePermissionService sysRolePermissionService;
 
     @Nonnull
     @Override
@@ -85,6 +88,18 @@ public class SysRoleController implements SysRoleApi {
     public Result<String> delete(@Nonnull List<String> roleIds) {
         AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
         sysRoleService.deleteByIds(roleIds);
+        return Result.ok();
+    }
+
+    @Override
+    public Result<List<String>> permissionIdsByRoleIds(@Nonnull List<String> roleIds) {
+        AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
+        return Result.ok(sysRolePermissionService.permissionIdsByRoleIds(roleIds));
+    }
+
+    @Override
+    public Result<String> saveRolePermission(@Nonnull RolePermissionSaveArgs args) {
+        sysRolePermissionService.saveRolePermission(args);
         return Result.ok();
     }
 }

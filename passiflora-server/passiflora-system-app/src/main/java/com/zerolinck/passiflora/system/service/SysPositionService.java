@@ -31,6 +31,7 @@ import com.zerolinck.passiflora.system.mapper.SysPositionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPosition> {
 
     private static final String LOCK_KEY = "passiflora:lock:sysPosition:";
+
+    private final SysPositionPermissionService sysPositionPermissionService;
 
     /**
      * 分页查询
@@ -127,7 +131,9 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(positionIds, CurrentUtil.getCurrentUserId());
+        int changeRowNum = baseMapper.deleteByIds(positionIds, CurrentUtil.getCurrentUserId());
+        sysPositionPermissionService.deleteByPositionIds(positionIds);
+        return changeRowNum;
     }
 
     /**

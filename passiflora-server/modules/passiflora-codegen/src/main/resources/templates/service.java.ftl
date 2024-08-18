@@ -14,6 +14,7 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}> {
     
     private static final String LOCK_KEY = "passiflora:lock:${entityName}:";

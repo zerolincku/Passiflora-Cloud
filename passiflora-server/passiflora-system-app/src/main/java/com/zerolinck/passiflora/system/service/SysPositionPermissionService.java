@@ -75,7 +75,7 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
         return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     @Transactional(rollbackFor = Exception.class)
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
@@ -91,13 +91,15 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
 
     @Nonnull
     public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
-        positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
+        if (CollectionUtils.isEmpty(positionIds)) {
+            return Collections.emptyList();
+        }
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
     public void savePositionPermission(@Nonnull PositionPermissionSaveArgs args) {
         LockUtil.lock(
-                LOCK_KEY + "sysPosition",
+                LOCK_KEY,
                 new LockWrapper<PositionPermissionSaveArgs>()
                         .lock(PositionPermissionSaveArgs::getPositionId, args.getPositionId()),
                 true,
