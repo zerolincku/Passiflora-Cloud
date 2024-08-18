@@ -34,6 +34,7 @@ import com.zerolinck.passiflora.model.system.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.system.mapperstruct.SysUserConvert;
 import com.zerolinck.passiflora.model.system.vo.SysUserInfo;
 import com.zerolinck.passiflora.model.system.vo.SysUserPositionVo;
+import com.zerolinck.passiflora.model.system.vo.SysUserRoleVo;
 import com.zerolinck.passiflora.model.system.vo.SysUserVo;
 import com.zerolinck.passiflora.system.mapper.SysUserMapper;
 import jakarta.annotation.Nonnull;
@@ -59,6 +60,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
     private final PassifloraProperties passifloraProperties;
     private final SysUserPositionService sysUserPositionService;
     private final SysPermissionService sysPermissionService;
+    private final SysUserRoleService sysUserRoleService;
 
     private static final String LOCK_KEY = "passiflora:lock:sysUser:";
 
@@ -68,13 +70,21 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
         Page<SysUser> page = baseMapper.page(
                 orgId, condition.page(), condition.searchWrapper(SysUser.class), condition.sortWrapper(SysUser.class));
 
-        Map<String, String> orgId2NameMap = sysOrgService.orgId2NameMap(
-                page.getRecords().stream().map(SysUser::getOrgId).toList());
-        Map<String, List<SysUserPositionVo>> userPositionMap = sysUserPositionService
-                .selectByUserIds(
-                        page.getRecords().stream().map(SysUser::getUserId).collect(Collectors.toSet()))
-                .stream()
+        Set<String> userIds = page.getRecords().stream().map(SysUser::getUserId).collect(Collectors.toSet());
+        Set<String> orgIds = page.getRecords().stream()
+                .map(SysUser::getOrgId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        // 查询 org 信息
+        Map<String, String> orgId2NameMap = sysOrgService.orgId2NameMap(orgIds);
+
+        // 查询职位信息
+        Map<String, List<SysUserPositionVo>> userPositionMap = sysUserPositionService.selectByUserIds(userIds).stream()
                 .collect(Collectors.groupingBy(SysUserPositionVo::getUserId));
+
+        // 查询角色信息
+        Map<String, List<SysUserRoleVo>> userRoleMap = sysUserRoleService.selectByUserIds(userIds).stream()
+                .collect(Collectors.groupingBy(SysUserRoleVo::getUserId));
 
         List<SysUserVo> recordsVo = page.getRecords().stream()
                 .map(sysUser -> {
@@ -92,6 +102,13 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
                             .map(SysUserPositionVo::getPositionName)
                             .collect(Collectors.toList()));
 
+                    // 填充角色信息
+                    List<SysUserRoleVo> userRoleVos = userRoleMap.getOrDefault(sysUser.getUserId(), new ArrayList<>());
+                    sysUserVo.setRoleIds(
+                            userRoleVos.stream().map(SysUserRoleVo::getRoleId).collect(Collectors.toList()));
+                    sysUserVo.setRoleNames(
+                            userRoleVos.stream().map(SysUserRoleVo::getRoleName).collect(Collectors.toList()));
+
                     return sysUserVo;
                 })
                 .toList();
@@ -106,6 +123,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             OnlyFieldCheck.checkInsert(baseMapper, args);
             baseMapper.insert(args);
             userPositionService.updateRelation(args);
+            sysUserRoleService.updateRelation(args);
             return null;
         });
     }
@@ -116,6 +134,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
                     OnlyFieldCheck.checkUpdate(baseMapper, args);
                     int changeRowCount = baseMapper.updateById(args);
                     userPositionService.updateRelation(args);
+                    sysUserRoleService.updateRelation(args);
                     return changeRowCount > 0;
                 });
     }

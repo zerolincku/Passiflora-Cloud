@@ -51,6 +51,11 @@ public interface SysRoleApi {
     Result<ListWithPage<SysRole>> page(@Nullable QueryCondition<SysRole> condition);
 
     @Nonnull
+    @Operation(summary = "列表查询")
+    @GetMapping("list")
+    Result<List<SysRole>> list(@Nullable QueryCondition<SysRole> condition);
+
+    @Nonnull
     @Operation(summary = "新增")
     @PostMapping("add")
     Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) SysRole sysRole);

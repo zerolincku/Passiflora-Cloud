@@ -30,6 +30,8 @@ import org.apache.ibatis.annotations.Param;
  * @since 2024-05-14
  */
 public interface SysUserPositionMapper extends BaseMapper<SysUserPosition> {
+
+    @Nonnull
     List<SysUserPositionVo> selectByUserIds(@Nonnull @Param("userIds") Collection<String> userIds);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */

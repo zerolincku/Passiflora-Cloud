@@ -58,6 +58,12 @@ public class SysRoleController implements SysRoleApi {
 
     @Nonnull
     @Override
+    public Result<List<SysRole>> list(@Nullable QueryCondition<SysRole> condition) {
+        return Result.ok(sysRoleService.list(condition));
+    }
+
+    @Nonnull
+    @Override
     public Result<String> add(@Nonnull SysRole sysRole) {
         sysRole.setRoleId(null);
         sysRoleService.add(sysRole);

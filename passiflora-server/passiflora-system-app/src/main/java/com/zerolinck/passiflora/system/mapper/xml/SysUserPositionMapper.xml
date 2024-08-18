@@ -17,7 +17,7 @@
             </foreach>
         ) as a
         INNER JOIN sys_position as b ON a.position_id = b.position_id
-        WHERE b.del_flag = 0
+        WHERE b.del_flag = 0 AND b.position_status = 1
     </select>
 
     <delete id="deleteByIds">

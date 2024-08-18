@@ -32,4 +32,7 @@ public class SysUserSaveArgs extends SysUser {
 
     @Schema(description = "职位ID集合")
     private List<String> positionIds;
+
+    @Schema(description = "角色ID集合")
+    private List<String> roleIds;
 }

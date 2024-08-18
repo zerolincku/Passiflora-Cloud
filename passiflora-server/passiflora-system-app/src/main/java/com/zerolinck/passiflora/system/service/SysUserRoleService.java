@@ -18,16 +18,17 @@ package com.zerolinck.passiflora.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.system.args.SysUserSaveArgs;
 import com.zerolinck.passiflora.model.system.entity.SysUserRole;
+import com.zerolinck.passiflora.model.system.vo.SysUserRoleVo;
 import com.zerolinck.passiflora.system.mapper.SysUserRoleMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -109,5 +110,59 @@ public class SysUserRoleService extends ServiceImpl<SysUserRoleMapper, SysUserRo
     @Nonnull
     public Optional<SysUserRole> detail(@Nonnull String id) {
         return Optional.ofNullable(baseMapper.selectById(id));
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public int deleteByUserIds(@Nonnull Collection<String> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return 0;
+        }
+        return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
+    }
+
+    @Nonnull
+    public List<SysUserRoleVo> selectByUserIds(@Nonnull Collection<String> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectByUserIds(userIds);
+    }
+
+    public void updateRelation(@Nonnull SysUserSaveArgs args) {
+        LockUtil.lock(
+                LOCK_KEY, new LockWrapper<SysUserRole>().lock(SysUserRole::getUserId, args.getUserId()), true, () -> {
+                    if (CollectionUtils.isEmpty(args.getRoleIds())) {
+                        this.deleteByUserIds(List.of(args.getUserId()));
+                        return null;
+                    }
+                    Set<String> existRoleIds = selectByUserIds(List.of(args.getUserId())).stream()
+                            .map(SysUserRoleVo::getRoleId)
+                            .collect(Collectors.toSet());
+                    Set<String> newRoleIds = new HashSet<>(args.getRoleIds());
+                    Set<String> addRoleIds = SetUtil.set2MoreOutSet1(existRoleIds, newRoleIds);
+                    Set<String> delRoleIds = SetUtil.set2MoreOutSet1(newRoleIds, existRoleIds);
+                    if (CollectionUtils.isNotEmpty(delRoleIds)) {
+                        this.deleteByUserIdAndRoleIds(args.getUserId(), delRoleIds);
+                    }
+                    if (CollectionUtils.isNotEmpty(addRoleIds)) {
+                        List<SysUserRole> addList = new ArrayList<>();
+                        for (String roleId : addRoleIds) {
+                            SysUserRole role = new SysUserRole();
+                            role.setUserId(args.getUserId());
+                            role.setRoleId(roleId);
+                            addList.add(role);
+                        }
+                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                    }
+                    return null;
+                });
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public int deleteByUserIdAndRoleIds(@Nonnull String userId, @Nullable Collection<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return 0;
+        }
+        return baseMapper.deleteByUserIdAndRoleIds(userId, roleIds, CurrentUtil.getCurrentUserId());
     }
 }

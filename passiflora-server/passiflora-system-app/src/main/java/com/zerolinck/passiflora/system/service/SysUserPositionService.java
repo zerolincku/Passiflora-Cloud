@@ -19,6 +19,7 @@ package com.zerolinck.passiflora.system.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -77,7 +78,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                             position.setPositionId(positionId);
                             addList.add(position);
                         }
-                        this.saveBatch(addList);
+                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
                     return null;
                 });
@@ -97,7 +98,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                 new LambdaQueryWrapper<SysUserPosition>().eq(SysUserPosition::getPositionId, positionIds));
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
@@ -105,6 +106,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
         return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
+    @SuppressWarnings({"UnusedReturnValue", "unused"})
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
@@ -112,7 +114,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;

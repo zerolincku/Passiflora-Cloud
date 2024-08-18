@@ -33,4 +33,36 @@
         </foreach>
     </delete>
 
+    <delete id="deleteByUserIds">
+        UPDATE sys_user_role SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE user_id IN
+        <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.system.vo.SysUserRoleVo">
+        SELECT a.user_id, b.role_id, b.role_name FROM
+        (SELECT user_id, role_id
+        FROM sys_user_role
+        WHERE del_flag = 0 AND user_id IN
+        <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ) as a
+        INNER JOIN sys_role as b ON a.role_id = b.role_id
+        WHERE b.del_flag = 0 AND b.role_status = 1
+    </select>
+
+    <delete id="deleteByUserIdAndRoleIds">
+        UPDATE sys_user_role SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE user_id = #{userId} AND role_id IN
+        <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

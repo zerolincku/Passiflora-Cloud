@@ -124,7 +124,7 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
     }
 
     @Nonnull
-    public Map<String, String> orgId2NameMap(@Nonnull List<String> orgIds) {
+    public Map<String, String> orgId2NameMap(@Nonnull Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
         }

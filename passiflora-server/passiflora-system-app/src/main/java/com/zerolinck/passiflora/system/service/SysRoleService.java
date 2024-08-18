@@ -63,6 +63,18 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
     }
 
     /**
+     * 列表查询
+     *
+     * @param condition 搜索条件
+     * @since 2024-08-18
+     */
+    @Nonnull
+    public List<SysRole> list(@Nullable QueryCondition<SysRole> condition) {
+        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
+        return baseMapper.selectList(condition.searchWrapper(SysRole.class));
+    }
+
+    /**
      * 新增角色
      *
      * @param sysRole 角色

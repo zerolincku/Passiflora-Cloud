@@ -22,9 +22,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.system.entity.SysUserRole;
+import com.zerolinck.passiflora.model.system.vo.SysUserRoleVo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -56,4 +58,15 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      * @since 2024-08-17
      */
     int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+
+    int deleteByUserIds(
+            @Nonnull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);
+
+    @Nonnull
+    List<SysUserRoleVo> selectByUserIds(@Nonnull @Param("userIds") Collection<String> userIds);
+
+    int deleteByUserIdAndRoleIds(
+            @Nonnull @Param("userId") String userId,
+            @Nonnull @Param("roleIds") Collection<String> roleIds,
+            @Nullable @Param("updateBy") String updateBy);
 }

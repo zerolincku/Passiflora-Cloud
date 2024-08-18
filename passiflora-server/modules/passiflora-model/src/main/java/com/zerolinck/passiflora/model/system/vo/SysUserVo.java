@@ -40,4 +40,10 @@ public class SysUserVo extends SysUser {
 
     @Schema(description = "职位名称集合")
     private Collection<String> positionNames = new ArrayList<>();
+
+    @Schema(description = "角色ID集合")
+    private Collection<String> roleIds = new ArrayList<>();
+
+    @Schema(description = "角色名称集合")
+    private Collection<String> roleNames = new ArrayList<>();
 }
