@@ -19,10 +19,12 @@ package com.zerolinck.passiflora.model.system.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.zerolinck.passiflora.model.common.BaseEntity;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
@@ -68,4 +70,10 @@ public class SysRole extends BaseEntity {
             groups = {Insert.class, Update.class},
             message = "角色标识不能为空")
     private String roleCode;
+
+    @Schema(description = "角色状态")
+    @NotNull(
+            groups = {Insert.class, Update.class},
+            message = "角色状态不能为空")
+    private StatusEnum roleStatus;
 }

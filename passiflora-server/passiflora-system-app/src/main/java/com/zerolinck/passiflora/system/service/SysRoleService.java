@@ -116,4 +116,32 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
     public Optional<SysRole> detail(@Nonnull String roleId) {
         return Optional.ofNullable(baseMapper.selectById(roleId));
     }
+
+    /**
+     * 禁用角色
+     *
+     * @param roleIds 角色ID集合
+     * @since 2024-08-18
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void disable(@Nullable List<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+        baseMapper.disable(roleIds, CurrentUtil.getCurrentUserId());
+    }
+
+    /**
+     * 启用角色
+     *
+     * @param roleIds 角色ID集合
+     * @since 2024-08-18
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void enable(@Nullable List<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+        baseMapper.enable(roleIds, CurrentUtil.getCurrentUserId());
+    }
 }

@@ -33,4 +33,24 @@
         </foreach>
     </delete>
 
+    <update id="disable">
+        UPDATE sys_role SET update_time = now(),
+        update_by = #{updateBy},
+        role_status = 0
+        WHERE role_id in
+        <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="enable">
+        UPDATE sys_role SET update_time = now(),
+        update_by = #{updateBy},
+        role_status = 1
+        WHERE role_id IN
+        <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

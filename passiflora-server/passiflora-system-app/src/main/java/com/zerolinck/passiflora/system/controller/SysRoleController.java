@@ -91,15 +91,31 @@ public class SysRoleController implements SysRoleApi {
         return Result.ok();
     }
 
+    @Nonnull
     @Override
     public Result<List<String>> permissionIdsByRoleIds(@Nonnull List<String> roleIds) {
         AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
         return Result.ok(sysRolePermissionService.permissionIdsByRoleIds(roleIds));
     }
 
+    @Nonnull
     @Override
     public Result<String> saveRolePermission(@Nonnull RolePermissionSaveArgs args) {
         sysRolePermissionService.saveRolePermission(args);
+        return Result.ok();
+    }
+
+    @Nonnull
+    @Override
+    public Result<String> disable(@Nonnull List<String> roleIds) {
+        sysRoleService.disable(roleIds);
+        return Result.ok();
+    }
+
+    @Nonnull
+    @Override
+    public Result<String> enable(@Nonnull List<String> roleIds) {
+        sysRoleService.enable(roleIds);
         return Result.ok();
     }
 }

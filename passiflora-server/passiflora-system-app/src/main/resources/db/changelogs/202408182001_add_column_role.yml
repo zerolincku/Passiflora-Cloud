@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202408182001_add_column_role.yml
+      author: linck
+      changes:
+      - addColumn:
+            schemaName: public
+            tableName: sys_role
+            columns:
+                - column:
+                      name: role_status
+                      type: int2
+                      defaultValue: 1
+                      remarks: 角色状态

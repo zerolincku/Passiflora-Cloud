@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202408182002_add_constraint_role.yml
+      author: linck
+      changes:
+      - addNotNullConstraint:
+          schemaName: public
+          tableName: sys_role
+          columnName: role_status

@@ -70,11 +70,23 @@ public interface SysRoleApi {
     @PostMapping("delete")
     Result<String> delete(@Nonnull @RequestBody List<String> roleIds);
 
+    @Nonnull
     @Operation(summary = "根据角色ids获取权限ids")
     @PostMapping("permissionIdsByRoleIds")
-    Result<List<String>> permissionIdsByRoleIds(@RequestBody List<String> roleIds);
+    Result<List<String>> permissionIdsByRoleIds(@Nonnull @RequestBody List<String> roleIds);
 
+    @Nonnull
     @Operation(summary = "保存角色权限")
     @PostMapping("saveRolePermission")
-    Result<String> saveRolePermission(@RequestBody @Validated RolePermissionSaveArgs args);
+    Result<String> saveRolePermission(@Nonnull @RequestBody @Validated RolePermissionSaveArgs args);
+
+    @Nonnull
+    @Operation(summary = "禁用")
+    @PostMapping("disable")
+    Result<String> disable(@Nonnull @RequestBody List<String> roleIds);
+
+    @Nonnull
+    @Operation(summary = "启用")
+    @PostMapping("enable")
+    Result<String> enable(@Nonnull @RequestBody List<String> roleIds);
 }

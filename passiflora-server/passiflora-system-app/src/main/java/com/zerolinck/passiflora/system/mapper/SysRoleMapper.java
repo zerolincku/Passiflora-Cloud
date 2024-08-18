@@ -57,4 +57,8 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      */
     int deleteByIds(
             @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+
+    void disable(@Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+
+    void enable(@Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 }
