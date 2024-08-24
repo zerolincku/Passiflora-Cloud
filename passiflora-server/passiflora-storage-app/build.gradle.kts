@@ -87,7 +87,7 @@ tasks {
     liquibase {
         activities.register("main") {
             this.arguments = mapOf(
-                "changeLogFile" to "src/main/resources/db/main.yml",
+                "changelogFile" to "src/main/resources/db/main.yml",
                 "url" to configMap["storage_app.database.url"],
                 "username" to configMap["storage_app.database.username"],
                 "password" to configMap["storage_app.database.password"],
