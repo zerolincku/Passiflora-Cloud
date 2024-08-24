@@ -7,7 +7,7 @@ dependencies {
         api("commons-httpclient:commons-httpclient:3.1")
         api("org.liquibase:liquibase-core:4.29.1")
         api("org.liquibase:liquibase-groovy-dsl:4.0.0")
-        api("info.picocli:picocli:4.7.5")
+        api("info.picocli:picocli:4.7.6")
         api("org.postgresql:postgresql:42.2.27")
         api("org.projectlombok:lombok:1.18.30")
         api("org.mapstruct:mapstruct:1.5.5.Final")
