@@ -35,6 +35,8 @@ public interface SysUserConvert {
     @Mapping(target = "orgName", ignore = true)
     @Mapping(target = "positionIds", ignore = true)
     @Mapping(target = "positionNames", ignore = true)
+    @Mapping(target = "roleIds", ignore = true)
+    @Mapping(target = "roleNames", ignore = true)
     SysUserVo entity2vo(SysUser sysUser);
 
     @Mapping(target = "permission", ignore = true)

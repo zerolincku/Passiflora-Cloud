@@ -23,6 +23,22 @@
         </if>
     </select>
 
+    <select id="list" resultType="com.zerolinck.passiflora.model.system.entity.SysConfig">
+        SELECT * FROM sys_config
+        <where>
+            del_flag = 0
+            <if test="ew.sqlSegment != null and ew.sqlSegment != ''">
+                AND ${ew.sqlSegment}
+            </if>
+        </where>
+        <if test="sortWrapper.sqlSegment == null or sortWrapper.sqlSegment == ''">
+            ORDER BY config_id ASC
+        </if>
+        <if test="sortWrapper.sqlSegment != null and sortWrapper.sqlSegment != ''">
+            ${sortWrapper.sqlSegment}
+        </if>
+    </select>
+
     <delete id="deleteByIds">
         UPDATE sys_config SET update_time = now(),
                                 update_by = #{updateBy},
