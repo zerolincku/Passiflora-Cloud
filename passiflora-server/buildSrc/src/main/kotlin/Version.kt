@@ -7,5 +7,5 @@ object Version {
 
     const val springDependencyManagementPluginVersion = "1.1.6"
     const val spotlessPluginVersion = "6.25.0"
-    const val liquibasePluginVersion = "2.2.1"
+    const val liquibasePluginVersion = "2.2.2"
 }
