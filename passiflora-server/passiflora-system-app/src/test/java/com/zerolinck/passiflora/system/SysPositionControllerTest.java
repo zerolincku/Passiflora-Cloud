@@ -30,8 +30,8 @@ import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.system.entity.SysPosition;
 import com.zerolinck.passiflora.model.system.enums.PositionDataScopeTypeEnum;
 import com.zerolinck.passiflora.model.system.vo.SysPositionVo;
+import jakarta.annotation.Resource;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -49,12 +49,13 @@ import org.springframework.test.web.servlet.MockMvc;
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
-@RequiredArgsConstructor
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SysPositionControllerTest {
+    @Resource
+    private ObjectMapper objectMapper;
 
-    private final ObjectMapper objectMapper;
-    private final MockMvc mockMvc;
+    @Resource
+    private MockMvc mockMvc;
 
     private static String testSysPositionId;
 

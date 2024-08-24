@@ -29,8 +29,8 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.model.system.entity.SysPermission;
 import com.zerolinck.passiflora.model.system.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.system.vo.SysPermissionTableVo;
+import jakarta.annotation.Resource;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -48,12 +48,14 @@ import org.springframework.test.web.servlet.MockMvc;
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
-@RequiredArgsConstructor
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SysPermissionControllerTest {
 
-    private final ObjectMapper objectMapper;
-    private final MockMvc mockMvc;
+    @Resource
+    private ObjectMapper objectMapper;
+
+    @Resource
+    private MockMvc mockMvc;
 
     private static String testSysPermissionId;
     private static SysPermission testSysPermission;

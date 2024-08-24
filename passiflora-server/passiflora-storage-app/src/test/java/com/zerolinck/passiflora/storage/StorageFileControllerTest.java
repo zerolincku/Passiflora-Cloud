@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.MethodOrderer;
@@ -50,12 +50,14 @@ import org.springframework.test.web.servlet.MvcResult;
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
-@RequiredArgsConstructor
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StorageFileControllerTest {
 
-    private final ObjectMapper objectMapper;
-    private final MockMvc mockMvc;
+    @Resource
+    private ObjectMapper objectMapper;
+
+    @Resource
+    private MockMvc mockMvc;
 
     private static String testStorageFileId;
     private static String quickUploadStorageFileId;
