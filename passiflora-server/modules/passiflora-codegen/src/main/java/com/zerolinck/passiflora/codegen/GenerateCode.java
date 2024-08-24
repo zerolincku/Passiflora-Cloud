@@ -36,7 +36,7 @@ public class GenerateCode {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> tableNames = List.of("sys_role_permission");
+        List<String> tableNames = List.of("sys_config");
         String moduleName = "system";
         String contextPath = "/passiflora/system-api";
         String author = "林常坤";
