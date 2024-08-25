@@ -59,7 +59,7 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                 () -> {
                     if (CollectionUtils.isEmpty(args.getPositionIds())) {
                         this.deleteByUserIds(List.of(args.getUserId()));
-                        return null;
+                        return;
                     }
                     Set<String> existPositionIds = findByUserIds(List.of(args.getUserId())).stream()
                             .map(SysUserPosition::getPositionId)
@@ -80,7 +80,6 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
                         }
                         ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
-                    return null;
                 });
     }
 

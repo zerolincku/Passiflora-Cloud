@@ -82,7 +82,6 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfig> {
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysConfig>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysConfig);
             baseMapper.insert(sysConfig);
-            return null;
         });
     }
 

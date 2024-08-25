@@ -56,6 +56,20 @@ public class LockUtil {
 
     private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE = new ConcurrentHashMap<>();
 
+    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, Runnable runnable) {
+        return lock(lockKey, lockWrapper, false, () -> {
+            runnable.run();
+            return null;
+        });
+    }
+
+    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, boolean useTransaction, Runnable runnable) {
+        return lock(lockKey, lockWrapper, useTransaction, () -> {
+            runnable.run();
+            return null;
+        });
+    }
+
     public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, Supplier<T> supplier) {
         return lock(lockKey, lockWrapper, false, supplier);
     }

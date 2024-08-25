@@ -56,7 +56,6 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
                 () -> {
                     OnlyFieldCheck.checkInsert(baseMapper, ${entityName});
                     baseMapper.insert(${entityName});
-                    return null;
                 }
         );
     }

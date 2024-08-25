@@ -91,7 +91,6 @@ public class SysPositionService extends ServiceImpl<SysPositionMapper, SysPositi
                     OnlyFieldCheck.checkInsert(baseMapper, sysPosition);
                     generateIdPathAndLevel(sysPosition);
                     baseMapper.insert(sysPosition);
-                    return null;
                 });
     }
 

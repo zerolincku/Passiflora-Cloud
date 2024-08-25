@@ -84,7 +84,6 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysRole>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysRole);
             baseMapper.insert(sysRole);
-            return null;
         });
     }
 

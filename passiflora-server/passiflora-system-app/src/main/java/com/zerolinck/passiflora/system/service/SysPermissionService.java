@@ -71,7 +71,6 @@ public class SysPermissionService extends ServiceImpl<SysPermissionMapper, SysPe
                     OnlyFieldCheck.checkInsert(baseMapper, sysPermission);
                     generateIadPathAndLevel(sysPermission);
                     baseMapper.insert(sysPermission);
-                    return null;
                 });
     }
 

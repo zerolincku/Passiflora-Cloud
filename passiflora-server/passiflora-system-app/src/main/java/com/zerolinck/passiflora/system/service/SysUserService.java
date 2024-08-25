@@ -124,7 +124,6 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> {
             baseMapper.insert(args);
             userPositionService.updateRelation(args);
             sysUserRoleService.updateRelation(args);
-            return null;
         });
     }
 

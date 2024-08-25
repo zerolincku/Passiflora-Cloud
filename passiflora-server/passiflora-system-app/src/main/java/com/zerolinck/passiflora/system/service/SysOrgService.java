@@ -71,7 +71,6 @@ public class SysOrgService extends ServiceImpl<SysOrgMapper, SysOrg> {
                     }
                     generateIadPathAndLevel(sysOrg);
                     baseMapper.insert(sysOrg);
-                    return null;
                 });
     }
 

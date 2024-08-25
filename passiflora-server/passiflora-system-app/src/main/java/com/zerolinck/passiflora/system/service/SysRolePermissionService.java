@@ -69,7 +69,6 @@ public class SysRolePermissionService extends ServiceImpl<SysRolePermissionMappe
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysRolePermission>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysRolePermission);
             baseMapper.insert(sysRolePermission);
-            return null;
         });
     }
 
@@ -152,7 +151,6 @@ public class SysRolePermissionService extends ServiceImpl<SysRolePermissionMappe
                         });
                         ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
-                    return null;
                 });
     }
 }

@@ -55,7 +55,6 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionPermission>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysPositionPermission);
             baseMapper.insert(sysPositionPermission);
-            return null;
         });
     }
 
@@ -122,7 +121,6 @@ public class SysPositionPermissionService extends ServiceImpl<SysPositionPermiss
                         });
                         ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
-                    return null;
                 });
     }
 }

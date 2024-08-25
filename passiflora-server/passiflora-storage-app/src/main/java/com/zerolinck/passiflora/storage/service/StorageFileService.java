@@ -211,7 +211,6 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                             throw new BizException(e);
                         }
                     }
-                    return null;
                 });
     }
 

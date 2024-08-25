@@ -71,7 +71,6 @@ public class SysDictService extends ServiceImpl<SysDictMapper, SysDict> {
                 () -> {
                     OnlyFieldCheck.checkInsert(baseMapper, sysDict);
                     baseMapper.insert(sysDict);
-                    return null;
                 });
     }
 

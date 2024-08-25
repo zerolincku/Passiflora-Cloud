@@ -58,7 +58,6 @@ public class SysPositionDataScopeService extends ServiceImpl<SysPositionDataScop
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysPositionDataScope>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysPositionDataScope);
             baseMapper.insert(sysPositionDataScope);
-            return null;
         });
     }
 

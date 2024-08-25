@@ -69,7 +69,6 @@ public class SysUserRoleService extends ServiceImpl<SysUserRoleMapper, SysUserRo
         LockUtil.lock(LOCK_KEY, new LockWrapper<SysUserRole>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, sysUserRole);
             baseMapper.insert(sysUserRole);
-            return null;
         });
     }
 
@@ -133,7 +132,7 @@ public class SysUserRoleService extends ServiceImpl<SysUserRoleMapper, SysUserRo
                 LOCK_KEY, new LockWrapper<SysUserRole>().lock(SysUserRole::getUserId, args.getUserId()), true, () -> {
                     if (CollectionUtils.isEmpty(args.getRoleIds())) {
                         this.deleteByUserIds(List.of(args.getUserId()));
-                        return null;
+                        return;
                     }
                     Set<String> existRoleIds = selectByUserIds(List.of(args.getUserId())).stream()
                             .map(SysUserRoleVo::getRoleId)
@@ -154,7 +153,6 @@ public class SysUserRoleService extends ServiceImpl<SysUserRoleMapper, SysUserRo
                         }
                         ProxyUtil.proxy(this.getClass()).saveBatch(addList);
                     }
-                    return null;
                 });
     }
 

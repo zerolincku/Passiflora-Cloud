@@ -99,7 +99,6 @@ public class SysDictItemService extends ServiceImpl<SysDictItemMapper, SysDictIt
             }
 
             baseMapper.insert(sysDictItem);
-            return null;
         });
     }
 
