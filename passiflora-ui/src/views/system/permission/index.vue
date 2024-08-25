@@ -348,6 +348,7 @@
       title: '操作',
       dataIndex: 'operations',
       slotName: 'operations',
+      width: 240,
       headerCellStyle: { paddingLeft: '16px' },
     },
   ]);
