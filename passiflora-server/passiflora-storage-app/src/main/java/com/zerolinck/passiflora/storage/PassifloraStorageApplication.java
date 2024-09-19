@@ -43,19 +43,22 @@ public class PassifloraStorageApplication {
         String env = environment.getProperty("spring.profiles.active");
         String port = environment.getProperty("server.port");
         String path = environment.getProperty("server.servlet.context-path");
+        String buildTime = environment.getProperty("passiflora.build-time");
         String outIp = NetUtil.findOutIp();
         log.info(
                 """
             \n项目启动成功: {} 环境
             本地 Swagger: \t\thttp://localhost:{}{}/doc.html
             外部地址 Swagger: \thttp://{}:{}{}/doc.html
-            Passiflora (C) 2024 version: {}""",
+            Passiflora (C) 2024 version: {}
+            buildTime: {}""",
                 env,
                 port,
                 path,
                 outIp,
                 port,
                 path,
-                projectVersion);
+                projectVersion,
+                buildTime);
     }
 }

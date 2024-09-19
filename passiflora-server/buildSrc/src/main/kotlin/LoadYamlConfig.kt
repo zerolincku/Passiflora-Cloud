@@ -1,11 +1,17 @@
 import java.io.File
 import org.yaml.snakeyaml.Yaml
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 @Suppress("unchecked_cast")
 fun configMap(path: String, env: String, projectVersion: String): MutableMap<String, String> {
     val configMap = mutableMapOf<String, String>()
     configMap["projectVersion"] = projectVersion
     configMap["env"] = env
+    // 添加编译时间
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    configMap["buildTime"] = dateFormat.format(Date())
     val configFile = File(path)
     val ymlMap = Yaml().loadAs(configFile.inputStream(), HashMap::class.java)
     processConfigMap(configMap, ymlMap.get(configMap["env"]) as Map<String, Any>)

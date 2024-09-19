@@ -31,6 +31,9 @@ public class PassifloraProperties {
     /** 项目版本 */
     private String projectVersion;
 
+    /** 编译时间 */
+    private String buildTime;
+
     private System system;
 
     private Config config;

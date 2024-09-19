@@ -45,3 +45,4 @@ knife4j:
 
 passiflora:
   project-version: @projectVersion@
+  build-time: @buildTime@

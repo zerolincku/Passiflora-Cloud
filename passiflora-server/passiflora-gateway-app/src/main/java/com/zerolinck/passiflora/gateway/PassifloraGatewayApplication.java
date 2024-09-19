@@ -38,17 +38,20 @@ public class PassifloraGatewayApplication {
         String projectVersion = environment.getProperty("passiflora.project-version");
         String env = environment.getProperty("spring.profiles.active");
         String port = environment.getProperty("server.port");
+        String buildTime = environment.getProperty("passiflora.build-time");
         String outIp = NetUtil.findOutIp();
         log.info(
                 """
             \n项目启动成功: {} 环境
             本地聚合 Swagger: \t\thttp://localhost:{}/doc.html
             外部地址聚合 Swagger: \thttp://{}:{}/doc.html
-            Passiflora (C) 2024 version: {}""",
+            Passiflora (C) 2024 version: {}
+            buildTime: {}""",
                 env,
                 port,
                 outIp,
                 port,
-                projectVersion);
+                projectVersion,
+                buildTime);
     }
 }
