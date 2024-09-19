@@ -1,6 +1,7 @@
 import java.io.File
-import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.Yaml
 
+@Suppress("unchecked_cast")
 fun configMap(path: String, env: String, projectVersion: String): MutableMap<String, String> {
     val configMap = mutableMapOf<String, String>()
     configMap["projectVersion"] = projectVersion
@@ -11,6 +12,7 @@ fun configMap(path: String, env: String, projectVersion: String): MutableMap<Str
     return configMap
 }
 
+@Suppress("unchecked_cast")
 fun processConfigMap(configMap: MutableMap<String, String>, map: Map<String, Any>, parentKey: String = "") {
     map.forEach { key, value ->
         val keyWithPrefix = if (parentKey.isEmpty()) key else "${parentKey}.${key}"
