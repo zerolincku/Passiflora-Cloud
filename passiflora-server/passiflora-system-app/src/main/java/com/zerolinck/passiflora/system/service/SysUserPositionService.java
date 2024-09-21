@@ -47,7 +47,9 @@ public class SysUserPositionService extends ServiceImpl<SysUserPositionMapper, S
 
     @Nonnull
     public List<SysUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {
-        userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
+        if (CollectionUtils.isEmpty(userIds)) {
+            return Collections.emptyList();
+        }
         return baseMapper.selectByUserIds(userIds);
     }
 
