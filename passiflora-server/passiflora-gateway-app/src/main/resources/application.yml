@@ -17,10 +17,10 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: passiflora-system-app
-          uri: lb://passiflora-system-app
+        - id: passiflora-iam-app
+          uri: lb://passiflora-iam-app
           predicates:
-            - Path=/passiflora/system-api/**
+            - Path=/passiflora/iam-api/**
         - id: passiflora-storage-app
           uri: lb://passiflora-storage-app
           predicates:
@@ -35,9 +35,9 @@ knife4j:
     strategy: manual
     routes:
       - name: 系统服务
-        service-name: passiflora-system-app
-        url: /passiflora/system-api/v3/api-docs?group=default
-        context-path: /passiflora/system-api
+        service-name: passiflora-iam-app
+        url: /passiflora/iam-api/v3/api-docs?group=default
+        context-path: /passiflora/iam-api
       - name: 文件服务
         service-name: passiflora-storage-app
         url: /passiflora/storage-api/v3/api-docs?group=default

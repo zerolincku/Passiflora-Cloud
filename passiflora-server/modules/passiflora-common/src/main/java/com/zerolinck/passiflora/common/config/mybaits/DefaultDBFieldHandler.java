@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.common.config.mybaits;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.model.system.entity.SysUser;
+import com.zerolinck.passiflora.model.iam.entity.SysUser;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;

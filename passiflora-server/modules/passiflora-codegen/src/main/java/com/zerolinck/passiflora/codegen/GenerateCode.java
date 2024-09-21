@@ -38,7 +38,7 @@ public class GenerateCode {
     public static void main(String[] args) {
         List<String> tableNames = List.of("sys_config");
         String moduleName = "system";
-        String contextPath = "/passiflora/system-api";
+        String contextPath = "/passiflora/iam-api";
         String author = "林常坤";
         boolean overwrite = false;
         render(tableNames, moduleName, contextPath, overwrite, author);

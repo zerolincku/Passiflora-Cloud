@@ -25,7 +25,7 @@ export interface positionPageParams
 
 export function positionPage(params: positionPageParams) {
   return axios.get<Result<Page<PositionRecord>>>(
-    '/system-api/sysPosition/page',
+    '/iam-api/sysPosition/page',
     {
       params,
       paramsSerializer: (obj) => {
@@ -36,64 +36,64 @@ export function positionPage(params: positionPageParams) {
 }
 
 export function positionAdd(data: PositionRecord) {
-  return axios.post<Result<string>>('/system-api/sysPosition/add', data);
+  return axios.post<Result<string>>('/iam-api/sysPosition/add', data);
 }
 
 export function positionUpdate(data: PositionRecord) {
-  return axios.post<Result<string>>('/system-api/sysPosition/update', data);
+  return axios.post<Result<string>>('/iam-api/sysPosition/update', data);
 }
 
 export function positionDetail(data: string) {
   return axios.post<Result<PositionRecord>>(
-    '/system-api/sysPosition/detail',
+    '/iam-api/sysPosition/detail',
     data
   );
 }
 
 export function positionDelete(data: string[]) {
   return axios.post<Result<PositionRecord>>(
-    '/system-api/sysPosition/delete',
+    '/iam-api/sysPosition/delete',
     data
   );
 }
 
 export function positionTree(positionName: string) {
   return axios.get<Result<PositionRecord[]>>(
-    `/system-api/sysPosition/positionTree?positionName=${positionName}`
+    `/iam-api/sysPosition/positionTree?positionName=${positionName}`
   );
 }
 
 export function positionUpdateOrder(data: PositionRecord[]) {
   return axios.post<Result<string>>(
-    '/system-api/sysPosition/updateOrder',
+    '/iam-api/sysPosition/updateOrder',
     data
   );
 }
 
 export function positionDisable(data: string[]) {
   return axios.post<Result<PositionRecord>>(
-    '/system-api/sysPosition/disable',
+    '/iam-api/sysPosition/disable',
     data
   );
 }
 
 export function positionEnable(data: string[]) {
   return axios.post<Result<PositionRecord>>(
-    '/system-api/sysPosition/enable',
+    '/iam-api/sysPosition/enable',
     data
   );
 }
 
 export function permissionIdsByPositionIds(data: string[]) {
   return axios.post<Result<string[]>>(
-    '/system-api/sysPosition/permissionIdsByPositionIds',
+    '/iam-api/sysPosition/permissionIdsByPositionIds',
     data
   );
 }
 
 export function savePositionPermission(data: positionPermissionSaveDto) {
   return axios.post<Result<string>>(
-    '/system-api/sysPosition/savePositionPermission',
+    '/iam-api/sysPosition/savePositionPermission',
     data
   );
 }

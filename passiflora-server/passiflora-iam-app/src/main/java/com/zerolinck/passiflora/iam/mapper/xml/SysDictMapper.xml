@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerolinck.passiflora.iam.mapper.SysDictMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_id, dict_name, remark, is_system, value_is_only, dict_tag, create_by, update_by, create_time, update_time, del_flag, version
+    </sql>
+
+    <select id="page" resultType="com.zerolinck.passiflora.model.iam.entity.SysDict">
+        SELECT * FROM sys_dict
+        <where>
+            del_flag = 0
+            <if test="ew.sqlSegment != null and ew.sqlSegment != ''">
+                AND ${ew.sqlSegment}
+            </if>
+        </where>
+        <if test="sortWrapper.sqlSegment == null or sortWrapper.sqlSegment == ''">
+            ORDER BY dict_id ASC
+        </if>
+        <if test="sortWrapper.sqlSegment != null and sortWrapper.sqlSegment != ''">
+            ${sortWrapper.sqlSegment}
+        </if>
+    </select>
+
+    <delete id="deleteByIds">
+        UPDATE sys_dict SET update_time = now(),
+                                update_by = #{updateBy},
+                                del_flag = 1
+        WHERE dict_id IN
+        <foreach item="id" index="index" collection="dictIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

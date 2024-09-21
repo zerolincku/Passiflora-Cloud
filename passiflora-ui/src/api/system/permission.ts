@@ -24,7 +24,7 @@ export interface permissionPageParams
 
 export function permissionPage(params: permissionPageParams) {
   return axios.get<Result<Page<PermissionRecord>>>(
-    '/system-api/sysPermission/page',
+    '/iam-api/sysPermission/page',
     {
       params,
       paramsSerializer: (obj) => {
@@ -36,49 +36,49 @@ export function permissionPage(params: permissionPageParams) {
 
 export function permissionTableTree() {
   return axios.get<Result<PermissionRecord[]>>(
-    '/system-api/sysPermission/permissionTableTree'
+    '/iam-api/sysPermission/permissionTableTree'
   );
 }
 
 export function permissionUpdateOrder(data: PermissionRecord[]) {
   return axios.post<Result<string>>(
-    '/system-api/sysPermission/updateOrder',
+    '/iam-api/sysPermission/updateOrder',
     data
   );
 }
 
 export function permissionAdd(data: PermissionRecord) {
-  return axios.post<Result<string>>('/system-api/sysPermission/add', data);
+  return axios.post<Result<string>>('/iam-api/sysPermission/add', data);
 }
 
 export function permissionUpdate(data: PermissionRecord) {
-  return axios.post<Result<string>>('/system-api/sysPermission/update', data);
+  return axios.post<Result<string>>('/iam-api/sysPermission/update', data);
 }
 
 export function permissionDetail(data: string) {
   return axios.post<Result<PermissionRecord>>(
-    '/system-api/sysPermission/detail',
+    '/iam-api/sysPermission/detail',
     data
   );
 }
 
 export function permissionDelete(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
-    '/system-api/sysPermission/delete',
+    '/iam-api/sysPermission/delete',
     data
   );
 }
 
 export function permissionDisable(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
-    '/system-api/sysPermission/disable',
+    '/iam-api/sysPermission/disable',
     data
   );
 }
 
 export function permissionEnable(data: string[]) {
   return axios.post<Result<PermissionRecord>>(
-    '/system-api/sysPermission/enable',
+    '/iam-api/sysPermission/enable',
     data
   );
 }

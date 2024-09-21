@@ -17,7 +17,7 @@ export type rolePermissionSaveDto = {
 export interface rolePageParams extends Partial<RoleRecord>, BasePageParam {}
 
 export function rolePage(params: rolePageParams) {
-  return axios.get<Result<Page<RoleRecord>>>('/system-api/sysRole/page', {
+  return axios.get<Result<Page<RoleRecord>>>('/iam-api/sysRole/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -26,7 +26,7 @@ export function rolePage(params: rolePageParams) {
 }
 
 export function roleList(params: rolePageParams) {
-  return axios.get<Result<RoleRecord[]>>('/system-api/sysRole/list', {
+  return axios.get<Result<RoleRecord[]>>('/iam-api/sysRole/list', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -35,39 +35,39 @@ export function roleList(params: rolePageParams) {
 }
 
 export function roleAdd(data: RoleRecord) {
-  return axios.post<Result<string>>('/system-api/sysRole/add', data);
+  return axios.post<Result<string>>('/iam-api/sysRole/add', data);
 }
 
 export function roleUpdate(data: RoleRecord) {
-  return axios.post<Result<string>>('/system-api/sysRole/update', data);
+  return axios.post<Result<string>>('/iam-api/sysRole/update', data);
 }
 
 export function roleDetail(data: string) {
-  return axios.post<Result<RoleRecord>>('/system-api/sysRole/detail', data);
+  return axios.post<Result<RoleRecord>>('/iam-api/sysRole/detail', data);
 }
 
 export function roleDelete(data: string[]) {
-  return axios.post<Result<RoleRecord>>('/system-api/sysRole/delete', data);
+  return axios.post<Result<RoleRecord>>('/iam-api/sysRole/delete', data);
 }
 
 export function roleDisable(data: string[]) {
-  return axios.post<Result<RoleRecord>>('/system-api/sysRole/disable', data);
+  return axios.post<Result<RoleRecord>>('/iam-api/sysRole/disable', data);
 }
 
 export function roleEnable(data: string[]) {
-  return axios.post<Result<RoleRecord>>('/system-api/sysRole/enable', data);
+  return axios.post<Result<RoleRecord>>('/iam-api/sysRole/enable', data);
 }
 
 export function permissionIdsByRoleIds(data: string[]) {
   return axios.post<Result<string[]>>(
-    '/system-api/sysRole/permissionIdsByRoleIds',
+    '/iam-api/sysRole/permissionIdsByRoleIds',
     data
   );
 }
 
 export function saveRolePermission(data: rolePermissionSaveDto) {
   return axios.post<Result<string>>(
-    '/system-api/sysRole/saveRolePermission',
+    '/iam-api/sysRole/saveRolePermission',
     data
   );
 }

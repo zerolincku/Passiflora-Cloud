@@ -48,7 +48,7 @@ jobs:
       with:
         file: Dockerfile-system
         platforms: linux/amd64
-        tags: zerolinck/passiflora-system:latest
+        tags: zerolinck/passiflora-iam:latest
         push: true
 
     - name: Storage Server Build and push Docker images

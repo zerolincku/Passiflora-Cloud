@@ -1,11 +1,11 @@
 FROM zerolinck/passiflora-server-builder AS build
 COPY passiflora-server /app
 WORKDIR /app
-RUN ./gradlew :passiflora-system-app:build -x test -Denv=prod
+RUN ./gradlew :passiflora-iam-app:build -x test -Denv=prod
 
 FROM openjdk:21-jdk
-ARG JAR_FILE=passiflora-system-*.jar
-COPY --from=build /app/passiflora-system-app/build/libs/${JAR_FILE} /app/app.jar
+ARG JAR_FILE=passiflora-iam-*.jar
+COPY --from=build /app/passiflora-iam-app/build/libs/${JAR_FILE} /app/app.jar
 WORKDIR /app
 VOLUME /etc/localtime:/etc/localtime:ro
 EXPOSE 51001

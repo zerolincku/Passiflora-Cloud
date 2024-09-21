@@ -24,7 +24,7 @@ services:
       timeout: 10s
       retries: 5
       
-  passiflora-system:
+  passiflora-iam:
     build:
       context: .
       dockerfile: Dockerfile-system
@@ -32,9 +32,9 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    container_name: passiflora-system
+    container_name: passiflora-iam
     restart: unless-stopped
-    image: passiflora-system
+    image: passiflora-iam
     extra_hosts:
       - "passiflora-nacos:host-gateway"
       - "passiflora-postgres:host-gateway"
@@ -45,7 +45,7 @@ services:
       passiflora-gateway:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:51001/passiflora/system-api" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:51001/passiflora/iam-api" ]
       start_period: 90s
       interval: 60s
       timeout: 10s

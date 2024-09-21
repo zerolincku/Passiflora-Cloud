@@ -36,7 +36,7 @@ export interface DictPage {
 }
 
 export function dictPage(params: dictPageParams) {
-  return axios.get<Result<Page<DictRecord>>>('/system-api/sysDict/page', {
+  return axios.get<Result<Page<DictRecord>>>('/iam-api/sysDict/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -45,24 +45,24 @@ export function dictPage(params: dictPageParams) {
 }
 
 export function dictAdd(data: DictRecord) {
-  return axios.post<Result<string>>('/system-api/sysDict/add', data);
+  return axios.post<Result<string>>('/iam-api/sysDict/add', data);
 }
 
 export function dictUpdate(data: DictRecord) {
-  return axios.post<Result<string>>('/system-api/sysDict/update', data);
+  return axios.post<Result<string>>('/iam-api/sysDict/update', data);
 }
 
 export function dictDetail(data: string) {
-  return axios.post<Result<DictRecord>>('/system-api/sysDict/detail', data);
+  return axios.post<Result<DictRecord>>('/iam-api/sysDict/detail', data);
 }
 
 export function dictDelete(data: string[]) {
-  return axios.post<Result<string>>('/system-api/sysDict/delete', data);
+  return axios.post<Result<string>>('/iam-api/sysDict/delete', data);
 }
 
 export function dictItemPage(params: dictPageParams) {
   return axios.get<Result<Page<DictItemRecord>>>(
-    '/system-api/sysDictItem/page',
+    '/iam-api/sysDictItem/page',
     {
       params,
       paramsSerializer: (obj) => {
@@ -74,46 +74,46 @@ export function dictItemPage(params: dictPageParams) {
 
 export function dictItemListByDictTag(params: string) {
   return axios.get<Result<DictItemRecord[]>>(
-    `/system-api/sysDictItem/listByDictTag?dictTag=${params}`
+    `/iam-api/sysDictItem/listByDictTag?dictTag=${params}`
   );
 }
 
 export function dictItemAdd(data: DictItemRecord) {
-  return axios.post<Result<string>>('/system-api/sysDictItem/add', data);
+  return axios.post<Result<string>>('/iam-api/sysDictItem/add', data);
 }
 
 export function dictItemUpdate(data: DictItemRecord) {
-  return axios.post<Result<string>>('/system-api/sysDictItem/update', data);
+  return axios.post<Result<string>>('/iam-api/sysDictItem/update', data);
 }
 
 export function dictItemDetail(data: string) {
   return axios.post<Result<DictItemRecord>>(
-    '/system-api/sysDictItem/update',
+    '/iam-api/sysDictItem/update',
     data
   );
 }
 
 export function dictItemDelete(data: string[]) {
-  return axios.post<Result<string>>('/system-api/sysDictItem/delete', data);
+  return axios.post<Result<string>>('/iam-api/sysDictItem/delete', data);
 }
 
 export function listByDictId(data: string) {
   return axios.post<Result<DictItemRecord[]>>(
-    '/system-api/sysDictItem/listByDictId',
+    '/iam-api/sysDictItem/listByDictId',
     data
   );
 }
 
 export function listByDictName(data: string) {
   return axios.post<Result<DictItemRecord[]>>(
-    '/system-api/sysDictItem/listByDictName',
+    '/iam-api/sysDictItem/listByDictName',
     data
   );
 }
 
 export function listByDictTag(data: string) {
   return axios.post<Result<DictItemRecord[]>>(
-    '/system-api/sysDictItem/listByDictTag',
+    '/iam-api/sysDictItem/listByDictTag',
     data
   );
 }

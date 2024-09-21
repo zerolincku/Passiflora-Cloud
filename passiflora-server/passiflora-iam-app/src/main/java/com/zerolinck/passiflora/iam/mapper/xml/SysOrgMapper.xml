@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerolinck.passiflora.iam.mapper.SysOrgMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        org_id, org_name, org_code, org_type, org_level, parent_org_id, org_id_path, create_by, update_by, create_time, update_time, del_flag, version, "order"
+    </sql>
+
+    <select id="page" resultType="com.zerolinck.passiflora.model.iam.entity.SysOrg">
+        SELECT * FROM sys_org
+        <where>
+            del_flag = 0
+            <if test="ew.sqlSegment != null and ew.sqlSegment != ''">
+                AND ${ew.sqlSegment}
+            </if>
+        </where>
+        <if test="sortWrapper.sqlSegment == null or sortWrapper.sqlSegment == ''">
+            ORDER BY org_level, "order", org_name
+        </if>
+        <if test="sortWrapper.sqlSegment != null and sortWrapper.sqlSegment != ''">
+            ${sortWrapper.sqlSegment}
+        </if>
+    </select>
+
+    <delete id="deleteByIds">
+        UPDATE sys_org SET update_time = now(),
+                                update_by = #{updateBy},
+                                del_flag = 1
+        WHERE org_id IN
+        <foreach item="id" index="index" collection="orgIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteById">
+        <bind name="path" value="'%'+orgId+'%'"/>
+        UPDATE sys_org SET update_time = now(),
+                            update_by = #{updateBy},
+                            del_flag = 1
+        WHERE sys_org.org_id_path like #{path}
+    </delete>
+</mapper>

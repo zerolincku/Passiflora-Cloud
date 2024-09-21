@@ -13,10 +13,10 @@ docker buildx build --push --platform linux/arm64,linux/amd64 -t zerolinck/passi
 构建系统服务镜像
 ```shell
 # 构建并推送到 dockerhub 仓库
-docker buildx build --push --platform linux/arm64,linux/amd64 -t zerolinck/passiflora-system -f Dockerfile-system .
+docker buildx build --push --platform linux/arm64,linux/amd64 -t zerolinck/passiflora-iam -f Dockerfile-system .
 
 # 本地构建
-docker build -t zerolinck/passiflora-system -f Dockerfile-system .
+docker build -t zerolinck/passiflora-iam -f Dockerfile-system .
 ```
 
 ### [Dockerfile-gateway](../../Dockerfile-gateway)

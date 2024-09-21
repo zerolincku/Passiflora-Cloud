@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerolinck.passiflora.iam.mapper.SysUserPositionMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        bind_id, user_id, position_id, create_by, update_by, create_time, update_time, del_flag, version
+    </sql>
+
+    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.vo.SysUserPositionVo">
+        SELECT a.user_id, b.position_id, b.position_name FROM
+         (SELECT user_id, position_id
+            FROM sys_user_position
+            WHERE del_flag = 0 AND user_id IN
+            <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        ) as a
+        INNER JOIN sys_position as b ON a.position_id = b.position_id
+        WHERE b.del_flag = 0 AND b.position_status = 1
+    </select>
+
+    <delete id="deleteByIds">
+        UPDATE sys_user_position SET update_time = now(),
+                                update_by = #{updateBy},
+                                del_flag = 1
+        WHERE bind_id IN
+        <foreach item="id" index="index" collection="bindIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByUserIds">
+        UPDATE sys_user_position SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE user_id IN
+        <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByPositionIds">
+        UPDATE sys_user_position SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE position_id IN
+        <foreach item="id" index="index" collection="positionIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByUserIdAndPositionIds">
+        UPDATE sys_user_position SET update_time = now(),
+        update_by = #{updateBy},
+        del_flag = 1
+        WHERE user_id = #{userId} AND position_id IN
+        <foreach item="id" index="index" collection="positionIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

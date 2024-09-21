@@ -49,8 +49,8 @@ public class TokenCheckGatewayFilterFactory
     private static final Set<Pattern> UN_CHECK_PATH = new HashSet<>();
 
     static {
-        UN_CHECK_PATH.add(Pattern.compile("/passiflora/system-api/sysUser/login"));
-        UN_CHECK_PATH.add(Pattern.compile("/passiflora/system-api/sysUser/logout"));
+        UN_CHECK_PATH.add(Pattern.compile("/passiflora/iam-api/sysUser/login"));
+        UN_CHECK_PATH.add(Pattern.compile("/passiflora/iam-api/sysUser/logout"));
         UN_CHECK_PATH.add(Pattern.compile("/doc\\.html"));
         UN_CHECK_PATH.add(Pattern.compile(".*/v3/api-docs"));
     }
@@ -79,10 +79,10 @@ public class TokenCheckGatewayFilterFactory
                 token = tokens.getFirst();
             }
             return webBuilder
-                    .baseUrl("http://passiflora-system-app")
+                    .baseUrl("http://passiflora-iam-app")
                     .build()
                     .get()
-                    .uri("/passiflora/system-api/sysUser/checkToken")
+                    .uri("/passiflora/iam-api/sysUser/checkToken")
                     .header(Constants.Authorization, token)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Result<Boolean>>() {})

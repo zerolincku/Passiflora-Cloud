@@ -7,5 +7,5 @@ export type EnumRecord = {
 };
 
 export function list(param: string) {
-  return axios.get<Result<EnumRecord[]>>(`/system-api/enum/${param}`);
+  return axios.get<Result<EnumRecord[]>>(`/iam-api/enum/${param}`);
 }
