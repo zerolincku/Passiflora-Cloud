@@ -233,23 +233,36 @@
             @page-size-change="onPageSizeChange"
           >
             <template #positionsNames="{ record }">
-              <a-tag v-if="record.positionNames.length">{{ record.positionNames[0] }}</a-tag>
+              <a-tag v-if="record.positionNames.length">{{
+                record.positionNames[0]
+              }}</a-tag>
               <a-popover v-if="record.positionNames.length > 1">
-                <a-tag class="ml-1.5">+{{ record.positionNames.length - 1 }}</a-tag>
+                <a-tag class="ml-1.5"
+                  >+{{ record.positionNames.length - 1 }}</a-tag
+                >
                 <template #content>
-                  <div v-for="(item, index) in record.positionNames" :key="item">
-                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{ item }}</a-tag>
+                  <div
+                    v-for="(item, index) in record.positionNames"
+                    :key="item"
+                  >
+                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{
+                      item
+                    }}</a-tag>
                   </div>
                 </template>
               </a-popover>
             </template>
             <template #roleNames="{ record }">
-              <a-tag v-if="record.roleNames.length">{{ record.roleNames[0] }}</a-tag>
+              <a-tag v-if="record.roleNames.length">{{
+                record.roleNames[0]
+              }}</a-tag>
               <a-popover v-if="record.roleNames.length > 1">
                 <a-tag class="ml-1.5">+{{ record.roleNames.length - 1 }}</a-tag>
                 <template #content>
                   <div v-for="(item, index) in record.roleNames" :key="item">
-                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{ item }}</a-tag>
+                    <a-tag :class="index === 0 ? '' : 'mt-1.5'">{{
+                      item
+                    }}</a-tag>
                   </div>
                 </template>
               </a-popover>
@@ -327,27 +340,27 @@
           </a-form-item>
           <a-form-item field="positionIds" label="职位" required>
             <a-tree-select
-                v-model="editFormModel.positionIds"
-                placeholder="请选择职位"
-                size="large"
-                :filter-tree-node="filterPositionTreeNode"
-                :data="positionTreeModel"
-                :field-names="positionTreeFieldNames"
-                :allow-clear="true"
-                :allow-search="true"
-                :multiple="true"
+              v-model="editFormModel.positionIds"
+              placeholder="请选择职位"
+              size="large"
+              :filter-tree-node="filterPositionTreeNode"
+              :data="positionTreeModel"
+              :field-names="positionTreeFieldNames"
+              :allow-clear="true"
+              :allow-search="true"
+              :multiple="true"
             />
           </a-form-item>
           <a-form-item field="positionIds" label="角色" required>
             <a-select
-                v-model="editFormModel.roleIds"
-                placeholder="请选择角色"
-                size="large"
-                :options="roleListModel"
-                :field-names="roleFieldNames"
-                :allow-clear="true"
-                :allow-search="true"
-                :multiple="true"
+              v-model="editFormModel.roleIds"
+              placeholder="请选择角色"
+              size="large"
+              :options="roleListModel"
+              :field-names="roleFieldNames"
+              :allow-clear="true"
+              :allow-search="true"
+              :multiple="true"
             />
           </a-form-item>
           <a-form-item field="phoneNum" label="电话号码" required>
@@ -394,26 +407,36 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, reactive, ref, watch} from 'vue';
-import useLoading from '@/hooks/loading';
-import {userAdd, userDelete, userPage, userPageParams, UserRecord, userUpdate,} from '@/api/organization/user';
-import {Pagination} from '@/types/global';
-import type {TableColumnData, TableRowSelection,} from '@arco-design/web-vue/es/table/interface';
-import cloneDeep from 'lodash/cloneDeep';
-import Sortable from 'sortablejs';
-import {useDictStore} from '@/store';
-import {DictItemRecord} from '@/api/system/dict';
-import {getLabelByValue} from '@/utils/dict';
-import {OrgRecord, orgTree,} from '@/api/organization/org';
-import {rowSelection} from '@/utils';
-import {IconPlus} from '@arco-design/web-vue/es/icon';
-import {Message} from '@arco-design/web-vue';
-import {isEmpty} from 'lodash';
-import icon from '@/components/icon';
-import {PositionRecord, positionTree} from "@/api/organization/position";
-import {roleList, rolePageParams, RoleRecord} from "@/api/system/role";
+  import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import {
+    userAdd,
+    userDelete,
+    userPage,
+    userPageParams,
+    UserRecord,
+    userUpdate,
+  } from '@/api/organization/user';
+  import { Pagination } from '@/types/global';
+  import type {
+    TableColumnData,
+    TableRowSelection,
+  } from '@arco-design/web-vue/es/table/interface';
+  import cloneDeep from 'lodash/cloneDeep';
+  import Sortable from 'sortablejs';
+  import { useDictStore } from '@/store';
+  import { DictItemRecord } from '@/api/system/dict';
+  import { getLabelByValue } from '@/utils/dict';
+  import { OrgRecord, orgTree } from '@/api/organization/org';
+  import { rowSelection } from '@/utils';
+  import { IconPlus } from '@arco-design/web-vue/es/icon';
+  import { Message } from '@arco-design/web-vue';
+  import { isEmpty } from 'lodash';
+  import icon from '@/components/icon';
+  import { PositionRecord, positionTree } from '@/api/organization/position';
+  import { roleList, rolePageParams, RoleRecord } from '@/api/system/role';
 
-type SizeProps = 'mini' | 'small' | 'medium' | 'large';
+  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   type Column = TableColumnData & { checked?: true };
 
   const scrollPercent = {
@@ -516,8 +539,9 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
 
   const filterPositionTreeNode = (inputText: string, node: PositionRecord) => {
     return (
-        (node.positionName as string).toLowerCase().indexOf(inputText.toLowerCase()) >
-        -1
+      (node.positionName as string)
+        .toLowerCase()
+        .indexOf(inputText.toLowerCase()) > -1
     );
   };
 
@@ -640,11 +664,11 @@ type SizeProps = 'mini' | 'small' | 'medium' | 'large';
     positionTreeModel.value = data.data;
   };
 
-const refreshRoleList = async () => {
-  const param: rolePageParams = {};
-  const { data } = await roleList(param);
-  roleListModel.value = data.data;
-};
+  const refreshRoleList = async () => {
+    const param: rolePageParams = {};
+    const { data } = await roleList(param);
+    roleListModel.value = data.data;
+  };
 
   const treeExpandStatusChange = () => {
     if (treeExpandIcon.value === 'icon-expand') {

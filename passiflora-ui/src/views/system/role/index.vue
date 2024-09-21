@@ -7,27 +7,27 @@
           <a-row>
             <a-col :flex="1">
               <a-form
-                  :model="searchForm"
-                  :label-col-props="{ span: 6 }"
-                  :wrapper-col-props="{ span: 18 }"
-                  label-align="left"
+                :model="searchForm"
+                :label-col-props="{ span: 6 }"
+                :wrapper-col-props="{ span: 18 }"
+                label-align="left"
               >
                 <a-row :gutter="16">
                   <a-col :span="6">
                     <a-form-item field="dictName" :hide-label="true">
                       <a-input
-                          v-model="searchForm['like[roleName]']"
-                          placeholder="请输入角色名称"
-                          @press-enter="search"
+                        v-model="searchForm['like[roleName]']"
+                        placeholder="请输入角色名称"
+                        @press-enter="search"
                       />
                     </a-form-item>
                   </a-col>
                   <a-col :span="6">
                     <a-form-item field="dictTag" :hide-label="true">
                       <a-input
-                          v-model="searchForm['like[roleCode]']"
-                          placeholder="请输入角色标签"
-                          @press-enter="search"
+                        v-model="searchForm['like[roleCode]']"
+                        placeholder="请输入角色标签"
+                        @press-enter="search"
                       />
                     </a-form-item>
                   </a-col>
@@ -154,10 +154,7 @@
             @page-size-change="onPageSizeChange"
           >
             <template #roleStatus="{ record }">
-              <span
-                v-if="record.roleStatus === 1"
-                class="circle pass"
-              ></span>
+              <span v-if="record.roleStatus === 1" class="circle pass"></span>
               <span v-else class="circle err"></span>
               {{
                 getLabelByValue(
@@ -242,8 +239,8 @@
           </a-form-item>
           <a-form-item field="roleCode" label="角色标识" required>
             <a-input
-                v-model="editFormModel.roleCode"
-                placeholder="请输入角色标识"
+              v-model="editFormModel.roleCode"
+              placeholder="请输入角色标识"
             />
           </a-form-item>
           <a-form-item field="roleStatus" label="状态" required>
@@ -300,19 +297,19 @@
     roleDisable,
     roleEnable,
     permissionIdsByRoleIds,
-    saveRolePermission, rolePage, rolePageParams,
+    saveRolePermission,
+    rolePage,
+    rolePageParams,
   } from '@/api/system/role';
-  import {
-    TableColumnData,
-  } from '@arco-design/web-vue/es/table/interface';
+  import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
   import cloneDeep from 'lodash/cloneDeep';
   import { densityList, rowSelection } from '@/utils';
   import { Message } from '@arco-design/web-vue';
   import { useEnumStore } from '@/store';
   import { EnumRecord } from '@/api/system/enum';
   import { getLabelByValue } from '@/utils/enums';
-  import {Pagination} from "@/types/global";
-  import Sortable from "sortablejs";
+  import { Pagination } from '@/types/global';
+  import Sortable from 'sortablejs';
 
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   type Column = TableColumnData & { checked?: true };
@@ -371,19 +368,19 @@
   ]);
 
   watch(
-      () => columns.value,
-      (val) => {
-        cloneColumns.value = cloneDeep(val);
-        cloneColumns.value.forEach((item, index) => {
-          item.checked = true;
-        });
-        showColumns.value = cloneDeep(cloneColumns.value);
-      },
-      { deep: true, immediate: true }
+    () => columns.value,
+    (val) => {
+      cloneColumns.value = cloneDeep(val);
+      cloneColumns.value.forEach((item, index) => {
+        item.checked = true;
+      });
+      showColumns.value = cloneDeep(cloneColumns.value);
+    },
+    { deep: true, immediate: true }
   );
 
   const fetchData = async (
-      params: rolePageParams = { current: 1, pageSize: 10 }
+    params: rolePageParams = { current: 1, pageSize: 10 }
   ) => {
     setLoading(true);
     try {
@@ -571,18 +568,18 @@
   };
 
   const exchangeArray = <T extends Array<any>>(
-      array: T,
-      beforeIdx: number,
-      newIdx: number,
-      isDeep = false
+    array: T,
+    beforeIdx: number,
+    newIdx: number,
+    isDeep = false
   ): T => {
     const newArray = isDeep ? cloneDeep(array) : array;
     if (beforeIdx > -1 && newIdx > -1) {
       // 先替换后面的，然后拿到替换的结果替换前面的
       newArray.splice(
-          beforeIdx,
-          1,
-          newArray.splice(newIdx, 1, newArray[beforeIdx]).pop()
+        beforeIdx,
+        1,
+        newArray.splice(newIdx, 1, newArray[beforeIdx]).pop()
       );
     }
     return newArray;

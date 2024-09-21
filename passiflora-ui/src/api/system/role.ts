@@ -14,32 +14,24 @@ export type rolePermissionSaveDto = {
   permissionIds?: string[];
 };
 
-export interface rolePageParams
-  extends Partial<RoleRecord>,
-    BasePageParam {}
+export interface rolePageParams extends Partial<RoleRecord>, BasePageParam {}
 
 export function rolePage(params: rolePageParams) {
-  return axios.get<Result<Page<RoleRecord>>>(
-    '/system-api/sysRole/page',
-    {
-      params,
-      paramsSerializer: (obj) => {
-        return qs.stringify(obj);
-      },
-    }
-  );
+  return axios.get<Result<Page<RoleRecord>>>('/system-api/sysRole/page', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
 
 export function roleList(params: rolePageParams) {
-  return axios.get<Result<RoleRecord[]>>(
-      '/system-api/sysRole/list',
-      {
-        params,
-        paramsSerializer: (obj) => {
-          return qs.stringify(obj);
-        },
-      }
-  );
+  return axios.get<Result<RoleRecord[]>>('/system-api/sysRole/list', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
 
 export function roleAdd(data: RoleRecord) {
@@ -51,31 +43,19 @@ export function roleUpdate(data: RoleRecord) {
 }
 
 export function roleDetail(data: string) {
-  return axios.post<Result<RoleRecord>>(
-    '/system-api/sysRole/detail',
-    data
-  );
+  return axios.post<Result<RoleRecord>>('/system-api/sysRole/detail', data);
 }
 
 export function roleDelete(data: string[]) {
-  return axios.post<Result<RoleRecord>>(
-    '/system-api/sysRole/delete',
-    data
-  );
+  return axios.post<Result<RoleRecord>>('/system-api/sysRole/delete', data);
 }
 
 export function roleDisable(data: string[]) {
-  return axios.post<Result<RoleRecord>>(
-    '/system-api/sysRole/disable',
-    data
-  );
+  return axios.post<Result<RoleRecord>>('/system-api/sysRole/disable', data);
 }
 
 export function roleEnable(data: string[]) {
-  return axios.post<Result<RoleRecord>>(
-    '/system-api/sysRole/enable',
-    data
-  );
+  return axios.post<Result<RoleRecord>>('/system-api/sysRole/enable', data);
 }
 
 export function permissionIdsByRoleIds(data: string[]) {
