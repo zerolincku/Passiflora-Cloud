@@ -51,7 +51,7 @@ public class PassifloraSystemApplication {
             本地 Swagger: \t\thttp://localhost:{}{}/doc.html
             外部地址 Swagger: \thttp://{}:{}{}/doc.html
             Passiflora (C) 2024 version: {}
-            buildTime: {}""",
+            BuildTime: {}""",
                 env,
                 port,
                 path,

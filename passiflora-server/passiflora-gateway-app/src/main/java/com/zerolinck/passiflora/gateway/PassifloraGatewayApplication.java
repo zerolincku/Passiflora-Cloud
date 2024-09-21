@@ -46,7 +46,7 @@ public class PassifloraGatewayApplication {
             本地聚合 Swagger: \t\thttp://localhost:{}/doc.html
             外部地址聚合 Swagger: \thttp://{}:{}/doc.html
             Passiflora (C) 2024 version: {}
-            buildTime: {}""",
+            BuildTime: {}""",
                 env,
                 port,
                 outIp,
