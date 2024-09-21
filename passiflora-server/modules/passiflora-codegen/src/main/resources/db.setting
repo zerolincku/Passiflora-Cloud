@@ -1,3 +1,3 @@
-url = jdbc:postgresql://127.0.0.1:5432/passiflora_system?reWriteBatchedInserts=true
+url = jdbc:postgresql://127.0.0.1:5432/passiflora_iam?reWriteBatchedInserts=true
 user = postgres
 pass = postgres
