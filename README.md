@@ -6,7 +6,7 @@
 Passiflora Cloud 是基于 JDK21、Spring Cloud、Gradle 构建的微服务项目，不同于其他的同类项目，Passiflora Cloud 具有以下优点：
 1. 合理清晰的项目结构，Passiflora Cloud 不同的应用以及通用服务，拆分为不同的模块。web 服务模块以 app 名称结尾，依赖模块以及通用模块放置在 modules 目录下。
 2. 高可靠的业务实现，基于版本号乐观锁+分布式锁的设计，保证所有的数据变更都不会出现并发导致的数据异常问题。
-3. 通过 JUnit 和 Mockito 单元测试，controller 方法覆盖率达到 100%，进一步的保证系统可靠性。
+3. 通过 JUnit 进行集成测试，接口覆盖率达到 100%，进一步的保证系统可靠性。
 
 ### 项目结构
 ```shell
