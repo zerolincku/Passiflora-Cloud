@@ -43,9 +43,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "用户")
 @FeignClient(
-        value = "sysUser",
-        contextId = "sysUser",
-        path = "/passiflora/iam-api/sysUser",
+        value = "iamUser",
+        contextId = "iamUser",
+        path = "/passiflora/iam-api/iamUser",
         configuration = FeignConfiguration.class)
 public interface IamUserApi {
     @Operation(summary = "分页查询")
@@ -56,12 +56,12 @@ public interface IamUserApi {
     @Nonnull
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) IamUserSaveArgs sysUser);
+    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) IamUserSaveArgs iamUser);
 
     @Nonnull
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) IamUserSaveArgs sysUser);
+    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) IamUserSaveArgs iamUser);
 
     @Operation(summary = "详情")
     @GetMapping("detail")

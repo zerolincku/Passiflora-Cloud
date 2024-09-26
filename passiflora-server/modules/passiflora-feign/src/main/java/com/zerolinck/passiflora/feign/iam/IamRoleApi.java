@@ -39,9 +39,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "角色")
 @FeignClient(
-        value = "sysRole",
-        contextId = "sysRole",
-        path = "/passiflora/iam-api/sysRole",
+        value = "iamRole",
+        contextId = "iamRole",
+        path = "/passiflora/iam-api/iamRole",
         configuration = FeignConfiguration.class)
 public interface IamRoleApi {
 

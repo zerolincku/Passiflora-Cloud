@@ -40,9 +40,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "机构")
 @FeignClient(
-        value = "sysOrg",
-        contextId = "sysOrg",
-        path = "/passiflora/iam-api/sysOrg",
+        value = "iamOrg",
+        contextId = "iamOrg",
+        path = "/passiflora/iam-api/iamOrg",
         configuration = FeignConfiguration.class)
 public interface IamOrgApi {
     @Operation(summary = "分页查询")

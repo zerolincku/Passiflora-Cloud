@@ -73,7 +73,7 @@ public class IamRoleControllerTest {
         iamRole.setRoleId("test");
         iamRole.setRoleName("test");
         iamRole.setRoleCode("test");
-        mockMvc.perform(post("/sysRole/add")
+        mockMvc.perform(post("/iamRole/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamRole)))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/sysRole/detail").param("roleId", testSysRoleId))
+        mockMvc.perform(get("/iamRole/detail").param("roleId", testSysRoleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -100,7 +100,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/sysRole/update")
+        mockMvc.perform(post("/iamRole/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamRole)))
                 .andExpect(status().isOk())
@@ -110,7 +110,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/sysRole/delete")
+        mockMvc.perform(post("/iamRole/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysRoleId})))
                 .andExpect(status().isOk())

@@ -41,9 +41,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "职位")
 @FeignClient(
-        value = "sysPosition",
-        contextId = "sysPosition",
-        path = "/passiflora/iam-api/sysPosition",
+        value = "iamPosition",
+        contextId = "iamPosition",
+        path = "/passiflora/iam-api/iamPosition",
         configuration = FeignConfiguration.class)
 public interface IamPositionApi {
     @Operation(summary = "分页查询")
@@ -80,7 +80,7 @@ public interface IamPositionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("updateOrder")
-    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> sysPositionVos);
+    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> iamPositionVos);
 
     @Operation(summary = "根据职位ids获取权限ids")
     @PostMapping("permissionIdsByPositionIds")

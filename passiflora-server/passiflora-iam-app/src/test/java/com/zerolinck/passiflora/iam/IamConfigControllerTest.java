@@ -89,7 +89,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/sysConfig/detail").param("configId", testSysConfigId))
+        mockMvc.perform(get("/iamConfig/detail").param("configId", testSysConfigId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -102,7 +102,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/sysConfig/update")
+        mockMvc.perform(post("/iamConfig/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamConfig)))
                 .andExpect(status().isOk())
@@ -112,7 +112,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/sysConfig/delete")
+        mockMvc.perform(post("/iamConfig/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysConfigId})))
                 .andExpect(status().isOk())

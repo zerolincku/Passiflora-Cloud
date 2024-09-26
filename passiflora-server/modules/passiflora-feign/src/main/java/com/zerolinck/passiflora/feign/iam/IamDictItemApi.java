@@ -39,9 +39,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "字典项")
 @FeignClient(
-        value = "sysDictItem",
-        contextId = "sysDictItem",
-        path = "/passiflora/iam-api/sysDictItem",
+        value = "iamDictItem",
+        contextId = "iamDictItem",
+        path = "/passiflora/iam-api/iamDictItem",
         configuration = FeignConfiguration.class)
 public interface IamDictItemApi {
     @Operation(summary = "分页查询")

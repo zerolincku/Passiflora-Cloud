@@ -38,9 +38,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "系统配置")
 @FeignClient(
-        value = "sysConfig",
-        contextId = "sysConfig",
-        path = "/passiflora/iam-api/sysConfig",
+        value = "iamConfig",
+        contextId = "iamConfig",
+        path = "/passiflora/iam-api/iamConfig",
         configuration = FeignConfiguration.class)
 public interface IamConfigApi {
 

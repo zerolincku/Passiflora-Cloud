@@ -41,9 +41,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Tag(name = "菜单")
 @FeignClient(
-        value = "sysPermission",
-        contextId = "sysPermission",
-        path = "/passiflora/iam-api/sysPermission",
+        value = "iamPermission",
+        contextId = "iamPermission",
+        path = "/passiflora/iam-api/iamPermission",
         configuration = FeignConfiguration.class)
 public interface IamPermissionApi {
     @Operation(summary = "分页查询")
@@ -76,7 +76,7 @@ public interface IamPermissionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("updateOrder")
-    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> sysPermissionTableVos);
+    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> iamPermissionTableVos);
 
     @Operation(summary = "禁用")
     @PostMapping("disable")

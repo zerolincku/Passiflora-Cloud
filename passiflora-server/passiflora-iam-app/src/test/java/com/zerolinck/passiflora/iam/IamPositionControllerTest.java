@@ -108,7 +108,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/sysPosition/update")
+        mockMvc.perform(post("/iamPosition/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamPosition)))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(5)
     public void testPermissionTree() throws Exception {
-        mockMvc.perform(get("/sysPosition/positionTree"))
+        mockMvc.perform(get("/iamPosition/positionTree"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -131,7 +131,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(6)
     public void testDisable() throws Exception {
-        mockMvc.perform(post("/sysPosition/disable")
+        mockMvc.perform(post("/iamPosition/disable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
@@ -141,7 +141,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(7)
     public void testEnable() throws Exception {
-        mockMvc.perform(post("/sysPosition/enable")
+        mockMvc.perform(post("/iamPosition/enable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(8)
     public void testUpdateOrder() throws Exception {
-        mockMvc.perform(post("/sysPosition/updateOrder")
+        mockMvc.perform(post("/iamPosition/updateOrder")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(positionTree)))
                 .andExpect(status().isOk())
@@ -161,7 +161,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(9)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/sysPosition/delete")
+        mockMvc.perform(post("/iamPosition/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
