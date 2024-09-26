@@ -61,7 +61,7 @@ public class IamUserControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysUser/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamUser/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -74,7 +74,7 @@ public class IamUserControllerTest {
         iamUser.setRealName("test");
         iamUser.setUserPassword("test");
         iamUser.setOrgId("test");
-        mockMvc.perform(post("/sysUser/add")
+        mockMvc.perform(post("/iamUser/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamUser)))
                 .andExpect(status().isOk())

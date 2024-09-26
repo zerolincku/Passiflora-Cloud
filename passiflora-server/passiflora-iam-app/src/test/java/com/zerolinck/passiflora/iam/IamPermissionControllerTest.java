@@ -64,7 +64,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysPermission/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamPermission/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

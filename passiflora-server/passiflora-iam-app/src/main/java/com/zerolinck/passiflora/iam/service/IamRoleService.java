@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysRole:";
+    private static final String LOCK_KEY = "passiflora:lock:iamRole:";
 
     private final IamRolePermissionService iamRolePermissionService;
 

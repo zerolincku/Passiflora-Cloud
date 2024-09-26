@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IamPositionPermissionService extends ServiceImpl<IamPositionPermissionMapper, IamPositionPermission> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysPositionPermission:";
+    private static final String LOCK_KEY = "passiflora:lock:iamPositionPermission:";
 
     @Nonnull
     public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {

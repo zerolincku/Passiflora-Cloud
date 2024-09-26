@@ -61,7 +61,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysRole/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamRole/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

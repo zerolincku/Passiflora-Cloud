@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPosition> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysPosition:";
+    private static final String LOCK_KEY = "passiflora:lock:iamPosition:";
 
     private final IamPositionPermissionService iamPositionPermissionService;
 
@@ -153,9 +153,9 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      */
     @Nonnull
     public List<IamPositionVo> positionTree() {
-        List<IamPositionVo> sysPositionVos = baseMapper.listByParentId("0");
-        sysPositionVos.forEach(this::recursionTree);
-        return sysPositionVos;
+        List<IamPositionVo> iamPositionVos = baseMapper.listByParentId("0");
+        iamPositionVos.forEach(this::recursionTree);
+        return iamPositionVos;
     }
 
     /**
@@ -195,28 +195,28 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
     /**
      * 更新职位排序
      *
-     * @param sysPositionVos 职位数数据
+     * @param iamPositionVos 职位数数据
      * @since 2024-08-12
      */
-    public void updateOrder(@Nullable List<IamPositionVo> sysPositionVos) {
-        if (CollectionUtils.isEmpty(sysPositionVos)) {
+    public void updateOrder(@Nullable List<IamPositionVo> iamPositionVos) {
+        if (CollectionUtils.isEmpty(iamPositionVos)) {
             return;
         }
-        for (IamPositionVo sysPositionTableVo : sysPositionVos) {
-            baseMapper.updateOrder(sysPositionTableVo);
-            updateOrder(sysPositionTableVo.getChildren());
+        for (IamPositionVo iamPositionTableVo : iamPositionVos) {
+            baseMapper.updateOrder(iamPositionTableVo);
+            updateOrder(iamPositionTableVo.getChildren());
         }
     }
 
     /**
      * 递归处理职位树
      *
-     * @param sysPositionVo 职位
+     * @param iamPositionVo 职位
      * @since 2024-08-12
      */
-    private void recursionTree(@Nonnull IamPositionVo sysPositionVo) {
-        sysPositionVo.setChildren(baseMapper.listByParentId(sysPositionVo.getPositionId()));
-        sysPositionVo.getChildren().forEach(this::recursionTree);
+    private void recursionTree(@Nonnull IamPositionVo iamPositionVo) {
+        iamPositionVo.setChildren(baseMapper.listByParentId(iamPositionVo.getPositionId()));
+        iamPositionVo.getChildren().forEach(this::recursionTree);
     }
 
     /**

@@ -62,7 +62,7 @@ public class IamDictControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysDict/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamDict/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

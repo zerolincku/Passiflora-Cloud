@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPermission> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysPermission:";
+    private static final String LOCK_KEY = "passiflora:lock:iamPermission:";
 
     @Nonnull
     public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
@@ -145,13 +145,13 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
-    public void updateOrder(@Nullable List<IamPermissionTableVo> sysPermissionTableVos) {
-        if (CollectionUtils.isEmpty(sysPermissionTableVos)) {
+    public void updateOrder(@Nullable List<IamPermissionTableVo> iamPermissionTableVos) {
+        if (CollectionUtils.isEmpty(iamPermissionTableVos)) {
             return;
         }
-        for (IamPermissionTableVo sysPermissionTableVo : sysPermissionTableVos) {
-            baseMapper.updateOrder(sysPermissionTableVo);
-            updateOrder(sysPermissionTableVo.getChildren());
+        for (IamPermissionTableVo iamPermissionTableVo : iamPermissionTableVos) {
+            baseMapper.updateOrder(iamPermissionTableVo);
+            updateOrder(iamPermissionTableVo.getChildren());
         }
     }
 

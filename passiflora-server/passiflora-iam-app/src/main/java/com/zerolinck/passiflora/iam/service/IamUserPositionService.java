@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, IamUserPosition> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysUserPosition:";
+    private static final String LOCK_KEY = "passiflora:lock:iamUserPosition:";
 
     @Nonnull
     public List<IamUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {

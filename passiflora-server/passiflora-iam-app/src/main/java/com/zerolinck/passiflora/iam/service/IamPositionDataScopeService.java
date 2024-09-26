@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScopeMapper, IamPositionDataScope> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysPositionDataScope:";
+    private static final String LOCK_KEY = "passiflora:lock:iamPositionDataScope:";
 
     @Nonnull
     public Page<IamPositionDataScope> page(@Nullable QueryCondition<IamPositionDataScope> condition) {

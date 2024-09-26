@@ -53,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictItem> {
 
     private final IamDictService iamDictService;
-    private static final String LOCK_KEY = "passiflora:lock:sysDictItem:";
+    private static final String LOCK_KEY = "passiflora:lock:iamDictItem:";
 
     /**
      * 分页查询
@@ -150,8 +150,8 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@Nonnull Collection<String> dictItemIds) {
         List<IamDictItem> iamDictItems = baseMapper.selectBatchIds(dictItemIds);
-        iamDictItems.forEach(sysDictItem -> {
-            if (YesOrNoEnum.YES.equals(sysDictItem.getIsSystem())) {
+        iamDictItems.forEach(iamDictItem -> {
+            if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许删除");
             }
         });

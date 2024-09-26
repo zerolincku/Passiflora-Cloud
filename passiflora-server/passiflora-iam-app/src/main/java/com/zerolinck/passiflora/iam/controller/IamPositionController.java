@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("sysPosition")
+@RequestMapping("iamPosition")
 @RequiredArgsConstructor
 public class IamPositionController implements IamPositionApi {
 
@@ -110,8 +110,8 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<String> updateOrder(List<IamPositionVo> sysPositionVos) {
-        iamPositionService.updateOrder(sysPositionVos);
+    public Result<String> updateOrder(List<IamPositionVo> iamPositionVos) {
+        iamPositionService.updateOrder(iamPositionVos);
         return Result.ok();
     }
 

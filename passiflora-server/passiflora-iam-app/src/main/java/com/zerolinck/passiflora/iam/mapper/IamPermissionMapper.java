@@ -43,9 +43,9 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
     int deleteByIds(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
 
-    @Update("UPDATE iam_permission SET \"order\" = #{sysPermissionTableVo.order} WHERE"
-            + " permission_id = #{sysPermissionTableVo.permissionId} ")
-    void updateOrder(@Param("sysPermissionTableVo") IamPermissionTableVo sysPermissionTableVo);
+    @Update("UPDATE iam_permission SET \"order\" = #{iamPermissionTableVo.order} WHERE"
+            + " permission_id = #{iamPermissionTableVo.permissionId} ")
+    void updateOrder(@Param("iamPermissionTableVo") IamPermissionTableVo iamPermissionTableVo);
 
     void disable(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
 

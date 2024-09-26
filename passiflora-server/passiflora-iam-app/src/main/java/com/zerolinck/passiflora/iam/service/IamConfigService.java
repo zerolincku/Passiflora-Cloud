@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IamConfigService extends ServiceImpl<IamConfigMapper, IamConfig> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysConfig:";
+    private static final String LOCK_KEY = "passiflora:lock:iamConfig:";
 
     /**
      * 分页查询

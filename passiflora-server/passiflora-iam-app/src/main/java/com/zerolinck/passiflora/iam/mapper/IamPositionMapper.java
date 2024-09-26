@@ -54,7 +54,7 @@ public interface IamPositionMapper extends BaseMapper<IamPosition> {
 
     void enable(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
-    @Update("UPDATE iam_position SET \"order\" = #{sysPositionVo.order} WHERE"
-            + " position_id = #{sysPositionVo.positionId} ")
-    void updateOrder(@Param("sysPositionVo") IamPositionVo sysPositionVo);
+    @Update("UPDATE iam_position SET \"order\" = #{iamPositionVo.order} WHERE"
+            + " position_id = #{iamPositionVo.positionId} ")
+    void updateOrder(@Param("iamPositionVo") IamPositionVo iamPositionVo);
 }

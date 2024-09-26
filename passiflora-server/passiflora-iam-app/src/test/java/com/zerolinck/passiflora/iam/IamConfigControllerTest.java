@@ -62,7 +62,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysConfig/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamConfig/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -75,7 +75,7 @@ public class IamConfigControllerTest {
         iamConfig.setConfigName("test");
         iamConfig.setConfigCode("test");
         iamConfig.setConfigValue("test");
-        mockMvc.perform(post("/sysConfig/add")
+        mockMvc.perform(post("/iamConfig/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamConfig)))
                 .andExpect(status().isOk())

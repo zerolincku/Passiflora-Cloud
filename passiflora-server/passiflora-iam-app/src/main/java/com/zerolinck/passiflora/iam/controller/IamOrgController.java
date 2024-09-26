@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("sysOrg")
+@RequestMapping("iamOrg")
 @RequiredArgsConstructor
 public class IamOrgController implements IamOrgApi {
 

@@ -66,7 +66,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/sysPosition/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iamPosition/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -81,7 +81,7 @@ public class IamPositionControllerTest {
         iamPosition.setDataScopeType(PositionDataScopeTypeEnum.ALL);
         iamPosition.setPositionLevel(1);
         iamPosition.setPositionStatus(StatusEnum.ENABLE);
-        mockMvc.perform(post("/sysPosition/add")
+        mockMvc.perform(post("/iamPosition/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamPosition)))
                 .andExpect(status().isOk())
@@ -95,7 +95,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/sysPosition/detail").param("positionId", testSysPositionId))
+        mockMvc.perform(get("/iamPosition/detail").param("positionId", testSysPositionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {

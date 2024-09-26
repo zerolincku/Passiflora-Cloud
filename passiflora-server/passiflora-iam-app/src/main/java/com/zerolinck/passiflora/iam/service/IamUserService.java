@@ -62,7 +62,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
     private final IamPermissionService iamPermissionService;
     private final IamUserRoleService iamUserRoleService;
 
-    private static final String LOCK_KEY = "passiflora:lock:sysUser:";
+    private static final String LOCK_KEY = "passiflora:lock:iamUser:";
 
     @Nonnull
     public Page<IamUserVo> page(@Nonnull String orgId, @Nullable QueryCondition<IamUser> condition) {
@@ -87,29 +87,29 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
                 .collect(Collectors.groupingBy(IamUserRoleVo::getUserId));
 
         List<IamUserVo> recordsVo = page.getRecords().stream()
-                .map(sysUser -> {
-                    IamUserVo sysUserVo = IamUserConvert.INSTANCE.entity2vo(sysUser);
+                .map(iamUser -> {
+                    IamUserVo iamUserVo = IamUserConvert.INSTANCE.entity2vo(iamUser);
                     // 填充机构信息
-                    sysUserVo.setOrgName(orgId2NameMap.get(sysUser.getOrgId()));
+                    iamUserVo.setOrgName(orgId2NameMap.get(iamUser.getOrgId()));
 
                     // 填充职位信息
                     List<IamUserPositionVo> positionVoList =
-                            userPositionMap.getOrDefault(sysUser.getUserId(), new ArrayList<>());
-                    sysUserVo.setPositionIds(positionVoList.stream()
+                            userPositionMap.getOrDefault(iamUser.getUserId(), new ArrayList<>());
+                    iamUserVo.setPositionIds(positionVoList.stream()
                             .map(IamUserPositionVo::getPositionId)
                             .collect(Collectors.toList()));
-                    sysUserVo.setPositionNames(positionVoList.stream()
+                    iamUserVo.setPositionNames(positionVoList.stream()
                             .map(IamUserPositionVo::getPositionName)
                             .collect(Collectors.toList()));
 
                     // 填充角色信息
-                    List<IamUserRoleVo> userRoleVos = userRoleMap.getOrDefault(sysUser.getUserId(), new ArrayList<>());
-                    sysUserVo.setRoleIds(
+                    List<IamUserRoleVo> userRoleVos = userRoleMap.getOrDefault(iamUser.getUserId(), new ArrayList<>());
+                    iamUserVo.setRoleIds(
                             userRoleVos.stream().map(IamUserRoleVo::getRoleId).collect(Collectors.toList()));
-                    sysUserVo.setRoleNames(
+                    iamUserVo.setRoleNames(
                             userRoleVos.stream().map(IamUserRoleVo::getRoleName).collect(Collectors.toList()));
 
-                    return sysUserVo;
+                    return iamUserVo;
                 })
                 .toList();
 
@@ -161,18 +161,18 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
             throw new BizException(ResultCodeEnum.UNAUTHORIZED);
         }
 
-        IamUserInfo sysUserInfo = IamUserConvert.INSTANCE.entity2info(iamUser);
+        IamUserInfo iamUserInfo = IamUserConvert.INSTANCE.entity2info(iamUser);
         List<IamPermission> permissionList = iamPermissionService.listByUserIds(userId);
 
-        permissionList.forEach(sysPermission -> {
-            if (PermissionTypeEnum.MENU.equals(sysPermission.getPermissionType())
-                    || PermissionTypeEnum.MENU_SET.equals(sysPermission.getPermissionType())) {
-                sysUserInfo.getMenu().add(sysPermission.getPermissionName());
+        permissionList.forEach(iamPermission -> {
+            if (PermissionTypeEnum.MENU.equals(iamPermission.getPermissionType())
+                    || PermissionTypeEnum.MENU_SET.equals(iamPermission.getPermissionType())) {
+                iamUserInfo.getMenu().add(iamPermission.getPermissionName());
             } else {
-                sysUserInfo.getPermission().add(sysPermission.getPermissionName());
+                iamUserInfo.getPermission().add(iamPermission.getPermissionName());
             }
         });
-        return sysUserInfo;
+        return iamUserInfo;
     }
 
     @Nonnull

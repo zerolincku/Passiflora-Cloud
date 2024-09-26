@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
 
-    private static final String LOCK_KEY = "passiflora:lock:sysOrg:";
+    private static final String LOCK_KEY = "passiflora:lock:iamOrg:";
 
     @Nonnull
     public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
@@ -98,8 +98,8 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                     generateIadPathAndLevel(iamOrg);
                     int changeRowCount = baseMapper.updateById(iamOrg);
                     // 子机构数据变更
-                    List<IamOrgVo> sysOrgList = listByParentId(iamOrg.getOrgId());
-                    sysOrgList.forEach(org -> {
+                    List<IamOrgVo> iamOrgList = listByParentId(iamOrg.getOrgId());
+                    iamOrgList.forEach(org -> {
                         generateIadPathAndLevel(org);
                         baseMapper.updateById(org);
                     });
@@ -142,14 +142,14 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
     }
 
     @Nullable public List<IamOrgVo> orgTree() {
-        List<IamOrgVo> sysOrgVos = baseMapper.listByParentId("0");
-        sysOrgVos.forEach(this::recursionTree);
-        return sysOrgVos;
+        List<IamOrgVo> iamOrgVos = baseMapper.listByParentId("0");
+        iamOrgVos.forEach(this::recursionTree);
+        return iamOrgVos;
     }
 
-    private void recursionTree(@Nonnull IamOrgVo sysOrgVo) {
-        sysOrgVo.setChildren(listByParentId(sysOrgVo.getOrgId()));
-        sysOrgVo.getChildren().forEach(this::recursionTree);
+    private void recursionTree(@Nonnull IamOrgVo iamOrgVo) {
+        iamOrgVo.setChildren(listByParentId(iamOrgVo.getOrgId()));
+        iamOrgVo.getChildren().forEach(this::recursionTree);
     }
 
     private void generateIadPathAndLevel(@Nonnull IamOrg iamOrg) {

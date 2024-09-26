@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("sysRole")
+@RequestMapping("iamRole")
 @RequiredArgsConstructor
 public class IamRoleController implements IamRoleApi {
 

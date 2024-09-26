@@ -52,7 +52,7 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
     @Resource
     private IamDictItemService iamDictItemService;
 
-    private static final String LOCK_KEY = "passiflora:lock:sysDict:";
+    private static final String LOCK_KEY = "passiflora:lock:iamDict:";
 
     @Nonnull
     public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
@@ -98,8 +98,8 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@Nonnull Collection<String> dictIds) {
         List<IamDict> iamDicts = baseMapper.selectBatchIds(dictIds);
-        iamDicts.forEach(sysDict -> {
-            if (YesOrNoEnum.YES.equals(sysDict.getIsSystem())) {
+        iamDicts.forEach(iamDict -> {
+            if (YesOrNoEnum.YES.equals(iamDict.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许删除");
             }
         });

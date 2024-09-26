@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("sysPermission")
+@RequestMapping("iamPermission")
 @RequiredArgsConstructor
 public class IamPermissionController implements IamPermissionApi {
 
@@ -101,8 +101,8 @@ public class IamPermissionController implements IamPermissionApi {
     }
 
     @Override
-    public Result<String> updateOrder(List<IamPermissionTableVo> sysPermissionTableVos) {
-        iamPermissionService.updateOrder(sysPermissionTableVos);
+    public Result<String> updateOrder(List<IamPermissionTableVo> iamPermissionTableVos) {
+        iamPermissionService.updateOrder(iamPermissionTableVos);
         return Result.ok();
     }
 
