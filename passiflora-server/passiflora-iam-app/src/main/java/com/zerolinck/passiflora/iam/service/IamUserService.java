@@ -189,7 +189,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         RedisUtils.set(
                 RedisPrefix.TOKEN_KEY + dbIamUser.getUserId() + ":" + token,
                 dbIamUser,
-                passifloraProperties.getSystem().getToken().getExpire());
+                passifloraProperties.getIam().getToken().getExpire());
         return token;
     }
 
@@ -206,8 +206,8 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         if (CollectionUtils.isEmpty(keys)) {
             return Boolean.FALSE;
         }
-        keys.forEach(key -> RedisUtils.expire(
-                key, passifloraProperties.getSystem().getToken().getExpire()));
+        keys.forEach(key ->
+                RedisUtils.expire(key, passifloraProperties.getIam().getToken().getExpire()));
         return Boolean.TRUE;
     }
 }

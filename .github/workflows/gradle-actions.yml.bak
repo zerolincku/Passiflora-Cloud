@@ -46,7 +46,7 @@ jobs:
     - name: System Server Build and push Docker images
       uses: docker/build-push-action@v5.3.0
       with:
-        file: Dockerfile-system
+        file: Dockerfile-iam
         platforms: linux/amd64
         tags: zerolinck/passiflora-iam:latest
         push: true

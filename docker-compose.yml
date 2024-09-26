@@ -27,7 +27,7 @@ services:
   passiflora-iam:
     build:
       context: .
-      dockerfile: Dockerfile-system
+      dockerfile: Dockerfile-iam
     environment:
       TZ: Asia/Shanghai
     volumes:

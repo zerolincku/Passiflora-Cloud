@@ -10,7 +10,7 @@ dev:
     endpoint: "http://passiflora-minio:9000"
     accessKey: "NWFlEWHfZacwl9dT1oJV"
     secretKey: "yC9O1M1baZKyV4busSHHw3F4y8F008anlCGxyvkx"
-  system_app:
+  iam_app:
     database:
       url: "jdbc:postgresql://passiflora-postgres:5432/passiflora_iam?reWriteBatchedInserts=true"
       username: "postgres"

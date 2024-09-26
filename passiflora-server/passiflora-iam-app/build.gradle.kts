@@ -86,9 +86,9 @@ tasks {
         activities.register("main") {
             this.arguments = mapOf(
                 "changelogFile" to "src/main/resources/db/main.yml",
-                "url" to configMap["system_app.database.url"],
-                "username" to configMap["system_app.database.username"],
-                "password" to configMap["system_app.database.password"],
+                "url" to configMap["iam_app.database.url"],
+                "username" to configMap["iam_app.database.username"],
+                "password" to configMap["iam_app.database.password"],
                 "logLevel" to "info"
             )
         }

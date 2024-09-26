@@ -13,9 +13,9 @@ spring:
       discovery:
         server-addr: "@nacos.serverAddr@"
   datasource:
-    url: "@system_app.database.url@"
-    username: "@system_app.database.username@"
-    password: "@system_app.database.password@"
+    url: "@iam_app.database.url@"
+    username: "@iam_app.database.username@"
+    password: "@iam_app.database.password@"
     driver-class-name: "org.postgresql.Driver"
   data:
     redis:
@@ -46,7 +46,7 @@ mybatis-plus:
       insert-strategy: "not_null"
       update-strategy: "not_null"
 passiflora:
-  system:
+  iam:
     token:
       expire: 604800
   config:

@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.common.config;
 
+import com.zerolinck.passiflora.model.iam.entity.IamConfig;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -34,7 +35,7 @@ public class PassifloraProperties {
     /** 编译时间 */
     private String buildTime;
 
-    private System system;
+    private IamConfig iam;
 
     private Config config;
 
@@ -42,7 +43,7 @@ public class PassifloraProperties {
 
     @Data
     @NoArgsConstructor
-    public static class System {
+    public static class IamConfig {
 
         private Token token;
 
