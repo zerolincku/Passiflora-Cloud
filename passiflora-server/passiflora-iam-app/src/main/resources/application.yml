@@ -1,11 +1,11 @@
+---
 server:
   port: 51001
   servlet:
-    context-path: /passiflora/iam-api
-
+    context-path: "/passiflora/iam-api"
 spring:
   application:
-    name: passiflora-iam-app
+    name: "passiflora-iam-app"
   profiles:
     active: "@env@"
   cloud:
@@ -16,18 +16,17 @@ spring:
     url: "@system_app.database.url@"
     username: "@system_app.database.username@"
     password: "@system_app.database.password@"
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: "org.postgresql.Driver"
   data:
     redis:
       database: "@redis.database@"
       host: "@redis.host@"
       port: "@redis.port@"
-
 feign:
   compression:
     request:
       enabled: true
-      mime-types: text/html,application/xml,application/json
+      mime-types: "text/html,application/xml,application/json"
       min-request-size: 2048
     response:
       enabled: true
@@ -36,18 +35,16 @@ feign:
       default:
         connect-timeout: 5000
         read-timeout: 600000
-
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
-  mapper-locations: classpath*:com/zerolinck/**/mapper/xml/*Mapper.xml
+    log-impl: "org.apache.ibatis.logging.slf4j.Slf4jImpl"
+  mapper-locations: "classpath*:com/zerolinck/**/mapper/xml/*Mapper.xml"
   global-config:
     db-config:
       logic-delete-value: 1
       logic-not-delete-value: 0
-      insert-strategy: not_null
-      update-strategy: not_null
-
+      insert-strategy: "not_null"
+      update-strategy: "not_null"
 passiflora:
   system:
     token:

@@ -40,7 +40,7 @@ spotless {
     }
     yaml {
         target("**/application*.yml", "**/config.yml")
-        prettier()
+        jackson()
     }
 }
 
