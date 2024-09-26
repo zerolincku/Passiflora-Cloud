@@ -1,0 +1,45 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: "202409262001_change_table_name.yml"
+    author: "linck"
+    changes:
+    - renameTable:
+        oldTableName: "sys_config"
+        newTableName: "iam_config"
+    - renameTable:
+        oldTableName: "sys_dict"
+        newTableName: "iam_dict"
+    - renameTable:
+        oldTableName: "sys_dict_item"
+        newTableName: "iam_dict_item"
+    - renameTable:
+        oldTableName: "sys_org"
+        newTableName: "iam_org"
+    - renameTable:
+        oldTableName: "sys_permission"
+        newTableName: "iam_permission"
+    - renameTable:
+        oldTableName: "sys_position"
+        newTableName: "iam_position"
+    - renameTable:
+        oldTableName: "sys_position_data_scope"
+        newTableName: "iam_position_data_scope"
+    - renameTable:
+        oldTableName: "sys_position_permission"
+        newTableName: "iam_position_permission"
+    - renameTable:
+        oldTableName: "sys_role"
+        newTableName: "iam_role"
+    - renameTable:
+        oldTableName: "sys_role_permission"
+        newTableName: "iam_role_permission"
+    - renameTable:
+        oldTableName: "sys_user"
+        newTableName: "iam_user"
+    - renameTable:
+        oldTableName: "sys_user_position"
+        newTableName: "iam_user_position"
+    - renameTable:
+        oldTableName: "sys_user_role"
+        newTableName: "iam_user_role"

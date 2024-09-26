@@ -36,7 +36,7 @@ public class GenerateCode {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> tableNames = List.of("sys_config");
+        List<String> tableNames = List.of("iam_config");
         String moduleName = "system";
         String contextPath = "/passiflora/iam-api";
         String author = "林常坤";

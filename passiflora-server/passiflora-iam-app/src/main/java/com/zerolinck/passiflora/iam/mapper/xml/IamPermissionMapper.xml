@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerolinck.passiflora.iam.mapper.IamPermissionMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        permission_id, permission_title, permission_name, permission_icon, permission_parent_id, permission_id_path, "order", remark, create_by, update_by, create_time, update_time, del_flag, version, permission_level, permission_status, permission_type
+    </sql>
+
+    <select id="page" resultType="com.zerolinck.passiflora.model.iam.entity.IamPermission">
+        SELECT * FROM iam_permission
+        <where>
+            del_flag = 0
+            <if test="ew.sqlSegment != null and ew.sqlSegment != ''">
+                AND ${ew.sqlSegment}
+            </if>
+        </where>
+        <if test="sortWrapper.sqlSegment == null or sortWrapper.sqlSegment == ''">
+            ORDER BY permission_level, "order", permission_title
+        </if>
+        <if test="sortWrapper.sqlSegment != null and sortWrapper.sqlSegment != ''">
+            ${sortWrapper.sqlSegment}
+        </if>
+    </select>
+
+    <select id="listByPositionId" resultType="com.zerolinck.passiflora.model.iam.entity.IamPermission">
+        SELECT b.* from (
+            SELECT position_id, permission_id from iam_position_permission
+            WHERE del_flag = 0
+            AND position_id = #{positionId}
+        ) as a INNER JOIN iam_permission as b ON a.permission_id = b.permission_id
+               INNER JOIN iam_position as sp ON a.position_id = sp.position_id
+        WHERE b.del_flag = 0 AND sp.del_flag = 0 AND sp.position_status = 1 ORDER BY b.permission_level, b."order", b.permission_title
+    </select>
+
+    <select id="listByRoleId" resultType="com.zerolinck.passiflora.model.iam.entity.IamPermission">
+        SELECT b.* from (
+                            SELECT role_id, permission_id from iam_role_permission
+                            WHERE del_flag = 0
+                              AND role_id = #{roleId}
+                        ) as a INNER JOIN iam_permission as b ON a.permission_id = b.permission_id
+                               INNER JOIN iam_role as sr ON a.role_id = sr.role_id
+        WHERE b.del_flag = 0 AND sr.del_flag = 0 AND sr.role_status = 1 ORDER BY b.permission_level, b."order", b.permission_title
+    </select>
+
+    <select id="listByUserId" resultType="com.zerolinck.passiflora.model.iam.entity.IamPermission">
+        SELECT * FROM (
+                          SELECT d.* FROM (
+                                              SELECT b.permission_id from (
+                                                                              SELECT position_id from iam_user_position
+                                                                              WHERE del_flag = 0
+                                                                                AND user_id = #{userId}
+                                                                          ) as a INNER JOIN iam_position_permission as b ON a.position_id = b.position_id
+                                                                     INNER JOIN iam_position as sp ON a.position_id = sp.position_id
+                                              WHERE b.del_flag = 0 AND sp.del_flag = 0 AND sp.position_status = 1
+                                          ) as c INNER JOIN iam_permission as d ON c.permission_id = d.permission_id
+                          UNION
+                          SELECT d.* FROM (
+                                              SELECT b.permission_id from (
+                                                                              SELECT role_id from iam_user_role
+                                                                              WHERE del_flag = 0
+                                                                                AND user_id = #{userId}
+                                                                          ) as a INNER JOIN iam_role_permission as b ON a.role_id = b.role_id
+                                                                        INNER JOIN iam_role as sr ON a.role_id = sr.role_id
+                                              WHERE b.del_flag = 0 AND sr.del_flag = 0 AND sr.role_status = 1
+                                          ) as c INNER JOIN iam_permission as d ON c.permission_id = d.permission_id
+                      ) as e
+                        WHERE e.del_flag = 0 ORDER BY e.permission_level, e."order", e.permission_title
+    </select>
+
+    <delete id="deleteByIds">
+        UPDATE iam_permission SET update_time = now(),
+                                update_by = #{updateBy},
+                                del_flag = 1
+        WHERE permission_id IN
+        <foreach item="id" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="disable">
+        UPDATE iam_permission SET update_time = now(),
+                                update_by = #{updateBy},
+                                permission_status = 0
+        WHERE
+        <foreach item="id" index="index" collection="permissionIds" open="(" separator=" OR " close=")">
+            permission_id_path like CONCAT('%', #{id}, '%')
+        </foreach>
+    </update>
+
+    <update id="enable">
+        UPDATE iam_permission SET update_time = now(),
+                                update_by = #{updateBy},
+                                permission_status = 1
+                                WHERE permission_id IN
+        <foreach item="id" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

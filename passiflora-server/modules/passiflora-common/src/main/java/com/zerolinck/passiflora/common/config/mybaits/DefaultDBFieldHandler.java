@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.common.config.mybaits;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.model.iam.entity.SysUser;
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -38,15 +38,15 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.debug("mybatis plus start insert fill ....");
-        SysUser sysUser = CurrentUtil.getCurrentUser();
+        IamUser iamUser = CurrentUtil.getCurrentUser();
         LocalDateTime now = LocalDateTime.now();
 
         fillValIfNullByName("createTime", now, metaObject, true);
         fillValIfNullByName("updateTime", now, metaObject, true);
         fillValIfNullByName("delFlag", 0, metaObject, true);
-        if (sysUser != null) {
-            fillValIfNullByName("createBy", sysUser.getUserId(), metaObject, true);
-            fillValIfNullByName("updateBy", sysUser.getUserId(), metaObject, true);
+        if (iamUser != null) {
+            fillValIfNullByName("createBy", iamUser.getUserId(), metaObject, true);
+            fillValIfNullByName("updateBy", iamUser.getUserId(), metaObject, true);
         }
     }
 
@@ -54,10 +54,10 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.debug("mybatis plus start update fill ....");
         LocalDateTime now = LocalDateTime.now();
-        SysUser sysUser = CurrentUtil.getCurrentUser();
+        IamUser iamUser = CurrentUtil.getCurrentUser();
         fillValIfNullByName("updateTime", now, metaObject, true);
-        if (sysUser != null) {
-            fillValIfNullByName("updateBy", sysUser.getUserId(), metaObject, true);
+        if (iamUser != null) {
+            fillValIfNullByName("updateBy", iamUser.getUserId(), metaObject, true);
         }
     }
 

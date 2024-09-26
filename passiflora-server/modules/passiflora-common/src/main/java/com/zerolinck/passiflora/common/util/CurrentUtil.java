@@ -21,7 +21,7 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
-import com.zerolinck.passiflora.model.iam.entity.SysUser;
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Set;
@@ -33,13 +33,13 @@ import java.util.Set;
 public class CurrentUtil {
 
     /** 当前登录账户，线程级别缓存 */
-    private static final ThreadLocal<SysUser> userMap = new ThreadLocal<>();
+    private static final ThreadLocal<IamUser> userMap = new ThreadLocal<>();
 
     /** 当前token */
     private static final ThreadLocal<String> tokenMap = new ThreadLocal<>();
 
     /** 获取当前登录用户 */
-    @Nullable public static SysUser getCurrentUser() {
+    @Nullable public static IamUser getCurrentUser() {
         if (userMap.get() != null) {
             return userMap.get();
         }
@@ -53,13 +53,13 @@ public class CurrentUtil {
             return null;
         }
         ObjectMapper objectMapper = SpringContextHolder.getBean(ObjectMapper.class);
-        SysUser sysUser = objectMapper.convertValue(o, SysUser.class);
-        userMap.set(sysUser);
-        return sysUser;
+        IamUser iamUser = objectMapper.convertValue(o, IamUser.class);
+        userMap.set(iamUser);
+        return iamUser;
     }
 
     @Nullable public static String getCurrentUserId() {
-        SysUser currentUser = getCurrentUser();
+        IamUser currentUser = getCurrentUser();
         if (currentUser == null) {
             return null;
         }
@@ -68,7 +68,7 @@ public class CurrentUtil {
 
     @Nonnull
     public static String requireCurrentUserId() {
-        SysUser currentUser = getCurrentUser();
+        IamUser currentUser = getCurrentUser();
         if (currentUser == null) {
             throw new BizException(ResultCodeEnum.UNAUTHORIZED);
         }
