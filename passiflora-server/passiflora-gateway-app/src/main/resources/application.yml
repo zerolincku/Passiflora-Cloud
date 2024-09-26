@@ -7,11 +7,11 @@ spring:
   application:
     name: passiflora-gateway-app
   profiles:
-    active: @env@
+    active: "@env@"
   cloud:
     nacos:
       discovery:
-        server-addr: @nacos.serverAddr@
+        server-addr: "@nacos.serverAddr@"
     gateway:
       discovery:
         locator:
@@ -44,5 +44,5 @@ knife4j:
         context-path: /passiflora/storage-api
 
 passiflora:
-  project-version: @projectVersion@
-  build-time: @buildTime@
+  project-version: "@projectVersion@"
+  build-time: "@buildTime@"
