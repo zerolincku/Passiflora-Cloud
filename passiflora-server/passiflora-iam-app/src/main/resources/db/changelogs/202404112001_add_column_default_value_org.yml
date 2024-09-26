@@ -1,9 +1,10 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202404112001_add_column_default_value_org
-      author: linck
-      changes:
-        - addDefaultValue:
-            tableName: sys_org
-            columnName: del_flag
-            defaultValue: 0
+- changeSet:
+    id: "202404112001_add_column_default_value_org"
+    author: "linck"
+    changes:
+    - addDefaultValue:
+        tableName: "sys_org"
+        columnName: "del_flag"
+        defaultValue: 0

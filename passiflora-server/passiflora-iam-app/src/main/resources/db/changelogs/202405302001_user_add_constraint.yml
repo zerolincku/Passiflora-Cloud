@@ -1,9 +1,10 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405302001_user_add_constraint.yml
-      author: linck
-      changes:
-      - addNotNullConstraint:
-          schemaName: public
-          tableName: sys_user
-          columnName: org_id
+- changeSet:
+    id: "202405302001_user_add_constraint.yml"
+    author: "linck"
+    changes:
+    - addNotNullConstraint:
+        schemaName: "public"
+        tableName: "sys_user"
+        columnName: "org_id"

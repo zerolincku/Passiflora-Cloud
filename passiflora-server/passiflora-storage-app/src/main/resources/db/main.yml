@@ -1,3 +1,4 @@
+---
 databaseChangeLog:
-  - includeAll:
-      path: src/main/resources/db/changelogs
+- includeAll:
+    path: "src/main/resources/db/changelogs"

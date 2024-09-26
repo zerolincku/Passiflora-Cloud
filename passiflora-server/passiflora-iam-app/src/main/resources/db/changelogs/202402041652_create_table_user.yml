@@ -1,140 +1,140 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202402041652_create_table_user.yml
-      author: linck
-      changes:
-        - createTable:
-            tableName: sys_user
-            remarks: 系统用户
-            columns:
-              - column:
-                  name: user_id
-                  type: varchar(20)
-                  constraints:
-                    primaryKey: true
-                  remarks: 主键
-              - column:
-                  name: user_name
-                  type: varchar(50)
-                  constraints:
-                    nullable: false
-                  remarks: 用户名
-              - column:
-                  name: real_name
-                  type: varchar(50)
-                  constraints:
-                    nullable: false
-                  remarks: 真实姓名
-              - column:
-                  name: id_card_no
-                  type: varchar(50)
-                  constraints:
-                    nullable: true
-                  remarks: 身份证号
-              - column:
-                  name: date_of_birth
-                  type: date
-                  constraints:
-                    nullable: true
-                  remarks: 出生日期
-              - column:
-                  name: gender
-                  type: int2
-                  constraints:
-                    nullable: true
-                  remarks: 性别
-              - column:
-                  name: phone_num
-                  type: varchar(30)
-                  constraints:
-                    nullable: true
-                  remarks: 手机号
-              - column:
-                  name: email
-                  type: varchar(50)
-                  constraints:
-                    nullable: true
-                  remarks: 电子邮箱
-              - column:
-                  name: avatar_file
-                  type: varchar(20)
-                  constraints:
-                    nullable: true
-                  remarks: 用户头像
-              - column:
-                  name: remark
-                  type: varchar(200)
-                  constraints:
-                    nullable: true
-                  remarks: 备注
-              - column:
-                  name: user_password
-                  type: varchar(50)
-                  constraints:
-                    nullable: false
-                  remarks: 用户密码
-              - column:
-                  name: salt
-                  type: varchar(50)
-                  constraints:
-                    nullable: false
-                  remarks: 密码盐
-              - column:
-                  name: create_by
-                  type: varchar(20)
-                  remarks: 创建用户id
-              - column:
-                  name: update_by
-                  type: varchar(20)
-                  remarks: 更新用户id
-              - column:
-                  name: create_time
-                  type: timestamp(6)
-                  constraints:
-                    nullable: false
-                  defaultValueComputed: CURRENT_TIMESTAMP
-                  remarks: 创建时间
-              - column:
-                  name: update_time
-                  type: timestamp(6)
-                  constraints:
-                    nullable: false
-                  defaultValueComputed: CURRENT_TIMESTAMP
-                  remarks: 更新时间
-              - column:
-                  name: del_flag
-                  type: int2
-                  constraints:
-                    nullable: false
-                  defaultValue: 0
-                  remarks: 删除标识
-              - column:
-                  name: version
-                  type: int8
-                  constraints:
-                    nullable: false
-                  defaultValue: 0
-                  remarks: 乐观锁版本
-
-  - changeSet:
-      id: 202402041652_add_column_user
-      author: linck
-      changes:
-        - insert:
-            tableName: sys_user
-            columns:
-              - column:
-                  name: user_id
-                  value: '1'
-              - column:
-                  name: user_name
-                  value: 'admin'
-              - column:
-                  name: real_name
-                  value: '系统管理员'
-              - column:
-                  name: user_password
-                  value: 'de4a48f993722408b56f3b6657146f30'
-              - column:
-                  name: salt
-                  value: '77a8e58a45c992afbdd3b9c6a5a13536'
+- changeSet:
+    id: "202402041652_create_table_user.yml"
+    author: "linck"
+    changes:
+    - createTable:
+        tableName: "sys_user"
+        remarks: "系统用户"
+        columns:
+        - column:
+            name: "user_id"
+            type: "varchar(20)"
+            constraints:
+              primaryKey: true
+            remarks: "主键"
+        - column:
+            name: "user_name"
+            type: "varchar(50)"
+            constraints:
+              nullable: false
+            remarks: "用户名"
+        - column:
+            name: "real_name"
+            type: "varchar(50)"
+            constraints:
+              nullable: false
+            remarks: "真实姓名"
+        - column:
+            name: "id_card_no"
+            type: "varchar(50)"
+            constraints:
+              nullable: true
+            remarks: "身份证号"
+        - column:
+            name: "date_of_birth"
+            type: "date"
+            constraints:
+              nullable: true
+            remarks: "出生日期"
+        - column:
+            name: "gender"
+            type: "int2"
+            constraints:
+              nullable: true
+            remarks: "性别"
+        - column:
+            name: "phone_num"
+            type: "varchar(30)"
+            constraints:
+              nullable: true
+            remarks: "手机号"
+        - column:
+            name: "email"
+            type: "varchar(50)"
+            constraints:
+              nullable: true
+            remarks: "电子邮箱"
+        - column:
+            name: "avatar_file"
+            type: "varchar(20)"
+            constraints:
+              nullable: true
+            remarks: "用户头像"
+        - column:
+            name: "remark"
+            type: "varchar(200)"
+            constraints:
+              nullable: true
+            remarks: "备注"
+        - column:
+            name: "user_password"
+            type: "varchar(50)"
+            constraints:
+              nullable: false
+            remarks: "用户密码"
+        - column:
+            name: "salt"
+            type: "varchar(50)"
+            constraints:
+              nullable: false
+            remarks: "密码盐"
+        - column:
+            name: "create_by"
+            type: "varchar(20)"
+            remarks: "创建用户id"
+        - column:
+            name: "update_by"
+            type: "varchar(20)"
+            remarks: "更新用户id"
+        - column:
+            name: "create_time"
+            type: "timestamp(6)"
+            constraints:
+              nullable: false
+            defaultValueComputed: "CURRENT_TIMESTAMP"
+            remarks: "创建时间"
+        - column:
+            name: "update_time"
+            type: "timestamp(6)"
+            constraints:
+              nullable: false
+            defaultValueComputed: "CURRENT_TIMESTAMP"
+            remarks: "更新时间"
+        - column:
+            name: "del_flag"
+            type: "int2"
+            constraints:
+              nullable: false
+            defaultValue: 0
+            remarks: "删除标识"
+        - column:
+            name: "version"
+            type: "int8"
+            constraints:
+              nullable: false
+            defaultValue: 0
+            remarks: "乐观锁版本"
+- changeSet:
+    id: "202402041652_add_column_user"
+    author: "linck"
+    changes:
+    - insert:
+        tableName: "sys_user"
+        columns:
+        - column:
+            name: "user_id"
+            value: "1"
+        - column:
+            name: "user_name"
+            value: "admin"
+        - column:
+            name: "real_name"
+            value: "系统管理员"
+        - column:
+            name: "user_password"
+            value: "de4a48f993722408b56f3b6657146f30"
+        - column:
+            name: "salt"
+            value: "77a8e58a45c992afbdd3b9c6a5a13536"

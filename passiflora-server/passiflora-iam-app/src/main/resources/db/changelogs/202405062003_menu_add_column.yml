@@ -1,16 +1,17 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405062003_menu_add_column
-      author: linck
-      changes:
-      - addColumn:
-          schemaName: public
-          tableName: sys_menu
-          columns:
-              - column:
-                    name: level
-                    type: int2
-                    constraints:
-                      nullable: false
-                    defaultValue: 1
-                    remarks: 级别
+- changeSet:
+    id: "202405062003_menu_add_column"
+    author: "linck"
+    changes:
+    - addColumn:
+        schemaName: "public"
+        tableName: "sys_menu"
+        columns:
+        - column:
+            name: "level"
+            type: "int2"
+            constraints:
+              nullable: false
+            defaultValue: 1
+            remarks: "级别"

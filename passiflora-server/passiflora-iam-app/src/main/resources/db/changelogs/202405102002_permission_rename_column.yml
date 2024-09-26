@@ -1,16 +1,16 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405102002_permission_rename_column.yml
-      author: linck
-      changes:
-      - renameColumn:
-          schemaName: public
-          tableName: sys_permission
-          oldColumnName: menu_id
-          newColumnName: permission_id
-
-      - renameColumn:
-            schemaName: public
-            tableName: sys_permission
-            oldColumnName: menu_type
-            newColumnName: permission_type
+- changeSet:
+    id: "202405102002_permission_rename_column.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_permission"
+        oldColumnName: "menu_id"
+        newColumnName: "permission_id"
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_permission"
+        oldColumnName: "menu_type"
+        newColumnName: "permission_type"

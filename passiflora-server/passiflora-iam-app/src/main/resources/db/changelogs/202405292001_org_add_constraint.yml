@@ -1,9 +1,10 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405292002_position_add_column.yml
-      author: linck
-      changes:
-      - addNotNullConstraint:
-          schemaName: public
-          tableName: sys_org
-          columnName: org_order
+- changeSet:
+    id: "202405292002_position_add_column.yml"
+    author: "linck"
+    changes:
+    - addNotNullConstraint:
+        schemaName: "public"
+        tableName: "sys_org"
+        columnName: "org_order"

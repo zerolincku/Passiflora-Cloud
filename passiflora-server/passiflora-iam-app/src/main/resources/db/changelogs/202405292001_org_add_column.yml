@@ -1,14 +1,15 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405292001_org_add_column.yml
-      author: linck
-      changes:
-      - addColumn:
-            schemaName: public
-            tableName: sys_org
-            columns:
-                - column:
-                      name: org_order
-                      type: int4
-                      defaultValue: 1
-                      remarks: 机构排序
+- changeSet:
+    id: "202405292001_org_add_column.yml"
+    author: "linck"
+    changes:
+    - addColumn:
+        schemaName: "public"
+        tableName: "sys_org"
+        columns:
+        - column:
+            name: "org_order"
+            type: "int4"
+            defaultValue: 1
+            remarks: "机构排序"

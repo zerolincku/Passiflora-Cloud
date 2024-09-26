@@ -1,130 +1,131 @@
+---
 databaseChangeLog:
-    - changeSet:
-          id: 202404081703_dict_data.yml_1
-          author: linck
-          changes:
-              - insert:
-                    tableName: sys_dict
-                    columns:
-                        - column:
-                              name: dict_id
-                              value: '1777220357552373762'
-                        - column:
-                              name: dict_name
-                              value: '性别'
-                        - column:
-                              name: remark
-                              value: null
-                        - column:
-                              name: is_system
-                              value: 1
-                        - column:
-                              name: value_is_only
-                              value: 0
-                        - column:
-                              name: dict_tag
-                              value: 'gender'
-                        - column:
-                              name: create_by
-                              value: null
-                        - column:
-                              name: update_by
-                              value: null
-                        - column:
-                              name: create_time
-                              value: '2024-04-08 14:22:07.108246'
-                        - column:
-                              name: update_time
-                              value: '2024-04-08 14:22:07.108246'
-                        - column:
-                              name: del_flag
-                              value: 0
-                        - column:
-                              name: version
-                              value: 0
-    - changeSet:
-          id: 202404081703_dict_data.yml_2
-          author: linck
-          changes:
-              - insert:
-                    tableName: sys_dict_item
-                    columns:
-                        - column:
-                              name: dict_item_id
-                              value: '1777223927664246785'
-                        - column:
-                              name: dict_id
-                              value: '1777220357552373762'
-                        - column:
-                              name: label
-                              value: '女'
-                        - column:
-                              name: value
-                              value: '0'
-                        - column:
-                              name: remark
-                              value: null
-                        - column:
-                              name: is_system
-                              value: 1
-                        - column:
-                              name: create_by
-                              value: null
-                        - column:
-                              name: update_by
-                              value: null
-                        - column:
-                              name: create_time
-                              value: '2024-04-08 14:36:18.239823'
-                        - column:
-                              name: update_time
-                              value: '2024-04-08 14:36:18.239823'
-                        - column:
-                              name: del_flag
-                              value: 0
-                        - column:
-                              name: version
-                              value: 0
-    - changeSet:
-          id: 202404081703_dict_data.yml_3
-          author: linck
-          changes:
-              - insert:
-                    tableName: sys_dict_item
-                    columns:
-                        - column:
-                              name: dict_item_id
-                              value: '1777223959134109697'
-                        - column:
-                              name: dict_id
-                              value: '1777220357552373762'
-                        - column:
-                              name: label
-                              value: '男'
-                        - column:
-                              name: value
-                              value: '1'
-                        - column:
-                              name: remark
-                              value: null
-                        - column:
-                              name: is_system
-                              value: 1
-                        - column:
-                              name: create_by
-                              value: null
-                        - column:
-                              name: update_by
-                              value: null
-                        - column:
-                              name: create_time
-                              value: '2024-04-08 14:36:25.741143'
-                        - column:
-                              name: update_time
-                              value: '2024-04-08 14:36:25.741143'
-                        - column:
-                              name: del_flag
-                              value: 0
-                        - column:
-                              name: version
-                              value: 0
+- changeSet:
+    id: "202404081703_dict_data.yml_1"
+    author: "linck"
+    changes:
+    - insert:
+        tableName: "sys_dict"
+        columns:
+        - column:
+            name: "dict_id"
+            value: "1777220357552373762"
+        - column:
+            name: "dict_name"
+            value: "性别"
+        - column:
+            name: "remark"
+            value: null
+        - column:
+            name: "is_system"
+            value: 1
+        - column:
+            name: "value_is_only"
+            value: 0
+        - column:
+            name: "dict_tag"
+            value: "gender"
+        - column:
+            name: "create_by"
+            value: null
+        - column:
+            name: "update_by"
+            value: null
+        - column:
+            name: "create_time"
+            value: "2024-04-08 14:22:07.108246"
+        - column:
+            name: "update_time"
+            value: "2024-04-08 14:22:07.108246"
+        - column:
+            name: "del_flag"
+            value: 0
+        - column:
+            name: "version"
+            value: 0
+- changeSet:
+    id: "202404081703_dict_data.yml_2"
+    author: "linck"
+    changes:
+    - insert:
+        tableName: "sys_dict_item"
+        columns:
+        - column:
+            name: "dict_item_id"
+            value: "1777223927664246785"
+        - column:
+            name: "dict_id"
+            value: "1777220357552373762"
+        - column:
+            name: "label"
+            value: "女"
+        - column:
+            name: "value"
+            value: "0"
+        - column:
+            name: "remark"
+            value: null
+        - column:
+            name: "is_system"
+            value: 1
+        - column:
+            name: "create_by"
+            value: null
+        - column:
+            name: "update_by"
+            value: null
+        - column:
+            name: "create_time"
+            value: "2024-04-08 14:36:18.239823"
+        - column:
+            name: "update_time"
+            value: "2024-04-08 14:36:18.239823"
+        - column:
+            name: "del_flag"
+            value: 0
+        - column:
+            name: "version"
+            value: 0
+- changeSet:
+    id: "202404081703_dict_data.yml_3"
+    author: "linck"
+    changes:
+    - insert:
+        tableName: "sys_dict_item"
+        columns:
+        - column:
+            name: "dict_item_id"
+            value: "1777223959134109697"
+        - column:
+            name: "dict_id"
+            value: "1777220357552373762"
+        - column:
+            name: "label"
+            value: "男"
+        - column:
+            name: "value"
+            value: "1"
+        - column:
+            name: "remark"
+            value: null
+        - column:
+            name: "is_system"
+            value: 1
+        - column:
+            name: "create_by"
+            value: null
+        - column:
+            name: "update_by"
+            value: null
+        - column:
+            name: "create_time"
+            value: "2024-04-08 14:36:25.741143"
+        - column:
+            name: "update_time"
+            value: "2024-04-08 14:36:25.741143"
+        - column:
+            name: "del_flag"
+            value: 0
+        - column:
+            name: "version"
+            value: 0

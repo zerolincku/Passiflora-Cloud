@@ -29,6 +29,7 @@ allprojects {
     }
 }
 
+// code format
 spotless {
     java {
         target("**/*.java")
@@ -39,7 +40,7 @@ spotless {
         licenseHeader(header)
     }
     yaml {
-        target("**/application*.yml", "**/config.yml")
+        target("**/*.yml")
         jackson()
     }
 }

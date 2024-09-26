@@ -1,8 +1,9 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202408172002_table_comment_position.yml
-      author: linck
-      changes:
-        - setTableRemarks:
-            tableName: sys_position
-            remarks: "职位"
+- changeSet:
+    id: "202408172002_table_comment_position.yml"
+    author: "linck"
+    changes:
+    - setTableRemarks:
+        tableName: "sys_position"
+        remarks: "职位"

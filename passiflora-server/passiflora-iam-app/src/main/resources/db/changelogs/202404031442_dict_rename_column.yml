@@ -1,19 +1,20 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202404031442_dict_rename_column_1.yml
-      author: linck
-      changes:
-      - renameColumn:
-          schemaName: public
-          tableName: sys_dict
-          oldColumnName: description
-          newColumnName: remark
-  - changeSet:
-        id: 202404031442_dict_rename_column_2.yml
-        author: linck
-        changes:
-        - renameColumn:
-              schemaName: public
-              tableName: sys_dict_item
-              oldColumnName: description
-              newColumnName: remark
+- changeSet:
+    id: "202404031442_dict_rename_column_1.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_dict"
+        oldColumnName: "description"
+        newColumnName: "remark"
+- changeSet:
+    id: "202404031442_dict_rename_column_2.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_dict_item"
+        oldColumnName: "description"
+        newColumnName: "remark"

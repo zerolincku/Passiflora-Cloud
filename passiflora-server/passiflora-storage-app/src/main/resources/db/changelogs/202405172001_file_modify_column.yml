@@ -1,10 +1,11 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405072001_menu_add_column
-      author: linck
-      changes:
-        - modifyDataType:
-            schemaName: public
-            tableName: storage_file
-            columnName: content_type
-            newDataType: varchar(100)
+- changeSet:
+    id: "202405072001_menu_add_column"
+    author: "linck"
+    changes:
+    - modifyDataType:
+        schemaName: "public"
+        tableName: "storage_file"
+        columnName: "content_type"
+        newDataType: "varchar(100)"

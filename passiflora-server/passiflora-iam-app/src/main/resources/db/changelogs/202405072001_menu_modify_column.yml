@@ -1,27 +1,24 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405072001_menu_add_column
-      author: linck
-      changes:
-      - addNotNullConstraint:
-          schemaName: public
-          tableName: sys_menu
-          columnName:  status
-
-
-      - addNotNullConstraint:
-          schemaName: public
-          tableName: sys_permission
-          columnName:  status
-
-      -  setColumnRemarks:
-           schemaName: public
-           tableName: sys_menu
-           columnName: status
-           remarks: 状态
-
-      - setColumnRemarks:
-          schemaName: public
-          tableName: sys_permission
-          columnName: status
-          remarks: 状态
+- changeSet:
+    id: "202405072001_menu_add_column"
+    author: "linck"
+    changes:
+    - addNotNullConstraint:
+        schemaName: "public"
+        tableName: "sys_menu"
+        columnName: "status"
+    - addNotNullConstraint:
+        schemaName: "public"
+        tableName: "sys_permission"
+        columnName: "status"
+    - setColumnRemarks:
+        schemaName: "public"
+        tableName: "sys_menu"
+        columnName: "status"
+        remarks: "状态"
+    - setColumnRemarks:
+        schemaName: "public"
+        tableName: "sys_permission"
+        columnName: "status"
+        remarks: "状态"

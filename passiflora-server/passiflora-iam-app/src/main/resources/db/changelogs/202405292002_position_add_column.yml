@@ -1,14 +1,15 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405292002_position_add_column.yml
-      author: linck
-      changes:
-      - addColumn:
-          schemaName: public
-          tableName: sys_position
-          columns:
-              - column:
-                    name: order
-                    type: int4
-                    defaultValue: 1
-                    remarks: 排序
+- changeSet:
+    id: "202405292002_position_add_column.yml"
+    author: "linck"
+    changes:
+    - addColumn:
+        schemaName: "public"
+        tableName: "sys_position"
+        columns:
+        - column:
+            name: "order"
+            type: "int4"
+            defaultValue: 1
+            remarks: "排序"

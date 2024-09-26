@@ -1,10 +1,11 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405072001_menu_rename_column.yml
-      author: linck
-      changes:
-      - renameColumn:
-          schemaName: public
-          tableName: sys_menu
-          oldColumnName: sort
-          newColumnName: order
+- changeSet:
+    id: "202405072001_menu_rename_column.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_menu"
+        oldColumnName: "sort"
+        newColumnName: "order"

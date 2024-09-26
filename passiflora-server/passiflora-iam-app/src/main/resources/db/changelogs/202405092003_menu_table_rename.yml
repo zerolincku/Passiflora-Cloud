@@ -1,13 +1,13 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405092003_menu_table_rename
-      author: linck
-      changes:
-      - dropTable:
-          schemaName: public
-          tableName: sys_permission
-
-      - renameTable:
-          schemaName: public
-          oldTableName: sys_menu
-          newTableName: sys_permission
+- changeSet:
+    id: "202405092003_menu_table_rename"
+    author: "linck"
+    changes:
+    - dropTable:
+        schemaName: "public"
+        tableName: "sys_permission"
+    - renameTable:
+        schemaName: "public"
+        oldTableName: "sys_menu"
+        newTableName: "sys_permission"

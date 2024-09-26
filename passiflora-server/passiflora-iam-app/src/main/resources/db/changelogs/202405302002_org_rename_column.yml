@@ -1,10 +1,11 @@
+---
 databaseChangeLog:
-  - changeSet:
-      id: 202405302002_org_rename_column.yml
-      author: linck
-      changes:
-      - renameColumn:
-          schemaName: public
-          tableName: sys_org
-          oldColumnName: org_order
-          newColumnName: order
+- changeSet:
+    id: "202405302002_org_rename_column.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        schemaName: "public"
+        tableName: "sys_org"
+        oldColumnName: "org_order"
+        newColumnName: "order"
