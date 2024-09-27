@@ -47,7 +47,7 @@ public class IamRolePermission extends BaseEntity {
     @NotBlank(
             groups = {Update.class},
             message = "主键不能为空")
-    private String bindId;
+    private String id;
 
     @Schema(description = "角色ID", maxLength = 20)
     @Length(

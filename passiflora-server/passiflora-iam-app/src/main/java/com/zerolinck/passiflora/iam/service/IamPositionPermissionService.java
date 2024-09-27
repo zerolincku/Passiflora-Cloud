@@ -67,11 +67,11 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nullable Collection<String> bindIds) {
-        if (CollectionUtils.isEmpty(bindIds)) {
+    public int deleteByIds(@Nullable Collection<String> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
+        return baseMapper.deleteByIds(ids, CurrentUtil.getCurrentUserId());
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -84,8 +84,8 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
     }
 
     @Nonnull
-    public Optional<IamPositionPermission> detail(@Nonnull String bindId) {
-        return Optional.ofNullable(baseMapper.selectById(bindId));
+    public Optional<IamPositionPermission> detail(@Nonnull String id) {
+        return Optional.ofNullable(baseMapper.selectById(id));
     }
 
     @Nonnull

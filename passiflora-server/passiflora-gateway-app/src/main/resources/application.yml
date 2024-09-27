@@ -32,7 +32,7 @@ knife4j:
     enabled: true
     strategy: "manual"
     routes:
-    - name: "系统服务"
+    - name: "身份服务"
       service-name: "passiflora-iam-app"
       url: "/passiflora/iam-api/v3/api-docs?group=default"
       context-path: "/passiflora/iam-api"

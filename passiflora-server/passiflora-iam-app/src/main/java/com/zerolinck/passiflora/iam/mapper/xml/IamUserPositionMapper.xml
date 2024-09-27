@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        bind_id, user_id, position_id, create_by, update_by, create_time, update_time, del_flag, version
+        id, user_id, position_id, create_by, update_by, create_time, update_time, del_flag, version
     </sql>
 
     <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo">
@@ -24,8 +24,8 @@
         UPDATE iam_user_position SET update_time = now(),
                                 update_by = #{updateBy},
                                 del_flag = 1
-        WHERE bind_id IN
-        <foreach item="id" index="index" collection="bindIds" open="(" separator="," close=")">
+        WHERE id IN
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

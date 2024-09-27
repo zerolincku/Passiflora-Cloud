@@ -35,7 +35,7 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
     List<IamUserPositionVo> selectByUserIds(@Nonnull @Param("userIds") Collection<String> userIds);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Nonnull @Param("bindIds") Collection<String> bindIds, @Nonnull @Param("updateBy") String updateBy);
+    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nonnull @Param("updateBy") String updateBy);
 
     int deleteByUserIds(
             @Nonnull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);

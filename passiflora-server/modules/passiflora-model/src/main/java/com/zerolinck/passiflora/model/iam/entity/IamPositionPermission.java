@@ -45,7 +45,7 @@ public class IamPositionPermission extends BaseEntity {
     @NotBlank(
             groups = {Update.class},
             message = "主键不能为空")
-    private String bindId;
+    private String id;
 
     @Schema(description = "职位ID", maxLength = 20)
     @Length(

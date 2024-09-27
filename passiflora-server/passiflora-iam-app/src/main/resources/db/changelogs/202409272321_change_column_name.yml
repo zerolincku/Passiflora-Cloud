@@ -1,0 +1,18 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: "202409272321_change_column_name.yml"
+    author: "linck"
+    changes:
+    - renameColumn:
+        tableName: "iam_position_permission"
+        oldColumnName: "bind_id"
+        newColumnName: "id"
+    - renameColumn:
+        tableName: "iam_role_permission"
+        oldColumnName: "bind_id"
+        newColumnName: "id"
+    - renameColumn:
+        tableName: "iam_user_position"
+        oldColumnName: "bind_id"
+        newColumnName: "id"

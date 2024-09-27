@@ -37,7 +37,7 @@ export interface UserPage {
 }
 
 export function userPage(params: userPageParams) {
-  return axios.get<Result<Page<UserRecord>>>('/iam-api/sysUser/page', {
+  return axios.get<Result<Page<UserRecord>>>('/iam-api/iamUser/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -46,35 +46,35 @@ export function userPage(params: userPageParams) {
 }
 
 export function userAdd(data: UserRecord) {
-  return axios.post<Result<string>>('/iam-api/sysUser/add', data);
+  return axios.post<Result<string>>('/iam-api/iamUser/add', data);
 }
 
 export function login(data: LoginData) {
-  return axios.post<Result<string>>('/iam-api/sysUser/login', data);
+  return axios.post<Result<string>>('/iam-api/iamUser/login', data);
 }
 
 export function logout() {
-  return axios.get<Result<string>>('/iam-api/sysUser/logout');
+  return axios.get<Result<string>>('/iam-api/iamUser/logout');
 }
 
 export function currentUserInfo() {
-  return axios.get<Result<UserState>>('/iam-api/sysUser/currentUserInfo');
+  return axios.get<Result<UserState>>('/iam-api/iamUser/currentUserInfo');
 }
 
 export function userUpdate(data: OrgRecord) {
-  return axios.post<Result<string>>('/iam-api/sysUser/update', data);
+  return axios.post<Result<string>>('/iam-api/iamUser/update', data);
 }
 
 export function userDetail(data: string) {
-  return axios.post<Result<OrgRecord>>('/iam-api/sysUser/detail', data);
+  return axios.post<Result<OrgRecord>>('/iam-api/iamUser/detail', data);
 }
 
 export function userDelete(data: string[]) {
-  return axios.post<Result<OrgRecord>>('/iam-api/sysUser/delete', data);
+  return axios.post<Result<OrgRecord>>('/iam-api/iamUser/delete', data);
 }
 
 export function getMenuList() {
   return axios.get<Result<RouteRecordNormalized[]>>(
-    '/iam-api/sysPermission/menuTree'
+    '/iam-api/iamPermission/menuTree'
   );
 }

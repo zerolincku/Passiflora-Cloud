@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        bind_id, position_id, permission_id, create_by, update_by, create_time, update_time, del_flag, version
+        id, position_id, permission_id, create_by, update_by, create_time, update_time, del_flag, version
     </sql>
 
     <select id="page" resultType="com.zerolinck.passiflora.model.iam.entity.IamPositionPermission">
@@ -16,7 +16,7 @@
             </if>
         </where>
         <if test="sortWrapper.sqlSegment == null or sortWrapper.sqlSegment == ''">
-            ORDER BY bind_id ASC
+            ORDER BY id ASC
         </if>
         <if test="sortWrapper.sqlSegment != null and sortWrapper.sqlSegment != ''">
             ${sortWrapper.sqlSegment}
@@ -27,8 +27,8 @@
         UPDATE iam_position_permission SET update_time = now(),
                                 update_by = #{updateBy},
                                 del_flag = 1
-        WHERE bind_id IN
-        <foreach item="id" index="index" collection="bindIds" open="(" separator="," close=")">
+        WHERE id IN
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

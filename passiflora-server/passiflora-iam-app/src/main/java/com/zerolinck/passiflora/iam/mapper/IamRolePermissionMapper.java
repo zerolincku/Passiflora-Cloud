@@ -53,11 +53,11 @@ public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
     /**
      * 更新 del_flag = 1，保证 update_by 和 update_time 正确
      *
-     * @param bindIds 角色权限主键集合
+     * @param ids 角色权限主键集合
      * @since 2024-08-17
      */
     int deleteByIds(
-            @Nonnull @Param("bindIds") Collection<String> bindIds, @Nullable @Param("updateBy") String updateBy);
+            @Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
     int deleteByRoleIds(
             @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);

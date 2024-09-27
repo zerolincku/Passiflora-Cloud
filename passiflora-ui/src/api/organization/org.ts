@@ -16,7 +16,7 @@ export type OrgRecord = {
 export interface orgPageParams extends Partial<OrgRecord>, BasePageParam {}
 
 export function orgPage(params: orgPageParams) {
-  return axios.get<Result<Page<OrgRecord>>>('/iam-api/sysOrg/page', {
+  return axios.get<Result<Page<OrgRecord>>>('/iam-api/iamOrg/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -25,23 +25,23 @@ export function orgPage(params: orgPageParams) {
 }
 
 export function orgAdd(data: OrgRecord) {
-  return axios.post<Result<string>>('/iam-api/sysOrg/add', data);
+  return axios.post<Result<string>>('/iam-api/iamOrg/add', data);
 }
 
 export function orgUpdate(data: OrgRecord) {
-  return axios.post<Result<string>>('/iam-api/sysOrg/update', data);
+  return axios.post<Result<string>>('/iam-api/iamOrg/update', data);
 }
 
 export function orgDetail(data: string) {
-  return axios.post<Result<OrgRecord>>('/iam-api/sysOrg/detail', data);
+  return axios.post<Result<OrgRecord>>('/iam-api/iamOrg/detail', data);
 }
 
 export function orgDelete(data: string[]) {
-  return axios.post<Result<OrgRecord>>('/iam-api/sysOrg/delete', data);
+  return axios.post<Result<OrgRecord>>('/iam-api/iamOrg/delete', data);
 }
 
 export function orgTree(orgName: string) {
   return axios.get<Result<OrgRecord[]>>(
-    `/iam-api/sysOrg/orgTree?orgName=${orgName}`
+    `/iam-api/iamOrg/orgTree?orgName=${orgName}`
   );
 }

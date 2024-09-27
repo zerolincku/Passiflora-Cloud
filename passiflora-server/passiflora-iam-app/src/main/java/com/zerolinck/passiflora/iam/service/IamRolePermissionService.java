@@ -89,26 +89,26 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
     /**
      * 删除角色权限
      *
-     * @param bindIds 角色权限ID集合
+     * @param ids 角色权限ID集合
      * @since 2024-08-17
      */
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nullable Collection<String> bindIds) {
-        if (CollectionUtils.isEmpty(bindIds)) {
+    public int deleteByIds(@Nullable Collection<String> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return baseMapper.deleteByIds(bindIds, CurrentUtil.getCurrentUserId());
+        return baseMapper.deleteByIds(ids, CurrentUtil.getCurrentUserId());
     }
 
     /**
      * 角色权限详情
      *
-     * @param bindId 角色权限ID
+     * @param id 角色权限ID
      * @since 2024-08-17
      */
     @Nonnull
-    public Optional<IamRolePermission> detail(@Nonnull String bindId) {
-        return Optional.ofNullable(baseMapper.selectById(bindId));
+    public Optional<IamRolePermission> detail(@Nonnull String id) {
+        return Optional.ofNullable(baseMapper.selectById(id));
     }
 
     @SuppressWarnings("UnusedReturnValue")
