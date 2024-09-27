@@ -31,7 +31,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
 
     // 非开发环境，排除 Swagger UI
-    if (configMap.get("env") == "dev") {
+    if (configMap["env"] == "dev") {
         implementation("com.github.xiaoymin:knife4j-gateway-spring-boot-starter")
     }
 }
