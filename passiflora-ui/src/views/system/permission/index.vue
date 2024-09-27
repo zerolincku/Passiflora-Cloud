@@ -476,9 +476,9 @@
   const statusOptions = ref<EnumRecord[] | undefined>([]);
   const permissionTypeEnumOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
-    statusOptions.value = await useEnumStore().getEnums('StatusEnum');
+    statusOptions.value = await useEnumStore().getEnums('status-enum');
     permissionTypeEnumOptions.value = await useEnumStore().getEnums(
-      'PermissionTypeEnum'
+      'permission-type-enum'
     );
     await fetchData();
   });

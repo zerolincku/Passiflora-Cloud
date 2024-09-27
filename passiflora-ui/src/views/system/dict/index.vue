@@ -445,7 +445,7 @@
 
   const valueIsOnlyOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
-    valueIsOnlyOptions.value = await useEnumStore().getEnums('YesOrNoEnum');
+    valueIsOnlyOptions.value = await useEnumStore().getEnums('yes-or-no-enum');
   });
 
   const addButton = async () => {

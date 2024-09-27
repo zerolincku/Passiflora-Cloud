@@ -426,9 +426,9 @@
   const positionStatusOptions = ref<EnumRecord[] | undefined>([]);
   const dataScopeTypeOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
-    positionStatusOptions.value = await useEnumStore().getEnums('StatusEnum');
+    positionStatusOptions.value = await useEnumStore().getEnums('status-enum');
     dataScopeTypeOptions.value = await useEnumStore().getEnums(
-      'PositionDataScopeTypeEnum'
+      'position-data-scope-type-enum'
     );
     await fetchData();
   });

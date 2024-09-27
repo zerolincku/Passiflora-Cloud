@@ -415,7 +415,7 @@
 
   const roleStatusOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
-    roleStatusOptions.value = await useEnumStore().getEnums('StatusEnum');
+    roleStatusOptions.value = await useEnumStore().getEnums('status-enum');
     await fetchData();
   });
 
