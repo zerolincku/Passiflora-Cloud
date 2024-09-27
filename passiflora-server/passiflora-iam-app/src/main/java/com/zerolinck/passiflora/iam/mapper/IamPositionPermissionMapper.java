@@ -39,8 +39,7 @@ public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermi
             @Param("sortWrapper") QueryWrapper<IamPositionPermission> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-            @Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
     int deleteByPositionIds(
             @Nonnull @Param("positionIds") Collection<String> positionIds,

@@ -16,29 +16,29 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.apache.commons.lang3.StringUtils;
 
 /** @author 林常坤 on 2024/08/16 */
 public class StrUtil {
 
-    @Nonnull public static String str(@Nullable Object obj, @Nonnull Charset charset) {
+    @Nonnull
+    public static String str(@Nullable Object obj, @Nonnull Charset charset) {
         return switch (obj) {
             case null -> "null";
             case String s -> s;
-            case byte[] bytes -> str(bytes, charset);
-            case Byte[] bytes -> str(bytes, charset);
-            case ByteBuffer byteBuffer -> str(byteBuffer, charset);
+            case byte[] bytes -> new String(bytes, charset);
+            case ByteBuffer byteBuffer -> charset.decode(byteBuffer).toString();
             default -> obj.toString();
         };
     }
 
     @Nonnull
+    @SuppressWarnings("unused")
     public static String camelToUnderline(@Nullable String str) {
         if (str == null) {
             return "";

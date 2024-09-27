@@ -56,8 +56,7 @@ public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
      * @param ids 角色权限主键集合
      * @since 2024-08-17
      */
-    int deleteByIds(
-            @Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
     int deleteByRoleIds(
             @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
