@@ -64,7 +64,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamPermission/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-permission/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -78,7 +78,7 @@ public class IamPermissionControllerTest {
         iamPermission.setPermissionName("test");
         iamPermission.setPermissionIdPath("test");
         iamPermission.setPermissionType(PermissionTypeEnum.MENU_SET);
-        mockMvc.perform(post("/iamPermission/add")
+        mockMvc.perform(post("/iam-permission/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamPermission)))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamPermission/detail").param("permissionId", testSysPermissionId))
+        mockMvc.perform(get("/iam-permission/detail").param("permissionId", testSysPermissionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -105,7 +105,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamPermission/update")
+        mockMvc.perform(post("/iam-permission/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamPermission)))
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(5)
     public void testMenuTree() throws Exception {
-        mockMvc.perform(get("/iamPermission/menuTree"))
+        mockMvc.perform(get("/iam-permission/menu-tree"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -123,7 +123,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(6)
     public void testPermissionTree() throws Exception {
-        mockMvc.perform(get("/iamPermission/permissionTableTree"))
+        mockMvc.perform(get("/iam-permission/permission-table-tree"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -136,7 +136,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(7)
     public void testDisable() throws Exception {
-        mockMvc.perform(post("/iamPermission/disable")
+        mockMvc.perform(post("/iam-permission/disable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())
@@ -146,7 +146,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(8)
     public void testEnable() throws Exception {
-        mockMvc.perform(post("/iamPermission/enable")
+        mockMvc.perform(post("/iam-permission/enable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())
@@ -156,7 +156,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(9)
     public void testUpdateOrder() throws Exception {
-        mockMvc.perform(post("/iamPermission/updateOrder")
+        mockMvc.perform(post("/iam-permission/update-order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(permissionTree)))
                 .andExpect(status().isOk())
@@ -166,7 +166,7 @@ public class IamPermissionControllerTest {
     @Test
     @Order(10)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamPermission/delete")
+        mockMvc.perform(post("/iam-permission/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())

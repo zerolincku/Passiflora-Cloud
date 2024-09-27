@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("${entityName}")
+@RequestMapping("${entityNameUrl}")
 @RequiredArgsConstructor
 public class ${controllerClass} implements ${apiClass} {
 

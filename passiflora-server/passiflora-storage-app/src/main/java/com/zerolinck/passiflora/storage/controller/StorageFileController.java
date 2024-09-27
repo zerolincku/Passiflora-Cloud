@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @RestController
-@RequestMapping("storageFile")
+@RequestMapping("storage-file")
 @RequiredArgsConstructor
 public class StorageFileController implements StorageFileApi {
 

@@ -66,7 +66,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamPosition/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-position/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -81,7 +81,7 @@ public class IamPositionControllerTest {
         iamPosition.setDataScopeType(PositionDataScopeTypeEnum.ALL);
         iamPosition.setPositionLevel(1);
         iamPosition.setPositionStatus(StatusEnum.ENABLE);
-        mockMvc.perform(post("/iamPosition/add")
+        mockMvc.perform(post("/iam-position/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamPosition)))
                 .andExpect(status().isOk())
@@ -95,7 +95,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamPosition/detail").param("positionId", testSysPositionId))
+        mockMvc.perform(get("/iam-position/detail").param("positionId", testSysPositionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -108,7 +108,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamPosition/update")
+        mockMvc.perform(post("/iam-position/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamPosition)))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(5)
     public void testPermissionTree() throws Exception {
-        mockMvc.perform(get("/iamPosition/positionTree"))
+        mockMvc.perform(get("/iam-position/position-tree"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -131,7 +131,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(6)
     public void testDisable() throws Exception {
-        mockMvc.perform(post("/iamPosition/disable")
+        mockMvc.perform(post("/iam-position/disable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
@@ -141,7 +141,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(7)
     public void testEnable() throws Exception {
-        mockMvc.perform(post("/iamPosition/enable")
+        mockMvc.perform(post("/iam-position/enable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(8)
     public void testUpdateOrder() throws Exception {
-        mockMvc.perform(post("/iamPosition/updateOrder")
+        mockMvc.perform(post("/iam-position/update-order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(positionTree)))
                 .andExpect(status().isOk())
@@ -161,7 +161,7 @@ public class IamPositionControllerTest {
     @Test
     @Order(9)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamPosition/delete")
+        mockMvc.perform(post("/iam-position/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())

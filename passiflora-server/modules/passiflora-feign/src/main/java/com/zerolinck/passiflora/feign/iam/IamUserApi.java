@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         value = "iamUser",
         contextId = "iamUser",
-        path = "/passiflora/iam-api/iamUser",
+        path = "/passiflora/iam-api/iam-user",
         configuration = FeignConfiguration.class)
 public interface IamUserApi {
     @Operation(summary = "分页查询")
@@ -80,7 +80,7 @@ public interface IamUserApi {
     Result<String> logout();
 
     @Operation(summary = "获取当前登录用户信息")
-    @GetMapping("currentUserInfo")
+    @GetMapping("current-user-info")
     Result<IamUserInfo> currentUserInfo();
 
     /**
@@ -89,6 +89,6 @@ public interface IamUserApi {
      * @return true-有效，false-无效
      */
     @Operation(summary = "验证token")
-    @GetMapping("checkToken")
+    @GetMapping("check-token")
     Result<Boolean> checkToken();
 }

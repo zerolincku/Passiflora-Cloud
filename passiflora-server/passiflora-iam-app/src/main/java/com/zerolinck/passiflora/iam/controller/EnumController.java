@@ -17,12 +17,14 @@
 package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.feign.iam.EnumApi;
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.*;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +43,7 @@ public class EnumController implements EnumApi {
 
     @Override
     public Result<List<Map<String, Object>>> get(String enumName) {
-        return Result.ok(MAP.get(enumName));
+        return Result.ok(Objects.requireNonNullElse(MAP.get(enumName), Collections.emptyList()));
     }
 
     @SneakyThrows
@@ -56,10 +58,11 @@ public class EnumController implements EnumApi {
                 Object name = getNameMethod.invoke(enumInstance);
                 Method getValueMethod = clazz.getMethod("getValue");
                 Object value = getValueMethod.invoke(enumInstance);
-                if (!MAP.containsKey(clazz.getSimpleName())) {
-                    MAP.put(clazz.getSimpleName(), new ArrayList<>());
+                String enumName = StrUtil.camelToMidline(clazz.getSimpleName());
+                if (!MAP.containsKey(enumName)) {
+                    MAP.put(enumName, new ArrayList<>());
                 }
-                MAP.get(clazz.getSimpleName()).add(Map.of("label", name.toString(), "value", value));
+                MAP.get(enumName).add(Map.of("label", name.toString(), "value", value));
             }
         }
     }

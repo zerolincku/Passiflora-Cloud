@@ -129,6 +129,7 @@ public class GenerateCode {
                 .put("moduleName", moduleName)
                 .put("date", TimeUtil.getDateStrNow())
                 .put("entityName", StrUtil.toCamelCase(table.getTableName()))
+                .put("entityNameUrl", StrUtil.toCamelCase(table.getTableName()).replace("_", "-"))
                 .put("serviceName", StrUtil.toCamelCase(table.getTableName() + "_" + "service"))
                 .put("mapperName", StrUtil.toCamelCase(table.getTableName() + "_" + "mapper"))
                 .put("controllerName", StrUtil.toCamelCase(table.getTableName() + "_" + "controller"))

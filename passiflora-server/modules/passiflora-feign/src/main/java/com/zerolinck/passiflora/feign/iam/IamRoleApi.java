@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(
         value = "iamRole",
         contextId = "iamRole",
-        path = "/passiflora/iam-api/iamRole",
+        path = "/passiflora/iam-api/iam-role",
         configuration = FeignConfiguration.class)
 public interface IamRoleApi {
 
@@ -77,12 +77,12 @@ public interface IamRoleApi {
 
     @Nonnull
     @Operation(summary = "根据角色ids获取权限ids")
-    @PostMapping("permissionIdsByRoleIds")
+    @PostMapping("permission-ids-by-role-ids")
     Result<List<String>> permissionIdsByRoleIds(@Nonnull @RequestBody List<String> roleIds);
 
     @Nonnull
     @Operation(summary = "保存角色权限")
-    @PostMapping("saveRolePermission")
+    @PostMapping("save-role-permission")
     Result<String> saveRolePermission(@Nonnull @RequestBody @Validated RolePermissionSaveArgs args);
 
     @Nonnull

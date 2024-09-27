@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         value = "iamPosition",
         contextId = "iamPosition",
-        path = "/passiflora/iam-api/iamPosition",
+        path = "/passiflora/iam-api/iam-position",
         configuration = FeignConfiguration.class)
 public interface IamPositionApi {
     @Operation(summary = "分页查询")
@@ -67,7 +67,7 @@ public interface IamPositionApi {
     Result<String> delete(@RequestBody List<String> positionIds);
 
     @Operation(summary = "职位树")
-    @GetMapping("positionTree")
+    @GetMapping("position-tree")
     Result<List<IamPositionVo>> positionTree();
 
     @Operation(summary = "禁用")
@@ -79,15 +79,15 @@ public interface IamPositionApi {
     Result<String> enable(@RequestBody List<String> positionIds);
 
     @Operation(summary = "更新排序")
-    @PostMapping("updateOrder")
+    @PostMapping("update-order")
     Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> iamPositionVos);
 
     @Operation(summary = "根据职位ids获取权限ids")
-    @PostMapping("permissionIdsByPositionIds")
+    @PostMapping("permission-ids-by-position-ids")
     Result<List<String>> permissionIdsByPositionIds(@RequestBody List<String> positionIds);
 
     @Operation(summary = "保存职位权限")
-    @PostMapping("savePositionPermission")
+    @PostMapping("save-position-permission")
     Result<String> savePositionPermission(
             @RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs);
 }

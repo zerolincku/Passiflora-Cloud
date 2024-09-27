@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("iamPosition")
+@RequestMapping("iam-position")
 @RequiredArgsConstructor
 public class IamPositionController implements IamPositionApi {
 

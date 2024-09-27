@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(
         value = "iamConfig",
         contextId = "iamConfig",
-        path = "/passiflora/iam-api/iamConfig",
+        path = "/passiflora/iam-api/iam-config",
         configuration = FeignConfiguration.class)
 public interface IamConfigApi {
 

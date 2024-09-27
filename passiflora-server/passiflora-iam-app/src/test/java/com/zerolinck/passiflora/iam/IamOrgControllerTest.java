@@ -59,7 +59,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamOrg/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-org/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -72,7 +72,7 @@ public class IamOrgControllerTest {
         iamOrg.setOrgCode("test");
         iamOrg.setOrgLevel(1);
         iamOrg.setOrgType(1);
-        mockMvc.perform(post("/iamOrg/add")
+        mockMvc.perform(post("/iam-org/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamOrg)))
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamOrg/detail").param("orgId", testSysOrgId))
+        mockMvc.perform(get("/iam-org/detail").param("orgId", testSysOrgId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -99,7 +99,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamOrg/update")
+        mockMvc.perform(post("/iam-org/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamOrg)))
                 .andExpect(status().isOk())
@@ -109,7 +109,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamOrg/delete")
+        mockMvc.perform(post("/iam-org/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysOrgId})))
                 .andExpect(status().isOk())
@@ -119,7 +119,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(6)
     public void testListByParentId() throws Exception {
-        mockMvc.perform(get("/iamOrg/listByParentId"))
+        mockMvc.perform(get("/iam-org/list-by-parent-id"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -127,7 +127,7 @@ public class IamOrgControllerTest {
     @Test
     @Order(7)
     public void testOrgTree() throws Exception {
-        mockMvc.perform(get("/iamOrg/orgTree"))
+        mockMvc.perform(get("/iam-org/org-tree"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

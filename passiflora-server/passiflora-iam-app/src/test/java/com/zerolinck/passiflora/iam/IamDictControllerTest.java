@@ -62,7 +62,7 @@ public class IamDictControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamDict/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-dict/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -70,7 +70,7 @@ public class IamDictControllerTest {
     @Test
     @Order(2)
     public void testItemPage() throws Exception {
-        mockMvc.perform(get("/iamDictItem/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-dict-item/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -81,7 +81,7 @@ public class IamDictControllerTest {
         IamDict iamDict = new IamDict();
         iamDict.setDictName("test");
         iamDict.setDictTag("test");
-        mockMvc.perform(post("/iamDict/add")
+        mockMvc.perform(post("/iam-dict/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamDict)))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class IamDictControllerTest {
         iamDictItem.setDictId(testSysDictId);
         iamDictItem.setLabel("test");
         iamDictItem.setValue("test");
-        mockMvc.perform(post("/iamDictItem/add")
+        mockMvc.perform(post("/iam-dict-item/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamDictItem)))
                 .andExpect(status().isOk())
@@ -113,7 +113,7 @@ public class IamDictControllerTest {
     @Test
     @Order(5)
     public void testDetailItem() throws Exception {
-        mockMvc.perform(get("/iamDictItem/detail").param("dictItemId", testSysDictItemId))
+        mockMvc.perform(get("/iam-dict-item/detail").param("dictItemId", testSysDictItemId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -126,7 +126,7 @@ public class IamDictControllerTest {
     @Test
     @Order(6)
     public void testUpdateItem() throws Exception {
-        mockMvc.perform(post("/iamDictItem/update")
+        mockMvc.perform(post("/iam-dict-item/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamDictItem)))
                 .andExpect(status().isOk())
@@ -136,7 +136,7 @@ public class IamDictControllerTest {
     @Test
     @Order(7)
     public void testDeleteItem() throws Exception {
-        mockMvc.perform(post("/iamDictItem/delete")
+        mockMvc.perform(post("/iam-dict-item/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysDictItemId})))
                 .andExpect(status().isOk())
@@ -146,7 +146,7 @@ public class IamDictControllerTest {
     @Test
     @Order(8)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamDict/detail").param("dictId", testSysDictId))
+        mockMvc.perform(get("/iam-dict/detail").param("dictId", testSysDictId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -159,7 +159,7 @@ public class IamDictControllerTest {
     @Test
     @Order(9)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamDict/update")
+        mockMvc.perform(post("/iam-dict/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamDict)))
                 .andExpect(status().isOk())
@@ -169,7 +169,7 @@ public class IamDictControllerTest {
     @Test
     @Order(10)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamDict/delete")
+        mockMvc.perform(post("/iam-dict/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysDictId})))
                 .andExpect(status().isOk())
@@ -179,7 +179,7 @@ public class IamDictControllerTest {
     @Test
     @Order(11)
     public void testListByDictId() throws Exception {
-        mockMvc.perform(get("/iamDictItem/listByDictId").param("dictId", "1778631179896446977"))
+        mockMvc.perform(get("/iam-dict-item/list-by-dict-id").param("dictId", "1778631179896446977"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -187,7 +187,7 @@ public class IamDictControllerTest {
     @Test
     @Order(12)
     public void testListByDictName() throws Exception {
-        mockMvc.perform(get("/iamDictItem/listByDictName").param("dictName", "机构类型"))
+        mockMvc.perform(get("/iam-dict-item/list-by-dict-name").param("dictName", "机构类型"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -195,7 +195,7 @@ public class IamDictControllerTest {
     @Test
     @Order(13)
     public void testListByDictTag() throws Exception {
-        mockMvc.perform(get("/iamDictItem/listByDictTag").param("dictTag", "orgType"))
+        mockMvc.perform(get("/iam-dict-item/list-by-dict-tag").param("dictTag", "orgType"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

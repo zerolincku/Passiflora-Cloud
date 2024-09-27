@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         value = "iamPermission",
         contextId = "iamPermission",
-        path = "/passiflora/iam-api/iamPermission",
+        path = "/passiflora/iam-api/iam-permission",
         configuration = FeignConfiguration.class)
 public interface IamPermissionApi {
     @Operation(summary = "分页查询")
@@ -67,15 +67,15 @@ public interface IamPermissionApi {
     Result<String> delete(@RequestBody List<String> permissionIds);
 
     @Operation(summary = "菜单树")
-    @GetMapping("menuTree")
+    @GetMapping("menu-tree")
     Result<List<IamPermissionVo>> menuTree();
 
     @Operation(summary = "权限树-列表使用")
-    @GetMapping("permissionTableTree")
+    @GetMapping("permission-table-tree")
     Result<List<IamPermissionTableVo>> permissionTableTree();
 
     @Operation(summary = "更新排序")
-    @PostMapping("updateOrder")
+    @PostMapping("update-order")
     Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> iamPermissionTableVos);
 
     @Operation(summary = "禁用")

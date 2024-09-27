@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         value = "iamDictItem",
         contextId = "iamDictItem",
-        path = "/passiflora/iam-api/iamDictItem",
+        path = "/passiflora/iam-api/iam-dict-item",
         configuration = FeignConfiguration.class)
 public interface IamDictItemApi {
     @Operation(summary = "分页查询")
@@ -65,14 +65,14 @@ public interface IamDictItemApi {
     Result<String> delete(@RequestBody List<String> dictItemIds);
 
     @Operation(summary = "根据字典ID查询")
-    @GetMapping("listByDictId")
+    @GetMapping("list-by-dict-id")
     Result<List<IamDictItem>> listByDictId(@RequestParam(value = "dictId") String dictId);
 
     @Operation(summary = "根据字典名称查询")
-    @GetMapping("listByDictName")
+    @GetMapping("list-by-dict-name")
     Result<List<IamDictItem>> listByDictName(@RequestParam(value = "dictName") String dictName);
 
     @Operation(summary = "根据字典标识查询")
-    @GetMapping("listByDictTag")
+    @GetMapping("list-by-dict-tag")
     Result<List<IamDictItem>> listByDictTag(@RequestParam(value = "dictTag") String dictTag);
 }

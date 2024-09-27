@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(
         value = "iamDict",
         contextId = "iamDict",
-        path = "/passiflora/iam-api/iamDict",
+        path = "/passiflora/iam-api/iam-dict",
         configuration = FeignConfiguration.class)
 public interface IamDictApi {
     @Operation(summary = "分页查询")

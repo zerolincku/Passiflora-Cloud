@@ -22,7 +22,7 @@ import java.util.List;
  * @since ${date}
  */
 @Tag(name = "${table.description}")
-@FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityName}", configuration = FeignConfiguration.class)
+@FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityNameUrl}", configuration = FeignConfiguration.class)
 public interface ${apiClass} {
 
     @Nonnull

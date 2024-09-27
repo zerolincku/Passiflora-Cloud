@@ -61,7 +61,7 @@ public class IamUserControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamUser/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-user/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -74,7 +74,7 @@ public class IamUserControllerTest {
         iamUser.setRealName("test");
         iamUser.setUserPassword("test");
         iamUser.setOrgId("test");
-        mockMvc.perform(post("/iamUser/add")
+        mockMvc.perform(post("/iam-user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamUser)))
                 .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class IamUserControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamUser/detail").param("userId", testUserId))
+        mockMvc.perform(get("/iam-user/detail").param("userId", testUserId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -103,7 +103,7 @@ public class IamUserControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamUser/update")
+        mockMvc.perform(post("/iam-user/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ public class IamUserControllerTest {
     public void testLogin() throws Exception {
         testUser.setUserName("test");
         testUser.setUserPassword("test");
-        mockMvc.perform(post("/iamUser/login")
+        mockMvc.perform(post("/iam-user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isOk())
@@ -129,7 +129,7 @@ public class IamUserControllerTest {
     @Test
     @Order(6)
     public void testCheckToken() throws Exception {
-        mockMvc.perform(get("/iamUser/checkToken").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/check-token").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -137,7 +137,7 @@ public class IamUserControllerTest {
     @Test
     @Order(7)
     public void testCurrentUserInfo() throws Exception {
-        mockMvc.perform(get("/iamUser/currentUserInfo").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/current-user-info").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -145,7 +145,7 @@ public class IamUserControllerTest {
     @Test
     @Order(8)
     public void testLogout() throws Exception {
-        mockMvc.perform(get("/iamUser/logout").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/logout").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -153,7 +153,7 @@ public class IamUserControllerTest {
     @Test
     @Order(9)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamUser/delete")
+        mockMvc.perform(post("/iam-user/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testUserId})))
                 .andExpect(status().isOk())

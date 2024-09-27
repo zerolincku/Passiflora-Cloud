@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         value = "iamOrg",
         contextId = "iamOrg",
-        path = "/passiflora/iam-api/iamOrg",
+        path = "/passiflora/iam-api/iam-org",
         configuration = FeignConfiguration.class)
 public interface IamOrgApi {
     @Operation(summary = "分页查询")
@@ -67,10 +67,10 @@ public interface IamOrgApi {
     Result<String> delete(@RequestBody List<String> orgIds);
 
     @Operation(summary = "根据父级ID查询子机构列表")
-    @GetMapping("listByParentId")
+    @GetMapping("list-by-parent-id")
     Result<List<IamOrgVo>> listByParentId(@RequestParam(required = false, value = "orgParentId") String orgParentId);
 
     @Operation(summary = "机构树")
-    @GetMapping("orgTree")
+    @GetMapping("org-tree")
     Result<List<IamOrgVo>> orgTree();
 }

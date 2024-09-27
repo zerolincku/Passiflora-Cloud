@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("iamConfig")
+@RequestMapping("iam-config")
 @RequiredArgsConstructor
 public class IamConfigController implements IamConfigApi {
 

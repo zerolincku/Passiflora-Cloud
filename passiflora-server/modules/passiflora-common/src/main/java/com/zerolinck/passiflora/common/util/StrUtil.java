@@ -16,22 +16,51 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /** @author 林常坤 on 2024/08/16 */
 public class StrUtil {
 
-    @Nullable public static String str(@Nullable Object obj, @Nonnull Charset charset) {
+    @Nonnull public static String str(@Nullable Object obj, @Nonnull Charset charset) {
         return switch (obj) {
-            case null -> null;
+            case null -> "null";
             case String s -> s;
             case byte[] bytes -> str(bytes, charset);
             case Byte[] bytes -> str(bytes, charset);
             case ByteBuffer byteBuffer -> str(byteBuffer, charset);
             default -> obj.toString();
         };
+    }
+
+    @Nonnull
+    public static String camelToUnderline(@Nullable String str) {
+        if (str == null) {
+            return "";
+        }
+        StringJoiner joiner = new StringJoiner("_");
+        String[] split = StringUtils.splitByCharacterTypeCamelCase(str);
+        for (String s : split) {
+            joiner.add(s.toLowerCase());
+        }
+        return joiner.toString();
+    }
+
+    @Nonnull
+    public static String camelToMidline(@Nullable String str) {
+        if (str == null) {
+            return "";
+        }
+        StringJoiner joiner = new StringJoiner("-");
+        String[] split = StringUtils.splitByCharacterTypeCamelCase(str);
+        for (String s : split) {
+            joiner.add(s.toLowerCase());
+        }
+        return joiner.toString();
     }
 }

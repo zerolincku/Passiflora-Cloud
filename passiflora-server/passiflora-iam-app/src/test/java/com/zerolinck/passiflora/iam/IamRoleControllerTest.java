@@ -61,7 +61,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamRole/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-role/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -73,7 +73,7 @@ public class IamRoleControllerTest {
         iamRole.setRoleId("test");
         iamRole.setRoleName("test");
         iamRole.setRoleCode("test");
-        mockMvc.perform(post("/iamRole/add")
+        mockMvc.perform(post("/iam-role/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamRole)))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamRole/detail").param("roleId", testSysRoleId))
+        mockMvc.perform(get("/iam-role/detail").param("roleId", testSysRoleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -100,7 +100,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamRole/update")
+        mockMvc.perform(post("/iam-role/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamRole)))
                 .andExpect(status().isOk())
@@ -110,7 +110,7 @@ public class IamRoleControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamRole/delete")
+        mockMvc.perform(post("/iam-role/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysRoleId})))
                 .andExpect(status().isOk())

@@ -62,7 +62,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamConfig/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-config/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -75,7 +75,7 @@ public class IamConfigControllerTest {
         iamConfig.setConfigName("test");
         iamConfig.setConfigCode("test");
         iamConfig.setConfigValue("test");
-        mockMvc.perform(post("/iamConfig/add")
+        mockMvc.perform(post("/iam-config/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamConfig)))
                 .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamConfig/detail").param("configId", testSysConfigId))
+        mockMvc.perform(get("/iam-config/detail").param("configId", testSysConfigId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -102,7 +102,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamConfig/update")
+        mockMvc.perform(post("/iam-config/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testIamConfig)))
                 .andExpect(status().isOk())
@@ -112,7 +112,7 @@ public class IamConfigControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamConfig/delete")
+        mockMvc.perform(post("/iam-config/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new String[] {testSysConfigId})))
                 .andExpect(status().isOk())

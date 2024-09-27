@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-04-01
  */
 @RestController
-@RequestMapping("iamDict")
+@RequestMapping("iam-dict")
 @RequiredArgsConstructor
 public class IamDictController implements IamDictApi {
 
