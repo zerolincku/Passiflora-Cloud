@@ -31,7 +31,7 @@ import java.time.ZoneOffset;
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
-        long timestamp = p.getLongValue();
+        long timestamp = Long.parseLong(p.getValueAsString());
         if (timestamp < 1_000_000_000_000L) {
             // 秒级时间戳
             return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneOffset.UTC);

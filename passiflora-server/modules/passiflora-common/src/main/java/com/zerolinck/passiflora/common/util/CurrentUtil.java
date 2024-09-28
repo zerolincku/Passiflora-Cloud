@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
@@ -24,6 +23,7 @@ import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,8 +52,8 @@ public class CurrentUtil {
         if (o == null) {
             return null;
         }
-        ObjectMapper objectMapper = SpringContextHolder.getBean(ObjectMapper.class);
-        IamUser iamUser = objectMapper.convertValue(o, IamUser.class);
+        @SuppressWarnings("unchecked")
+        IamUser iamUser = JsonUtil.convertValue((Map<String, Object>) o, IamUser.class);
         userMap.set(iamUser);
         return iamUser;
     }

@@ -35,7 +35,7 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
 };
 
 export const NOT_PERMISSION_ROUTE: RouteRecordRaw = {
-  path: '/notPermission',
+  path: '/not-permission',
   name: 'notPermission',
   component: () => import('@/views/not-permission/index.vue'),
   meta: {
@@ -45,7 +45,7 @@ export const NOT_PERMISSION_ROUTE: RouteRecordRaw = {
 };
 
 export const NOT_AUTH_ROUTE: RouteRecordRaw = {
-  path: '/notAuth',
+  path: '/not-auth',
   name: 'notAuth',
   component: () => import('@/views/not-auth/index.vue'),
   meta: {

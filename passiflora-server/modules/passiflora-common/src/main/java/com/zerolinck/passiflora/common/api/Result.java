@@ -27,13 +27,13 @@ import lombok.Data;
 @Data
 public class Result<T> {
 
-    private long code;
+    private int code;
     private String message;
     private T data;
 
     protected Result() {}
 
-    protected Result(long code, String message, T data) {
+    protected Result(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -102,11 +102,13 @@ public class Result<T> {
     }
 
     /** 未登录返回结果 */
+    @SuppressWarnings("unused")
     public static <T> Result<T> unauthorized() {
         return failed(ResultCodeEnum.UNAUTHORIZED);
     }
 
     /** 未授权返回结果 */
+    @SuppressWarnings("unused")
     public static <T> Result<T> forbidden() {
         return failed(ResultCodeEnum.FORBIDDEN);
     }
