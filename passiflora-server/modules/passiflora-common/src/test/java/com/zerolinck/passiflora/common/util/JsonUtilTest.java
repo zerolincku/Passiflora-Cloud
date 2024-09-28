@@ -1,19 +1,32 @@
+/* 
+ * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.zerolinck.passiflora.common.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-/**
- * @author 林常坤 on 2024/09/28
- */
+/** @author 林常坤 on 2024/09/28 */
 public class JsonUtilTest {
 
     @Data
@@ -78,10 +91,7 @@ public class JsonUtilTest {
 
     @Test
     void testConvertToMapList() {
-        List<User> users = Arrays.asList(
-                new User("Henry", 60),
-                new User("Ivy", 65)
-        );
+        List<User> users = Arrays.asList(new User("Henry", 60), new User("Ivy", 65));
         List<Map<String, Object>> mapList = JsonUtil.convertToMapList(users);
         assertEquals(2, mapList.size());
         assertEquals("Henry", mapList.get(0).get("name"));
