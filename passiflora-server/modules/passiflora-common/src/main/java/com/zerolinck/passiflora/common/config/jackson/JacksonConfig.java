@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
@@ -56,6 +57,10 @@ public class JacksonConfig {
         serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER));
         serializers.put(LocalTime.class, new LocalTimeSerializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
 
+        // Long 序列化规则
+        serializers.put(Long.class, ToStringSerializer.instance);
+        serializers.put(Long.TYPE, ToStringSerializer.instance);
+
         // NameValue 序列化配置
         serializers.put(LabelValueInterface.class, new JsonSerializer<LabelValueInterface>() {
             @Override
@@ -74,9 +79,9 @@ public class JacksonConfig {
         Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
 
         // 自动注册枚举反序列化规则
-        classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer() {
+        classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer<>() {
             @Override
-            public Object deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+            public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
                 Integer value = jsonParser.getIntValue();
                 return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
             }
