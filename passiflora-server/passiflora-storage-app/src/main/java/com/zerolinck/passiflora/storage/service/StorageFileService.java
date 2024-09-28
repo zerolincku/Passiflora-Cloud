@@ -252,13 +252,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 .setHeader(
                         Header.CONTENT_DISPOSITION.getValue(), "attachment; filename=" + urlCodec.encode("文件压缩包.zip"));
         ZipOutputStream zipOut = new ZipOutputStream(NetUtil.getResponse().getOutputStream());
-        Set<String> fileNameSet = new HashSet<>();
+        Map<String, Integer> fileNameCountMap = new HashMap<>();
         for (String fileId : fileIds) {
             StorageFile storageFile = baseMapper.selectById(fileId);
 
             // 出现同名文件时重命名
-            String fileName = dealFileName(storageFile, fileNameSet);
-            fileNameSet.add(fileName);
+            String fileName = dealFileName(storageFile, fileNameCountMap);
             zipOut.putNextEntry(new ZipEntry(fileName));
             GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(storageFile.getBucketName())
@@ -281,13 +280,13 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     /** 处理压缩包文件重名问题 */
     @Nonnull
-    private static String dealFileName(@Nonnull StorageFile storageFile, @Nonnull Set<String> fileNameSet) {
+    private static String dealFileName(
+            @Nonnull StorageFile storageFile, @Nonnull Map<String, Integer> fileNameCountMap) {
         String fileName = storageFile.getOriginalFileName();
-        while (fileNameSet.contains(fileName)) {
+        if (fileNameCountMap.containsKey(fileName)) {
             String[] fileNames = fileName.split("\\.");
             if (fileNames.length == 1) {
-                fileName += "-1";
-                continue;
+                return fileName + "(" + fileNameCountMap.get(fileName) + ")";
             }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < fileNames.length - 1; i++) {
@@ -296,10 +295,13 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     sb.append(".");
                 }
             }
-            sb.append("-1");
+            sb.append("(").append(fileNameCountMap.get(fileName)).append(")");
             sb.append(".");
             sb.append(fileNames[fileNames.length - 1]);
             fileName = sb.toString();
+            fileNameCountMap.put(fileName, fileNameCountMap.get(fileName) + 1);
+        } else {
+            fileNameCountMap.put(fileName, 1);
         }
         return fileName;
     }
