@@ -50,8 +50,37 @@ import org.springframework.context.annotation.Configuration;
 public class JacksonConfig {
 
     @Bean
-    @SuppressWarnings("unchecked")
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        Map<Class<?>, JsonSerializer<?>> serializers = getDefaultSerializer();
+        Map<Class<?>, JsonDeserializer<?>> deserializers = getDefaultDeserializer();
+
+        return builder -> builder.locale(Locale.CHINA)
+                .timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()))
+                .serializersByType(serializers)
+                .deserializersByType(deserializers);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<Class<?>, JsonDeserializer<?>> getDefaultDeserializer() {
+        Map<Class<?>, JsonDeserializer<?>> deserializers = new HashMap<>();
+        deserializers.put(LocalDateTime.class, new LocalDateTimeDeserializer());
+        deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER));
+        deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
+
+        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
+
+        // 自动注册枚举反序列化规则
+        classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer<>() {
+            @Override
+            public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
+                Integer value = jsonParser.getIntValue();
+                return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
+            }
+        }));
+        return deserializers;
+    }
+
+    public static Map<Class<?>, JsonSerializer<?>> getDefaultSerializer() {
         Map<Class<?>, JsonSerializer<?>> serializers = new HashMap<>();
         serializers.put(LocalDateTime.class, new LocalDateTimeSerializer(TimeUtil.NORMAL_DATE_TIME_FORMATTER));
         serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER));
@@ -70,26 +99,7 @@ public class JacksonConfig {
                 jsonGenerator.writeObject(value.getValue());
             }
         });
-
-        Map<Class<?>, JsonDeserializer<?>> deserializers = new HashMap<>();
-        deserializers.put(LocalDateTime.class, new LocalDateTimeDeserializer());
-        deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER));
-        deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
-
-        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
-
-        // 自动注册枚举反序列化规则
-        classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer<>() {
-            @Override
-            public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
-                Integer value = jsonParser.getIntValue();
-                return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
-            }
-        }));
-
-        return builder -> builder.locale(Locale.CHINA)
-                .timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()))
-                .serializersByType(serializers)
-                .deserializersByType(deserializers);
+        return serializers;
     }
+
 }

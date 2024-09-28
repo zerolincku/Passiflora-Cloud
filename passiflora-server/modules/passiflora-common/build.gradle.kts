@@ -1,5 +1,6 @@
 plugins {
     id("java-library")
+    jacoco
 }
 
 dependencies {
@@ -13,18 +14,22 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     compileOnlyApi("org.springframework:spring-context")
     compileOnlyApi("com.fasterxml.jackson.core:jackson-databind")
-    compileOnlyApi("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     compileOnlyApi("com.fasterxml.jackson.core:jackson-core")
     compileOnlyApi("org.springframework.boot:spring-boot-autoconfigure")
     compileOnlyApi("org.springframework:spring-web")
     compileOnlyApi("org.apache.tomcat.embed:tomcat-embed-core")
     compileOnlyApi("org.postgresql:postgresql")
     compileOnly("io.swagger.core.v3:swagger-annotations-jakarta")
+
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    api("org.apache.tomcat.embed:tomcat-embed-core")
     api("org.springframework.boot:spring-boot-starter-log4j2")
     api("org.springframework:spring-webmvc")
     api("org.springframework.data:spring-data-redis")
@@ -35,4 +40,10 @@ dependencies {
     api("commons-codec:commons-codec")
     api("commons-io:commons-io")
     api("com.google.guava:guava")
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
 }

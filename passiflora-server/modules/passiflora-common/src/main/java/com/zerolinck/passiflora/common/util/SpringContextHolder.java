@@ -50,15 +50,21 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     }
 
     /** 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型. */
-    @Nonnull
+    @Nullable
     @SuppressWarnings({"unchecked", "unused"})
     public static <T> T getBean(@Nonnull String name) {
+        if (applicationContext == null) {
+            return null;
+        }
         return (T) applicationContext.getBean(name);
     }
 
     /** 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型. */
-    @Nonnull
+    @Nullable
     public static <T> T getBean(@Nonnull Class<T> requiredType) {
+        if (applicationContext == null) {
+            return null;
+        }
         return applicationContext.getBean(requiredType);
     }
 

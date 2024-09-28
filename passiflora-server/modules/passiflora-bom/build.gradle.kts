@@ -32,6 +32,8 @@ dependencies {
         api("commons-codec:commons-codec:1.17.1")
         api("commons-io:commons-io:2.16.1")
         api("com.google.guava:guava:33.2.1-jre")
+        api("org.junit.jupiter:junit-jupiter-api:5.7.0")
+        api("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     }
 }
 
