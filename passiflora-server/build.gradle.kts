@@ -26,6 +26,7 @@ allprojects {
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${Version.springCloudVersion}")
             mavenBom("org.springframework.boot:spring-boot-dependencies:${Version.springBootVersion}")
         }
+        applyMavenExclusions(false)
     }
 }
 
