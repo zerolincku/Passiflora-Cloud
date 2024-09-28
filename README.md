@@ -19,7 +19,7 @@ Passiflora Cloud 是基于 JDK21、Spring Cloud、Gradle 构建的微服务项�
 │   │   ├── passiflora-feign （Feign组件）
 │   │   └── passiflora-model （Model组件）
 │   ├── passiflora-gateway-app （网关应用）
-│   ├── passiflora-iam-app （iam应用）
+│   ├── passiflora-iam-app （身份应用）
 │   ├── passiflora-storage-app （文件储存应用）
 │   └── buildSrc (构建脚本)
 └── passiflora-ui （前端项目）
