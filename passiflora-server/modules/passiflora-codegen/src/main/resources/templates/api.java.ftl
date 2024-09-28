@@ -1,6 +1,5 @@
 package com.zerolinck.passiflora.feign.${moduleName};
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
@@ -28,7 +27,7 @@ public interface ${apiClass} {
     @Nonnull
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition);
+    Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition);
 
     @Nonnull
     @Operation(summary = "新增")

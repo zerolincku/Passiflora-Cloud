@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.feign.storage;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
@@ -46,7 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface StorageFileApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<StorageFile>> page(QueryCondition<StorageFile> condition);
+    Result<List<StorageFile>> page(QueryCondition<StorageFile> condition);
 
     @Operation(summary = "根据文件ids获取列表")
     @PostMapping("list-by-file-ids")

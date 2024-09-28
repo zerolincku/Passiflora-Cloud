@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 
 export type RoleRecord = {
   roleId?: string;
@@ -17,7 +17,7 @@ export type rolePermissionSaveDto = {
 export interface rolePageParams extends Partial<RoleRecord>, BasePageParam {}
 
 export function rolePage(params: rolePageParams) {
-  return axios.get<Result<Page<RoleRecord>>>('/iam-api/iam-role/page', {
+  return axios.get<Result<RoleRecord[]>>('/iam-api/iam-role/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);

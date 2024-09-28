@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.iam.controller;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -52,8 +51,8 @@ public class IamRoleController implements IamRoleApi {
 
     @Nonnull
     @Override
-    public Result<ListWithPage<IamRole>> page(@Nullable QueryCondition<IamRole> condition) {
-        return Result.page(iamRoleService.page(condition));
+    public Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition) {
+        return Result.ok(iamRoleService.page(condition));
     }
 
     @Nonnull

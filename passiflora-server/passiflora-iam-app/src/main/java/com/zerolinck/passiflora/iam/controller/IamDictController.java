@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.iam.controller;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -42,8 +41,8 @@ public class IamDictController implements IamDictApi {
     private final IamDictService iamDictService;
 
     @Override
-    public Result<ListWithPage<IamDict>> page(QueryCondition<IamDict> condition) {
-        return Result.page(iamDictService.page(condition));
+    public Result<List<IamDict>> page(QueryCondition<IamDict> condition) {
+        return Result.ok(iamDictService.page(condition));
     }
 
     @Override

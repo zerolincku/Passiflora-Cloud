@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.iam.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -48,8 +47,8 @@ public class IamPermissionController implements IamPermissionApi {
     private final IamPermissionService iamPermissionService;
 
     @Override
-    public Result<ListWithPage<IamPermission>> page(QueryCondition<IamPermission> condition) {
-        return Result.page(iamPermissionService.page(condition));
+    public Result<List<IamPermission>> page(QueryCondition<IamPermission> condition) {
+        return Result.ok(iamPermissionService.page(condition));
     }
 
     @Override

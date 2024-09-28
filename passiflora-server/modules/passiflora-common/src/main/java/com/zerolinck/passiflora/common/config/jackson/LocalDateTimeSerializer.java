@@ -28,6 +28,6 @@ public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     @Override
     public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         long timestamp = value.toInstant(ZoneOffset.UTC).toEpochMilli();
-        gen.writeNumber(timestamp);
+        gen.writeString(String.valueOf(timestamp));
     }
 }

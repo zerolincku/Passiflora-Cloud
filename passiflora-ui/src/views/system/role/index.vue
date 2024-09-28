@@ -385,9 +385,9 @@
     setLoading(true);
     try {
       const { data } = await rolePage(params);
-      renderData.value = data.data.list;
+      renderData.value = data.data;
       pagination.current = params.current;
-      pagination.total = data.data.total;
+      pagination.total = data.total;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {

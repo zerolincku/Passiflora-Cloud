@@ -110,7 +110,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     @Nonnull
     @SneakyThrows
-    public String upload(@Nonnull MultipartFile file, @Nonnull String fileName) {
+    public String upload(@Nonnull MultipartFile file, @Nullable String fileName) {
         String md5Hex = DigestUtils.md5Hex(file.getBytes());
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, md5Hex), true, () -> {

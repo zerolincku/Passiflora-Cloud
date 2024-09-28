@@ -698,9 +698,9 @@
     setLoading(true);
     try {
       const { data } = await userPage(params);
-      renderData.value = data.data.list;
+      renderData.value = data.data;
       pagination.current = params.current as number;
-      pagination.total = data.data.total;
+      pagination.total = data.total;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {

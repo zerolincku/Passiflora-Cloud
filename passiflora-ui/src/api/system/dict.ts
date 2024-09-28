@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 
 export type DictRecord = {
   dictId?: string;
@@ -36,7 +36,7 @@ export interface DictPage {
 }
 
 export function dictPage(params: dictPageParams) {
-  return axios.get<Result<Page<DictRecord>>>('/iam-api/iam-dict/page', {
+  return axios.get<Result<DictRecord[]>>('/iam-api/iam-dict/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -61,7 +61,7 @@ export function dictDelete(data: string[]) {
 }
 
 export function dictItemPage(params: dictPageParams) {
-  return axios.get<Result<Page<DictItemRecord>>>(
+  return axios.get<Result<DictItemRecord[]>>(
     '/iam-api/iam-dict-item/page',
     {
       params,

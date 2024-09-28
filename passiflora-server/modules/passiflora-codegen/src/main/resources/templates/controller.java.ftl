@@ -1,6 +1,5 @@
 package com.zerolinck.passiflora.${moduleName}.controller;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -34,8 +33,8 @@ public class ${controllerClass} implements ${apiClass} {
 
     @Nonnull
     @Override
-    public Result<ListWithPage<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition) {
-        return Result.page(${serviceName}.page(condition));
+    public Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition) {
+        return Result.ok(${serviceName}.page(condition));
     }
 
     @Nonnull

@@ -316,9 +316,9 @@
     setLoading(true);
     try {
       const { data } = await dictPage(params);
-      renderData.value = data.data.list;
+      renderData.value = data.data;
       pagination.current = params.current;
-      pagination.total = data.data.total;
+      pagination.total = data.total;
       renderData.value.forEach((item) => {
         if (item.isSystem === 1) {
           item.disabled = true;

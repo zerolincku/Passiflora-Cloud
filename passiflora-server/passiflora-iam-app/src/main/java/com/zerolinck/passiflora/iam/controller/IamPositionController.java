@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.iam.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -50,8 +49,8 @@ public class IamPositionController implements IamPositionApi {
     private final IamPositionPermissionService iamPositionPermissionService;
 
     @Override
-    public Result<ListWithPage<IamPosition>> page(QueryCondition<IamPosition> condition) {
-        return Result.page(iamPositionService.page(condition));
+    public Result<List<IamPosition>> page(QueryCondition<IamPosition> condition) {
+        return Result.ok(iamPositionService.page(condition));
     }
 
     @Override

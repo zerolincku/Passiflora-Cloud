@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 
 export type PositionRecord = {
   positionId?: string;
@@ -24,7 +24,7 @@ export interface positionPageParams
     BasePageParam {}
 
 export function positionPage(params: positionPageParams) {
-  return axios.get<Result<Page<PositionRecord>>>(
+  return axios.get<Result<PositionRecord[]>>(
     '/iam-api/iam-position/page',
     {
       params,

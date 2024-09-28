@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.storage.controller;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -48,8 +47,8 @@ public class StorageFileController implements StorageFileApi {
 
     @Nonnull
     @Override
-    public Result<ListWithPage<StorageFile>> page(@Nullable QueryCondition<StorageFile> condition) {
-        return Result.page(storageFileService.page(condition));
+    public Result<List<StorageFile>> page(@Nullable QueryCondition<StorageFile> condition) {
+        return Result.ok(storageFileService.page(condition));
     }
 
     @Nonnull
@@ -75,7 +74,7 @@ public class StorageFileController implements StorageFileApi {
 
     @Nonnull
     @Override
-    public Result<String> upload(@Nonnull MultipartFile file, @Nonnull String fileName) {
+    public Result<String> upload(@Nonnull MultipartFile file, @Nullable String fileName) {
         return Result.ok(storageFileService.upload(file, fileName));
     }
 

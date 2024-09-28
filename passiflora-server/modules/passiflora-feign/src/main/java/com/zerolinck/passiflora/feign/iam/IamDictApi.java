@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.feign.iam;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
@@ -43,7 +42,7 @@ import org.springframework.web.bind.annotation.*;
 public interface IamDictApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<IamDict>> page(QueryCondition<IamDict> condition);
+    Result<List<IamDict>> page(QueryCondition<IamDict> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

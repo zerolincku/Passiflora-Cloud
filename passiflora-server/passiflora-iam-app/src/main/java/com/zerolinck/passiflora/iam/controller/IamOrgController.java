@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.iam.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -47,8 +46,8 @@ public class IamOrgController implements IamOrgApi {
     private final IamOrgService iamOrgService;
 
     @Override
-    public Result<ListWithPage<IamOrg>> page(QueryCondition<IamOrg> condition) {
-        return Result.page(iamOrgService.page(condition));
+    public Result<List<IamOrg>> page(QueryCondition<IamOrg> condition) {
+        return Result.ok(iamOrgService.page(condition));
     }
 
     @Override

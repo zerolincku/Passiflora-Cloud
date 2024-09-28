@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.iam.controller;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -51,8 +50,8 @@ public class IamConfigController implements IamConfigApi {
 
     @Nonnull
     @Override
-    public Result<ListWithPage<IamConfig>> page(@Nullable QueryCondition<IamConfig> condition) {
-        return Result.page(iamConfigService.page(condition));
+    public Result<List<IamConfig>> page(@Nullable QueryCondition<IamConfig> condition) {
+        return Result.ok(iamConfigService.page(condition));
     }
 
     @Nonnull

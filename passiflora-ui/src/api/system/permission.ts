@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 
 export type PermissionRecord = {
   permissionId?: string;
@@ -23,7 +23,7 @@ export interface permissionPageParams
     BasePageParam {}
 
 export function permissionPage(params: permissionPageParams) {
-  return axios.get<Result<Page<PermissionRecord>>>(
+  return axios.get<Result<PermissionRecord[]>>(
     '/iam-api/iam-permission/page',
     {
       params,

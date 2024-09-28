@@ -41,12 +41,8 @@ export interface GeneralChart {
 export interface Result<T = unknown> {
   code: number;
   message: string;
-  data: T;
-}
-
-export interface Page<T> {
-  list: T[];
-  total: number;
+  data?: T;
+  total?: number;
 }
 
 export interface BaseEntity {

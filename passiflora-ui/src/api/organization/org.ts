@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 
 export type OrgRecord = {
   orgId?: string;
@@ -16,7 +16,7 @@ export type OrgRecord = {
 export interface orgPageParams extends Partial<OrgRecord>, BasePageParam {}
 
 export function orgPage(params: orgPageParams) {
-  return axios.get<Result<Page<OrgRecord>>>('/iam-api/iam-org/page', {
+  return axios.get<Result<OrgRecord[]>>('/iam-api/iam-org/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);

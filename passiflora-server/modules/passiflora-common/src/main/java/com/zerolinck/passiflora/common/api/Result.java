@@ -17,6 +17,8 @@
 package com.zerolinck.passiflora.common.api;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -29,7 +31,12 @@ public class Result<T> {
 
     private int code;
     private String message;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+    /** 总条数 */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long total;
 
     protected Result() {}
 
@@ -37,6 +44,13 @@ public class Result<T> {
         this.code = code;
         this.message = message;
         this.data = data;
+    }
+
+    protected Result(int code, String message, T data, Long total) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.total = total;
     }
 
     /** 成功返回结果 */
@@ -53,11 +67,12 @@ public class Result<T> {
         return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), data);
     }
 
-    public static <T> Result<ListWithPage<T>> page(Page<T> data) {
+    public static <T> Result<List<T>> ok(Page<T> data) {
         return new Result<>(
                 ResultCodeEnum.SUCCESS.getCode(),
                 ResultCodeEnum.SUCCESS.getMessage(),
-                new ListWithPage<>(data.getRecords(), data.getTotal()));
+                data.getRecords(),
+                data.getTotal());
     }
 
     /**

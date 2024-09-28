@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.feign.iam;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
@@ -50,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface IamUserApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<IamUserVo>> page(
+    Result<List<IamUserVo>> page(
             @RequestParam(value = "orgId", required = false) String orgId, QueryCondition<IamUser> condition);
 
     @Nonnull

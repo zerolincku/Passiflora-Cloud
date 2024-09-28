@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.feign.iam;
 
-import com.zerolinck.passiflora.common.api.ListWithPage;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
@@ -48,7 +47,7 @@ public interface IamRoleApi {
     @Nonnull
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<ListWithPage<IamRole>> page(@Nullable QueryCondition<IamRole> condition);
+    Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition);
 
     @Nonnull
     @Operation(summary = "列表查询")

@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'query-string';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
-import { Result, Page, BaseEntity, BasePageParam } from '@/types/global';
+import { Result, BaseEntity, BasePageParam } from '@/types/global';
 import { OrgRecord } from '@/api/organization/org';
 
 export interface LoginData {
@@ -37,7 +37,7 @@ export interface UserPage {
 }
 
 export function userPage(params: userPageParams) {
-  return axios.get<Result<Page<UserRecord>>>('/iam-api/iam-user/page', {
+  return axios.get<Result<UserRecord[]>>('/iam-api/iam-user/page', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
