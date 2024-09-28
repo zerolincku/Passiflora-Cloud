@@ -32,4 +32,4 @@ Passiflora Cloud 是基于 JDK21、Spring Cloud、Gradle 构建的微服务项�
 
 ### [Docker-file 说明](document%2Fzh%2FDockerfile.md)
 
-### [单元测试说明](document%2Fzh%2F单元测试说明.md)
+### [集成测试说明](document%2Fzh%2F集成测试说明.md)
