@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
@@ -82,7 +81,7 @@ public class JacksonConfig {
 
     public static Map<Class<?>, JsonSerializer<?>> getDefaultSerializer() {
         Map<Class<?>, JsonSerializer<?>> serializers = new HashMap<>();
-        serializers.put(LocalDateTime.class, new LocalDateTimeSerializer(TimeUtil.NORMAL_DATE_TIME_FORMATTER));
+        serializers.put(LocalDateTime.class, new LocalDateTimeSerializer());
         serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER));
         serializers.put(LocalTime.class, new LocalTimeSerializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
 

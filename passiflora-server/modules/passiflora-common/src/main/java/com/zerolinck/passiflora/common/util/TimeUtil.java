@@ -30,7 +30,7 @@ public class TimeUtil {
     private static final Pattern NORMAL = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
 
     private static final Pattern NO_SECOND = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$");
-    private static final Pattern NO_MINUTS = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}$");
+    private static final Pattern NO_MINUTES = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}$");
     private static final Pattern NO_HOUR = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
     public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER =
@@ -52,7 +52,7 @@ public class TimeUtil {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER);
         } else if (NO_SECOND.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_SECOND);
-        } else if (NO_MINUTS.matcher(dateStr).matches()) {
+        } else if (NO_MINUTES.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);
         } else if (NO_HOUR.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr + " 00", NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);

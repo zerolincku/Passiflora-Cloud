@@ -16,28 +16,18 @@
  */
 package com.zerolinck.passiflora.common.config.jackson;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-/**
- * @author linck
- * @since 2024-02-06
- */
-public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+/** @author 林常坤 on 2024/09/28 */
+public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     @Override
-    public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
-        long timestamp = p.getLongValue();
-        if (timestamp < 1_000_000_000_000L) {
-            // 秒级时间戳
-            return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneOffset.UTC);
-        } else {
-            // 毫秒级时间戳
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.UTC);
-        }
+    public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        long timestamp = value.toInstant(ZoneOffset.UTC).toEpochMilli();
+        gen.writeNumber(timestamp);
     }
 }
