@@ -16,7 +16,6 @@
  */
 package com.zerolinck.passiflora.common.config;
 
-import com.zerolinck.passiflora.model.iam.entity.IamConfig;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
