@@ -1,9 +1,9 @@
 ---
 databaseChangeLog:
 - changeSet:
-    id: "202409272321_change_column_name.yml"
+    id: "202409302321_delete_table.yml"
     author: "linck"
     changes:
     - dropTable:
         tableName: "iam_config"
-        cascadeConstraints: true
+        cascadeConstraints: false
