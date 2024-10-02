@@ -259,12 +259,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
             // 出现同名文件时重命名
             String fileName = dealFileName(storageFile, fileNameCountMap);
             zipOut.putNextEntry(new ZipEntry(fileName));
-            GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
+            try (GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(storageFile.getBucketName())
                     .object(storageFile.getObjectName())
-                    .build());
-            IOUtils.copy(inputStream, zipOut);
-            inputStream.close();
+                    .build())) {
+                IOUtils.copy(inputStream, zipOut);
+            }
             zipOut.closeEntry();
             baseMapper.incrDownCount(fileId);
         }

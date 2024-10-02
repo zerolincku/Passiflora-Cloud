@@ -1,6 +1,7 @@
 ---
 server:
   port: 51000
+  shutdown: "graceful"
 spring:
   main:
     web-application-type: "reactive"

@@ -1,6 +1,7 @@
 ---
 server:
   port: 51002
+  shutdown: "graceful"
   servlet:
     context-path: "/passiflora/storage-api"
 spring:
