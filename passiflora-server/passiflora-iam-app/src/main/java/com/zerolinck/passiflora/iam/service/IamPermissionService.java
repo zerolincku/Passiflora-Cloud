@@ -145,7 +145,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
-    public void updateOrder(@Nullable List<IamPermissionTableVo> iamPermissionTableVos) {
+    public void updateOrder(@Nullable Collection<IamPermissionTableVo> iamPermissionTableVos) {
         if (CollectionUtils.isEmpty(iamPermissionTableVos)) {
             return;
         }
@@ -226,7 +226,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     }
 
     private void dealMenuTree(
-            @Nullable List<IamPermissionVo> menuVos, @Nonnull Map<String, List<IamPermissionVo>> menuMap) {
+            @Nullable Collection<IamPermissionVo> menuVos, @Nonnull Map<String, List<IamPermissionVo>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
@@ -239,7 +239,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     }
 
     private void permissionTableTree(
-            @Nullable List<IamPermissionTableVo> menuVos, @Nonnull Map<String, List<IamPermissionTableVo>> menuMap) {
+            @Nullable Collection<IamPermissionTableVo> menuVos,
+            @Nonnull Map<String, List<IamPermissionTableVo>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }

@@ -198,7 +198,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param iamPositionVos 职位数数据
      * @since 2024-08-12
      */
-    public void updateOrder(@Nullable List<IamPositionVo> iamPositionVos) {
+    public void updateOrder(@Nullable Collection<IamPositionVo> iamPositionVos) {
         if (CollectionUtils.isEmpty(iamPositionVos)) {
             return;
         }

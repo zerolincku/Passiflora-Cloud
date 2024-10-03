@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.model.iam.args;
 
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,8 +31,8 @@ import lombok.EqualsAndHashCode;
 public class IamUserSaveArgs extends IamUser {
 
     @Schema(description = "职位ID集合")
-    private List<String> positionIds;
+    private Collection<String> positionIds;
 
     @Schema(description = "角色ID集合")
-    private List<String> roleIds;
+    private Collection<String> roleIds;
 }

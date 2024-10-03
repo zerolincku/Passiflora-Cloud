@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.model.iam.vo;
 
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,5 +31,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class IamPositionVo extends IamPosition {
 
-    private List<IamPositionVo> children;
+    private Collection<IamPositionVo> children;
 }

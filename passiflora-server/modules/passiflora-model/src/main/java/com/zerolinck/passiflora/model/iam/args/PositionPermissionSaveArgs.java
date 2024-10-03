@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.model.iam.args;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -33,5 +33,5 @@ public class PositionPermissionSaveArgs {
     @Length(max = 20, message = "职位ID长度不能大于20") @NotBlank(message = "职位ID不能为空")
     private String positionId;
 
-    private List<String> permissionIds;
+    private Collection<String> permissionIds;
 }

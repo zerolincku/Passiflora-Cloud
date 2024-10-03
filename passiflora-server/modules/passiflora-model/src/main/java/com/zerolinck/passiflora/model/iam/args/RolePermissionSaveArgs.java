@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.model.iam.args;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -30,5 +30,5 @@ public class RolePermissionSaveArgs {
     @Length(max = 20, message = "角色ID长度不能大于20") @NotBlank(message = "角色ID不能为空")
     private String roleId;
 
-    private List<String> permissionIds;
+    private Collection<String> permissionIds;
 }

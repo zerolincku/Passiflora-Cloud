@@ -8,8 +8,8 @@
     <description>
         passiflora-pmd-rule
     </description>
-    <exclude-pattern>/com/zerolinck/passiflora/common/util/lock/.*</exclude-pattern>
-    <exclude-pattern>/com/zerolinck/passiflora/common/config/mybaits/TypeHandlerRegister.java</exclude-pattern>
+    <exclude-pattern>.*/com/zerolinck/passiflora/common/util/lock/.*</exclude-pattern>
+    <exclude-pattern>.*/com/zerolinck/passiflora/common/config/mybaits/TypeHandlerRegister.java</exclude-pattern>
 
     <!-- foreach 替换 for i -->
     <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach" />

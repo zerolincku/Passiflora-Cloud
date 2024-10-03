@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.model.iam.vo;
 
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 
 /**
@@ -37,7 +37,7 @@ public class IamPermissionVo {
 
     private MenuMeta meta;
 
-    private List<IamPermissionVo> children;
+    private Collection<IamPermissionVo> children;
 
     @Data
     public static class MenuMeta {

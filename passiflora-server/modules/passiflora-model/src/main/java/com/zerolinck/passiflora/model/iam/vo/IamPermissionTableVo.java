@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.model.iam.vo;
 
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,5 +29,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class IamPermissionTableVo extends IamPermission {
 
-    private List<IamPermissionTableVo> children;
+    private Collection<IamPermissionTableVo> children;
 }
