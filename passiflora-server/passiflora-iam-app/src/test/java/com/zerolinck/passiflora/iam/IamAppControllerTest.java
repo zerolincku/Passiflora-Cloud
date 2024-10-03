@@ -75,6 +75,8 @@ public class IamAppControllerTest {
         iamApp.setAppName("test");
         iamApp.setAppKey("test");
         iamApp.setAppSecret("test");
+        iamApp.setAppStatus(1);
+        iamApp.setAppType(1);
         iamApp.setAppIcon("test");
         iamApp.setAppUrl("test");
         iamApp.setAppRemark("test");

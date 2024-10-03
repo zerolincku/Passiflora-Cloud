@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        user_id, user_name, real_name, org_id, id_card_no, date_of_birth, gender, phone_num, email, avatar_file, remark, user_password, salt, create_by, update_by, create_time, update_time, del_flag, version
+        user_id, user_name, real_name, org_id, id_card_no, date_of_birth, gender, phone_num, email, avatar_file, remark, user_password, create_by, update_by, create_time, update_time, del_flag, version
     </sql>
 
     <select id="page" resultType="com.zerolinck.passiflora.model.iam.entity.IamUser">

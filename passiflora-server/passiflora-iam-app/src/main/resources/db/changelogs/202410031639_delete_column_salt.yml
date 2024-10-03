@@ -1,0 +1,9 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: "202410031639_delete_column_salt.yml"
+    author: "linck"
+    changes:
+    - dropColumn:
+        tableName: "iam_user"
+        columnName: "salt"

@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +74,7 @@ public class IamRoleControllerTest {
         iamRole.setRoleId("test");
         iamRole.setRoleName("test");
         iamRole.setRoleCode("test");
+        iamRole.setRoleStatus(StatusEnum.ENABLE);
         mockMvc.perform(post("/iam-role/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(iamRole)))

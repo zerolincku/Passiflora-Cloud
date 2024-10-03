@@ -41,7 +41,6 @@ public interface IamUserConvert {
 
     @Mapping(target = "permission", ignore = true)
     @Mapping(target = "menu", ignore = true)
-    @Mapping(target = "salt", ignore = true)
     @Mapping(target = "userPassword", ignore = true)
     IamUserInfo entity2info(IamUser iamUser);
 }

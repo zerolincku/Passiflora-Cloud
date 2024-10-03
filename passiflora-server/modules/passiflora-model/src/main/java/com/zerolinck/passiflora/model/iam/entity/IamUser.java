@@ -120,9 +120,6 @@ public class IamUser extends BaseEntity {
             message = "用户密码不能为空")
     private String userPassword;
 
-    @Schema(description = "密码盐", maxLength = 50)
-    private String salt;
-
     @Schema(description = "用户头像", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},

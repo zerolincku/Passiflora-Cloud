@@ -66,7 +66,6 @@ public class IamUserController implements IamUserApi {
     public Result<String> update(@Nonnull IamUserSaveArgs args) {
         args.setUserPassword(null);
         args.setUserName(null);
-        args.setSalt(null);
         boolean success = iamUserService.update(args);
         if (success) {
             return Result.ok(args.getUserId());
