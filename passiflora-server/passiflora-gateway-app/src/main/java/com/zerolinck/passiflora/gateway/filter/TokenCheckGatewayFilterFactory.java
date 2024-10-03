@@ -64,7 +64,7 @@ public class TokenCheckGatewayFilterFactory
 
     @Override
     public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
+        return (exchange, chain) -> {
             RequestPath path = exchange.getRequest().getPath();
             for (Pattern pattern : UN_CHECK_PATH) {
                 if (pattern.matcher(path.value()).matches()) {
@@ -87,10 +87,10 @@ public class TokenCheckGatewayFilterFactory
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Result<Boolean>>() {})
                     .flatMap(result -> {
-                        if (ResultCodeEnum.SUCCESS.getCode() != result.getCode() || !result.getData()) {
-                            return Mono.error(new BizException(ResultCodeEnum.UNAUTHORIZED));
-                        } else {
+                        if (ResultCodeEnum.SUCCESS.getCode() == result.getCode()) {
                             return chain.filter(exchange);
+                        } else {
+                            return Mono.error(new BizException(ResultCodeEnum.UNAUTHORIZED));
                         }
                     })
                     .onErrorResume(ex -> {
@@ -99,7 +99,7 @@ public class TokenCheckGatewayFilterFactory
                         }
                         return Mono.error(new BizException(ex));
                     });
-        });
+        };
     }
 
     /** 配置参数类 */

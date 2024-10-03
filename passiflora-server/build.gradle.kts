@@ -1,6 +1,7 @@
 plugins {
     java
     idea
+    pmd
     id("io.spring.dependency-management") version Version.springDependencyManagementPluginVersion
     id("com.diffplug.spotless") version Version.spotlessPluginVersion
 }
@@ -9,6 +10,7 @@ allprojects {
     group = "com.zerolinck"
     version = Version.passifloraVersion
     apply(plugin = "idea")
+    apply(plugin = "pmd")
     apply(plugin = "io.spring.dependency-management")
 
     tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
@@ -27,6 +29,13 @@ allprojects {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${Version.springBootVersion}")
         }
         applyMavenExclusions(false)
+    }
+
+    pmd {
+        isConsoleOutput = true
+        toolVersion = Version.pmdToolVersion
+        rulesMinimumPriority = 5
+        ruleSets(rootDir.absolutePath + "/pmd-rule.xml")
     }
 }
 

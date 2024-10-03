@@ -66,7 +66,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @since 2024-08-17
      */
     public void add(@Nonnull IamRolePermission iamRolePermission) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<IamRolePermission>(), true, () -> {
+        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamRolePermission);
             baseMapper.insert(iamRolePermission);
         });
@@ -79,7 +79,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @since 2024-08-17
      */
     public boolean update(@Nonnull IamRolePermission iamRolePermission) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<IamRolePermission>(), true, () -> {
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamRolePermission);
             int changeRowCount = baseMapper.updateById(iamRolePermission);
             return changeRowCount > 0;

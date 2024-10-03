@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.storage.init;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -46,7 +45,7 @@ public class CreateBucketRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         String bucketName = passifloraProperties.getStorage().getBucketName();
-        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<StorageFile>(), true, () -> {
+        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<>(), true, () -> {
             try {
                 boolean bucketExists = minioClient.bucketExists(
                         BucketExistsArgs.builder().bucket(bucketName).build());

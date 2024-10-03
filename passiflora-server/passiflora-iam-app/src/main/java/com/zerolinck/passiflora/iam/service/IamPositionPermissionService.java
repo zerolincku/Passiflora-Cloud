@@ -52,14 +52,14 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
     }
 
     public void add(@Nonnull IamPositionPermission iamPositionPermission) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<IamPositionPermission>(), true, () -> {
+        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamPositionPermission);
             baseMapper.insert(iamPositionPermission);
         });
     }
 
     public boolean update(@Nonnull IamPositionPermission iamPositionPermission) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<IamPositionPermission>(), true, () -> {
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamPositionPermission);
             int changeRowCount = baseMapper.updateById(iamPositionPermission);
             return changeRowCount > 0;

@@ -295,9 +295,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     sb.append(".");
                 }
             }
-            sb.append("(").append(fileNameCountMap.get(fileName)).append(")");
-            sb.append(".");
-            sb.append(fileNames[fileNames.length - 1]);
+            sb.append("(").append(fileNameCountMap.get(fileName)).append(").").append(fileNames[fileNames.length - 1]);
             fileName = sb.toString();
             fileNameCountMap.put(fileName, fileNameCountMap.get(fileName) + 1);
         } else {

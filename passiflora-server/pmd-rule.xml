@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<ruleset name="Custom Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        passiflora-pmd-rule
+    </description>
+
+    <!-- foreach 替换 for i -->
+    <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach" />
+    <!-- 三元表达式避免非等判断 -->
+    <rule ref="category/java/codestyle.xml/ConfusingTernary" />
+    <!-- 不能省略大括号 -->
+    <rule ref="category/java/codestyle.xml/ControlStatementBraces">
+        <properties>
+            <property name="checkIfElseStmt" value="true" />
+            <property name="checkSingleIfStmt" value="true" />
+            <property name="checkWhileStmt" value="true" />
+            <property name="checkForStmt" value="true" />
+            <property name="checkDoWhileStmt" value="true" />
+            <property name="checkCaseStmt" value="false" />
+            <property name="allowEmptyLoop" value="false" />
+        </properties>
+    </rule>
+    <!-- 不必要的分号 -->
+    <rule ref="category/java/codestyle.xml/UnnecessarySemicolon" />
+    <!-- 不必要的 return -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryReturn" />
+    <!-- 不必要的修饰符 -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryModifier" />
+    <!-- 不必要的强制转换 -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryCast" />
+    <!-- 不必要的 import -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryImport" />
+    <!-- 泛型使用类型推断 -->
+    <rule ref="category/java/codestyle.xml/UseDiamondOperator" />
+    <!-- 不必要的括号 -->
+    <rule ref="category/java/codestyle.xml/UselessParentheses" />
+    <!-- 使用短数组初始化方式 -->
+    <rule ref="category/java/codestyle.xml/UseShortArrayInitializer" />
+    <!-- 长于 3 字符的数字，使用 _ 分隔 -->
+    <rule ref="category/java/codestyle.xml/UseUnderscoresInNumericLiterals">
+        <properties>
+            <property name="acceptableDecimalLength" value="3" />
+        </properties>
+    </rule>
+    <!-- 相同的异常捕获 -->
+    <rule ref="category/java/codestyle.xml/IdenticalCatchBranches" />
+    <!-- 可能为 null 的 equals 调用 -->
+    <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
+    <!-- 不使用添加空字符串的方式，将对象转换为 string -->
+    <rule ref="category/java/performance.xml/AddEmptyString" />
+    <!-- 避免实例化 string 对象 -->
+    <rule ref="category/java/performance.xml/StringInstantiation" />
+    <!-- 避免低效的 string buffer 拼接 -->
+    <rule ref="category/java/performance.xml/InefficientStringBuffering" />
+    <!-- 避免连续文字追加 -->
+    <rule ref="category/java/performance.xml/ConsecutiveLiteralAppends" />
+    <!-- 连续追加应连续使用 append -->
+    <rule ref="category/java/performance.xml/ConsecutiveAppendsShouldReuse" />
+    <!-- 文本 equals，应字面量在前 -->
+    <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons" />
+    <!-- 使用 try with resource -->
+    <rule ref="category/java/bestpractices.xml/UseTryWithResources">
+        <properties>
+            <property name="closeMethods" value="close,closeQuietly" />
+        </properties>
+    </rule>
+    <!-- 避免使用 printStackTrace() -->
+    <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace" />
+</ruleset>

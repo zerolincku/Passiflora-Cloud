@@ -55,14 +55,14 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
     }
 
     public void add(@Nonnull IamPositionDataScope iamPositionDataScope) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<IamPositionDataScope>(), true, () -> {
+        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamPositionDataScope);
             baseMapper.insert(iamPositionDataScope);
         });
     }
 
     public boolean update(@Nonnull IamPositionDataScope iamPositionDataScope) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<IamPositionDataScope>(), true, () -> {
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamPositionDataScope);
             int changeRowCount = baseMapper.updateById(iamPositionDataScope);
             return changeRowCount > 0;

@@ -67,7 +67,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @since 2024-09-30
      */
     public void add(@Nonnull IamApp iamApp) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<IamApp>(), true, () -> {
+        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamApp);
             baseMapper.insert(iamApp);
         });
@@ -80,7 +80,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @since 2024-09-30
      */
     public boolean update(@Nonnull IamApp iamApp) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<IamApp>(), true, () -> {
+        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamApp);
             int changeRowCount = baseMapper.updateById(iamApp);
             return changeRowCount > 0;
