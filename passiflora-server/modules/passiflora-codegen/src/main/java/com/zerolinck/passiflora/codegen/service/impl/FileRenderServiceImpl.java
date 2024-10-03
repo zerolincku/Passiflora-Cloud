@@ -41,21 +41,21 @@ public class FileRenderServiceImpl implements RenderService {
         String currentDirectory = System.getProperty("user.dir");
         String dirPath = String.format(currentDirectory + render.getPath());
         String filePath =
-                String.format((dirPath + render.getFileName()), render.getData().get("entityClass"));
+                String.format(dirPath + render.getFileName(), render.getData().get("entityClass"));
         if (!FileUtil.exist(dirPath)) {
             FileUtil.mkdir(dirPath);
         }
-        if (!render.isOverride()) {
+        if (render.isOverride()) {
+            if (FileUtil.exist(filePath)) {
+                log.info("{}文件已存在，覆盖", filePath);
+            }
+        } else {
+            FileUtil.writeUtf8String(result, filePath);
             if (FileUtil.exist(filePath)) {
                 log.info("{}文件已存在，不进行写入", filePath);
             } else {
                 FileUtil.writeUtf8String(result, filePath);
             }
-        } else {
-            if (FileUtil.exist(filePath)) {
-                log.info("{}文件已存在，覆盖", filePath);
-            }
-            FileUtil.writeUtf8String(result, filePath);
         }
     }
 }

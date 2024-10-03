@@ -22,7 +22,9 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -45,21 +47,18 @@ public class CreateBucketRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         String bucketName = passifloraProperties.getStorage().getBucketName();
-        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<>(), true, () -> {
-            try {
-                boolean bucketExists = minioClient.bucketExists(
-                        BucketExistsArgs.builder().bucket(bucketName).build());
-                if (log.isDebugEnabled()) {
-                    log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
-                }
-                if (!bucketExists) {
-                    minioClient.makeBucket(
-                            MakeBucketArgs.builder().bucket(bucketName).build());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        });
+        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<>(), true, () -> createBucket(bucketName));
+    }
+
+    @SneakyThrows
+    private void createBucket(@Nonnull String bucketName) {
+        boolean bucketExists = minioClient.bucketExists(
+                BucketExistsArgs.builder().bucket(bucketName).build());
+        if (log.isDebugEnabled()) {
+            log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
+        }
+        if (!bucketExists) {
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        }
     }
 }

@@ -83,7 +83,6 @@ public class IamUserControllerTest {
                         .readTree(result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
-        System.out.println();
     }
 
     @Test
@@ -97,7 +96,6 @@ public class IamUserControllerTest {
                     JsonNode jsonNode = objectMapper.readTree(responseBody);
                     testUser = objectMapper.convertValue(jsonNode.get("data"), IamUser.class);
                 });
-        System.out.println();
     }
 
     @Test

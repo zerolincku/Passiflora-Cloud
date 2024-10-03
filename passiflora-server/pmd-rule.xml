@@ -71,4 +71,40 @@
     </rule>
     <!-- 避免使用 printStackTrace() -->
     <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace" />
+    <!-- 不能省略 Override 注解 -->
+    <rule ref="category/java/bestpractices.xml/MissingOverride" />
+    <!-- 不能使用 System.(out|err).print -->
+    <rule ref="category/java/bestpractices.xml/SystemPrintln" />
+    <!-- 不必要的装箱 -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryBoxing" />
+    <!-- 不必要的局部变量申明 -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryLocalBeforeReturn" />
+    <!-- 禁止 4 层以上 if 嵌套 -->
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="4" />
+        </properties>
+    </rule>
+    <!-- 避免捕获后重新抛出异常 -->
+    <rule ref="category/java/design.xml/AvoidRethrowingException" />
+    <!-- 避免重新抛出被捕获的异常并包装在同一类型的新实例中 -->
+    <rule ref="category/java/design.xml/AvoidThrowingNewInstanceOfSameException" />
+    <!-- 避免抛出 NullPointerException -->
+    <rule ref="category/java/design.xml/AvoidThrowingNullPointerException" />
+    <!-- 不要抛出原始的 RuntimeException、Throwable、Exception 或 Error，而应使用子类异常或错误 -->
+    <rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes" />
+    <!-- 方法定义中抛出未检查异常 -->
+    <rule ref="category/java/design.xml/AvoidUncheckedExceptionsInSignatures" />
+    <!-- 使用 && 组合嵌套 if -->
+    <rule ref="category/java/design.xml/CollapsibleIfStatements" />
+    <!-- 使用相反运算符，而不是使用逻辑补码运算符否定整个表达式 -->
+    <rule ref="category/java/design.xml/LogicInversion" />
+    <!-- 避免在布尔表达式中进行不必要的比较 -->
+    <rule ref="category/java/design.xml/SimplifyBooleanExpressions" />
+    <!-- 简化布尔返回 -->
+    <rule ref="category/java/design.xml/SimplifyBooleanReturns" />
+    <!-- 避免无用的 override -->
+    <rule ref="category/java/design.xml/UselessOverridingMethod" />
+    <!-- 避免无条件 If 语句 -->
+    <rule ref="category/java/errorprone.xml/UnconditionalIfStatement" />
 </ruleset>
