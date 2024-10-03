@@ -52,7 +52,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      */
     public void add(@Nonnull ${entityClass} ${entityName}) {
         LockUtil.lock(LOCK_KEY,
-                new LockWrapper<${entityClass}>(), true,
+                new LockWrapper<>(), true,
                 () -> {
                     OnlyFieldCheck.checkInsert(baseMapper, ${entityName});
                     baseMapper.insert(${entityName});
@@ -68,7 +68,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      */
     public boolean update(@Nonnull ${entityClass} ${entityName}) {
         return LockUtil.lock(LOCK_KEY,
-                new LockWrapper<${entityClass}>(), true,
+                new LockWrapper<>(), true,
                 () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, ${entityName});
                     int changeRowCount = baseMapper.updateById(${entityName});
