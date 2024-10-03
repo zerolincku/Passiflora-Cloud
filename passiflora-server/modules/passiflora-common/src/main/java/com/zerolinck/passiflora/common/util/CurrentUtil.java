@@ -25,11 +25,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author linck
  * @since 2023-12-15
  */
+@UtilityClass
 public class CurrentUtil {
 
     /** 当前登录账户，线程级别缓存 */

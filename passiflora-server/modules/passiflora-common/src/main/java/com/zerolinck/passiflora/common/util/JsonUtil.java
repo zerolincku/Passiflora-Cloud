@@ -26,8 +26,10 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/09/28 */
+@UtilityClass
 public class JsonUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.common.util;
 
 import jakarta.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author 林常坤
  * @since 2024-08-13
  */
+@UtilityClass
 public class PwdUtil {
 
     /**

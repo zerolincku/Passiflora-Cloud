@@ -21,6 +21,7 @@ import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +33,7 @@ import org.springframework.util.CollectionUtils;
  * @since 2023-12-14
  */
 @Slf4j
+@UtilityClass
 public class RedisUtils {
 
     private static RedisTemplate<String, Object> redisTemplate;

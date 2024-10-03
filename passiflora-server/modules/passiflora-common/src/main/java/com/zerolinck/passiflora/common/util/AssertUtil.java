@@ -20,11 +20,13 @@ import com.zerolinck.passiflora.common.exception.BizException;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author linck
  * @since 2024-03-18
  */
+@UtilityClass
 public class AssertUtil {
 
     public static void notEmpty(@Nullable Collection<?> collection, @Nonnull String message) {

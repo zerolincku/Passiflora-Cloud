@@ -49,6 +49,6 @@ public class TypeConvert {
         } else if (columnType.startsWith("date")) {
             return LocalDate.class;
         }
-        throw new RuntimeException("不支持的类型" + columnType);
+        throw new IllegalArgumentException("不支持的类型" + columnType);
     }
 }

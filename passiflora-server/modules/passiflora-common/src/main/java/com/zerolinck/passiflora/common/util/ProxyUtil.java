@@ -16,10 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * @author 林常坤
  * @since 2024-08-13
  */
+@UtilityClass
 public class ProxyUtil {
 
     public static <T> T proxy(Class<T> clazz) {

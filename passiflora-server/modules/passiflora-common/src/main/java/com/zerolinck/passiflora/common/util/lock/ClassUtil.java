@@ -35,11 +35,11 @@ public class ClassUtil {
      * @since 2024-08-14
      */
     public static Set<Class<?>> getLabelValueClasses() {
-        ClassPath classPath = null;
+        ClassPath classPath;
         try {
             classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
 
         Collection<ClassPath.ClassInfo> allClasses = classPath.getTopLevelClassesRecursive("com.zerolinck");

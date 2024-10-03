@@ -18,11 +18,13 @@ package com.zerolinck.passiflora.common.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author linck
  * @since 2024-06-29
  */
+@UtilityClass
 public class SetUtil {
 
     /** 返回 set2 相对于 set1 多出的值 */

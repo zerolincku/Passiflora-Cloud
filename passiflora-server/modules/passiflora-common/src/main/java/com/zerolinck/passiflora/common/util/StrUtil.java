@@ -21,9 +21,11 @@ import java.nio.charset.Charset;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 /** @author 林常坤 on 2024/08/16 */
+@UtilityClass
 public class StrUtil {
 
     @Nonnull

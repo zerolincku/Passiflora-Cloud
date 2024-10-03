@@ -18,11 +18,13 @@ package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import javax.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author linck
  * @since 2024-02-06
  */
+@UtilityClass
 public class EnumUtil {
 
     @Nonnull
@@ -34,7 +36,7 @@ public class EnumUtil {
                 return nameValue;
             }
         }
-        throw new RuntimeException(clazz.getSimpleName() + " 无此value: " + value);
+        throw new IllegalArgumentException(clazz.getSimpleName() + " 无此value: " + value);
     }
 
     @Nonnull
@@ -47,6 +49,6 @@ public class EnumUtil {
                 return nameValue;
             }
         }
-        throw new RuntimeException(clazz.getSimpleName() + " 无此name: " + name);
+        throw new IllegalArgumentException(clazz.getSimpleName() + " 无此name: " + name);
     }
 }

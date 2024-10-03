@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.common.util;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.lang.reflect.Field;
@@ -148,12 +147,14 @@ public class QueryCondition<T> {
     }
 
     /** 设置表别名 */
+    @SuppressWarnings("unused")
     public QueryCondition<T> tableAlise(String tableAlise) {
         this.tableAlise = tableAlise;
         return this;
     }
 
     /** 设置字段名转换映射 */
+    @SuppressWarnings("unused")
     public QueryCondition<T> fieldNameCover(Map<String, String> fieldNameCover) {
         this.fieldNameCover = fieldNameCover;
         return this;
@@ -258,9 +259,9 @@ public class QueryCondition<T> {
         Map<String, Field> fieldMap = this.getFields();
         if (fieldMap.containsKey(column)) {
             // 驼峰转下划线
-            return ((this.tableAlise == null ? "" : (this.tableAlise + ".")) + StringUtils.camelToUnderline(column));
+            return this.tableAlise == null ? "" : this.tableAlise + "." + StringUtils.camelToUnderline(column);
         }
-        throw new BizException(String.format("不允许的搜索条件: %s", column));
+        throw new IllegalArgumentException(String.format("不允许的搜索条件: %s", column));
     }
 
     /**
@@ -285,12 +286,10 @@ public class QueryCondition<T> {
             return Long.valueOf(value);
         }
         Class<?>[] interfaces = field.getType().getInterfaces();
-        if (interfaces.length > 0) {
-            if (interfaces[0].equals(LabelValueInterface.class)) {
-                return Integer.valueOf(value);
-            }
+        if (interfaces.length > 0 && interfaces[0].equals(LabelValueInterface.class)) {
+            return Integer.valueOf(value);
         }
-        throw new BizException("不支持的搜索类型：" + field.getType().getSimpleName());
+        throw new IllegalArgumentException("不支持的搜索类型：" + field.getType().getSimpleName());
     }
 
     /** 获取字段缓存 */

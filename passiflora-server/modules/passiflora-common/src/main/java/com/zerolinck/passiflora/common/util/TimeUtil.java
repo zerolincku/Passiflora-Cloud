@@ -20,11 +20,13 @@ import jakarta.annotation.Nonnull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author linck
  * @since 2024-02-06
  */
+@UtilityClass
 public class TimeUtil {
 
     private static final Pattern NORMAL = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
@@ -39,7 +41,7 @@ public class TimeUtil {
     public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER_NO_SECOND =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER_NO_MINUTS =
+    public static final DateTimeFormatter NORMAL_DATE_TIME_FORMATTER_NO_MINUTES =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
 
     public static final DateTimeFormatter NORMAL_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -53,11 +55,11 @@ public class TimeUtil {
         } else if (NO_SECOND.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_SECOND);
         } else if (NO_MINUTES.matcher(dateStr).matches()) {
-            return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);
+            return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER_NO_MINUTES);
         } else if (NO_HOUR.matcher(dateStr).matches()) {
-            return LocalDateTime.parse(dateStr + " 00", NORMAL_DATE_TIME_FORMATTER_NO_MINUTS);
+            return LocalDateTime.parse(dateStr + " 00", NORMAL_DATE_TIME_FORMATTER_NO_MINUTES);
         }
-        throw new RuntimeException("时间参数错误: " + dateStr);
+        throw new IllegalArgumentException("时间参数错误: " + dateStr);
     }
 
     @Nonnull

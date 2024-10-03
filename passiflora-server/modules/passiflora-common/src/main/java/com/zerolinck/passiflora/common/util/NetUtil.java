@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -33,6 +34,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author linck
  * @since 2023-12-11
  */
+@UtilityClass
 public class NetUtil {
 
     /** 查询网卡 ip 地址 */
@@ -42,7 +44,9 @@ public class NetUtil {
         AtomicReference<String> ip = new AtomicReference<>(null);
         for (NetworkInterface face : Collections.list(interfaces)) {
             // 过滤回环接口等
-            if (face.isLoopback() || !face.isUp()) continue;
+            if (face.isLoopback() || !face.isUp()) {
+                continue;
+            }
 
             face.getInterfaceAddresses().stream()
                     .map(InterfaceAddress::getAddress)
