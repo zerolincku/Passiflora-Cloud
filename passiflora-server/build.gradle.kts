@@ -45,7 +45,7 @@ spotless {
         target("**/*.java")
         importOrder()
         removeUnusedImports()
-        palantirJavaFormat("2.50.0").formatJavadoc(true)
+        palantirJavaFormat(Version.palantirJavaVersion).formatJavadoc(true)
         formatAnnotations()
         licenseHeader(header)
     }
