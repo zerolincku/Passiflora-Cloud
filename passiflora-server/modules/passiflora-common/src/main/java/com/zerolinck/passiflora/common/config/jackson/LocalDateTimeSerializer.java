@@ -21,13 +21,13 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 
 /** @author 林常坤 on 2024/09/28 */
 public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     @Override
     public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        long timestamp = value.toInstant(ZoneOffset.UTC).toEpochMilli();
+        long timestamp = value.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         gen.writeString(String.valueOf(timestamp));
     }
 }

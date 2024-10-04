@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 
 /**
  * @author linck
@@ -34,10 +34,10 @@ public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
         long timestamp = Long.parseLong(p.getValueAsString());
         if (timestamp < 1_000_000_000_000L) {
             // 秒级时间戳
-            return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneOffset.UTC);
+            return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault());
         } else {
             // 毫秒级时间戳
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.UTC);
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
         }
     }
 }
