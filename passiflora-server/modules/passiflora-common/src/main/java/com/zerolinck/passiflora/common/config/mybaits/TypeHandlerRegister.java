@@ -45,7 +45,7 @@ public class TypeHandlerRegister {
     ObjectMapper objectMapper;
 
     @PostConstruct
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes", "PMD"})
     public void init() {
         // 扫描当前项目下所有 LabelValueInterface 实现类
         Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
