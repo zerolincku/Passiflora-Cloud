@@ -45,7 +45,7 @@ public class TypeHandlerRegister {
     ObjectMapper objectMapper;
 
     @PostConstruct
-    @SuppressWarnings({"unchecked", "rawtypes", "PMD"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void init() {
         // 扫描当前项目下所有 LabelValueInterface 实现类
         Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
@@ -59,30 +59,33 @@ public class TypeHandlerRegister {
         classes.forEach(clazz -> sqlSessionFactory
                 .getConfiguration()
                 .getTypeHandlerRegistry()
-                .register(clazz, new BaseTypeHandler() {
-                    @Override
-                    public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
-                            throws SQLException {
-                        ps.setInt(i, ((LabelValueInterface) parameter).getValue());
-                    }
+                .register(
+                        clazz,
+                        new BaseTypeHandler() { // NOPMD
+                            @Override
+                            public void setNonNullParameter(
+                                    PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+                                    throws SQLException {
+                                ps.setInt(i, ((LabelValueInterface) parameter).getValue());
+                            }
 
-                    @Override
-                    public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
-                        return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnName));
-                    }
+                            @Override
+                            public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
+                                return EnumUtil.getEnumByValue(
+                                        (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnName));
+                            }
 
-                    @Override
-                    public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-                        return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnIndex));
-                    }
+                            @Override
+                            public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+                                return EnumUtil.getEnumByValue(
+                                        (Class<? extends LabelValueInterface>) clazz, rs.getInt(columnIndex));
+                            }
 
-                    @Override
-                    public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-                        return EnumUtil.getEnumByValue(
-                                (Class<? extends LabelValueInterface>) clazz, cs.getInt(columnIndex));
-                    }
-                }));
+                            @Override
+                            public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+                                return EnumUtil.getEnumByValue(
+                                        (Class<? extends LabelValueInterface>) clazz, cs.getInt(columnIndex));
+                            }
+                        }));
     }
 }
