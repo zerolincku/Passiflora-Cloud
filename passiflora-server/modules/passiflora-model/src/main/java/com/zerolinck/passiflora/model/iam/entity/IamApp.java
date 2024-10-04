@@ -19,6 +19,8 @@ package com.zerolinck.passiflora.model.iam.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.zerolinck.passiflora.model.common.BaseEntity;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
+import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -105,13 +107,13 @@ public class IamApp extends BaseEntity {
     @NotNull(
             groups = {Insert.class, Update.class},
             message = "应用状态不能为空")
-    private Integer appStatus;
+    private StatusEnum appStatus;
 
     @Schema(description = "应用类型")
     @NotNull(
             groups = {Insert.class, Update.class},
             message = "应用类型不能为空")
-    private Integer appType;
+    private AppTypeEnum appType;
 
     @Schema(description = "应用描述", maxLength = 200)
     @Length(

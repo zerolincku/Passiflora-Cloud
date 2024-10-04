@@ -25,7 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
+import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
@@ -75,8 +77,8 @@ public class IamAppControllerTest {
         iamApp.setAppName("test");
         iamApp.setAppKey("test");
         iamApp.setAppSecret("test");
-        iamApp.setAppStatus(1);
-        iamApp.setAppType(1);
+        iamApp.setAppStatus(StatusEnum.ENABLE);
+        iamApp.setAppType(AppTypeEnum.WEB_APP);
         iamApp.setAppIcon("test");
         iamApp.setAppUrl("test");
         iamApp.setAppRemark("test");
