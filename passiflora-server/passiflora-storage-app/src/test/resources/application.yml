@@ -13,9 +13,6 @@ spring:
     nacos:
       discovery:
         server-addr: "@nacos.serverAddr@"
-  datasource:
-    url: "jdbc:tc:postgresql:13.16-bookworm:///"
-    driver-class-name: "org.testcontainers.jdbc.ContainerDatabaseDriver"
   liquibase:
     change-log: "classpath:/db/main.yml"
     enabled: true
