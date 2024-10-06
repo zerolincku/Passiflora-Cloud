@@ -29,10 +29,7 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -40,6 +37,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * 通用文件 Unit Test
@@ -49,9 +49,10 @@ import org.springframework.test.web.servlet.MvcResult;
  */
 @Slf4j
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class StorageFileControllerTest {
+class StorageFileControllerTest {
 
     @Resource
     private ObjectMapper objectMapper;
@@ -61,6 +62,20 @@ public class StorageFileControllerTest {
 
     private static String testStorageFileId;
     private static String quickUploadStorageFileId;
+
+    @Container
+    private static final PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+
+    @BeforeAll
+    public static void initialize() {
+        postgres.start();
+    }
+
+    @AfterAll
+    public static void destroy() {
+        postgres.stop();
+    }
 
     @Test
     @Order(1)

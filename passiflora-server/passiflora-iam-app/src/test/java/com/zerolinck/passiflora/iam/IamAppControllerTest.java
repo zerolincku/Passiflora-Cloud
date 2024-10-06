@@ -30,14 +30,14 @@ import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * 应用 Unit Test
@@ -47,9 +47,10 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @Slf4j
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class IamAppControllerTest {
+class IamAppControllerTest {
 
     @Resource
     private ObjectMapper objectMapper;
@@ -60,6 +61,20 @@ public class IamAppControllerTest {
     private static String testIamAppId;
 
     private static IamApp testIamApp;
+
+    @Container
+    private static final PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+
+    @BeforeAll
+    public static void initialize() {
+        postgres.start();
+    }
+
+    @AfterAll
+    public static void destroy() {
+        postgres.stop();
+    }
 
     @Test
     @Order(1)

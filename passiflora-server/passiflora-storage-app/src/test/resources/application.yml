@@ -1,0 +1,64 @@
+---
+server:
+  port: 51002
+  shutdown: "graceful"
+  servlet:
+    context-path: "/passiflora/storage-api"
+spring:
+  application:
+    name: "passiflora-storage-app"
+  profiles:
+    active: "@env@"
+  cloud:
+    nacos:
+      discovery:
+        server-addr: "@nacos.serverAddr@"
+  datasource:
+    url: "jdbc:tc:postgresql:13.16-bookworm:///"
+    driver-class-name: "org.testcontainers.jdbc.ContainerDatabaseDriver"
+  liquibase:
+    change-log: "classpath:/db/main.yml"
+    enabled: true
+  data:
+    redis:
+      database: "@redis.database@"
+      host: "@redis.host@"
+      port: "@redis.port@"
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types: "text/html,application/xml,application/json"
+      min-request-size: 2048
+    response:
+      enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 600000
+mybatis-plus:
+  configuration:
+    log-impl: "org.apache.ibatis.logging.slf4j.Slf4jImpl"
+  mapper-locations: "classpath*:com/zerolinck/**/mapper/xml/*Mapper.xml"
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      insert-strategy: "not_null"
+      update-strategy: "not_null"
+passiflora:
+  config:
+    mybatis: true
+    exception: true
+    globalFilter: true
+    lock: true
+    cache: true
+  project-version: "@projectVersion@"
+  build-time: "@buildTime@"
+  storage:
+    bucket-name: "passiflora"
+    minio:
+      endpoint: "@minio.endpoint@"
+      access-key: "@minio.accessKey@"
+      secret-key: "@minio.secretKey@"

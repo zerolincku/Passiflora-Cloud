@@ -55,17 +55,28 @@ dependencies {
     implementation("org.postgresql:postgresql")
 
     // liquibase
+    implementation("org.liquibase:liquibase-core")
     liquibaseRuntime("org.liquibase:liquibase-core")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl")
     liquibaseRuntime("info.picocli:picocli")
     liquibaseRuntime("org.postgresql:postgresql")
 
     implementation("io.minio:minio")
+
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
 }
 
 tasks {
     processResources {
         exclude("db/**")
+        filter<ReplaceTokens>("tokens" to configMap)
+    }
+    processTestResources {
+        from(sourceSets["test"].resources)
+        from(sourceSets["main"].resources.srcDirs) {
+            include("db/changelogs/**")
+        }
         filter<ReplaceTokens>("tokens" to configMap)
     }
     compileJava {
