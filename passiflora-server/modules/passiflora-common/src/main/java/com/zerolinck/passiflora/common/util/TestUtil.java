@@ -19,7 +19,12 @@ package com.zerolinck.passiflora.common.util;
 import java.util.concurrent.locks.ReentrantLock;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-/** @author 林常坤 on 2024/10/07 */
+/**
+ * TestContainers 容器复用，避免频繁创建测试容器
+ *
+ * @author 林常坤
+ * @since 2024-10-07
+ */
 public class TestUtil {
 
     private static PostgreSQLContainer<?> postgres;
