@@ -1,7 +1,7 @@
 package com.zerolinck.passiflora.${moduleName};
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import jakarta.annotation.Resource;
@@ -13,7 +13,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,19 +34,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @Slf4j
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ${entityClass}ControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
-
     @Resource
     private MockMvc mockMvc;
     
     private static String test${entityClass}Id;
-
     private static ${entityClass} test${entityClass};
+
+    @Container
+    @ServiceConnection
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
     
     @Test
     @Order(1)
@@ -66,10 +70,10 @@ public class ${entityClass}ControllerTest {
         </#list>
         mockMvc.perform(post("/${entityName}/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(${entityName})))
+            .content(JsonUtil.toJson(${entityName})))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-            .andDo(result -> test${entityClass}Id = objectMapper.readTree(result.getResponse().getContentAsString()).get("data").asText());
+            .andDo(result -> test${entityClass}Id = JsonUtil.readTree(result.getResponse().getContentAsString()).get("data").asText());
     }
     
     @Test
@@ -81,8 +85,8 @@ public class ${entityClass}ControllerTest {
             .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
             .andDo(result -> {
                 String responseBody = result.getResponse().getContentAsString();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                test${entityClass} = objectMapper.convertValue(jsonNode.get("data"), ${entityClass}.class);
+                JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                test${entityClass} = JsonUtil.convertValue(jsonNode.get("data"), ${entityClass}.class);
             });
     }
     
@@ -91,7 +95,7 @@ public class ${entityClass}ControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/${entityName}/update")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(test${entityClass})))
+            .content(JsonUtil.toJson(test${entityClass})))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -101,7 +105,7 @@ public class ${entityClass}ControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/${entityName}/delete")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(new String[]{test${entityClass}Id})))
+            .content(JsonUtil.toJson(new String[]{test${entityClass}Id})))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

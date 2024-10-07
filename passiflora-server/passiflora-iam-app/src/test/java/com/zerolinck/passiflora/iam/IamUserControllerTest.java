@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import jakarta.annotation.Resource;
@@ -49,10 +49,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamUserControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
-
     @Resource
     private MockMvc mockMvc;
 
@@ -83,13 +79,13 @@ class IamUserControllerTest {
         iamUser.setOrgId("test");
         mockMvc.perform(post("/iam-user/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamUser)))
+                        .content(JsonUtil.toJson(iamUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testUserId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testUserId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -100,8 +96,8 @@ class IamUserControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testUser = objectMapper.convertValue(jsonNode.get("data"), IamUser.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testUser = JsonUtil.convertValue(jsonNode.get("data"), IamUser.class);
                 });
     }
 
@@ -110,7 +106,7 @@ class IamUserControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-user/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(JsonUtil.toJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -122,13 +118,13 @@ class IamUserControllerTest {
         testUser.setUserPassword("test");
         mockMvc.perform(post("/iam-user/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(JsonUtil.toJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testToken = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testToken = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -160,7 +156,7 @@ class IamUserControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-user/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testUserId})))
+                        .content(JsonUtil.toJson(new String[] {testUserId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

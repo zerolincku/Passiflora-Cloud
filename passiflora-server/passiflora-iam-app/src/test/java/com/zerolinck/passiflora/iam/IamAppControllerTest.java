@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
@@ -52,9 +52,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamAppControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
 
     @Resource
     private MockMvc mockMvc;
@@ -91,13 +88,13 @@ class IamAppControllerTest {
         iamApp.setAppRemark("test");
         mockMvc.perform(post("/iamApp/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamApp)))
+                        .content(JsonUtil.toJson(iamApp)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testIamAppId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testIamAppId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -108,8 +105,8 @@ class IamAppControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamApp = objectMapper.convertValue(jsonNode.get("data"), IamApp.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamApp = JsonUtil.convertValue(jsonNode.get("data"), IamApp.class);
                 });
     }
 
@@ -118,7 +115,7 @@ class IamAppControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iamApp/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamApp)))
+                        .content(JsonUtil.toJson(testIamApp)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -128,7 +125,7 @@ class IamAppControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iamApp/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testIamAppId})))
+                        .content(JsonUtil.toJson(new String[] {testIamAppId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

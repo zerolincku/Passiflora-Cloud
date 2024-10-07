@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
@@ -53,9 +53,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamPositionControllerTest {
-    @Resource
-    private ObjectMapper objectMapper;
-
     @Resource
     private MockMvc mockMvc;
 
@@ -88,11 +85,11 @@ class IamPositionControllerTest {
         iamPosition.setPositionStatus(StatusEnum.ENABLE);
         mockMvc.perform(post("/iam-position/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamPosition)))
+                        .content(JsonUtil.toJson(iamPosition)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testSysPositionId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
+                .andDo(result -> testSysPositionId = JsonUtil.readTree(
+                                result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
     }
@@ -105,8 +102,8 @@ class IamPositionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamPosition = objectMapper.convertValue(jsonNode.get("data"), IamPosition.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamPosition = JsonUtil.convertValue(jsonNode.get("data"), IamPosition.class);
                 });
     }
 
@@ -115,7 +112,7 @@ class IamPositionControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-position/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamPosition)))
+                        .content(JsonUtil.toJson(testIamPosition)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -128,8 +125,8 @@ class IamPositionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    positionTree = objectMapper.convertValue(jsonNode.get("data"), new TypeReference<>() {});
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    positionTree = JsonUtil.convertValue(jsonNode.get("data"), new TypeReference<>() {});
                 });
     }
 
@@ -138,7 +135,7 @@ class IamPositionControllerTest {
     public void testDisable() throws Exception {
         mockMvc.perform(post("/iam-position/disable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -148,7 +145,7 @@ class IamPositionControllerTest {
     public void testEnable() throws Exception {
         mockMvc.perform(post("/iam-position/enable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -158,7 +155,7 @@ class IamPositionControllerTest {
     public void testUpdateOrder() throws Exception {
         mockMvc.perform(post("/iam-position/update-order")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(positionTree)))
+                        .content(JsonUtil.toJson(positionTree)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -168,7 +165,7 @@ class IamPositionControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-position/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysPositionId})))
+                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

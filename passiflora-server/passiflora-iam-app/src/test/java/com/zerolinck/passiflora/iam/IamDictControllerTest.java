@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import jakarta.annotation.Resource;
@@ -49,9 +49,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamDictControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
 
     @Resource
     private MockMvc mockMvc;
@@ -90,13 +87,13 @@ class IamDictControllerTest {
         iamDict.setDictTag("test");
         mockMvc.perform(post("/iam-dict/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamDict)))
+                        .content(JsonUtil.toJson(iamDict)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testSysDictId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testSysDictId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -108,11 +105,11 @@ class IamDictControllerTest {
         iamDictItem.setValue("test");
         mockMvc.perform(post("/iam-dict-item/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamDictItem)))
+                        .content(JsonUtil.toJson(iamDictItem)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testSysDictItemId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
+                .andDo(result -> testSysDictItemId = JsonUtil.readTree(
+                                result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
     }
@@ -125,8 +122,8 @@ class IamDictControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamDictItem = objectMapper.convertValue(jsonNode.get("data"), IamDictItem.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamDictItem = JsonUtil.convertValue(jsonNode.get("data"), IamDictItem.class);
                 });
     }
 
@@ -135,7 +132,7 @@ class IamDictControllerTest {
     public void testUpdateItem() throws Exception {
         mockMvc.perform(post("/iam-dict-item/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamDictItem)))
+                        .content(JsonUtil.toJson(testIamDictItem)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -145,7 +142,7 @@ class IamDictControllerTest {
     public void testDeleteItem() throws Exception {
         mockMvc.perform(post("/iam-dict-item/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysDictItemId})))
+                        .content(JsonUtil.toJson(new String[] {testSysDictItemId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -158,8 +155,8 @@ class IamDictControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamDict = objectMapper.convertValue(jsonNode.get("data"), IamDict.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamDict = JsonUtil.convertValue(jsonNode.get("data"), IamDict.class);
                 });
     }
 
@@ -168,7 +165,7 @@ class IamDictControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-dict/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamDict)))
+                        .content(JsonUtil.toJson(testIamDict)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -178,7 +175,7 @@ class IamDictControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-dict/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysDictId})))
+                        .content(JsonUtil.toJson(new String[] {testSysDictId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

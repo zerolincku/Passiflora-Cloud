@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -48,9 +48,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamOrgControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
 
     @Resource
     private MockMvc mockMvc;
@@ -81,13 +78,13 @@ class IamOrgControllerTest {
         iamOrg.setOrgType(1);
         mockMvc.perform(post("/iam-org/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamOrg)))
+                        .content(JsonUtil.toJson(iamOrg)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testSysOrgId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testSysOrgId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -98,8 +95,8 @@ class IamOrgControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamOrg = objectMapper.convertValue(jsonNode.get("data"), IamOrg.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamOrg = JsonUtil.convertValue(jsonNode.get("data"), IamOrg.class);
                 });
     }
 
@@ -108,7 +105,7 @@ class IamOrgControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-org/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamOrg)))
+                        .content(JsonUtil.toJson(testIamOrg)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -118,7 +115,7 @@ class IamOrgControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-org/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysOrgId})))
+                        .content(JsonUtil.toJson(new String[] {testSysOrgId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }

@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +54,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageFileControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
-
     @Resource
     private MockMvc mockMvc;
 
@@ -87,8 +83,8 @@ class StorageFileControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testStorageFileId = objectMapper.convertValue(jsonNode.get("data"), String.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testStorageFileId = JsonUtil.convertValue(jsonNode.get("data"), String.class);
                 });
     }
 
@@ -103,13 +99,13 @@ class StorageFileControllerTest {
         storageFile.setFileMd5(DigestUtils.md5Hex(file.getBytes()));
         mockMvc.perform(post("/storage-file/try-quickly-upload")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(storageFile)))
+                        .content(JsonUtil.toJson(storageFile)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    quickUploadStorageFileId = objectMapper.convertValue(jsonNode.get("data"), String.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    quickUploadStorageFileId = JsonUtil.convertValue(jsonNode.get("data"), String.class);
                 });
     }
 
@@ -118,7 +114,7 @@ class StorageFileControllerTest {
     public void testListByFileIds() throws Exception {
         mockMvc.perform(post("/storage-file/list-by-file-ids")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {
+                        .content(JsonUtil.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
@@ -138,7 +134,7 @@ class StorageFileControllerTest {
     public void testConfirmFile() throws Exception {
         mockMvc.perform(post("/storage-file/confirm-file")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testStorageFileId})))
+                        .content(JsonUtil.toJson(new String[] {testStorageFileId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -158,7 +154,7 @@ class StorageFileControllerTest {
     public void testDownloadZip() throws Exception {
         MvcResult result = mockMvc.perform(post("/storage-file/download-zip")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {
+                        .content(JsonUtil.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
@@ -172,7 +168,7 @@ class StorageFileControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/storage-file/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {
+                        .content(JsonUtil.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())

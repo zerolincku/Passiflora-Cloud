@@ -51,6 +51,16 @@ public class JsonUtil {
         return objectMapper.readValue(json, clazz);
     }
 
+    @SneakyThrows
+    public static <T> T convertValue(Object obj, Class<T> clazz) {
+        return objectMapper.convertValue(obj, clazz);
+    }
+
+    @SneakyThrows
+    public static <T> T convertValue(Object obj, TypeReference<T> typeReference) {
+        return objectMapper.convertValue(obj, typeReference);
+    }
+
     /** 将 JSON 字符串转换为 List */
     @SneakyThrows
     public static <T> List<T> convertToList(String json, Class<T> clazz) {

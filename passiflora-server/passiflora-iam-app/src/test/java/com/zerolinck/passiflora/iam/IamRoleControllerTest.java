@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import jakarta.annotation.Resource;
@@ -51,10 +51,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IamRoleControllerTest {
-
-    @Resource
-    private ObjectMapper objectMapper;
-
     @Resource
     private MockMvc mockMvc;
 
@@ -84,13 +80,13 @@ class IamRoleControllerTest {
         iamRole.setRoleStatus(StatusEnum.ENABLE);
         mockMvc.perform(post("/iam-role/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(iamRole)))
+                        .content(JsonUtil.toJson(iamRole)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
-                .andDo(result -> testSysRoleId = objectMapper
-                        .readTree(result.getResponse().getContentAsString())
-                        .get("data")
-                        .asText());
+                .andDo(result ->
+                        testSysRoleId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
     }
 
     @Test
@@ -101,8 +97,8 @@ class IamRoleControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = objectMapper.readTree(responseBody);
-                    testIamRole = objectMapper.convertValue(jsonNode.get("data"), IamRole.class);
+                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
+                    testIamRole = JsonUtil.convertValue(jsonNode.get("data"), IamRole.class);
                 });
     }
 
@@ -111,7 +107,7 @@ class IamRoleControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-role/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testIamRole)))
+                        .content(JsonUtil.toJson(testIamRole)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
@@ -121,7 +117,7 @@ class IamRoleControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-role/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new String[] {testSysRoleId})))
+                        .content(JsonUtil.toJson(new String[] {testSysRoleId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
     }
