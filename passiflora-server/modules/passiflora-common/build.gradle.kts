@@ -27,6 +27,7 @@ dependencies {
     compileOnlyApi("org.apache.tomcat.embed:tomcat-embed-core")
     compileOnlyApi("org.postgresql:postgresql")
     compileOnly("io.swagger.core.v3:swagger-annotations-jakarta")
+    compileOnly("org.testcontainers:postgresql")
 
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")

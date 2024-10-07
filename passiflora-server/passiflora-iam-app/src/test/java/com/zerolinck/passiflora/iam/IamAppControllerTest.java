@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
@@ -33,11 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
@@ -60,10 +60,13 @@ class IamAppControllerTest {
 
     private static IamApp testIamApp;
 
-    @Container
-    @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        TestUtil.getPostgres().start();
+        registry.add("spring.datasource.url", TestUtil.getPostgres()::getJdbcUrl);
+        registry.add("spring.datasource.username", TestUtil.getPostgres()::getUsername);
+        registry.add("spring.datasource.password", TestUtil.getPostgres()::getPassword);
+    }
 
     @Test
     @Order(1)
