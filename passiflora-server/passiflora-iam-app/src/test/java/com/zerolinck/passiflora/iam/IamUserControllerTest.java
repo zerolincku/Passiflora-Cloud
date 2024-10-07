@@ -44,10 +44,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * @since 2024-03-20
  */
 @Slf4j
-@SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IamUserControllerTest {
     @Resource
     private MockMvc mockMvc;

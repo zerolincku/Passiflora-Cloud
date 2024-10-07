@@ -49,10 +49,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * @since 2024-05-17
  */
 @Slf4j
-@SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StorageFileControllerTest {
     @Resource
     private MockMvc mockMvc;
