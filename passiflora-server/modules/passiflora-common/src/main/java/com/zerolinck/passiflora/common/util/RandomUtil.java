@@ -16,33 +16,14 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.experimental.UtilityClass;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.apache.commons.lang3.RandomStringUtils;
 
-/**
- * TestContainers 容器复用，避免频繁创建测试容器
- *
- * @author 林常坤
- * @since 2024-10-07
- */
+/** @author 林常坤 on 2024/10/08 */
 @UtilityClass
-public class TestUtil {
+public class RandomUtil {
 
-    private static PostgreSQLContainer<?> postgres;
-    private static final ReentrantLock lock = new ReentrantLock();
-
-    public static PostgreSQLContainer<?> getPostgres() {
-        if (postgres == null) {
-            try {
-                lock.lock();
-                if (postgres == null) {
-                    postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
-                }
-            } finally {
-                lock.unlock();
-            }
-        }
-        return postgres;
+    public static String lowerCharAndNum(int count) {
+        return RandomStringUtils.random(count, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
 }

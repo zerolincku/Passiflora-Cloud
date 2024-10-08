@@ -22,6 +22,7 @@ import com.zerolinck.passiflora.model.common.BaseEntity;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import com.zerolinck.passiflora.model.valid.Insert;
+import com.zerolinck.passiflora.model.valid.OnlyField;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -53,6 +54,7 @@ public class IamApp extends BaseEntity {
             message = "应用ID不能为空")
     private String appId;
 
+    @OnlyField
     @Schema(description = "应用名称", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},
@@ -63,24 +65,11 @@ public class IamApp extends BaseEntity {
             message = "应用名称不能为空")
     private String appName;
 
+    @OnlyField
     @Schema(description = "应用令牌", maxLength = 100)
-    @Length(
-            groups = {Insert.class, Update.class},
-            max = 100,
-            message = "应用令牌长度不能大于100")
-    @NotBlank(
-            groups = {Insert.class, Update.class},
-            message = "应用令牌不能为空")
     private String appKey;
 
     @Schema(description = "应用秘钥", maxLength = 100)
-    @Length(
-            groups = {Insert.class, Update.class},
-            max = 100,
-            message = "应用秘钥长度不能大于100")
-    @NotBlank(
-            groups = {Insert.class, Update.class},
-            message = "应用秘钥不能为空")
     private String appSecret;
 
     @Schema(description = "应用图标", maxLength = 100)
@@ -104,9 +93,6 @@ public class IamApp extends BaseEntity {
     private String appUrl;
 
     @Schema(description = "应用状态")
-    @NotNull(
-            groups = {Insert.class, Update.class},
-            message = "应用状态不能为空")
     private StatusEnum appStatus;
 
     @Schema(description = "应用类型")
@@ -120,9 +106,6 @@ public class IamApp extends BaseEntity {
             groups = {Insert.class, Update.class},
             max = 200,
             message = "应用描述长度不能大于200")
-    @NotBlank(
-            groups = {Insert.class, Update.class},
-            message = "应用描述不能为空")
     private String appRemark;
 
     @Schema(description = "应用令牌有效期")

@@ -101,6 +101,22 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
         return baseMapper.deleteByIds(appIds, CurrentUtil.getCurrentUserId());
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public int disable(@Nullable Collection<String> appIds) {
+        if (CollectionUtils.isEmpty(appIds)) {
+            return 0;
+        }
+        return baseMapper.disable(appIds, CurrentUtil.getCurrentUserId());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int enable(@Nullable Collection<String> appIds) {
+        if (CollectionUtils.isEmpty(appIds)) {
+            return 0;
+        }
+        return baseMapper.enable(appIds, CurrentUtil.getCurrentUserId());
+    }
+
     /**
      * 应用详情
      *

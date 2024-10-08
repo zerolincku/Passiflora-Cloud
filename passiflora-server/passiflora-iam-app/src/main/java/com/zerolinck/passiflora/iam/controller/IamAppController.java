@@ -21,8 +21,10 @@ import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.RandomUtil;
 import com.zerolinck.passiflora.feign.iam.IamAppApi;
 import com.zerolinck.passiflora.iam.service.IamAppService;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -56,6 +58,9 @@ public class IamAppController implements IamAppApi {
     @Override
     public Result<String> add(@Nonnull IamApp iamApp) {
         iamApp.setAppId(null);
+        iamApp.setAppKey(RandomUtil.lowerCharAndNum(32));
+        iamApp.setAppSecret(RandomUtil.lowerCharAndNum(32));
+        iamApp.setAppStatus(StatusEnum.ENABLE);
         iamAppService.add(iamApp);
         return Result.ok(iamApp.getAppId());
     }
@@ -63,6 +68,8 @@ public class IamAppController implements IamAppApi {
     @Nonnull
     @Override
     public Result<String> update(@Nonnull IamApp iamApp) {
+        iamApp.setAppKey(null);
+        iamApp.setAppSecret(null);
         boolean success = iamAppService.update(iamApp);
         if (success) {
             return Result.ok(iamApp.getAppId());
@@ -83,6 +90,22 @@ public class IamAppController implements IamAppApi {
     public Result<String> delete(@Nonnull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.deleteByIds(appIds);
+        return Result.ok();
+    }
+
+    @Nonnull
+    @Override
+    public Result<String> disable(@Nonnull List<String> appIds) {
+        AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
+        iamAppService.disable(appIds);
+        return Result.ok();
+    }
+
+    @Nonnull
+    @Override
+    public Result<String> enable(@Nonnull List<String> appIds) {
+        AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
+        iamAppService.enable(appIds);
         return Result.ok();
     }
 }

@@ -33,4 +33,24 @@
         </foreach>
     </delete>
 
+    <delete id="disable">
+        UPDATE iam_app SET update_time = now(),
+        update_by = #{updateBy},
+        app_status = 0
+        WHERE app_id IN
+        <foreach item="id" index="index" collection="appIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="enable">
+        UPDATE iam_app SET update_time = now(),
+        update_by = #{updateBy},
+        app_status = 1
+        WHERE app_id IN
+        <foreach item="id" index="index" collection="appIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

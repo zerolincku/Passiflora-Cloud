@@ -56,4 +56,8 @@ public interface IamAppMapper extends BaseMapper<IamApp> {
      * @since 2024-09-30
      */
     int deleteByIds(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+
+    int disable(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+
+    int enable(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
 }

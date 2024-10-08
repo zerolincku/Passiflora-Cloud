@@ -31,7 +31,6 @@ import lombok.experimental.UtilityClass;
 /** @author 林常坤 on 2024/09/28 */
 @UtilityClass
 public class JsonUtil {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /** 将对象转换为 JSON 字符串 */
     @SneakyThrows
@@ -100,6 +99,8 @@ public class JsonUtil {
     private static <T> T parse(@Nonnull String jsonString, JavaType javaType) {
         return objectMapper.readValue(jsonString, javaType);
     }
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         SimpleModule module = new SimpleModule();
