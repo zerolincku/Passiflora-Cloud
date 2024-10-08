@@ -32,11 +32,14 @@ public class TestUtil {
 
     public static PostgreSQLContainer<?> getPostgres() {
         if (postgres == null) {
-            lock.lock();
-            if (postgres == null) {
-                postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+            try {
+                lock.lock();
+                if (postgres == null) {
+                    postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+                }
+            } finally {
+                lock.unlock();
             }
-            lock.unlock();
         }
         return postgres;
     }
