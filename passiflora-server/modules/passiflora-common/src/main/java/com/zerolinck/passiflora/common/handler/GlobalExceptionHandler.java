@@ -20,10 +20,6 @@ import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.NetUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Locale;
-import java.util.StringJoiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,6 +31,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.StringJoiner;
+
 /**
  * 全局异常捕获
  *
@@ -44,6 +46,24 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 @ConditionalOnProperty(prefix = "passiflora.config", name = "exception", havingValue = "true")
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = IllegalStateException.class)
+    public Result<String> processException(IllegalStateException e) {
+        log.error("捕获状态异常", e);
+        return Result.illegalArgs(e.getMessage());
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public Result<String> processException(IllegalArgumentException e) {
+        log.error("捕获参数异常", e);
+        return Result.illegalArgs(e.getMessage());
+    }
+
+    @ExceptionHandler(value = NoSuchElementException.class)
+    public Result<String> processException(NoSuchElementException e) {
+        log.error("捕获元素不存在异常", e);
+        return Result.illegalArgs(e.getMessage());
+    }
 
     /** 捕获自定义异常 */
     @ExceptionHandler(value = BizException.class)
@@ -65,11 +85,8 @@ public class GlobalExceptionHandler {
     /** 捕获请求参数错误 */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Result<String> exceptionHandler(HttpMessageNotReadableException e) {
-        long epochSecond =
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        String code = Long.toHexString(epochSecond).toUpperCase(Locale.ROOT);
-        log.error("系统错误，错误代码: 0X{}", code, e);
-        return Result.failed(ResultCodeEnum.VALIDATE_FAILED);
+        log.error("请求参数错误", e);
+        return Result.failed(ResultCodeEnum.ILLEGAL_ARGUMENT);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
@@ -99,7 +116,7 @@ public class GlobalExceptionHandler {
         StringJoiner sj = new StringJoiner("，");
         e.getBindingResult().getFieldErrors().forEach(x -> sj.add(x.getDefaultMessage()));
         log.error("参数错误：{}", sj);
-        return Result.validateFailed(sj.toString());
+        return Result.illegalArgs(sj.toString());
     }
 
     /** get参数验证异常,会抛出一个BindException */
@@ -108,6 +125,6 @@ public class GlobalExceptionHandler {
         StringJoiner sj = new StringJoiner("，");
         e.getBindingResult().getFieldErrors().forEach(x -> sj.add(x.getDefaultMessage()));
         log.error("参数错误：{}", sj);
-        return Result.validateFailed(sj.toString());
+        return Result.illegalArgs(sj.toString());
     }
 }

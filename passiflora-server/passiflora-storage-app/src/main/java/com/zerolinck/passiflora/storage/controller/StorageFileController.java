@@ -68,7 +68,7 @@ public class StorageFileController implements StorageFileApi {
     public Result<String> tryQuicklyUpload(@Nonnull StorageFile storageFile) {
         AssertUtil.notBlank(storageFile.getOriginalFileName(), "文件名称不能为空，请重新填写");
         AssertUtil.notBlank(storageFile.getContentType(), "文件 contentType 不能为空，请重新填写");
-        AssertUtil.notBlank(storageFile.getFileMd5(), "文件MD5不能为空，请重新填写");
+        AssertUtil.notBlank(storageFile.getFileMd5(), "文件 MD5 不能为空，请重新填写");
         return Result.ok(storageFileService.tryQuicklyUpload(storageFile));
     }
 

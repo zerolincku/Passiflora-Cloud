@@ -18,13 +18,13 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictApi;
 import com.zerolinck.passiflora.iam.service.IamDictService;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,8 +65,7 @@ public class IamDictController implements IamDictApi {
     @Override
     public Result<IamDict> detail(String dictId) {
         AssertUtil.notBlank(dictId, "字典 ID 不能为空");
-        return Result.ok(
-                iamDictService.detail(dictId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamDictService.detail(dictId).orElseThrow(() -> new NoSuchElementException("字典不存在")));
     }
 
     @Override

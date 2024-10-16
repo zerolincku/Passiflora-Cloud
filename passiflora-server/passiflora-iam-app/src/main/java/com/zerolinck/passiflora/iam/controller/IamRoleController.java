@@ -18,7 +18,6 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamRoleApi;
@@ -29,6 +28,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,8 +84,7 @@ public class IamRoleController implements IamRoleApi {
     @Override
     public Result<IamRole> detail(@Nonnull String roleId) {
         AssertUtil.notBlank(roleId, "角色 ID 不能为空");
-        return Result.ok(
-                iamRoleService.detail(roleId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamRoleService.detail(roleId).orElseThrow(() -> new NoSuchElementException("角色不存在")));
     }
 
     @Nonnull

@@ -18,7 +18,6 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.RandomUtil;
@@ -29,6 +28,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +82,7 @@ public class IamAppController implements IamAppApi {
     @Override
     public Result<IamApp> detail(@Nonnull String appId) {
         AssertUtil.notBlank(appId, "应用 ID 不能为空");
-        return Result.ok(iamAppService.detail(appId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamAppService.detail(appId).orElseThrow(() -> new NoSuchElementException("应用不存在")));
     }
 
     @Nonnull

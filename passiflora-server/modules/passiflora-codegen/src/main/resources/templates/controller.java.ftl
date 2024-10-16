@@ -2,7 +2,6 @@ package com.zerolinck.passiflora.${moduleName}.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * ${table.description} Controller
@@ -60,8 +60,9 @@ public class ${controllerClass} implements ${apiClass} {
     @Override
     public Result<${entityClass}> detail(@Nonnull String ${table.pkFieldName}) {
         AssertUtil.notBlank(${table.pkFieldName}, "${table.description} ID 不能为空");
-        return Result.ok(
-                ${serviceName}.detail(${table.pkFieldName}).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(${serviceName}
+                .detail(${table.pkFieldName})
+                .orElseThrow(() -> new NoSuchElementException("${table.description}不存在")));
     }
 
     @Nonnull

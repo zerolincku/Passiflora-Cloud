@@ -18,7 +18,6 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamUserApi;
@@ -30,6 +29,7 @@ import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
 import jakarta.annotation.Nonnull;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,8 +77,7 @@ public class IamUserController implements IamUserApi {
     @Override
     public Result<IamUser> detail(@RequestParam(value = "userId") String userId) {
         AssertUtil.notBlank(userId, "用户 ID 不能为空");
-        return Result.ok(
-                iamUserService.detail(userId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamUserService.detail(userId).orElseThrow(() -> new NoSuchElementException("用户不存在")));
     }
 
     @Override

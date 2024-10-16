@@ -98,6 +98,11 @@ public class Result<T> {
         return new Result<>(code, message, null);
     }
 
+    /** 参数异常 */
+    public static <T> Result<T> illegalArgs(String message) {
+        return new Result<>(ResultCodeEnum.ILLEGAL_ARGUMENT.getCode(), message, null);
+    }
+
     /**
      * 失败返回结果
      *
@@ -105,15 +110,6 @@ public class Result<T> {
      */
     public static <T> Result<T> failed(String message) {
         return new Result<>(ResultCodeEnum.FAILED.getCode(), message, null);
-    }
-
-    /**
-     * 参数验证失败返回结果
-     *
-     * @param message 提示信息
-     */
-    public static <T> Result<T> validateFailed(String message) {
-        return new Result<>(ResultCodeEnum.VALIDATE_FAILED.getCode(), message, null);
     }
 
     /** 未登录返回结果 */

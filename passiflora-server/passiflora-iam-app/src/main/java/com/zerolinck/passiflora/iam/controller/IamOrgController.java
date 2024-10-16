@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.iam.controller;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamOrgApi;
@@ -27,6 +26,7 @@ import com.zerolinck.passiflora.iam.service.IamOrgService;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +76,7 @@ public class IamOrgController implements IamOrgApi {
     @Override
     public Result<IamOrg> detail(String orgId) {
         AssertUtil.notBlank(orgId, "机构 ID 不能为空");
-        return Result.ok(iamOrgService.detail(orgId).orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamOrgService.detail(orgId).orElseThrow(() -> new NoSuchElementException("机构不存在")));
     }
 
     /** 此方法会级联删除下级机构 */

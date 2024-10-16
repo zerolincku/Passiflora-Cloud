@@ -72,7 +72,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     public void add(@Nonnull IamDictItem iamDictItem) {
         IamDict iamDict = iamDictService
                 .detail(iamDictItem.getDictId())
-                .orElseThrow(() -> new BizException(ResultCodeEnum.INVALID_PARAM_FAILED, "无此字典"));
+                .orElseThrow(() -> new BizException(ResultCodeEnum.ILLEGAL_ARGUMENT, "无此字典"));
 
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());
@@ -106,7 +106,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     public boolean update(@Nonnull IamDictItem iamDictItem) {
         IamDict iamDict = iamDictService
                 .detail(iamDictItem.getDictId())
-                .orElseThrow(() -> new BizException(ResultCodeEnum.INVALID_PARAM_FAILED, "无此字典"));
+                .orElseThrow(() -> new BizException(ResultCodeEnum.ILLEGAL_ARGUMENT, "无此字典"));
 
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());

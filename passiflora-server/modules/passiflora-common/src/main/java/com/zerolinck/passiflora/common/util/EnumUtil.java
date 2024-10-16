@@ -36,7 +36,7 @@ public class EnumUtil {
                 return nameValue;
             }
         }
-        throw new IllegalArgumentException(clazz.getSimpleName() + " 无此value: " + value);
+        throw new IllegalStateException(clazz.getSimpleName() + " 无此value: " + value);
     }
 
     @Nonnull
@@ -49,6 +49,6 @@ public class EnumUtil {
                 return nameValue;
             }
         }
-        throw new IllegalArgumentException(clazz.getSimpleName() + " 无此name: " + name);
+        throw new IllegalStateException(clazz.getSimpleName() + " 无此name: " + name);
     }
 }

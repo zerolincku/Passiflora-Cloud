@@ -16,7 +16,7 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.zerolinck.passiflora.common.exception.BizException;
+import com.google.common.base.Strings;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,25 +31,25 @@ public class AssertUtil {
 
     public static void notEmpty(@Nullable Collection<?> collection, @Nonnull String message) {
         if (collection == null || collection.isEmpty()) {
-            throw new BizException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
     public static void notBlank(@Nullable CharSequence charSequence, @Nonnull String message) {
         if (charSequence == null || charSequence.isEmpty()) {
-            throw new BizException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
     public static void notNull(@Nullable Object object, @Nonnull String message) {
         if (object == null) {
-            throw new BizException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
     public static void notNull(@Nullable Object object, @Nonnull String message, @Nonnull Object... args) {
         if (object == null) {
-            throw new BizException(message, args);
+            throw new IllegalArgumentException(Strings.lenientFormat(message, args));
         }
     }
 }

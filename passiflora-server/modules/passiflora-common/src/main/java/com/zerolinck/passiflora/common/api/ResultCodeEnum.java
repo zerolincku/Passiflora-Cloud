@@ -31,10 +31,7 @@ public enum ResultCodeEnum implements IErrorCode {
     FORBIDDEN(403, "没有相关权限"),
     NOT_FOUND(404, "404 NOT FOUND"),
 
-    NO_STATUS_VALUE(40001, "没有对应的状态"),
-    NO_MATCH_DATA(40002, "没有对应的数据"),
-    VALIDATE_FAILED(40003, "参数检验失败"),
-    INVALID_PARAM_FAILED(40004, "参数错误"),
+    ILLEGAL_ARGUMENT(40001, "参数错误"),
     ;
 
     private final int code;

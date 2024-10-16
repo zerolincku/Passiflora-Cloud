@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.iam.controller;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
-import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamPositionApi;
@@ -29,6 +28,7 @@ import com.zerolinck.passiflora.model.iam.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -79,9 +79,7 @@ public class IamPositionController implements IamPositionApi {
     @Override
     public Result<IamPosition> detail(String positionId) {
         AssertUtil.notBlank(positionId, "职位 ID 不能为空");
-        return Result.ok(iamPositionService
-                .detail(positionId)
-                .orElseThrow(() -> new BizException(ResultCodeEnum.NO_MATCH_DATA)));
+        return Result.ok(iamPositionService.detail(positionId).orElseThrow(() -> new NoSuchElementException("职位不存在")));
     }
 
     @Override

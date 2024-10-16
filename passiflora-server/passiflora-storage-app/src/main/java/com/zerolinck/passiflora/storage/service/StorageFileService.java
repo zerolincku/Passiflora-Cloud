@@ -227,7 +227,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     public void downloadFile(@Nonnull String fileId) {
         StorageFile storageFile = baseMapper.selectById(fileId);
         if (storageFile == null) {
-            throw new BizException("文件消失了");
+            throw new NoSuchElementException("文件不存在");
         }
         GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
                 .bucket(storageFile.getBucketName())
@@ -255,7 +255,9 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         Map<String, Integer> fileNameCountMap = new HashMap<>();
         for (String fileId : fileIds) {
             StorageFile storageFile = baseMapper.selectById(fileId);
-
+            if (storageFile == null) {
+                throw new NoSuchElementException("文件不存在，fileId=" + fileId);
+            }
             // 出现同名文件时重命名
             String fileName = dealFileName(storageFile, fileNameCountMap);
             zipOut.putNextEntry(new ZipEntry(fileName));
