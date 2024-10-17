@@ -20,3 +20,24 @@ dev:
       url: "jdbc:postgresql://passiflora-postgres:5432/passiflora_storage?reWriteBatchedInserts=true"
       username: "postgres"
       password: "postgres"
+prod:
+  nacos:
+    serverAddr: "passiflora-nacos:8848"
+  redis:
+    host: "passiflora-redis"
+    port: "6379"
+    database: "8"
+  minio:
+    endpoint: "http://passiflora-minio:9000"
+    accessKey: "NWFlEWHfZacwl9dT1oJV"
+    secretKey: "yC9O1M1baZKyV4busSHHw3F4y8F008anlCGxyvkx"
+  iam_app:
+    database:
+      url: "jdbc:postgresql://passiflora-postgres:5432/passiflora_iam?reWriteBatchedInserts=true"
+      username: "postgres"
+      password: "postgres"
+  storage_app:
+    database:
+      url: "jdbc:postgresql://passiflora-postgres:5432/passiflora_storage?reWriteBatchedInserts=true"
+      username: "postgres"
+      password: "postgres"

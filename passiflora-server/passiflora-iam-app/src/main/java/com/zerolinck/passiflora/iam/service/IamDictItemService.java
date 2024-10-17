@@ -31,6 +31,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,8 +39,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /**
  * @author linck
@@ -68,9 +67,8 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void add(@Nonnull IamDictItem iamDictItem) {
-        IamDict iamDict = iamDictService
-                .detail(iamDictItem.getDictId())
-                .orElseThrow(() -> new NoSuchElementException("无此字典"));
+        IamDict iamDict =
+                iamDictService.detail(iamDictItem.getDictId()).orElseThrow(() -> new NoSuchElementException("无此字典"));
 
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());
