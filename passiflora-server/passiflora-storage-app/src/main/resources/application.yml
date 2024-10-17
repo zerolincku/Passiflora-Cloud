@@ -23,6 +23,8 @@ spring:
       database: "@redis.database@"
       host: "@redis.host@"
       port: "@redis.port@"
+  liquibase:
+    enabled: false
 feign:
   compression:
     request:
