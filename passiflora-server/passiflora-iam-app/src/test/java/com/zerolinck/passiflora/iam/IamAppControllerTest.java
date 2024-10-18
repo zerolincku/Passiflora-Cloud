@@ -31,7 +31,10 @@ import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -62,10 +65,7 @@ class IamAppControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.getPostgres().start();
-        registry.add("spring.datasource.url", TestUtil.getPostgres()::getJdbcUrl);
-        registry.add("spring.datasource.username", TestUtil.getPostgres()::getUsername);
-        registry.add("spring.datasource.password", TestUtil.getPostgres()::getPassword);
+        TestUtil.postgresContainerStart(registry);
     }
 
     @Test

@@ -25,6 +25,7 @@ import com.zerolinck.passiflora.storage.service.StorageFileService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +83,7 @@ public class StorageFileController implements StorageFileApi {
     @Override
     public Result<StorageFile> detail(@Nonnull String fileId) {
         AssertUtil.notBlank(fileId, "文件 ID 不能为空");
-        return Result.ok(storageFileService.detail(fileId));
+        return Result.ok(storageFileService.detail(fileId).orElseThrow(() -> new NoSuchElementException("无此文件")));
     }
 
     @Nonnull
@@ -106,7 +107,7 @@ public class StorageFileController implements StorageFileApi {
     @Nonnull
     @Override
     public Result<String> confirmFile(@Nonnull List<String> fileIds) {
-        storageFileService.confirmFile(fileIds);
+        storageFileService.confirmFiles(fileIds);
         return Result.ok();
     }
 }

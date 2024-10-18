@@ -18,6 +18,8 @@ package com.zerolinck.passiflora.common.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.experimental.UtilityClass;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 /**
@@ -30,9 +32,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public class TestUtil {
 
     private static PostgreSQLContainer<?> postgres;
+    private static MinIOContainer minio;
     private static final ReentrantLock lock = new ReentrantLock();
 
-    public static PostgreSQLContainer<?> getPostgres() {
+    public static void postgresContainerStart(DynamicPropertyRegistry registry) {
         if (postgres == null) {
             try {
                 lock.lock();
@@ -43,6 +46,27 @@ public class TestUtil {
                 lock.unlock();
             }
         }
-        return postgres;
+        postgres.start();
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+    @SuppressWarnings("unused")
+    public static void minioContainerStart(DynamicPropertyRegistry registry) {
+        if (minio == null) {
+            try {
+                lock.lock();
+                if (minio == null) {
+                    minio = new MinIOContainer("minio/minio:RELEASE.2024-10-13T13-34-11Z").withReuse(true);
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+        minio.start();
+        registry.add("passiflora.storage.oss.endpoint", minio::getS3URL);
+        registry.add("passiflora.storage.oss.access-key", minio::getUserName);
+        registry.add("passiflora.storage.oss.secret-key", minio::getPassword);
     }
 }

@@ -26,8 +26,10 @@ dependencies {
     compileOnlyApi("org.springframework:spring-web")
     compileOnlyApi("org.apache.tomcat.embed:tomcat-embed-core")
     compileOnlyApi("org.postgresql:postgresql")
+    compileOnly("org.springframework:spring-test")
     compileOnly("io.swagger.core.v3:swagger-annotations-jakarta")
     compileOnly("org.testcontainers:postgresql")
+    compileOnly("org.testcontainers:minio")
 
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")

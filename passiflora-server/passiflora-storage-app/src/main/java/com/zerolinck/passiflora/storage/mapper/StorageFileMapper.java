@@ -58,6 +58,5 @@ public interface StorageFileMapper extends BaseMapper<StorageFile> {
             "UPDATE storage_file SET last_download_time = now(), download_count = download_count + 1 WHERE file_id = #{fileId}")
     void incrDownCount(@Nonnull @Param("fileId") String fileId);
 
-    int confirmFile(
-            @Nonnull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
+    int confirmFile(@Nonnull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy);
 }

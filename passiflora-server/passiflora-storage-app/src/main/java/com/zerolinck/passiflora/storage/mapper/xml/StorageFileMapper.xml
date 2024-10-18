@@ -35,12 +35,9 @@
 
     <update id="confirmFile">
         UPDATE storage_file SET update_time = now(),
-        update_by = #{updateBy},
-        file_status = 1
-        WHERE file_id IN
-        <foreach item="id" index="index" collection="fileIds" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+                                update_by = #{updateBy},
+                                file_status = 1
+        WHERE file_id = #{fileId}
     </update>
 
 </mapper>

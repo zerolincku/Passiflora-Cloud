@@ -17,6 +17,8 @@
 package com.zerolinck.passiflora.storage.util;
 
 import jakarta.annotation.Nonnull;
+import java.io.IOException;
+import java.io.OutputStream;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
@@ -25,9 +27,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 /** @author 林常坤 on 2024/10/17 */
 @UtilityClass

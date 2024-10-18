@@ -34,6 +34,9 @@ import com.zerolinck.passiflora.storage.util.OssS3Util;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -43,12 +46,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 通用文件 Service
@@ -142,7 +142,8 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                         bucket = dbStorageFile.getBucketName();
                         // 检查 oss 文件是否存在
                         try {
-                            exist = OssS3Util.doesFileExist(dbStorageFile.getBucketName(), dbStorageFile.getObjectName());
+                            exist = OssS3Util.doesFileExist(
+                                    dbStorageFile.getBucketName(), dbStorageFile.getObjectName());
                             log.info("文件已存在，秒传，fileMd5: {}", md5Hex);
                         } catch (Exception e) {
                             // 可能查询文件不存在，尝试重新覆盖文件
@@ -186,29 +187,21 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
             return;
         }
         LockUtil.lock(
-                LOCK_KEY + "md5:",
+                LOCK_KEY,
                 new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
                 true,
                 () -> {
                     baseMapper.deleteByIds(List.of(fileId), CurrentUtil.getCurrentUserId());
                     Integer md5Count = baseMapper.countByFileMd5(storageFile.getFileMd5());
                     if (md5Count == 0) {
-                        try {
-                            OssS3Util.deleteFile(storageFile.getBucketName(), storageFile.getObjectName());
-                        } catch (Exception e) {
-                            throw new BizException(e);
-                        }
+                        OssS3Util.deleteFile(storageFile.getBucketName(), storageFile.getObjectName());
                     }
                 });
     }
 
     @Nonnull
-    public StorageFile detail(@Nonnull String fileId) {
-        StorageFile storageFile = baseMapper.selectById(fileId);
-        if (storageFile == null) {
-            throw new BizException("无对应通用文件数据，请刷新后重试");
-        }
-        return storageFile;
+    public Optional<StorageFile> detail(@Nonnull String fileId) {
+        return Optional.ofNullable(baseMapper.selectById(fileId));
     }
 
     @SneakyThrows
@@ -252,11 +245,20 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         zipOut.close();
     }
 
-    public void confirmFile(@Nonnull List<String> fileIds) {
+    /** 批量确认文件使用，将临时文件转换为正式文件 */
+    @Transactional
+    public void confirmFiles(@Nonnull List<String> fileIds) {
         if (fileIds.isEmpty()) {
             return;
         }
-        baseMapper.confirmFile(fileIds, CurrentUtil.getCurrentUserId());
+        for (String fileId : fileIds) {
+            confirmFile(fileId);
+        }
+    }
+
+    /** 确认文件使用，将临时文件转换为正式文件 */
+    public void confirmFile(@Nonnull String fileId) {
+        baseMapper.confirmFile(fileId, CurrentUtil.getCurrentUserId());
     }
 
     /** 处理压缩包文件重名问题 */
