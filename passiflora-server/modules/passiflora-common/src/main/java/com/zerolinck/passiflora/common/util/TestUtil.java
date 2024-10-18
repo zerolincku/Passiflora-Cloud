@@ -37,6 +37,15 @@ public class TestUtil {
     private static RedisContainer redis;
     private static final ReentrantLock lock = new ReentrantLock();
 
+    /**
+     * nacos 不能自动创建 namespace，需要手动登录创建，用户环境隔离，避免测试环境与其他环境产生干扰
+     *
+     * @author 林常坤 on 2024/10/18
+     */
+    public static void nacosTestNameSpace(DynamicPropertyRegistry registry) {
+        registry.add("spring.cloud.nacos.discovery.namespace", () -> "test");
+    }
+
     public static void postgresContainerStart(DynamicPropertyRegistry registry) {
         if (postgres == null) {
             try {

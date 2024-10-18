@@ -63,6 +63,7 @@ class IamDictControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
+        TestUtil.nacosTestNameSpace(registry);
         TestUtil.postgresContainerStart(registry);
         TestUtil.redisContainerStart(registry);
     }
