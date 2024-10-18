@@ -53,6 +53,8 @@ dependencies {
     implementation("org.redisson:redisson-spring-boot-starter")
     implementation("com.baomidou:mybatis-plus-boot-starter")
     implementation("org.postgresql:postgresql")
+    implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:apache-client")
 
     // liquibase
     implementation("org.liquibase:liquibase-core")
@@ -60,8 +62,6 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl")
     liquibaseRuntime("info.picocli:picocli")
     liquibaseRuntime("org.postgresql:postgresql")
-
-    implementation("io.minio:minio")
 
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")

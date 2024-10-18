@@ -19,9 +19,7 @@ package com.zerolinck.passiflora.storage.init;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
+import com.zerolinck.passiflora.storage.util.OssS3Util;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -41,7 +39,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CreateBucketRunner implements ApplicationRunner {
 
-    private final MinioClient minioClient;
     private final PassifloraProperties passifloraProperties;
 
     @Override
@@ -52,13 +49,12 @@ public class CreateBucketRunner implements ApplicationRunner {
 
     @SneakyThrows
     private void createBucket(@Nonnull String bucketName) {
-        boolean bucketExists = minioClient.bucketExists(
-                BucketExistsArgs.builder().bucket(bucketName).build());
+        boolean bucketExists = OssS3Util.doesBucketExist(bucketName);
         if (log.isDebugEnabled()) {
             log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
         }
         if (!bucketExists) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            OssS3Util.createBucket(bucketName);
         }
     }
 }

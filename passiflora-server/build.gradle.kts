@@ -17,7 +17,6 @@ allprojects {
 
     repositories {
         aliyunCentral()
-        aliyunPublic()
         tencentRepository()
         huaweiRepository()
         mavenCentral()

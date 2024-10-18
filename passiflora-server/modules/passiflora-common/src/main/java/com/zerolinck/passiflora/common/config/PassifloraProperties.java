@@ -78,17 +78,17 @@ public class PassifloraProperties {
         /** 对象存储桶名称 */
         private String bucketName;
 
-        private Minio minio;
+        private Oss oss;
 
         @Data
         @NoArgsConstructor
-        public static class Minio {
+        public static class Oss {
 
-            /** minio 地址 */
+            /** oss 地址 */
             private String endpoint;
-            /** minio accessKey */
+            /** oss accessKey */
             private String accessKey;
-            /** minio secretKey */
+            /** oss secretKey */
             private String secretKey;
         }
     }

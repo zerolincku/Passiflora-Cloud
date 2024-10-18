@@ -55,7 +55,7 @@ passiflora:
   build-time: "@buildTime@"
   storage:
     bucket-name: "passiflora"
-    minio:
-      endpoint: "@minio.endpoint@"
-      access-key: "@minio.accessKey@"
-      secret-key: "@minio.secretKey@"
+    oss:
+      endpoint: "@oss.endpoint@"
+      access-key: "@oss.accessKey@"
+      secret-key: "@oss.secretKey@"

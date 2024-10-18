@@ -30,13 +30,10 @@ import com.zerolinck.passiflora.model.common.constant.Header;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
-import io.minio.*;
+import com.zerolinck.passiflora.storage.util.OssS3Util;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +42,13 @@ import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 通用文件 Service
@@ -61,7 +61,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFile> {
 
-    private final MinioClient minioClient;
     private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
@@ -136,35 +135,27 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     // 检查文件是否已经上传
                     List<StorageFile> storageFiles = baseMapper.selectList(
                             new LambdaQueryWrapper<StorageFile>().eq(StorageFile::getFileMd5, md5Hex));
-                    StatObjectResponse statObject = null;
+                    boolean exist = false;
                     if (!storageFiles.isEmpty()) {
                         StorageFile dbStorageFile = storageFiles.getFirst();
                         objectName = dbStorageFile.getObjectName();
                         bucket = dbStorageFile.getBucketName();
-                        // 检查 minio 文件是否存在
+                        // 检查 oss 文件是否存在
                         try {
-                            statObject = minioClient.statObject(StatObjectArgs.builder()
-                                    .bucket(dbStorageFile.getBucketName())
-                                    .object(dbStorageFile.getObjectName())
-                                    .build());
+                            exist = OssS3Util.doesFileExist(dbStorageFile.getBucketName(), dbStorageFile.getObjectName());
                             log.info("文件已存在，秒传，fileMd5: {}", md5Hex);
                         } catch (Exception e) {
                             // 可能查询文件不存在，尝试重新覆盖文件
                             log.warn(
-                                    "minio stat 文件错误 objectName: {}, exception: {}",
+                                    "oss stat 文件错误 objectName: {}, exception: {}",
                                     dbStorageFile.getObjectName(),
                                     e.getMessage());
                         }
                     }
 
-                    if (statObject == null) {
+                    if (!exist) {
                         try {
-                            minioClient.putObject(PutObjectArgs.builder().bucket(bucket).object(objectName).stream(
-                                            file.getInputStream(),
-                                            file.getInputStream().available(),
-                                            -1)
-                                    .contentType(file.getContentType())
-                                    .build());
+                            OssS3Util.uploadFile(bucket, objectName, file);
                         } catch (Exception e) {
                             throw new BizException(e);
                         }
@@ -203,10 +194,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     Integer md5Count = baseMapper.countByFileMd5(storageFile.getFileMd5());
                     if (md5Count == 0) {
                         try {
-                            minioClient.removeObject(RemoveObjectArgs.builder()
-                                    .bucket(storageFile.getBucketName())
-                                    .object(storageFile.getObjectName())
-                                    .build());
+                            OssS3Util.deleteFile(storageFile.getBucketName(), storageFile.getObjectName());
                         } catch (Exception e) {
                             throw new BizException(e);
                         }
@@ -229,10 +217,6 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         if (storageFile == null) {
             throw new NoSuchElementException("文件不存在");
         }
-        GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
-                .bucket(storageFile.getBucketName())
-                .object(storageFile.getObjectName())
-                .build());
         HttpServletResponse response = NetUtil.getResponse();
         if (MimeTypeUtils.APPLICATION_JSON.toString().equals(storageFile.getContentType())) {
             response.setContentType(MimeTypeUtils.TEXT_PLAIN.toString());
@@ -242,7 +226,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         response.setHeader(
                 Header.CONTENT_DISPOSITION.getValue(),
                 "attachment; filename=" + urlCodec.encode(storageFile.getOriginalFileName()));
-        IOUtils.copy(inputStream, response.getOutputStream());
+        OssS3Util.downloadFile(storageFile.getBucketName(), storageFile.getObjectName(), response.getOutputStream());
         baseMapper.incrDownCount(fileId);
     }
 
@@ -261,12 +245,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
             // 出现同名文件时重命名
             String fileName = dealFileName(storageFile, fileNameCountMap);
             zipOut.putNextEntry(new ZipEntry(fileName));
-            try (GetObjectResponse inputStream = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(storageFile.getBucketName())
-                    .object(storageFile.getObjectName())
-                    .build())) {
-                IOUtils.copy(inputStream, zipOut);
-            }
+            OssS3Util.downloadFile(storageFile.getBucketName(), storageFile.getObjectName(), zipOut);
             zipOut.closeEntry();
             baseMapper.incrDownCount(fileId);
         }

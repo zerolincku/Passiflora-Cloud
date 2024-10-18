@@ -26,7 +26,6 @@ dependencies {
         api("org.mybatis:mybatis-typehandlers-jsr310:1.0.2")
         api("org.redisson:redisson-spring-boot-starter:3.36.0")
         api("org.redisson:redisson:3.36.0")
-        api("io.minio:minio:8.5.10")
         api("org.apache.commons:commons-lang3:3.16.0")
         api("org.apache.commons:commons-collections4:4.4")
         api("commons-codec:commons-codec:1.17.1")
@@ -34,6 +33,8 @@ dependencies {
         api("com.google.guava:guava:33.2.1-jre")
         api("org.junit.jupiter:junit-jupiter-api:5.11.1")
         api("org.junit.jupiter:junit-jupiter-engine:5.11.1")
+        api("software.amazon.awssdk:s3:2.28.23")
+        api("software.amazon.awssdk:apache-client:2.28.24")
     }
 }
 
