@@ -66,6 +66,7 @@ class IamPositionControllerTest {
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         TestUtil.postgresContainerStart(registry);
+        TestUtil.redisContainerStart(registry);
     }
 
     @Test

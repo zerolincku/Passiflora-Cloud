@@ -16,6 +16,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:minio")
+    api("com.redis:testcontainers-redis")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -30,6 +33,7 @@ dependencies {
     compileOnly("io.swagger.core.v3:swagger-annotations-jakarta")
     compileOnly("org.testcontainers:postgresql")
     compileOnly("org.testcontainers:minio")
+    compileOnly("com.redis:testcontainers-redis")
 
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")

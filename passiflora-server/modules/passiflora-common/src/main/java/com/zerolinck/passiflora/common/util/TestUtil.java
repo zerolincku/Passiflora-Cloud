@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import com.redis.testcontainers.RedisContainer;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.experimental.UtilityClass;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -33,6 +34,7 @@ public class TestUtil {
 
     private static PostgreSQLContainer<?> postgres;
     private static MinIOContainer minio;
+    private static RedisContainer redis;
     private static final ReentrantLock lock = new ReentrantLock();
 
     public static void postgresContainerStart(DynamicPropertyRegistry registry) {
@@ -50,6 +52,22 @@ public class TestUtil {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+    public static void redisContainerStart(DynamicPropertyRegistry registry) {
+        if (redis == null) {
+            try {
+                lock.lock();
+                if (redis == null) {
+                    redis = new RedisContainer("redis:6.2.7").withReuse(true);
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+        redis.start();
+        registry.add("spring.data.redis.host", redis::getHost);
+        registry.add("spring.data.redis.port", redis::getRedisPort);
     }
 
     @SuppressWarnings("unused")
