@@ -10,19 +10,19 @@ Passiflora Cloud 是基于 JDK21、Spring Cloud、Gradle 构建的微服务项�
 
 ### 项目结构
 ```shell
-├── .github（github actions配置, 不使用 github actions 可删除）
-├── passiflora-server （后端项目）
+├── .github (github actions配置, 不使用 github actions 可删除)
+├── passiflora-server (后端项目)
 │   ├── modules
-│   │   ├── passiflora-bom （依赖版本配置）
-│   │   ├── passiflora-codegen （代码生成）
-│   │   ├── passiflora-common （通用组件）
-│   │   ├── passiflora-feign （Feign组件）
-│   │   └── passiflora-model （Model组件）
-│   ├── passiflora-gateway-app （网关应用）
-│   ├── passiflora-iam-app （身份应用）
-│   ├── passiflora-storage-app （文件储存应用）
+│   │   ├── passiflora-bom (依赖版本配置)
+│   │   ├── passiflora-codegen (代码生成)
+│   │   ├── passiflora-common (通用组件)
+│   │   ├── passiflora-feign (Feign组件)
+│   │   └── passiflora-model (Model组件)
+│   ├── passiflora-gateway-app (网关应用)
+│   ├── passiflora-iam-app (身份应用)
+│   ├── passiflora-storage-app (文件储存应用)
 │   └── buildSrc (构建脚本)
-└── passiflora-ui （前端项目）
+└── passiflora-ui (前端项目)
 ```
 ### [授权说明](document%2Fzh%2F授权说明.md)
 
