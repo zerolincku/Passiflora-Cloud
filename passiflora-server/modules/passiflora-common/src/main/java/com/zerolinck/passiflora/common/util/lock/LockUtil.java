@@ -22,7 +22,8 @@ import com.zerolinck.passiflora.common.util.lock.suppert.LambdaMeta;
 import com.zerolinck.passiflora.common.util.lock.suppert.LambdaUtils;
 import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
 import com.zerolinck.passiflora.common.util.lock.suppert.reflect.PropertyNamer;
-import java.lang.reflect.Method;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +32,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -50,64 +50,89 @@ public class LockUtil {
     @Setter
     private static TransactionTemplate transactionTemplate;
 
+    /** 加锁等待时间 */
+    private static final Integer COMMON_LOCK_WAIT_SECONDS = 2;
+    /** 最长持有锁时间 */
+    private static final Integer COMMON_LOCK_LEASE_SECONDS = 60;
+
     private static final Map<String, LambdaMeta> LAMBDA_META_CACHE = new ConcurrentHashMap<>();
 
     private static final Map<Class<?>, Map<String, String>> FIELD_NAME_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE = new ConcurrentHashMap<>();
+    public static void lock(@Nonnull String lockKey, @Nonnull Runnable runnable) {
+        lock(lockKey, null, false, runnable);
+    }
 
-    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, Runnable runnable) {
-        return lock(lockKey, lockWrapper, false, () -> {
+    public static void lock(@Nonnull String lockKey, boolean useTransaction, @Nonnull Runnable runnable) {
+        lock(lockKey, null, useTransaction, runnable);
+    }
+
+    public static void lock(@Nonnull String lockKey, @Nullable LockWrapper<?> lockWrapper, @Nonnull Runnable runnable) {
+        lock(lockKey, lockWrapper, false, runnable);
+    }
+
+    public static void lock(
+            @Nonnull String lockKey,
+            @Nullable LockWrapper<?> lockWrapper,
+            boolean useTransaction,
+            @Nonnull Runnable runnable) {
+        lock(lockKey, lockWrapper, useTransaction, () -> {
             runnable.run();
             return null;
         });
     }
 
-    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, boolean useTransaction, Runnable runnable) {
-        return lock(lockKey, lockWrapper, useTransaction, () -> {
-            runnable.run();
-            return null;
-        });
-    }
-
-    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, Supplier<T> supplier) {
+    public static <T> T lock(
+            @Nonnull String lockKey, @Nullable LockWrapper<?> lockWrapper, @Nonnull Supplier<T> supplier) {
         return lock(lockKey, lockWrapper, false, supplier);
     }
 
-    public static <T> T lock(String lockKey, LockWrapper<?> lockWrapper, boolean useTransaction, Supplier<T> supplier) {
-        AtomicInteger lockLength = new AtomicInteger(lockWrapper.getColumns().size());
-        lockWrapper.getEntityListLock().forEach((clazz, list) -> lockLength.addAndGet(list.size()));
-        RLock[] locks = new RLock[lockLength.get()];
+    public static <T> T lock(
+            @Nonnull String lockKey,
+            @Nullable LockWrapper<?> lockWrapper,
+            boolean useTransaction,
+            @Nonnull Supplier<T> supplier) {
+        RLock[] locks;
+        if (lockWrapper == null) {
+            locks = new RLock[1];
+        } else {
+            AtomicInteger lockLength =
+                    new AtomicInteger(lockWrapper.getColumns().size());
+            lockWrapper.getColumnValueList().forEach((clazz, list) -> lockLength.addAndGet(list.size()));
+            locks = new RLock[lockLength.get()];
+        }
 
         try {
-            AtomicInteger i = new AtomicInteger();
-            for (; i.get() < lockWrapper.getColumns().size(); i.getAndIncrement()) {
-                String fieldName = getFieldName(lockWrapper.getColumns().get(i.get()));
-                locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName
-                        + ":"
-                        + lockWrapper.getColumnValues().get(i.get()));
-                locks[i.get()].tryLock(10, 60, TimeUnit.SECONDS);
-            }
-            lockWrapper.getEntityListLock().forEach((function, entityList) -> {
-                Method method = getMethod(function);
-                for (Object entity : entityList) {
-                    String fieldName = getFieldName(function);
-                    Object value;
-                    try {
-                        value = method.invoke(entity);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName + ":" + value);
-                    try {
-                        locks[i.get()].tryLock(10, 60, TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
-                    }
-                    i.getAndIncrement();
+            // lockWrapper 为空时，直接锁定 lockKey
+            if (lockWrapper == null) {
+                locks[0] = redissonClient.getLock(lockKey);
+                locks[0].tryLock(COMMON_LOCK_WAIT_SECONDS, COMMON_LOCK_LEASE_SECONDS, TimeUnit.SECONDS);
+            } else {
+                AtomicInteger i = new AtomicInteger();
+                // 锁定单项值锁
+                for (; i.get() < locks.length; i.getAndIncrement()) {
+                    String fieldName = getFieldName(lockWrapper.getColumns().get(i.get()));
+                    locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName
+                            + ":"
+                            + lockWrapper.getColumnValues().get(i.get()));
+                    locks[i.get()].tryLock(COMMON_LOCK_WAIT_SECONDS, COMMON_LOCK_LEASE_SECONDS, TimeUnit.SECONDS);
                 }
-            });
+                // 锁定多项值锁
+                lockWrapper.getColumnValueList().forEach((function, columnValueList) -> {
+                    for (Object columnValue : columnValueList) {
+                        String fieldName = getFieldName(function);
+                        locks[i.get()] = redissonClient.getFairLock(lockKey + fieldName + ":" + columnValue);
+                        try {
+                            locks[i.get()].tryLock(
+                                    COMMON_LOCK_WAIT_SECONDS, COMMON_LOCK_LEASE_SECONDS, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
+                        }
+                        i.getAndIncrement();
+                    }
+                });
+            }
             return useTransaction ? transactionTemplate.execute(status -> supplier.get()) : supplier.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -117,7 +142,7 @@ public class LockUtil {
         }
     }
 
-    public static void unlock(Lock... locks) {
+    public static void unlock(@Nonnull Lock... locks) {
         for (Lock lock : locks) {
             if (lock != null) {
                 lock.unlock();
@@ -125,7 +150,8 @@ public class LockUtil {
         }
     }
 
-    private static String getFieldName(SFunction<?, ?> column) {
+    @Nonnull
+    private static String getFieldName(@Nonnull SFunction<?, ?> column) {
         if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
             LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
         }
@@ -138,22 +164,5 @@ public class LockUtil {
             FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).put(meta.getImplMethodName(), fieldName);
         }
         return FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).get(meta.getImplMethodName());
-    }
-
-    @SneakyThrows
-    private static Method getMethod(SFunction<?, ?> column) {
-        if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
-            LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
-        }
-        LambdaMeta meta = LAMBDA_META_CACHE.get(column.toString());
-        Class<?> instantiatedClass = meta.getInstantiatedClass();
-        String implMethodName = meta.getImplMethodName();
-        if (!METHOD_CACHE.containsKey(instantiatedClass)) {
-            METHOD_CACHE.put(instantiatedClass, new HashMap<>());
-        }
-        if (!METHOD_CACHE.get(instantiatedClass).containsKey(implMethodName)) {
-            METHOD_CACHE.get(instantiatedClass).put(implMethodName, instantiatedClass.getMethod(implMethodName));
-        }
-        return METHOD_CACHE.get(instantiatedClass).get(implMethodName);
     }
 }

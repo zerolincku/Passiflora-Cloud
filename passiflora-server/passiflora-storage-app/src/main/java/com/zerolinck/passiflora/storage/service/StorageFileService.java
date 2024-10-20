@@ -46,7 +46,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -246,7 +245,6 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     /** 批量确认文件使用，将临时文件转换为正式文件 */
-    @Transactional
     public void confirmFiles(@Nonnull List<String> fileIds) {
         if (fileIds.isEmpty()) {
             return;
@@ -259,6 +257,10 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     /** 确认文件使用，将临时文件转换为正式文件 */
     public void confirmFile(@Nonnull String fileId) {
         baseMapper.confirmFile(fileId, CurrentUtil.getCurrentUserId());
+    }
+
+    public Set<String> expiredTempFileIds() {
+        return baseMapper.expiredTempFileIds();
     }
 
     /** 处理压缩包文件重名问题 */

@@ -27,8 +27,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Slf4j
+@EnableScheduling
 @SpringBootApplication
 @MapperScan("com.zerolinck.**.mapper")
 @EnableConfigurationProperties(PassifloraProperties.class)

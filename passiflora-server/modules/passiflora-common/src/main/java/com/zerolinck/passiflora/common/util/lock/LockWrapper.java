@@ -31,14 +31,17 @@ import org.apache.commons.collections4.CollectionUtils;
 @SuppressWarnings("all")
 public class LockWrapper<T> {
 
+    /** 加锁字段 eg: 需要根据 name 字段加锁，XXXEntity::getName */
     @Getter
     private List<SFunction<T, ?>> columns = new ArrayList<>();
 
+    /** 单项加锁 eg: 需要锁定 name: a */
     @Getter
     private List<Object> columnValues = new ArrayList<>();
 
+    /** 多项加锁 eg: 需要锁定 name: a、name: b ... */
     @Getter
-    private Map<SFunction<T, ?>, List<? extends T>> entityListLock = new HashMap<>();
+    private Map<SFunction<T, ?>, List<?>> columnValueList = new HashMap<>();
 
     public LockWrapper<T> lock(SFunction<T, ?> column, String columnValue) {
         if (columnValue == null) {
@@ -49,11 +52,11 @@ public class LockWrapper<T> {
         return this;
     }
 
-    public LockWrapper<T> lock(SFunction<T, ?> column, List<? extends T> entityList) {
-        if (CollectionUtils.isEmpty(entityList)) {
+    public LockWrapper<T> lock(SFunction<T, ?> column, List<?> columnValues) {
+        if (CollectionUtils.isEmpty(columnValues)) {
             return this;
         }
-        entityListLock.put(column, entityList);
+        columnValueList.put(column, columnValues);
         return this;
     }
 }

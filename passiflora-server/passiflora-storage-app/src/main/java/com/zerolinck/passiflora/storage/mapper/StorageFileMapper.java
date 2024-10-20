@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -59,4 +60,9 @@ public interface StorageFileMapper extends BaseMapper<StorageFile> {
     void incrDownCount(@Nonnull @Param("fileId") String fileId);
 
     int confirmFile(@Nonnull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy);
+
+    /** 查询创建时间大于 24h 的临时文件ID */
+    @Select(
+            "SELECT file_id from storage_file WHERE file_status = 0 AND create_time <= DATE_SUB(NOW(), INTERVAL 24 HOUR)")
+    Set<String> expiredTempFileIds();
 }
