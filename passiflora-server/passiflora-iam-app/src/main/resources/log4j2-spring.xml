@@ -9,7 +9,7 @@
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="applicationName">${spring:spring.application.name}</property>
         <property name="CONSOLE_LOG_PATTERN"
-                  value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%4.5p} %clr{${sys:PID}}{magenta} %clr{-}{faint} %clr{[%5.20t]}{faint} %clr{%-30.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx" />
+                  value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%4.5p} %clr{${sys:PID}}{magenta} %clr{-}{faint} %clr{[%5.20t]}{faint} %clr{%-1.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx" />
         <property name="FILE_LOG_PATTERN"
                   value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%t] %c{1.}.%M(%L): %msg%n" />
 
@@ -18,7 +18,7 @@
         <property name="FILE_NAME" value="${applicationName}.log" />
     </Properties>
 
-    <springProfile name="dev">
+    <springProfile name="local,dev">
         <appenders>
             <console name="Console" target="SYSTEM_OUT">
                 <PatternLayout charset="UTF-8" pattern="${CONSOLE_LOG_PATTERN}" />
@@ -58,7 +58,6 @@
             <root level="info">
                 <appender-ref ref="RollingFileInfo" />
             </root>
-            <logger name="com.zerolinck.passiflora.iam.mapper" level="debug"/>
         </loggers>
     </springProfile>
 </configuration>

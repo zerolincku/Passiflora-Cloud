@@ -1,7 +1,7 @@
 FROM zerolinck/passiflora-server-builder AS build
 COPY passiflora-server /app
 WORKDIR /app
-RUN ./gradlew :passiflora-gateway-app:build -x test -Denv=dev
+RUN ./gradlew :passiflora-gateway-app:build -x test -Denv=local
 
 FROM openjdk:21-jdk
 ARG JAR_FILE=passiflora-gateway-*.jar

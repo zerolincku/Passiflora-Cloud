@@ -11,7 +11,7 @@ configurations.all {
     exclude("org.springframework.boot", "spring-boot-starter-logging")
 }
 
-val env: String = System.getProperty("env", "dev")
+val env: String = System.getProperty("env", "local")
 println("> 使用 $env 环境编译")
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
@@ -34,7 +34,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // 非开发环境，排除 Swagger(UI
-    if(configMap["env"] == "dev") {
+    if (configMap["env"] == "dev" || configMap["env"] == "local") {
         implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
     } else {
         implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter") {
