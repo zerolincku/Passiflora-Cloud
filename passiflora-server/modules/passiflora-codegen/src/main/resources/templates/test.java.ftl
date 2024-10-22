@@ -2,6 +2,7 @@ package com.zerolinck.passiflora.${moduleName};
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.common.api.ResultCodeEnum;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import jakarta.annotation.Resource;
@@ -13,10 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -44,9 +42,12 @@ public class ${entityClass}ControllerTest {
     private static String test${entityClass}Id;
     private static ${entityClass} test${entityClass};
 
-    @Container
-    @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.0-alpine").withReuse(true);
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        TestUtil.nacosTestNameSpace(registry);
+        TestUtil.postgresContainerStart(registry);
+        TestUtil.redisContainerStart(registry);
+    }
     
     @Test
     @Order(1)
