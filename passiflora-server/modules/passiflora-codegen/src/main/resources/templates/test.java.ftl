@@ -46,7 +46,7 @@ public class ${entityClass}ControllerTest {
 
     @Container
     @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.0-alpine").withReuse(true);
     
     @Test
     @Order(1)

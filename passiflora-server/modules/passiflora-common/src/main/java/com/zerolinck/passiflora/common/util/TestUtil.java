@@ -17,11 +17,12 @@
 package com.zerolinck.passiflora.common.util;
 
 import com.redis.testcontainers.RedisContainer;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.experimental.UtilityClass;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * TestContainers 容器复用，避免频繁创建测试容器
@@ -51,7 +52,7 @@ public class TestUtil {
             try {
                 lock.lock();
                 if (postgres == null) {
-                    postgres = new PostgreSQLContainer<>("postgres:13.16-bookworm").withReuse(true);
+                    postgres = new PostgreSQLContainer<>("postgres:17.0-alpine").withReuse(true);
                 }
             } finally {
                 lock.unlock();
@@ -68,7 +69,7 @@ public class TestUtil {
             try {
                 lock.lock();
                 if (redis == null) {
-                    redis = new RedisContainer("redis:6.2.7").withReuse(true);
+                    redis = new RedisContainer("redis:7.4.1-alpine").withReuse(true);
                 }
             } finally {
                 lock.unlock();
