@@ -29,10 +29,11 @@
         <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。 -->
         <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效 -->
         <loggers>
+            <logger name="com.zerolinck.passiflora.iam.mapper" level="debug"/>
+            <Logger name="com.baomidou.mybatisplus.core.injector.methods" level="ERROR"/>
             <root level="info">
                 <appender-ref ref="Console" />
             </root>
-            <logger name="com.zerolinck.passiflora.iam.mapper" level="debug"/>
         </loggers>
     </springProfile>
 
@@ -55,6 +56,7 @@
         <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。 -->
         <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效 -->
         <loggers>
+            <Logger name="com.baomidou.mybatisplus.core.injector.methods" level="ERROR"/>
             <root level="info">
                 <appender-ref ref="RollingFileInfo" />
             </root>

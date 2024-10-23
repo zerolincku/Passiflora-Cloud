@@ -33,7 +33,6 @@
             <root level="info">
                 <appender-ref ref="Console" />
             </root>
-            <logger name="com.zerolinck.passiflora.iam.mapper" level="debug"/>
         </loggers>
     </springProfile>
 
@@ -59,7 +58,6 @@
             <root level="info">
                 <appender-ref ref="RollingFileInfo" />
             </root>
-            <logger name="com.zerolinck.passiflora.iam.mapper" level="debug"/>
         </loggers>
     </springProfile>
 </configuration>
