@@ -1,4 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import java.util.*
 
 plugins {
     java
@@ -11,16 +12,26 @@ configurations.all {
     exclude("org.springframework.boot", "spring-boot-starter-logging")
 }
 
-val env: String = System.getProperty("env", "local")
+val env: String = System.getProperty("env", Constans.DEL_ENV)
 println("> 使用 $env 环境编译")
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
+val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+val arch = System.getProperty("os.arch").lowercase(Locale.getDefault())
 
 dependencies {
     implementation(project(":modules:passiflora-feign"))
     annotationProcessor(platform(project(":modules:passiflora-bom")))
     testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
     liquibaseRuntime(platform(project(":modules:passiflora-bom")))
+
+    if (os.contains("mac")) {
+        if (arch.contains("aarch64")) {
+            runtimeOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = "osx-aarch_64")
+        } else {
+            runtimeOnly(group = "io.netty", name = "netty-resolver-dns-native-macos")
+        }
+    }
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -29,7 +40,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
 
-    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
@@ -55,6 +65,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("software.amazon.awssdk:s3")
     implementation("software.amazon.awssdk:apache-client")
+    implementation("com.github.ben-manes.caffeine:caffeine")
 
     // liquibase
     implementation("org.liquibase:liquibase-core")
