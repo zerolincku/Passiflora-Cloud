@@ -19,8 +19,9 @@ package com.zerolinck.passiflora.codegen.util;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zerolinck.passiflora.common.util.YamlUtil;
-import java.util.Map;
+
 import javax.sql.DataSource;
+import java.util.Map;
 
 /** @author 林常坤 on 2024/10/24 */
 public class DataSourceUtil {
@@ -33,7 +34,6 @@ public class DataSourceUtil {
         config.setPassword(configMap.get("password").toString());
         config.setMaximumPoolSize(1);
         config.setMinimumIdle(1);
-        config.setIdleTimeout(30000);
         config.setConnectionTimeout(10000);
         return new HikariDataSource(config);
     }
