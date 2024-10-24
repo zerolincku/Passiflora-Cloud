@@ -28,9 +28,9 @@ dependencies {
 
     if (os.contains("mac")) {
         if (arch.contains("aarch64")) {
-            runtimeOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = "osx-aarch_64")
+            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = "osx-aarch_64")
         } else {
-            runtimeOnly(group = "io.netty", name = "netty-resolver-dns-native-macos")
+            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos")
         }
     }
 
@@ -76,6 +76,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("com.redis:testcontainers-redis")
 }
 
 tasks {

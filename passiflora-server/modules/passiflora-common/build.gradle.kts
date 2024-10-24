@@ -15,10 +15,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:minio")
-    api("com.redis:testcontainers-redis")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
