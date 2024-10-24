@@ -38,10 +38,11 @@ public class Table {
     /** 原始字段集合 */
     private List<Column> originColumnList;
 
-    /** 移除了{@link com.zerolinck.passiflora.model.common.BaseEntity} 中已存在字段的字段集合 */
+    /** 移除了 {@link com.zerolinck.passiflora.model.common.BaseEntity} 中已存在字段的字段集合 */
     private List<Column> columnList;
 
-    private boolean extentBase;
+    /** 标识，是否应该继承 {@link com.zerolinck.passiflora.model.common.BaseEntity} */
+    private boolean extendsBase;
 
     public Table(String tableName, String description, List<Column> originColumnList, List<Column> columnList) {
         this.tableName = tableName;

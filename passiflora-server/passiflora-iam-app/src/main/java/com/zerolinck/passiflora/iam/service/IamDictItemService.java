@@ -142,7 +142,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@Nonnull Collection<String> dictItemIds) {
-        List<IamDictItem> iamDictItems = baseMapper.selectBatchIds(dictItemIds);
+        List<IamDictItem> iamDictItems = baseMapper.selectByIds(dictItemIds);
         iamDictItems.forEach(iamDictItem -> {
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许删除");

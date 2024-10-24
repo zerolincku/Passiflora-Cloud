@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("org.yaml:snakeyaml:2.2")
+    implementation("org.yaml:snakeyaml:2.3")
 }
 
 repositories {

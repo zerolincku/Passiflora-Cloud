@@ -16,13 +16,13 @@
  */
 package com.zerolinck.passiflora.codegen;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import com.zerolinck.passiflora.codegen.model.Render;
 import com.zerolinck.passiflora.codegen.model.Table;
 import com.zerolinck.passiflora.codegen.service.RenderService;
 import com.zerolinck.passiflora.codegen.service.impl.FileRenderServiceImpl;
 import com.zerolinck.passiflora.codegen.service.impl.PostgresDbService;
+import com.zerolinck.passiflora.common.util.MapUtil;
+import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class GenerateCode {
     private static void render(
             List<String> tableNames, String moduleName, String contextPath, boolean overwrite, String author) {
         tableNames.forEach(tableName -> {
-            Map<Object, Object> dict = getInfo(tableName, moduleName, contextPath, author);
+            Map<String, Object> dict = getInfo(tableName, moduleName, contextPath, author);
             RenderService renderService = new FileRenderServiceImpl();
             renderService.render(new Render(
                     overwrite,
@@ -116,7 +116,7 @@ public class GenerateCode {
         });
     }
 
-    private static Map<Object, Object> getInfo(String tableName, String moduleName, String contextPath, String author) {
+    private static Map<String, Object> getInfo(String tableName, String moduleName, String contextPath, String author) {
         Table table = new PostgresDbService().getTableInfo(tableName);
         return MapUtil.builder()
                 .put("author", author)

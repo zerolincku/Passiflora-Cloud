@@ -16,13 +16,11 @@
  */
 package com.zerolinck.passiflora.codegen.service.impl;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
-import cn.hutool.extra.template.TemplateEngine;
-import cn.hutool.extra.template.TemplateUtil;
 import com.zerolinck.passiflora.codegen.model.Render;
 import com.zerolinck.passiflora.codegen.service.RenderService;
+import com.zerolinck.passiflora.common.util.FileUtil;
+import com.zerolinck.passiflora.common.util.FreemarkerUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-02-07 */
@@ -30,29 +28,24 @@ import lombok.extern.slf4j.Slf4j;
 public class FileRenderServiceImpl implements RenderService {
 
     @Override
+    @SneakyThrows
     public void render(Render render) {
-        TemplateEngine engine =
-                TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
-        Template template = engine.getTemplate(render.getTemplate());
-        String result = template.render(render.getData());
+        String result = FreemarkerUtil.renderTemplate(
+                FreemarkerUtil.getTemplateFromClasspath(render.getTemplate()), render.getData());
+
+        // 确定文件路径
         String currentDirectory = System.getProperty("user.dir");
         String dirPath = String.format(currentDirectory + render.getPath());
         String filePath =
                 String.format(dirPath + render.getFileName(), render.getData().get("entityClass"));
-        if (!FileUtil.exist(dirPath)) {
-            FileUtil.mkdir(dirPath);
-        }
-        if (render.isOverride()) {
-            if (FileUtil.exist(filePath)) {
-                log.info("{}文件已存在，覆盖", filePath);
-            }
-        } else {
-            FileUtil.writeUtf8String(result, filePath);
-            if (FileUtil.exist(filePath)) {
-                log.info("{}文件已存在，不进行写入", filePath);
-            } else {
-                FileUtil.writeUtf8String(result, filePath);
-            }
+
+        try {
+            // 确保目录存在
+            FileUtil.ensureDirectoryExists(dirPath);
+            // 写入文件
+            FileUtil.writeFile(filePath, result, render.isOverride());
+        } catch (Exception e) {
+            log.error("文件写入错误", e);
         }
     }
 }

@@ -1,0 +1,4 @@
+---
+url: "@iam_app.database.url@"
+username: "@iam_app.database.username@"
+password: "@iam_app.database.password@"

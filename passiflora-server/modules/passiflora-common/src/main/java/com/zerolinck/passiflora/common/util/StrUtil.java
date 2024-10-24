@@ -39,6 +39,7 @@ public class StrUtil {
         };
     }
 
+    /** 驼峰字符串，转换为使用 _ 连接的字符串 */
     @Nonnull
     @SuppressWarnings("unused")
     public static String camelToUnderline(@Nullable String str) {
@@ -53,6 +54,7 @@ public class StrUtil {
         return joiner.toString();
     }
 
+    /** 驼峰字符串，转换为使用 - 连接的字符串 */
     @Nonnull
     public static String camelToMidline(@Nullable String str) {
         if (str == null) {
@@ -64,5 +66,38 @@ public class StrUtil {
             joiner.add(s.toLowerCase());
         }
         return joiner.toString();
+    }
+
+    /** 将字符串的第一个字符转为大写 */
+    public static String upperFirst(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    }
+
+    /** 将下划线分隔的字符串转换为驼峰命名法 */
+    public static String toCamelCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        StringBuilder result = new StringBuilder();
+        boolean toUpperCase = false;
+
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '_') {
+                toUpperCase = true;
+            } else {
+                if (toUpperCase) {
+                    result.append(Character.toUpperCase(c));
+                    toUpperCase = false;
+                } else {
+                    result.append(c);
+                }
+            }
+        }
+        return result.toString();
     }
 }

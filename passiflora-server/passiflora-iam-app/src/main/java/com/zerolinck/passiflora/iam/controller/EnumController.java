@@ -21,9 +21,9 @@ import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.feign.iam.EnumApi;
 import jakarta.annotation.PostConstruct;
-import java.lang.reflect.Method;
 import java.util.*;
 import lombok.SneakyThrows;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,14 +53,16 @@ public class EnumController implements EnumApi {
             Object[] enumConstants = clazz.getEnumConstants();
             // 遍历枚举实例
             for (Object enumInstance : enumConstants) {
-                Method getNameMethod = clazz.getMethod("getLabel");
-                Object name = getNameMethod.invoke(enumInstance);
-                Method getValueMethod = clazz.getMethod("getValue");
-                Object value = getValueMethod.invoke(enumInstance);
+                Object name = ReflectionUtils.invokeMethod(
+                        Objects.requireNonNull(ReflectionUtils.findMethod(clazz, "getLabel")), enumInstance);
+                Object value = ReflectionUtils.invokeMethod(
+                        Objects.requireNonNull(ReflectionUtils.findMethod(clazz, "getValue")), enumInstance);
                 String enumName = StrUtil.camelToMidline(clazz.getSimpleName());
                 if (!MAP.containsKey(enumName)) {
                     MAP.put(enumName, new ArrayList<>());
                 }
+                assert name != null;
+                assert value != null;
                 MAP.get(enumName).add(Map.of("label", name.toString(), "value", value));
             }
         }

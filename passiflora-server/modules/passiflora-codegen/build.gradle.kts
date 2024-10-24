@@ -1,6 +1,12 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     java
 }
+
+val env: String = System.getProperty("env", Constans.DEL_ENV)
+val projectVersion = project.version.toString()
+val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
 dependencies {
     implementation(project(":modules:passiflora-common"))
@@ -15,9 +21,17 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
 
     runtimeOnly("org.postgresql:postgresql")
-    implementation("cn.hutool:hutool-db:5.8.27")
-    implementation("cn.hutool:hutool-extra:5.8.27")
+    implementation("commons-dbutils:commons-dbutils")
+    implementation("com.zaxxer:HikariCP")
     implementation("org.freemarker:freemarker")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("org.slf4j:slf4j-jdk14")
+    implementation("org.yaml:snakeyaml")
+}
+
+tasks {
+    processResources {
+        filter<ReplaceTokens>("tokens" to configMap)
+    }
 }

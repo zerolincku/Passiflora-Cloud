@@ -14,7 +14,6 @@ configurations.all {
 }
 
 val env: String = System.getProperty("env", Constans.DEL_ENV)
-println("> 使用 $env 环境编译")
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 val os = System.getProperty("os.name").lowercase(Locale.getDefault())
@@ -92,6 +91,10 @@ tasks {
         filter<ReplaceTokens>("tokens" to configMap)
     }
     compileJava {
+        options.compilerArgs.add("-Xlint:deprecation")
+        doFirst {
+            print("> Task :${project.name}: 使用 $env 环境编译")
+        }
         doLast {
             copy {
                 from("src/main/java") {

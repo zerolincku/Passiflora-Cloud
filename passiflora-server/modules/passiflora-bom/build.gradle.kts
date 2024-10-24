@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     constraints {
+        api("org.slf4j:slf4j-jdk14:2.0.16")
         api("io.netty:netty-resolver-dns-native-macos:4.1.114.Final")
         api("org.liquibase:liquibase-core:4.29.1")
         api("org.liquibase:liquibase-groovy-dsl:4.0.0")
@@ -31,6 +32,8 @@ dependencies {
         api("commons-codec:commons-codec:1.17.1")
         api("commons-io:commons-io:2.17.0")
         api("org.apache.httpcomponents.client5:httpclient5:5.4")
+        api("commons-dbutils:commons-dbutils:1.8.1")
+        api("org.apache.velocity:velocity-engine-core:2.4.1")
         api("com.google.guava:guava:33.3.1-jre")
         api("com.github.ben-manes.caffeine:caffeine:3.1.8")
         api("org.junit.jupiter:junit-jupiter-api:5.11.3")
@@ -38,6 +41,7 @@ dependencies {
         api("software.amazon.awssdk:s3:2.28.23")
         api("software.amazon.awssdk:apache-client:2.28.24")
         api("com.redis:testcontainers-redis:2.2.2")
+        api("org.yaml:snakeyaml:2.3")
     }
 }
 

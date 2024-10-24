@@ -32,6 +32,8 @@ dependencies {
     compileOnly("org.testcontainers:minio")
     compileOnly("com.redis:testcontainers-redis")
 
+    api("org.freemarker:freemarker")
+    api("org.yaml:snakeyaml")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")
     api("org.springframework.boot:spring-boot-starter-log4j2")

@@ -14,26 +14,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.codegen.model;
+package com.zerolinck.passiflora.common.util;
 
+import java.util.HashMap;
 import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/** @author linck on 2024-02-07 */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Render {
+/** @author 林常坤 on 2024/10/24 */
+public class MapUtil {
 
-    private boolean override;
+    public static MapBuilder builder() {
+        return new MapBuilder();
+    }
 
-    private String template;
+    public static class MapBuilder {
 
-    private String fileName;
+        private final Map<String, Object> map = new HashMap<>();
 
-    private String path;
+        public MapBuilder put(String key, Object value) {
+            map.put(key, value);
+            return this;
+        }
 
-    private Map<String, Object> data;
+        public Map<String, Object> build() {
+            return map;
+        }
+    }
 }

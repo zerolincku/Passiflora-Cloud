@@ -1,6 +1,6 @@
 package com.zerolinck.passiflora.model.${moduleName}.entity;
 
-<#if table.extentBase>
+<#if table.extendsBase>
 import com.zerolinck.passiflora.model.common.BaseEntity;
 </#if>
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -21,10 +21,10 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 @Schema(description = "${table.description}")
-<#if table.extentBase>
+<#if table.extendsBase>
 @EqualsAndHashCode(callSuper = false)
 </#if>
-public class ${entityClass} <#if table.extentBase>extends BaseEntity </#if>{
+public class ${entityClass} <#if table.extendsBase>extends BaseEntity </#if>{
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.columnList as column>
