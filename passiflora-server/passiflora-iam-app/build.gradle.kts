@@ -10,6 +10,7 @@ plugins {
 
 configurations.all {
     exclude("org.springframework.boot", "spring-boot-starter-logging")
+    exclude("commons-logging", "commons-logging")
 }
 
 val env: String = System.getProperty("env", Constans.DEL_ENV)
