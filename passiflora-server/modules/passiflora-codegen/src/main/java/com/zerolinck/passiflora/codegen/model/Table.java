@@ -16,15 +16,14 @@
  */
 package com.zerolinck.passiflora.codegen.model;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /** @author linck on 2024-02-06 */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Table {
 
     private String tableName;
@@ -43,11 +42,4 @@ public class Table {
 
     /** 标识，是否应该继承 {@link com.zerolinck.passiflora.model.common.BaseEntity} */
     private boolean extendsBase;
-
-    public Table(String tableName, String description, List<Column> originColumnList, List<Column> columnList) {
-        this.tableName = tableName;
-        this.description = description;
-        this.originColumnList = originColumnList;
-        this.columnList = columnList;
-    }
 }
