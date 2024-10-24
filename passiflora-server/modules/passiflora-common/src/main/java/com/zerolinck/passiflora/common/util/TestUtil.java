@@ -26,8 +26,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 /**
  * TestContainers 容器复用，避免频繁创建测试容器
  *
- * @author 林常坤
- * @since 2024-10-07
+ * @author 林常坤 on 2024-10-07
  */
 @UtilityClass
 public class TestUtil {

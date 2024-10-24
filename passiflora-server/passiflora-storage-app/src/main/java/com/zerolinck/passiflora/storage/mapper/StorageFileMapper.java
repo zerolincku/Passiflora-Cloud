@@ -34,8 +34,7 @@ import org.apache.ibatis.annotations.Update;
 /**
  * 通用文件 Mybatis Mapper
  *
- * @author linck
- * @since 2024-05-17
+ * @author linck on 2024-05-17
  */
 public interface StorageFileMapper extends BaseMapper<StorageFile> {
 

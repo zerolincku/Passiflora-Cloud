@@ -45,8 +45,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 /**
  * 角色 Unit Test
  *
- * @author 林常坤
- * @since 2024-08-17
+ * @author 林常坤 on 2024-08-17
  */
 @Slf4j
 @Testcontainers

@@ -39,8 +39,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /**
  * 分布式锁工具类，保证在并发情况下的数据正确
  *
- * @author linck
- * @since 2024-03-20
+ * @author linck on 2024-03-20
  */
 public class LockUtil {
 

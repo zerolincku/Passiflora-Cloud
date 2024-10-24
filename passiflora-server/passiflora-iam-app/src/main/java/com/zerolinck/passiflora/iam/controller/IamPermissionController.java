@@ -35,8 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author linck
- * @since 2024-05-06
+ * @author linck on 2024-05-06
  */
 @Slf4j
 @RestController

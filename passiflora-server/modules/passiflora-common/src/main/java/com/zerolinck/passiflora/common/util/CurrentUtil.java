@@ -28,8 +28,7 @@ import java.util.Set;
 import lombok.experimental.UtilityClass;
 
 /**
- * @author linck
- * @since 2023-12-15
+ * @author linck on 2023-12-15
  */
 @UtilityClass
 public class CurrentUtil {

@@ -29,8 +29,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * @author linck
- * @since 2024-05-14
+ * @author linck on 2024-05-14
  */
 @Data
 @Schema(description = "职位数据权限")

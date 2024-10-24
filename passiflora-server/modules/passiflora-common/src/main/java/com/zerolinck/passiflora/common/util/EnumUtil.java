@@ -21,8 +21,7 @@ import javax.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 @UtilityClass
 public class EnumUtil {

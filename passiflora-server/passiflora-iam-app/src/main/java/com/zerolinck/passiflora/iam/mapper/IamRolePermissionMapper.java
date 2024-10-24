@@ -31,8 +31,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 角色权限 Mybatis Mapper
  *
- * @author 林常坤
- * @since 2024-08-17
+ * @author 林常坤 on 2024-08-17
  */
 public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
 

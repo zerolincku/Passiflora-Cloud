@@ -38,8 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author linck
- * @since 2024-04-09
+ * @author linck on 2024-04-09
  */
 @Slf4j
 @Service

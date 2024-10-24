@@ -22,8 +22,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * 应用 MapStruct Convert
  *
- * @author linck
- * @since 2024-03-26
+ * @author linck on 2024-03-26
  */
 @Mapper
 @SuppressWarnings("all")

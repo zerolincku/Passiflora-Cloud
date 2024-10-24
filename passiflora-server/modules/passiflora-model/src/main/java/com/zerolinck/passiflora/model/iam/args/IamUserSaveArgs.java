@@ -23,8 +23,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author 林常坤
- * @since 2024-08-04
+ * @author 林常坤 on 2024-08-04
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -27,8 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 
 /**
- * @author linck
- * @since 2023-12-15
+ * @author linck on 2023-12-15
  */
 @Slf4j
 public class FeignConfiguration implements RequestInterceptor {

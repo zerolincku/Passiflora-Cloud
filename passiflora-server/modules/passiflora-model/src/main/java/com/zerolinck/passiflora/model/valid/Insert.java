@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.model.valid;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 public interface Insert {}

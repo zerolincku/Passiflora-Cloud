@@ -38,8 +38,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 /**
- * @author linck
- * @since 2024-04-30
+ * @author linck on 2024-04-30
  */
 @Slf4j
 @Component

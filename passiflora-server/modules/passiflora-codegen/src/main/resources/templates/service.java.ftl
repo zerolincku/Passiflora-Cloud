@@ -22,8 +22,7 @@ import java.util.*;
 /**
  * ${table.description} Service
  *
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 @Slf4j
 @Service

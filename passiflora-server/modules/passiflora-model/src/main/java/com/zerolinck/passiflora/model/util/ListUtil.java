@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author linck
- * @since 2024-05-01
+ * @author linck on 2024-05-01
  */
 public class ListUtil {
 

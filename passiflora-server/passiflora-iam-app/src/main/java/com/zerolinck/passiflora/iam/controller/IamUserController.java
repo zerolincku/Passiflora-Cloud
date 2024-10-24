@@ -38,8 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author linck
- * @since 2024-02-05
+ * @author linck on 2024-02-05
  */
 @RestController
 @RequestMapping("iam-user")

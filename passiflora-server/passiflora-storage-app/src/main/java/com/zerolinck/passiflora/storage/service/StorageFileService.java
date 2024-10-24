@@ -52,8 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 通用文件 Service
  *
- * @author linck
- * @since 2024-05-17
+ * @author linck on 2024-05-17
  */
 @Slf4j
 @Service

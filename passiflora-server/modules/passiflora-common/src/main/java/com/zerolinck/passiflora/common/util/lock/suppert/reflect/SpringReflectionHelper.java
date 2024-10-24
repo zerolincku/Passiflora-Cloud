@@ -22,8 +22,7 @@ import org.springframework.core.GenericTypeResolver;
  * Spring 反射辅助类
  *
  * @author noear
- * @author hubin
- * @since 2021-09-03
+ * @author hubin on 2021-09-03
  */
 public class SpringReflectionHelper {
 

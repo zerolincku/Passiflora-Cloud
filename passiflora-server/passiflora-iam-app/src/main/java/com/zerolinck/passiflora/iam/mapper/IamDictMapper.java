@@ -26,8 +26,7 @@ import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @author linck
- * @since 2024-04-01
+ * @author linck on 2024-04-01
  */
 public interface IamDictMapper extends BaseMapper<IamDict> {
     Page<IamDict> page(

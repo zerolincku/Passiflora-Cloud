@@ -37,8 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 应用 Controller
  *
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 @Slf4j
 @RestController

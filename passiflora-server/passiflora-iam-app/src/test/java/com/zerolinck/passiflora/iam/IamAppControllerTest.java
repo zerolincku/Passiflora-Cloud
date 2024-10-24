@@ -46,8 +46,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 /**
  * 应用 Unit Test
  *
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 @Slf4j
 @Testcontainers

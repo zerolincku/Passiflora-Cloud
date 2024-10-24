@@ -31,8 +31,7 @@ import org.springframework.stereotype.Component;
 /**
  * 检查 bucket 是否存在，不存在，则创建
  *
- * @author linck
- * @since 2024-05-27
+ * @author linck on 2024-05-27
  */
 @Slf4j
 @Component

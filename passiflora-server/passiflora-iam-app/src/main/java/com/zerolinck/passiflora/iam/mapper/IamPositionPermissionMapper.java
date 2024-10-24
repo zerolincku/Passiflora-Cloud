@@ -29,8 +29,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @author linck
- * @since 2024-05-06
+ * @author linck on 2024-05-06
  */
 public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermission> {
     Page<IamPositionPermission> page(

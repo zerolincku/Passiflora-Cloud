@@ -33,8 +33,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * 通用文件 Entity
  *
- * @author linck
- * @since 2024-05-17
+ * @author linck on 2024-05-17
  */
 @Data
 @Schema(description = "通用文件")

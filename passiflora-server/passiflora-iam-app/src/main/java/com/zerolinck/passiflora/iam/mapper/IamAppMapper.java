@@ -30,8 +30,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 应用 Mybatis Mapper
  *
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 public interface IamAppMapper extends BaseMapper<IamApp> {
 

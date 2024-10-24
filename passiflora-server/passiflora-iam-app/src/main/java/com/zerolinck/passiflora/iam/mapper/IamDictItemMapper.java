@@ -28,8 +28,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
- * @author linck
- * @since 2024-04-01
+ * @author linck on 2024-04-01
  */
 public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
     Page<IamDictItem> page(

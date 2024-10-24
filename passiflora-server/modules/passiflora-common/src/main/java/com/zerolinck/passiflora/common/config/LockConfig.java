@@ -26,8 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * @author linck
- * @since 2024-05-13
+ * @author linck on 2024-05-13
  */
 @Configuration
 @ConditionalOnProperty(prefix = "passiflora.config", name = "lock", havingValue = "true")

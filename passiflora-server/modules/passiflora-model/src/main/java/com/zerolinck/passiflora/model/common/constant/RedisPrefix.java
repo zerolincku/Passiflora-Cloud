@@ -17,8 +17,7 @@
 package com.zerolinck.passiflora.model.common.constant;
 
 /**
- * @author linck
- * @since 2024-04-01
+ * @author linck on 2024-04-01
  */
 public interface RedisPrefix {
     String TOKEN_KEY = "passiflora:token:";

@@ -15,8 +15,7 @@ import java.util.Collection;
 /**
  * ${table.description} Mybatis Mapper
  *
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 public interface ${mapperClass} extends BaseMapper<${entityClass}> {
 

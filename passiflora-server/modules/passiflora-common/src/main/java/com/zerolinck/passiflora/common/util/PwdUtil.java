@@ -24,8 +24,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 /**
  * 密码工具类
  *
- * @author 林常坤
- * @since 2024-08-13
+ * @author 林常坤 on 2024-08-13
  */
 @UtilityClass
 public class PwdUtil {

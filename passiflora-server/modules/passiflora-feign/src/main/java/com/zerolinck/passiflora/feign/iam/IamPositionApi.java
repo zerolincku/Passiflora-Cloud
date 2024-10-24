@@ -35,8 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author linck
- * @since 2024-05-14
+ * @author linck on 2024-05-14
  */
 @Tag(name = "职位")
 @FeignClient(

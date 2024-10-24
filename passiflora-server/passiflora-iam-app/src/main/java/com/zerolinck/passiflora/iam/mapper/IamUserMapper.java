@@ -26,8 +26,7 @@ import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @author linck
- * @since 2024-02-07
+ * @author linck on 2024-02-07
  */
 public interface IamUserMapper extends BaseMapper<IamUser> {
     Page<IamUser> page(

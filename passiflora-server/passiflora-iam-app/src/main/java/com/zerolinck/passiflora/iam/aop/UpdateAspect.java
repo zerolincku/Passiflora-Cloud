@@ -26,8 +26,7 @@ import org.springframework.stereotype.Component;
 /**
  * 拦截 update 方法，置空 createAt 和 createBy
  *
- * @author linck
- * @since 2024-03-19
+ * @author linck on 2024-03-19
  */
 @Slf4j
 @Aspect

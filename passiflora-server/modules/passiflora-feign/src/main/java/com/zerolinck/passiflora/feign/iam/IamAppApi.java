@@ -32,8 +32,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 @Tag(name = "应用")
 @FeignClient(

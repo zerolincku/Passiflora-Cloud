@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 @Tag(name = "${table.description}")
 @FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityNameUrl}", configuration = FeignConfiguration.class)

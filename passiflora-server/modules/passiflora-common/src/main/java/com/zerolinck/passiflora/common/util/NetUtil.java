@@ -31,8 +31,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * @author linck
- * @since 2023-12-11
+ * @author linck on 2023-12-11
  */
 @UtilityClass
 public class NetUtil {

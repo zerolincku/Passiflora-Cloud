@@ -6,8 +6,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * ${table.description} MapStruct Convert
  *
- * @author ${author}
- * @since 2024-03-26
+ * @author ${author} on 2024-03-26
  */
 @Mapper
 @SuppressWarnings("all")

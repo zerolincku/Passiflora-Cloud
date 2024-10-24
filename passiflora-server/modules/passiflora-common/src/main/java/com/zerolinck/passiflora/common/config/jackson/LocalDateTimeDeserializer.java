@@ -25,8 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
     @Override

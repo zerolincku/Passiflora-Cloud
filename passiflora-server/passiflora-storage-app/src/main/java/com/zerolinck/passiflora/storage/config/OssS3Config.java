@@ -30,8 +30,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 
 /**
- * @author linck
- * @since 2023-12-15
+ * @author linck on 2023-12-15
  */
 @Configuration
 @RequiredArgsConstructor

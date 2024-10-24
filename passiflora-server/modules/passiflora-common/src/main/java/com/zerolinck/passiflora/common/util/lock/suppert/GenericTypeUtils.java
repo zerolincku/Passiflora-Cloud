@@ -23,8 +23,7 @@ import com.zerolinck.passiflora.common.util.lock.suppert.reflect.SpringReflectio
  * 泛型类工具（用于隔离Spring的代码）
  *
  * @author noear
- * @author hubin
- * @since 2021-09-03
+ * @author hubin on 2021-09-03
  */
 public class GenericTypeUtils {
 

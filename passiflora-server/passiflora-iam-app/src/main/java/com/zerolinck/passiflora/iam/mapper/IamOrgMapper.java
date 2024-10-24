@@ -29,8 +29,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
- * @author linck
- * @since 2024-04-09
+ * @author linck on 2024-04-09
  */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
     Page<IamOrg> page(

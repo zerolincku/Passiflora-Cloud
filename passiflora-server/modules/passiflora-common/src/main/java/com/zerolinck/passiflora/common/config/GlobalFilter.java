@@ -25,8 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 
 /**
- * @author linck
- * @since 2024-04-24
+ * @author linck on 2024-04-24
  */
 @Slf4j
 @WebFilter("/*")

@@ -42,8 +42,7 @@ import lombok.Data;
  * <p>eg: 排序 sort[name]=desc&sort[id]=asc 等同于 order by name desc, id asc
  *
  * @param <T> 创建 page 以及，queryWrapper 的泛型类
- * @author linck
- * @since 2022-11-18
+ * @author linck on 2022-11-18
  */
 @Data
 public class QueryCondition<T> {

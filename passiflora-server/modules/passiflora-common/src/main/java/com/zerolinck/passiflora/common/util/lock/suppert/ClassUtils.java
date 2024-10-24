@@ -26,8 +26,7 @@ import java.util.List;
  * ClassUtils
  *
  * @author Caratacus
- * @author HCL
- * @since 2017/07/08
+ * @author HCL on 2017/07/08
  */
 public final class ClassUtils {
 

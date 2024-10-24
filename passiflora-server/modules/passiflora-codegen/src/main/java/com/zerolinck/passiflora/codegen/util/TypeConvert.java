@@ -22,8 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 public class TypeConvert {
 

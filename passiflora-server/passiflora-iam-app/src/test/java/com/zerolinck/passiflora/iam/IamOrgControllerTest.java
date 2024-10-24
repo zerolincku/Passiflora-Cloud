@@ -42,8 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
- * @author linck
- * @since 2024-04-09
+ * @author linck on 2024-04-09
  */
 @Slf4j
 @Testcontainers

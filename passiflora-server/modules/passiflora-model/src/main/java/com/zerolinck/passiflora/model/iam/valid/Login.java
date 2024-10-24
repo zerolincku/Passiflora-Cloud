@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.model.iam.valid;
 
 /**
- * @author linck
- * @since 2024-02-07
+ * @author linck on 2024-02-07
  */
 public interface Login {}

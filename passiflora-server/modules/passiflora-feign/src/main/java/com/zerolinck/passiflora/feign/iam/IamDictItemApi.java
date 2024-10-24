@@ -33,8 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author linck
- * @since 2024-04-01
+ * @author linck on 2024-04-01
  */
 @Tag(name = "字典项")
 @FeignClient(

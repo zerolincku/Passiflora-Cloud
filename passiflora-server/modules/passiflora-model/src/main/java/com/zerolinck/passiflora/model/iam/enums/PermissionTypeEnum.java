@@ -21,8 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author linck
- * @since 2024-05-08
+ * @author linck on 2024-05-08
  */
 @Getter
 @AllArgsConstructor

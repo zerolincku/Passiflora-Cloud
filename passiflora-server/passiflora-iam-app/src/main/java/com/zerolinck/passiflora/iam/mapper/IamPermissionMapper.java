@@ -31,8 +31,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 /**
- * @author linck
- * @since 2024-05-06
+ * @author linck on 2024-05-06
  */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {
     Page<IamPermission> page(

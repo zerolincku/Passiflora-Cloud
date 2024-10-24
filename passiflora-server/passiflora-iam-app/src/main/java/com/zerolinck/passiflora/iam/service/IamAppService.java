@@ -37,8 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 应用 Service
  *
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 @Slf4j
 @Service

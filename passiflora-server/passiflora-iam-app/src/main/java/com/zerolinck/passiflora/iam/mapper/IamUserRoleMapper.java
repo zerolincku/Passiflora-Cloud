@@ -32,8 +32,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 用户角色绑定 Mybatis Mapper
  *
- * @author 林常坤
- * @since 2024-08-17
+ * @author 林常坤 on 2024-08-17
  */
 public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
 

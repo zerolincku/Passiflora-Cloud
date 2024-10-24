@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * @author linck
- * @since 2023-12-13
+ * @author linck on 2023-12-13
  */
 @FeignClient(
         value = "enum",

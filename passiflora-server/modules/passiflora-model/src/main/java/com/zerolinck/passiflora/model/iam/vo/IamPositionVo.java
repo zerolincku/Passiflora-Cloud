@@ -23,8 +23,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author linck
- * @since 2024-05-28
+ * @author linck on 2024-05-28
  */
 @Data
 @Schema(description = "职位")

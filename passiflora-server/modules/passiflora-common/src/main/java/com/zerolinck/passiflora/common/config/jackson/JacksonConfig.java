@@ -42,8 +42,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 @Configuration
 public class JacksonConfig {

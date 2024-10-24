@@ -23,8 +23,7 @@ import lombok.Getter;
 /**
  * 文件状态
  *
- * @author linck
- * @since 2024-04-09
+ * @author linck on 2024-04-09
  */
 @Getter
 @AllArgsConstructor

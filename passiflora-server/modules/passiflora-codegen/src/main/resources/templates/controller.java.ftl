@@ -20,8 +20,7 @@ import java.util.NoSuchElementException;
 /**
  * ${table.description} Controller
  *
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 @Slf4j
 @RestController

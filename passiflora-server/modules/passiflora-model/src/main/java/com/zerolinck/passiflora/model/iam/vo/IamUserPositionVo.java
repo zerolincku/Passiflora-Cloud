@@ -19,8 +19,7 @@ package com.zerolinck.passiflora.model.iam.vo;
 import lombok.Data;
 
 /**
- * @author 林常坤
- * @since 2024-08-10
+ * @author 林常坤 on 2024-08-10
  */
 @Data
 public class IamUserPositionVo {

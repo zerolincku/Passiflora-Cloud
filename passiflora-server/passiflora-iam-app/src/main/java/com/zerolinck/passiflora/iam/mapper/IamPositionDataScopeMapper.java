@@ -26,8 +26,7 @@ import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * @author linck
- * @since 2024-05-14
+ * @author linck on 2024-05-14
  */
 public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {
     Page<IamPositionDataScope> page(

@@ -17,8 +17,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * ${table.description} Entity
  *
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 @Data
 @Schema(description = "${table.description}")

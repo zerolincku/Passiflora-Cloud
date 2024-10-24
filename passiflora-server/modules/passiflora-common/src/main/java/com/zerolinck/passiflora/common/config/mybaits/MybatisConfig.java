@@ -26,8 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author linck
- * @since 2024-02-07
+ * @author linck on 2024-02-07
  */
 @Configuration
 @ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")

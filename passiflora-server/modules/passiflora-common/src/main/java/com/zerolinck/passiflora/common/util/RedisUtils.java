@@ -29,8 +29,7 @@ import org.springframework.util.CollectionUtils;
 /**
  * 需要再 Configuration 中注册 redisTemplate 时，将 redisTemplate 注入此工具类
  *
- * @author linck
- * @since 2023-12-14
+ * @author linck on 2023-12-14
  */
 @Slf4j
 @UtilityClass

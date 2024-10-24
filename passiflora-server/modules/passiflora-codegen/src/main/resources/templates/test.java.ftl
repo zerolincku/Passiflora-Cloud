@@ -27,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * ${table.description} Unit Test
  *
- * @author ${author}
- * @since ${date}
+ * @author ${author} on ${date}
  */
 @Slf4j
 @Testcontainers

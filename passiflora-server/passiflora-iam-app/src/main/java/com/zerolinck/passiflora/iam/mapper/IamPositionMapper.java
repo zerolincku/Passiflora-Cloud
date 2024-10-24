@@ -30,8 +30,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 /**
- * @author linck
- * @since 2024-05-14
+ * @author linck on 2024-05-14
  */
 public interface IamPositionMapper extends BaseMapper<IamPosition> {
     Page<IamPosition> page(

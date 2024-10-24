@@ -19,8 +19,7 @@ package com.zerolinck.passiflora.codegen.model;
 import lombok.Data;
 
 /**
- * @author linck
- * @since 2024-02-06
+ * @author linck on 2024-02-06
  */
 @Data
 public class Column {

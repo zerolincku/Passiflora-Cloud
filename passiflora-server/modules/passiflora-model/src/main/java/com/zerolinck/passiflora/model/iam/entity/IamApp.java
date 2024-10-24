@@ -35,8 +35,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * 应用 Entity
  *
- * @author linck
- * @since 2024-09-30
+ * @author linck on 2024-09-30
  */
 @Data
 @Schema(description = "应用")

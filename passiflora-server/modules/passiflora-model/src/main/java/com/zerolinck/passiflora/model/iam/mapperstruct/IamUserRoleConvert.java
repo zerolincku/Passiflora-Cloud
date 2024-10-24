@@ -22,8 +22,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * 用户角色绑定 MapStruct Convert
  *
- * @author 林常坤
- * @since 2024-03-26
+ * @author 林常坤 on 2024-03-26
  */
 @Mapper
 @SuppressWarnings("all")
