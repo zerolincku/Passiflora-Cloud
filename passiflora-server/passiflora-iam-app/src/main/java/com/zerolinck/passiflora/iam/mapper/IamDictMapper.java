@@ -25,9 +25,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author linck on 2024-04-01
- */
+/** @author linck on 2024-04-01 */
 public interface IamDictMapper extends BaseMapper<IamDict> {
     Page<IamDict> page(
             IPage<IamDict> page,

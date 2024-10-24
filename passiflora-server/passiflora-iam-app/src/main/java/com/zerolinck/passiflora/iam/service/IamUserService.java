@@ -47,9 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 @Service
 @RequiredArgsConstructor
 public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {

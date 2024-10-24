@@ -25,9 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 @Configuration
 @ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")
 public class MybatisConfig {

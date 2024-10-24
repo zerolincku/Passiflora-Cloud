@@ -22,9 +22,7 @@ import java.util.Collection;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-/**
- * @author linck on 2024-06-29
- */
+/** @author linck on 2024-06-29 */
 @Data
 public class PositionPermissionSaveArgs {
 

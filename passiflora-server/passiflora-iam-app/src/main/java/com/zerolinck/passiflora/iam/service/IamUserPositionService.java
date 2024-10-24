@@ -35,9 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-/**
- * @author linck on 2024-05-14
- */
+/** @author linck on 2024-05-14 */
 @Slf4j
 @Service
 public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, IamUserPosition> {

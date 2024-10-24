@@ -37,9 +37,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author linck on 2024-05-14
- */
+/** @author linck on 2024-05-14 */
 @Slf4j
 @Service
 @RequiredArgsConstructor

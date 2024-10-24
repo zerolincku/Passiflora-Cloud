@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * @author linck on 2024-05-17
- */
+/** @author linck on 2024-05-17 */
 @Tag(name = "通用文件")
 @FeignClient(
         value = "storageFile",

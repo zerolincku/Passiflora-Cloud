@@ -32,9 +32,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * @author linck on 2023-04-11
- */
+/** @author linck on 2023-04-11 */
 public class TypeHandlerRegister {
 
     @Resource

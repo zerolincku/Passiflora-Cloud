@@ -20,9 +20,7 @@ import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * @author linck on 2024-04-02
- */
+/** @author linck on 2024-04-02 */
 @Getter
 @AllArgsConstructor
 public enum YesOrNoEnum implements LabelValueInterface {

@@ -25,9 +25,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 public interface IamUserMapper extends BaseMapper<IamUser> {
     Page<IamUser> page(
             @Param("orgId") String orgId,

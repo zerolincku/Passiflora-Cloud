@@ -32,9 +32,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author linck on 2024-05-06
- */
+/** @author linck on 2024-05-06 */
 @Slf4j
 @Service
 public class IamPositionPermissionService extends ServiceImpl<IamPositionPermissionMapper, IamPositionPermission> {

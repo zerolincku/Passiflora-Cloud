@@ -18,9 +18,7 @@ package com.zerolinck.passiflora.common.util;
 
 import lombok.experimental.UtilityClass;
 
-/**
- * @author 林常坤 on 2024-08-13
- */
+/** @author 林常坤 on 2024-08-13 */
 @UtilityClass
 public class ProxyUtil {
 

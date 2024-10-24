@@ -17,14 +17,14 @@
 package com.zerolinck.passiflora.common.util;
 
 import jakarta.annotation.Nonnull;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import lombok.experimental.UtilityClass;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 @UtilityClass
 public class TimeUtil {
 
@@ -48,6 +48,7 @@ public class TimeUtil {
     public static final DateTimeFormatter NORMAL_TIME_FORMATTER_NO_SECOND = DateTimeFormatter.ofPattern("HH:mm");
 
     @Nonnull
+    @SuppressWarnings("unused")
     public static LocalDateTime commonStrDate2LocalDateTime(@Nonnull String dateStr) {
         if (NORMAL.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER);
@@ -59,6 +60,22 @@ public class TimeUtil {
             return LocalDateTime.parse(dateStr + " 00", NORMAL_DATE_TIME_FORMATTER_NO_MINUTES);
         }
         throw new IllegalArgumentException("时间参数错误: " + dateStr);
+    }
+
+    /** 时间戳转换为 LocalDateTime */
+    @Nonnull
+    public static LocalDateTime timestamp2LocalDateTime(@Nonnull String timestamp) {
+        long epoch;
+        if (timestamp.length() == 10) {
+            // 秒级时间戳，转换为毫秒
+            epoch = Long.parseLong(timestamp) * 1000;
+        } else if (timestamp.length() == 13) {
+            // 毫秒级时间戳
+            epoch = Long.parseLong(timestamp);
+        } else {
+            throw new IllegalArgumentException("Invalid timestamp format. Must be either 10 or 13 digits.");
+        }
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
     }
 
     @Nonnull

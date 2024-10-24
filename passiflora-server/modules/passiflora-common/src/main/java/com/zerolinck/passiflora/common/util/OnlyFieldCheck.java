@@ -34,9 +34,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author linck on 2023-12-18
- */
+/** @author linck on 2023-12-18 */
 public class OnlyFieldCheck {
 
     private static final Map<Class<?>, List<CheckField>> map = new HashMap<>();

@@ -18,9 +18,7 @@ package com.zerolinck.passiflora.codegen.service;
 
 import com.zerolinck.passiflora.codegen.model.Table;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 public interface DbService {
     Table getTableInfo(String tableName);
 }

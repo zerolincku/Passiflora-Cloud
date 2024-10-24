@@ -22,9 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 
-/**
- * @author linck on 2024-03-18
- */
+/** @author linck on 2024-03-18 */
 @UtilityClass
 public class AssertUtil {
 

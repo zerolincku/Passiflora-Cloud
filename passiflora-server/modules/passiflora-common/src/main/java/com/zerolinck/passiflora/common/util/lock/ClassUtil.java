@@ -23,9 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author 林常坤 on 2024-08-14
- */
+/** @author 林常坤 on 2024-08-14 */
 public class ClassUtil {
 
     /**

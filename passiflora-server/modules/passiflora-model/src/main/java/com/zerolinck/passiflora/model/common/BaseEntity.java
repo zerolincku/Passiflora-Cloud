@@ -26,9 +26,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Data;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 @Data
 public class BaseEntity {
 

@@ -24,9 +24,7 @@ import java.util.Map;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
-/**
- * @author linck on 2024-05-04
- */
+/** @author linck on 2024-05-04 */
 @SuppressWarnings("all")
 public class LockWrapper<T> {
 

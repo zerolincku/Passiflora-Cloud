@@ -18,9 +18,7 @@ package com.zerolinck.passiflora.codegen.service;
 
 import com.zerolinck.passiflora.codegen.model.Render;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 public interface RenderService {
     void render(Render render);
 }

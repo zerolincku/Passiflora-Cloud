@@ -23,9 +23,7 @@ import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @author linck on 2024-03-19
- */
+/** @author linck on 2024-03-19 */
 @Data
 @Schema(description = "用户")
 @EqualsAndHashCode(callSuper = false)

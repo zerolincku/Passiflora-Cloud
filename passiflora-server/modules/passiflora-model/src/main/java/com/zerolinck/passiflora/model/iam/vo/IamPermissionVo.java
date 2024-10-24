@@ -21,9 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Data;
 
-/**
- * @author linck on 2024-05-06
- */
+/** @author linck on 2024-05-06 */
 @Data
 public class IamPermissionVo {
 

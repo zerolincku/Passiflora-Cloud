@@ -20,9 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.experimental.UtilityClass;
 
-/**
- * @author linck on 2024-06-29
- */
+/** @author linck on 2024-06-29 */
 @UtilityClass
 public class SetUtil {
 

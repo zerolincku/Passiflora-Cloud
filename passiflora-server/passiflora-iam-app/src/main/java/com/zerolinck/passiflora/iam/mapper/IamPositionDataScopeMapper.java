@@ -25,9 +25,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author linck on 2024-05-14
- */
+/** @author linck on 2024-05-14 */
 public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {
     Page<IamPositionDataScope> page(
             IPage<IamPositionDataScope> page,

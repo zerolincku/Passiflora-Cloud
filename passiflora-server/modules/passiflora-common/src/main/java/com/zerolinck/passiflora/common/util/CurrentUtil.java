@@ -27,9 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.experimental.UtilityClass;
 
-/**
- * @author linck on 2023-12-15
- */
+/** @author linck on 2023-12-15 */
 @UtilityClass
 public class CurrentUtil {
 

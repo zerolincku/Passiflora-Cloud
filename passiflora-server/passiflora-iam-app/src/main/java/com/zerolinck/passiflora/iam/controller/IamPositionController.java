@@ -35,9 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author linck on 2024-05-14
- */
+/** @author linck on 2024-05-14 */
 @Slf4j
 @RestController
 @RequestMapping("iam-position")

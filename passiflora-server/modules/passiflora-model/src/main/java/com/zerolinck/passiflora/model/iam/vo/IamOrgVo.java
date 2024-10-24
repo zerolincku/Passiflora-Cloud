@@ -22,9 +22,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @author linck on 2024-04-09
- */
+/** @author linck on 2024-04-09 */
 @Data
 @Schema(description = "机构")
 @EqualsAndHashCode(callSuper = true)

@@ -29,9 +29,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-/**
- * @author linck on 2024-04-01
- */
+/** @author linck on 2024-04-01 */
 @Data
 @Schema(description = "字典")
 @EqualsAndHashCode(callSuper = false)

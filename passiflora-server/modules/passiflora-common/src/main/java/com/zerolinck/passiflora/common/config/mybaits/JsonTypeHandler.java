@@ -27,9 +27,7 @@ import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.postgresql.util.PGobject;
 
-/**
- * @author linck on 2024-01-11
- */
+/** @author linck on 2024-01-11 */
 public class JsonTypeHandler extends BaseTypeHandler<JsonNode> {
 
     private static final PGobject jsonObject = new PGobject();

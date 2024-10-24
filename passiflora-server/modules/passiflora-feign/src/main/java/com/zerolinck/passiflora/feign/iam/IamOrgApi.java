@@ -33,9 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * @author linck on 2024-04-09
- */
+/** @author linck on 2024-04-09 */
 @Tag(name = "机构")
 @FeignClient(
         value = "iamOrg",

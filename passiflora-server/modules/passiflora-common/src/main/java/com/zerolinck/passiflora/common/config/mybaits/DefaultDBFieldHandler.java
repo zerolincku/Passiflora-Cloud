@@ -28,9 +28,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.springframework.util.ClassUtils;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 @Slf4j
 public class DefaultDBFieldHandler implements MetaObjectHandler {
 

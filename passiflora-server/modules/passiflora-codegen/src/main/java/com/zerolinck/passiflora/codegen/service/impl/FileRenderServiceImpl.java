@@ -25,9 +25,7 @@ import com.zerolinck.passiflora.codegen.model.Render;
 import com.zerolinck.passiflora.codegen.service.RenderService;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author linck on 2024-02-07
- */
+/** @author linck on 2024-02-07 */
 @Slf4j
 public class FileRenderServiceImpl implements RenderService {
 

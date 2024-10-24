@@ -19,9 +19,7 @@ package com.zerolinck.passiflora.model.iam.mapperstruct;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-/**
- * @author linck on 2024-03-26
- */
+/** @author linck on 2024-03-26 */
 @Mapper
 @SuppressWarnings("all")
 public interface IamUserPositionConvert {

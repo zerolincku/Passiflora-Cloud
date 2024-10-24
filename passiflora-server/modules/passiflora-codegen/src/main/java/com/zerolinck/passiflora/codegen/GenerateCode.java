@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.SneakyThrows;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 public class GenerateCode {
 
     @SneakyThrows

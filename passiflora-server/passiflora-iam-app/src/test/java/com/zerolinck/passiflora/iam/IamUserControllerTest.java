@@ -42,9 +42,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-/**
- * @author linck on 2024-03-20
- */
+/** @author linck on 2024-03-20 */
 @Slf4j
 @Testcontainers
 @AutoConfigureMockMvc

@@ -30,9 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.SneakyThrows;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 public class PostgresDbService implements DbService {
 
     @Override

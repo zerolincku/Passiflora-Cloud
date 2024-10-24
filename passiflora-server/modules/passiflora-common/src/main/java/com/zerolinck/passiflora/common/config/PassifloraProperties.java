@@ -20,9 +20,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author linck on 2024-05-27
- */
+/** @author linck on 2024-05-27 */
 @Data
 @ConfigurationProperties(prefix = "passiflora")
 public class PassifloraProperties {

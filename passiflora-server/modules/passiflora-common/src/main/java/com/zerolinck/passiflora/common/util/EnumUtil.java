@@ -20,9 +20,7 @@ import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import javax.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 
-/**
- * @author linck on 2024-02-06
- */
+/** @author linck on 2024-02-06 */
 @UtilityClass
 public class EnumUtil {
 

@@ -274,7 +274,7 @@ public class QueryCondition<T> {
         if (field.getType().equals(String.class)) {
             return value;
         } else if (field.getType().equals(LocalDateTime.class)) {
-            return TimeUtil.commonStrDate2LocalDateTime(value);
+            return TimeUtil.timestamp2LocalDateTime(value);
         } else if (field.getType().equals(LocalDate.class)) {
             return LocalDate.parse(value, TimeUtil.NORMAL_DATE_FORMATTER);
         } else if (field.getType().equals(LocalTime.class)) {

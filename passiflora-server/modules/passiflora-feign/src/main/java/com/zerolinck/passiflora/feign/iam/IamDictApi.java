@@ -29,9 +29,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author linck on 2024-04-01
- */
+/** @author linck on 2024-04-01 */
 @Tag(name = "字典")
 @FeignClient(
         value = "iamDict",

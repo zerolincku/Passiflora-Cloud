@@ -19,9 +19,7 @@ package com.zerolinck.passiflora.model.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author linck on 2024-05-01
- */
+/** @author linck on 2024-05-01 */
 public class ListUtil {
 
     @SuppressWarnings("rawtypes")

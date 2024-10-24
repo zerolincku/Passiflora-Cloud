@@ -22,9 +22,7 @@ import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @author 林常坤 on 2024-08-04
- */
+/** @author 林常坤 on 2024-08-04 */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IamUserSaveArgs extends IamUser {
