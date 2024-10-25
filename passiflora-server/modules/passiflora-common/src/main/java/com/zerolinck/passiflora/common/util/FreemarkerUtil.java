@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.common.util;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;

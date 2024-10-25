@@ -21,6 +21,7 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
 
     runtimeOnly("org.postgresql:postgresql")
+    implementation("org.yaml:snakeyaml")
     implementation("commons-dbutils:commons-dbutils")
     implementation("com.zaxxer:HikariCP")
     implementation("org.freemarker:freemarker")

@@ -16,10 +16,9 @@
  */
 package com.zerolinck.passiflora.codegen.model;
 
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /** @author linck on 2024-02-06 */
 @Data

@@ -18,15 +18,14 @@ package com.zerolinck.passiflora.common.config.mybaits;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.postgresql.util.PGobject;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import lombok.SneakyThrows;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.postgresql.util.PGobject;
 
 /** @author linck on 2024-01-11 */
 public class JsonTypeHandler extends BaseTypeHandler<JsonNode> {

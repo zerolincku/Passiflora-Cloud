@@ -22,24 +22,21 @@ import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
 /** @author linck on 2023-04-11 */
+@RequiredArgsConstructor
 public class TypeHandlerRegister {
-
-    @Resource
-    SqlSessionFactory sqlSessionFactory;
-
-    @Resource
-    ObjectMapper objectMapper;
+    private final SqlSessionFactory sqlSessionFactory;
+    private final ObjectMapper objectMapper;
 
     @PostConstruct
     @SuppressWarnings({"unchecked", "rawtypes"})

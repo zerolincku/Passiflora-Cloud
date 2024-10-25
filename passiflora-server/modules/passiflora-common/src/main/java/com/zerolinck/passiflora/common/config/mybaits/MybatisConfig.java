@@ -21,6 +21,8 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,7 +65,7 @@ public class MybatisConfig {
     }
 
     @Bean
-    public TypeHandlerRegister enumHandler() {
-        return new TypeHandlerRegister();
+    public TypeHandlerRegister enumHandler(SqlSessionFactory sqlSessionFactory, ObjectMapper objectMapper) {
+        return new TypeHandlerRegister(sqlSessionFactory, objectMapper);
     }
 }

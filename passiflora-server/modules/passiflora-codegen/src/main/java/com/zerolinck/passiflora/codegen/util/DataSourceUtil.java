@@ -19,9 +19,8 @@ package com.zerolinck.passiflora.codegen.util;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zerolinck.passiflora.common.util.YamlUtil;
-
-import javax.sql.DataSource;
 import java.util.Map;
+import javax.sql.DataSource;
 
 /** @author 林常坤 on 2024/10/24 */
 public class DataSourceUtil {

@@ -31,8 +31,8 @@ dependencies {
     compileOnly("org.testcontainers:postgresql")
     compileOnly("org.testcontainers:minio")
     compileOnly("com.redis:testcontainers-redis")
+    compileOnly("org.freemarker:freemarker")
 
-    api("org.freemarker:freemarker")
     api("org.yaml:snakeyaml")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")
