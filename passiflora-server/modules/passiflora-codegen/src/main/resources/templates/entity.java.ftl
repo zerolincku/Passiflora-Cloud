@@ -32,14 +32,14 @@ public class ${entityClass} <#if table.extendsBase>extends BaseEntity </#if>{
     @TableId(type = IdType.ASSIGN_ID)
     </#if>
     <#if column.fieldType.getSimpleName() == "String" && column.length??>
-    <#if column.defaultValue??>
+    <#if column.defaultValue?? && column.defaultValue != "''::character varying">
     @Schema(description = "${column.description}", maxLength = ${column.length}, defaultValue = "${column.defaultValue}")
     <#else>
     @Schema(description = "${column.description}", maxLength = ${column.length})
     </#if>
     @Length(groups = {Insert.class, Update.class}, max = ${column.length}, message = "${column.description}长度不能大于${column.length}")
     <#else>
-    <#if column.defaultValue??>
+    <#if column.defaultValue?? && column.defaultValue != "''::character varying">
     @Schema(description = "${column.description}", defaultValue = "${column.defaultValue}")
     <#else>
     @Schema(description = "${column.description}")
