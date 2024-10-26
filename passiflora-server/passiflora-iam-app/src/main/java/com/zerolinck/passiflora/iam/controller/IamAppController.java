@@ -27,12 +27,13 @@ import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * 应用 Controller
@@ -41,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("iamApp")
+@RequestMapping("iam-app")
 @RequiredArgsConstructor
 public class IamAppController implements IamAppApi {
 

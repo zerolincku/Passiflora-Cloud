@@ -24,9 +24,10 @@ import com.zerolinck.passiflora.codegen.service.impl.PostgresDbService;
 import com.zerolinck.passiflora.common.util.MapUtil;
 import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
+import lombok.SneakyThrows;
+
 import java.util.List;
 import java.util.Map;
-import lombok.SneakyThrows;
 
 /** @author linck on 2024-02-06 */
 public class GenerateCode {
@@ -126,7 +127,7 @@ public class GenerateCode {
                 .put("moduleName", moduleName)
                 .put("date", TimeUtil.getDateStrNow())
                 .put("entityName", StrUtil.toCamelCase(table.getTableName()))
-                .put("entityNameUrl", StrUtil.toCamelCase(table.getTableName()).replace("_", "-"))
+                .put("entityNameUrl", table.getTableName().replace("_", "-"))
                 .put("serviceName", StrUtil.toCamelCase(table.getTableName() + "_" + "service"))
                 .put("mapperName", StrUtil.toCamelCase(table.getTableName() + "_" + "mapper"))
                 .put("controllerName", StrUtil.toCamelCase(table.getTableName() + "_" + "controller"))
