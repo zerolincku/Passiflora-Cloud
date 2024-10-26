@@ -55,7 +55,7 @@ public enum ResultCode implements IErrorCode {
                 return resultEnum;
             }
         }
-        return null;
+        throw new IllegalArgumentException("无效的返回码");
     }
 
     @Override
