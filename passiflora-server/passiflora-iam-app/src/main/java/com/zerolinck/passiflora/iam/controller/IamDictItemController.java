@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictItemApi;
@@ -55,7 +55,7 @@ public class IamDictItemController implements IamDictItemApi {
         if (success) {
             return Result.ok(iamDictItem.getDictItemId());
         } else {
-            return Result.failed(ResultCodeEnum.COMPETE_FAILED);
+            return Result.failed(ResultCode.COMPETE_FAILED);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.zerolinck.passiflora.${moduleName}.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
@@ -51,7 +51,7 @@ public class ${controllerClass} implements ${apiClass} {
         if (success) {
             return Result.ok(${entityName}.get${table.pkFieldName[0..0]?upper_case}${table.pkFieldName[1..]}());
         } else {
-            return Result.failed(ResultCodeEnum.COMPETE_FAILED);
+            return Result.failed(ResultCode.COMPETE_FAILED);
         }
     }
 

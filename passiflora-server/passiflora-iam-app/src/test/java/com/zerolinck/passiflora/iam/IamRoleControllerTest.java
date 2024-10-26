@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
@@ -71,7 +71,7 @@ class IamRoleControllerTest {
     public void testPage() throws Exception {
         mockMvc.perform(get("/iam-role/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -86,7 +86,7 @@ class IamRoleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamRole)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
                         testSysRoleId = JsonUtil.readTree(result.getResponse().getContentAsString())
                                 .get("data")
@@ -98,7 +98,7 @@ class IamRoleControllerTest {
     public void testDetail() throws Exception {
         mockMvc.perform(get("/iam-role/detail").param("roleId", testSysRoleId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -113,7 +113,7 @@ class IamRoleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testIamRole)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -123,6 +123,6 @@ class IamRoleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testSysRoleId})))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 }

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
@@ -75,7 +75,7 @@ class StorageFileControllerTest {
     public void testPage() throws Exception {
         mockMvc.perform(get("/storage-file/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -85,7 +85,7 @@ class StorageFileControllerTest {
                 new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file".getBytes());
         mockMvc.perform(multipart("/storage-file/upload").file(file))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -106,7 +106,7 @@ class StorageFileControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(storageFile)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -123,7 +123,7 @@ class StorageFileControllerTest {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -131,7 +131,7 @@ class StorageFileControllerTest {
     public void testDetail() throws Exception {
         mockMvc.perform(get("/storage-file/detail").param("fileId", testStorageFileId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -141,7 +141,7 @@ class StorageFileControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testStorageFileId})))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -177,6 +177,6 @@ class StorageFileControllerTest {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 }

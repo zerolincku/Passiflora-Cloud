@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
@@ -70,7 +70,7 @@ class IamDictControllerTest {
     public void testPage() throws Exception {
         mockMvc.perform(get("/iam-dict/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -78,7 +78,7 @@ class IamDictControllerTest {
     public void testItemPage() throws Exception {
         mockMvc.perform(get("/iam-dict-item/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -91,7 +91,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamDict)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
                         testSysDictId = JsonUtil.readTree(result.getResponse().getContentAsString())
                                 .get("data")
@@ -109,7 +109,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamDictItem)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> testSysDictItemId = JsonUtil.readTree(
                                 result.getResponse().getContentAsString())
                         .get("data")
@@ -121,7 +121,7 @@ class IamDictControllerTest {
     public void testDetailItem() throws Exception {
         mockMvc.perform(get("/iam-dict-item/detail").param("dictItemId", testSysDictItemId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -136,7 +136,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testIamDictItem)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -146,7 +146,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testSysDictItemId})))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -154,7 +154,7 @@ class IamDictControllerTest {
     public void testDetail() throws Exception {
         mockMvc.perform(get("/iam-dict/detail").param("dictId", testSysDictId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -169,7 +169,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testIamDict)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -179,7 +179,7 @@ class IamDictControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testSysDictId})))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -187,7 +187,7 @@ class IamDictControllerTest {
     public void testListByDictId() throws Exception {
         mockMvc.perform(get("/iam-dict-item/list-by-dict-id").param("dictId", "1778631179896446977"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -195,7 +195,7 @@ class IamDictControllerTest {
     public void testListByDictName() throws Exception {
         mockMvc.perform(get("/iam-dict-item/list-by-dict-name").param("dictName", "机构类型"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -203,6 +203,6 @@ class IamDictControllerTest {
     public void testListByDictTag() throws Exception {
         mockMvc.perform(get("/iam-dict-item/list-by-dict-tag").param("dictTag", "orgType"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 }

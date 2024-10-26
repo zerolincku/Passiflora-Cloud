@@ -16,7 +16,7 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
@@ -69,7 +69,7 @@ public class CurrentUtil {
     public static String requireCurrentUserId() {
         IamUser currentUser = getCurrentUser();
         if (currentUser == null) {
-            throw new BizException(ResultCodeEnum.UNAUTHORIZED);
+            throw new BizException(ResultCode.UNAUTHORIZED);
         }
         return currentUser.getUserId();
     }

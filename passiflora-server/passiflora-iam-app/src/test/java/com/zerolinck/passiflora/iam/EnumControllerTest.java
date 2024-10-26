@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +59,6 @@ class EnumControllerTest {
     public void testList() throws Exception {
         mockMvc.perform(get("/enum/OrgLevelEnum"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 }

@@ -3,7 +3,7 @@ package com.zerolinck.passiflora.${moduleName};
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class ${entityClass}ControllerTest {
         mockMvc.perform(get("/${entityName}/page")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+            .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
     
     @Test
@@ -72,7 +72,7 @@ public class ${entityClass}ControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.toJson(${entityName})))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+            .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
             .andDo(result -> test${entityClass}Id = JsonUtil.readTree(result.getResponse().getContentAsString()).get("data").asText());
     }
     
@@ -82,7 +82,7 @@ public class ${entityClass}ControllerTest {
         mockMvc.perform(get("/${entityName}/detail")
             .param("${table.pkFieldName}", test${entityClass}Id))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+            .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
             .andDo(result -> {
                 String responseBody = result.getResponse().getContentAsString();
                 JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -97,7 +97,7 @@ public class ${entityClass}ControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.toJson(test${entityClass})))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+            .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
     
     @Test
@@ -107,7 +107,7 @@ public class ${entityClass}ControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.toJson(new String[]{test${entityClass}Id})))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+            .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
 }

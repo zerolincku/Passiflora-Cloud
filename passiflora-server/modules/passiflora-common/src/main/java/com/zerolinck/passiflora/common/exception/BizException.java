@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.common.exception;
 
 import com.google.common.base.Strings;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import lombok.Getter;
 
 /**
@@ -31,7 +31,7 @@ public class BizException extends RuntimeException {
     /** 状态码 */
     private final Integer code;
 
-    public BizException(BizException e, ResultCodeEnum resultCodeEnum) {
+    public BizException(BizException e, ResultCode resultCodeEnum) {
         super(e.getMessage());
         this.code = resultCodeEnum.getCode();
     }
@@ -41,24 +41,24 @@ public class BizException extends RuntimeException {
         this.code = e.getCode();
     }
 
-    public BizException(Throwable throwable, ResultCodeEnum resultCodeEnum) {
+    public BizException(Throwable throwable, ResultCode resultCodeEnum) {
         super(throwable);
         this.code = resultCodeEnum.getCode();
     }
 
     public BizException(Throwable throwable) {
         super(throwable);
-        this.code = ResultCodeEnum.FAILED.getCode();
+        this.code = ResultCode.FAILED.getCode();
     }
 
     public BizException(String message) {
         super(message);
-        this.code = ResultCodeEnum.FAILED.getCode();
+        this.code = ResultCode.FAILED.getCode();
     }
 
     public BizException(String message, Object... params) {
         super(Strings.lenientFormat(message, params));
-        this.code = ResultCodeEnum.FAILED.getCode();
+        this.code = ResultCode.FAILED.getCode();
     }
 
     /**
@@ -66,7 +66,7 @@ public class BizException extends RuntimeException {
      *
      * @param resultCodeEnum 返回枚举对象
      */
-    public BizException(ResultCodeEnum resultCodeEnum) {
+    public BizException(ResultCode resultCodeEnum) {
         super(resultCodeEnum.getMessage());
         this.code = resultCodeEnum.getCode();
     }
@@ -75,12 +75,12 @@ public class BizException extends RuntimeException {
      * @param resultCodeEnum 返回枚举对象
      * @param message 错误信息
      */
-    public BizException(ResultCodeEnum resultCodeEnum, String message) {
+    public BizException(ResultCode resultCodeEnum, String message) {
         super(message);
         this.code = resultCodeEnum.getCode();
     }
 
-    public BizException(ResultCodeEnum resultCodeEnum, String message, Object... params) {
+    public BizException(ResultCode resultCodeEnum, String message, Object... params) {
         super(Strings.lenientFormat(message, params));
         this.code = resultCodeEnum.getCode();
     }

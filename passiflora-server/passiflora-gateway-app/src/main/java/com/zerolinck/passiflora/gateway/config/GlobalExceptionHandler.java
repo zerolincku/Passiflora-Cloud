@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.gateway.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             response.setStatusCode(e.getStatusCode());
             logException(request, e);
             if (HttpStatusCode.valueOf(404).equals(e.getStatusCode())) {
-                return Mono.just(Result.failed(ResultCodeEnum.NOT_FOUND));
+                return Mono.just(Result.failed(ResultCode.NOT_FOUND));
             }
             return Mono.just(Result.failed(e.getReason()));
         } else {
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
                 return Mono.just(Result.failed(e.getCode(), e.getMessage()));
             } else {
                 logException(request, throwable);
-                return Mono.just(Result.failed(ResultCodeEnum.FAILED));
+                return Mono.just(Result.failed(ResultCode.FAILED));
             }
         }
     }

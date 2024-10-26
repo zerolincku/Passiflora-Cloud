@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.gateway.filter;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import jakarta.annotation.Resource;
@@ -84,10 +84,10 @@ public class TokenCheckGatewayFilterFactory
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Result<Boolean>>() {})
                     .flatMap(result -> {
-                        if (ResultCodeEnum.SUCCESS.getCode() == result.getCode()) {
+                        if (ResultCode.SUCCESS.getCode() == result.getCode()) {
                             return chain.filter(exchange);
                         } else {
-                            return Mono.error(new BizException(ResultCodeEnum.UNAUTHORIZED));
+                            return Mono.error(new BizException(ResultCode.UNAUTHORIZED));
                         }
                     })
                     .onErrorResume(ex -> {

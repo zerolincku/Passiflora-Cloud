@@ -16,7 +16,7 @@
  */
 package com.zerolinck.passiflora.common.util.lock;
 
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.lock.suppert.LambdaMeta;
 import com.zerolinck.passiflora.common.util.lock.suppert.LambdaUtils;
@@ -126,7 +126,7 @@ public class LockUtil {
                                     COMMON_LOCK_WAIT_SECONDS, COMMON_LOCK_LEASE_SECONDS, TimeUnit.SECONDS);
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
-                            throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
+                            throw new BizException(e, ResultCode.COMPETE_FAILED);
                         }
                         i.getAndIncrement();
                     }
@@ -135,7 +135,7 @@ public class LockUtil {
             return useTransaction ? transactionTemplate.execute(status -> supplier.get()) : supplier.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new BizException(e, ResultCodeEnum.COMPETE_FAILED);
+            throw new BizException(e, ResultCode.COMPETE_FAILED);
         } finally {
             unlock(locks);
         }

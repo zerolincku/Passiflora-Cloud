@@ -21,7 +21,7 @@ package com.zerolinck.passiflora.common.api;
  *
  * @author linck
  */
-public enum ResultCodeEnum implements IErrorCode {
+public enum ResultCode implements IErrorCode {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
     /** 加锁失败 */
@@ -37,7 +37,7 @@ public enum ResultCodeEnum implements IErrorCode {
     private final int code;
     private final String message;
 
-    ResultCodeEnum(int code, String message) {
+    ResultCode(int code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -49,8 +49,8 @@ public enum ResultCodeEnum implements IErrorCode {
      * @return 枚举对象
      */
     @SuppressWarnings("unused")
-    public static ResultCodeEnum getByCode(int code) {
-        for (ResultCodeEnum resultEnum : ResultCodeEnum.values()) {
+    public static ResultCode getByCode(int code) {
+        for (ResultCode resultEnum : ResultCode.values()) {
             if (code == resultEnum.getCode()) {
                 return resultEnum;
             }

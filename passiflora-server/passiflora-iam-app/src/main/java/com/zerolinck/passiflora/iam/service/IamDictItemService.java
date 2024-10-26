@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.iam.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -99,7 +99,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     public boolean update(@Nonnull IamDictItem iamDictItem) {
         IamDict iamDict = iamDictService
                 .detail(iamDictItem.getDictId())
-                .orElseThrow(() -> new BizException(ResultCodeEnum.ILLEGAL_ARGUMENT, "无此字典"));
+                .orElseThrow(() -> new BizException(ResultCode.ILLEGAL_ARGUMENT, "无此字典"));
 
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());

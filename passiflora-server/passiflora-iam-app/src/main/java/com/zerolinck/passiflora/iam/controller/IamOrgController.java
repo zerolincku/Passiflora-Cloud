@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.AssertUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamOrgApi;
@@ -66,7 +66,7 @@ public class IamOrgController implements IamOrgApi {
         if (success) {
             return Result.ok(iamOrg.getOrgId());
         } else {
-            return Result.failed(ResultCodeEnum.COMPETE_FAILED);
+            return Result.failed(ResultCode.COMPETE_FAILED);
         }
     }
 

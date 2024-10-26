@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.common.constant.Constants;
@@ -68,7 +68,7 @@ class IamUserControllerTest {
     public void testPage() throws Exception {
         mockMvc.perform(get("/iam-user/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -83,7 +83,7 @@ class IamUserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamUser)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
                         testUserId = JsonUtil.readTree(result.getResponse().getContentAsString())
                                 .get("data")
@@ -95,7 +95,7 @@ class IamUserControllerTest {
     public void testDetail() throws Exception {
         mockMvc.perform(get("/iam-user/detail").param("userId", testUserId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
                     JsonNode jsonNode = JsonUtil.readTree(responseBody);
@@ -110,7 +110,7 @@ class IamUserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testUser)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -122,7 +122,7 @@ class IamUserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testUser)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
                         testToken = JsonUtil.readTree(result.getResponse().getContentAsString())
                                 .get("data")
@@ -134,7 +134,7 @@ class IamUserControllerTest {
     public void testCheckToken() throws Exception {
         mockMvc.perform(get("/iam-user/check-token").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -142,7 +142,7 @@ class IamUserControllerTest {
     public void testCurrentUserInfo() throws Exception {
         mockMvc.perform(get("/iam-user/current-user-info").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -150,7 +150,7 @@ class IamUserControllerTest {
     public void testLogout() throws Exception {
         mockMvc.perform(get("/iam-user/logout").header(Constants.Authorization, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 
     @Test
@@ -160,6 +160,6 @@ class IamUserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testUserId})))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", equalTo(ResultCodeEnum.SUCCESS.getCode())));
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
 }

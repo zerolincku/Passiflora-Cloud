@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.*;
@@ -155,7 +155,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         String userId = CurrentUtil.getCurrentUserId();
         IamUser iamUser = this.getById(userId);
         if (StringUtils.isBlank(userId) || Objects.isNull(iamUser)) {
-            throw new BizException(ResultCodeEnum.UNAUTHORIZED);
+            throw new BizException(ResultCode.UNAUTHORIZED);
         }
 
         IamUserInfo iamUserInfo = IamUserConvert.INSTANCE.entity2info(iamUser);

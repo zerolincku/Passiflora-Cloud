@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.common.handler;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCodeEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.NetUtil;
 import java.time.LocalDateTime;
@@ -85,14 +85,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Result<String> exceptionHandler(HttpMessageNotReadableException e) {
         log.error("请求参数错误", e);
-        return Result.failed(ResultCodeEnum.ILLEGAL_ARGUMENT);
+        return Result.failed(ResultCode.ILLEGAL_ARGUMENT);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public Result<String> exceptionHandler(NoResourceFoundException e) {
         NetUtil.getResponse().setStatus(404);
         log.error("404 Not Found: {}", e.getMessage());
-        return Result.failed(ResultCodeEnum.NOT_FOUND);
+        return Result.failed(ResultCode.NOT_FOUND);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

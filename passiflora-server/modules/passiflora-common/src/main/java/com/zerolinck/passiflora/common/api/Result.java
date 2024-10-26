@@ -55,7 +55,7 @@ public class Result<T> {
 
     /** 成功返回结果 */
     public static Result<String> ok() {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), "");
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), "");
     }
 
     /**
@@ -64,15 +64,12 @@ public class Result<T> {
      * @param data 获取的数据
      */
     public static <T> Result<T> ok(T data) {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), data);
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
     public static <T> Result<List<T>> ok(Page<T> data) {
         return new Result<>(
-                ResultCodeEnum.SUCCESS.getCode(),
-                ResultCodeEnum.SUCCESS.getMessage(),
-                data.getRecords(),
-                data.getTotal());
+                ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data.getRecords(), data.getTotal());
     }
 
     /**
@@ -82,7 +79,7 @@ public class Result<T> {
      * @param message 提示信息
      */
     public static <T> Result<T> ok(T data, String message) {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), message, data);
+        return new Result<>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
     /**
@@ -100,7 +97,7 @@ public class Result<T> {
 
     /** 参数异常 */
     public static <T> Result<T> illegalArgs(String message) {
-        return new Result<>(ResultCodeEnum.ILLEGAL_ARGUMENT.getCode(), message, null);
+        return new Result<>(ResultCode.ILLEGAL_ARGUMENT.getCode(), message, null);
     }
 
     /**
@@ -109,18 +106,18 @@ public class Result<T> {
      * @param message 提示信息
      */
     public static <T> Result<T> failed(String message) {
-        return new Result<>(ResultCodeEnum.FAILED.getCode(), message, null);
+        return new Result<>(ResultCode.FAILED.getCode(), message, null);
     }
 
     /** 未登录返回结果 */
     @SuppressWarnings("unused")
     public static <T> Result<T> unauthorized() {
-        return failed(ResultCodeEnum.UNAUTHORIZED);
+        return failed(ResultCode.UNAUTHORIZED);
     }
 
     /** 未授权返回结果 */
     @SuppressWarnings("unused")
     public static <T> Result<T> forbidden() {
-        return failed(ResultCodeEnum.FORBIDDEN);
+        return failed(ResultCode.FORBIDDEN);
     }
 }
