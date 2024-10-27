@@ -25,12 +25,12 @@ import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +51,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * @param condition 搜索条件
      * @since 2024-08-17
      */
-    @Nonnull
-    public Page<IamUserRole> page(@Nullable QueryCondition<IamUserRole> condition) {
+    @NotNull public Page<IamUserRole> page(@Nullable QueryCondition<IamUserRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamUserRole.class), condition.sortWrapper(IamUserRole.class));
@@ -64,7 +63,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * @param iamUserRole 用户角色绑定
      * @since 2024-08-17
      */
-    public void add(@Nonnull IamUserRole iamUserRole) {
+    public void add(@NotNull IamUserRole iamUserRole) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamUserRole);
             baseMapper.insert(iamUserRole);
@@ -77,7 +76,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * @param iamUserRole 用户角色绑定
      * @since 2024-08-17
      */
-    public boolean update(@Nonnull IamUserRole iamUserRole) {
+    public boolean update(@NotNull IamUserRole iamUserRole) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamUserRole);
             int changeRowCount = baseMapper.updateById(iamUserRole);
@@ -105,28 +104,26 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * @param id 用户角色绑定ID
      * @since 2024-08-17
      */
-    @Nonnull
-    public Optional<IamUserRole> detail(@Nonnull String id) {
+    @NotNull public Optional<IamUserRole> detail(@NotNull String id) {
         return Optional.ofNullable(baseMapper.selectById(id));
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public int deleteByUserIds(@Nonnull Collection<String> userIds) {
+    public int deleteByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
         return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public List<IamUserRoleVo> selectByUserIds(@Nonnull Collection<String> userIds) {
+    @NotNull public List<IamUserRoleVo> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
         return baseMapper.selectByUserIds(userIds);
     }
 
-    public void updateRelation(@Nonnull IamUserSaveArgs args) {
+    public void updateRelation(@NotNull IamUserSaveArgs args) {
         LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUserRole>().lock(IamUserRole::getUserId, args.getUserId()), true, () -> {
                     if (CollectionUtils.isEmpty(args.getRoleIds())) {
@@ -156,7 +153,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public int deleteByUserIdAndRoleIds(@Nonnull String userId, @Nullable Collection<String> roleIds) {
+    public int deleteByUserIdAndRoleIds(@NotNull String userId, @Nullable Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }

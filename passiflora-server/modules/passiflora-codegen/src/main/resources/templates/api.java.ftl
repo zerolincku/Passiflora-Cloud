@@ -8,8 +8,8 @@ import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,28 +23,28 @@ import java.util.List;
 @FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityNameUrl}", configuration = FeignConfiguration.class)
 public interface ${apiClass} {
 
-    @Nonnull
+    @NotNull
     @Operation(summary = "分页查询")
     @GetMapping("page")
     Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition);
 
-    @Nonnull
+    @NotNull
     @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) ${entityClass} ${entityName});
+    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) ${entityClass} ${entityName});
 
-    @Nonnull
+    @NotNull
     @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) ${entityClass} ${entityName});
+    Result<String> update(@NotNull @RequestBody @Validated(Update.class) ${entityClass} ${entityName});
 
-    @Nonnull
+    @NotNull
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<${entityClass}> detail(@Nonnull @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
+    Result<${entityClass}> detail(@NotNull @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
 
-    @Nonnull
+    @NotNull
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@Nonnull @RequestBody List<String> ${table.pkFieldName}s);
+    Result<String> delete(@NotNull @RequestBody List<String> ${table.pkFieldName}s);
 }

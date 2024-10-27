@@ -25,12 +25,12 @@ import com.zerolinck.passiflora.iam.service.IamRolePermissionService;
 import com.zerolinck.passiflora.iam.service.IamRoleService;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,29 +48,25 @@ public class IamRoleController implements IamRoleApi {
     private final IamRoleService iamRoleService;
     private final IamRolePermissionService iamRolePermissionService;
 
-    @Nonnull
-    @Override
+    @NotNull @Override
     public Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition) {
         return Result.ok(iamRoleService.page(condition));
     }
 
-    @Nonnull
-    @Override
+    @NotNull @Override
     public Result<List<IamRole>> list(@Nullable QueryCondition<IamRole> condition) {
         return Result.ok(iamRoleService.list(condition));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> add(@Nonnull IamRole iamRole) {
+    @NotNull @Override
+    public Result<String> add(@NotNull IamRole iamRole) {
         iamRole.setRoleId(null);
         iamRoleService.add(iamRole);
         return Result.ok(iamRole.getRoleId());
     }
 
-    @Nonnull
-    @Override
-    public Result<String> update(@Nonnull IamRole iamRole) {
+    @NotNull @Override
+    public Result<String> update(@NotNull IamRole iamRole) {
         boolean success = iamRoleService.update(iamRole);
         if (success) {
             return Result.ok(iamRole.getRoleId());
@@ -79,45 +75,39 @@ public class IamRoleController implements IamRoleApi {
         }
     }
 
-    @Nonnull
-    @Override
-    public Result<IamRole> detail(@Nonnull String roleId) {
+    @NotNull @Override
+    public Result<IamRole> detail(@NotNull String roleId) {
         AssertUtil.notBlank(roleId, "角色 ID 不能为空");
         return Result.ok(iamRoleService.detail(roleId).orElseThrow(() -> new NoSuchElementException("角色不存在")));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> delete(@Nonnull List<String> roleIds) {
+    @NotNull @Override
+    public Result<String> delete(@NotNull List<String> roleIds) {
         AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
         iamRoleService.deleteByIds(roleIds);
         return Result.ok();
     }
 
-    @Nonnull
-    @Override
-    public Result<List<String>> permissionIdsByRoleIds(@Nonnull List<String> roleIds) {
+    @NotNull @Override
+    public Result<List<String>> permissionIdsByRoleIds(@NotNull List<String> roleIds) {
         AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
         return Result.ok(iamRolePermissionService.permissionIdsByRoleIds(roleIds));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> saveRolePermission(@Nonnull RolePermissionSaveArgs args) {
+    @NotNull @Override
+    public Result<String> saveRolePermission(@NotNull RolePermissionSaveArgs args) {
         iamRolePermissionService.saveRolePermission(args);
         return Result.ok();
     }
 
-    @Nonnull
-    @Override
-    public Result<String> disable(@Nonnull List<String> roleIds) {
+    @NotNull @Override
+    public Result<String> disable(@NotNull List<String> roleIds) {
         iamRoleService.disable(roleIds);
         return Result.ok();
     }
 
-    @Nonnull
-    @Override
-    public Result<String> enable(@Nonnull List<String> roleIds) {
+    @NotNull @Override
+    public Result<String> enable(@NotNull List<String> roleIds) {
         iamRoleService.enable(roleIds);
         return Result.ok();
     }

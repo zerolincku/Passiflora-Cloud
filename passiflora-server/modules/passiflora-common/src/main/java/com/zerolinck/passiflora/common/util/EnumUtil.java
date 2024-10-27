@@ -17,16 +17,15 @@
 package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
-import javax.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
 public class EnumUtil {
 
-    @Nonnull
-    public static LabelValueInterface getEnumByValue(
-            @Nonnull Class<? extends LabelValueInterface> clazz, @Nonnull Object value) {
+    @NotNull public static LabelValueInterface getEnumByValue(
+            @NotNull Class<? extends LabelValueInterface> clazz, @NotNull Object value) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getValue().equals(value)) {
@@ -36,10 +35,9 @@ public class EnumUtil {
         throw new IllegalStateException(clazz.getSimpleName() + " 无此value: " + value);
     }
 
-    @Nonnull
-    @SuppressWarnings("unused")
+    @NotNull @SuppressWarnings("unused")
     public static LabelValueInterface getEnumByName(
-            @Nonnull Class<? extends LabelValueInterface> clazz, @Nonnull Object name) {
+            @NotNull Class<? extends LabelValueInterface> clazz, @NotNull Object name) {
         LabelValueInterface[] enumConstants = clazz.getEnumConstants();
         for (LabelValueInterface nameValue : enumConstants) {
             if (nameValue.getLabel().equals(name)) {

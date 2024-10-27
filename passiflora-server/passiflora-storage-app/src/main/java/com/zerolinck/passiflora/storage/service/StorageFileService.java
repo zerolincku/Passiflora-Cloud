@@ -31,8 +31,6 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -45,6 +43,8 @@ import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,8 +64,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
     private static final URLCodec urlCodec = new URLCodec();
 
-    @Nonnull
-    public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
+    @NotNull public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(StorageFile.class), condition.sortWrapper(StorageFile.class));
@@ -81,8 +80,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
      * @param storageFile 需要参数 originalFileName，contentType, fileMd5
      * @return 空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID
      */
-    @Nonnull
-    public String tryQuicklyUpload(@Nonnull StorageFile storageFile) {
+    @NotNull public String tryQuicklyUpload(@NotNull StorageFile storageFile) {
         return LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
@@ -105,9 +103,8 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
-    @Nonnull
-    @SneakyThrows
-    public String upload(@Nonnull MultipartFile file, @Nullable String fileName) {
+    @NotNull @SneakyThrows
+    public String upload(@NotNull MultipartFile file, @Nullable String fileName) {
         String md5Hex = DigestUtils.md5Hex(file.getBytes());
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, md5Hex), true, () -> {
@@ -164,19 +161,18 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
-    @Nonnull
-    public List<StorageFile> listByFileMd5(@Nonnull String fileMd5) {
+    @NotNull public List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
         return baseMapper.listByFileMd5(fileMd5);
     }
 
-    public void deleteByIds(@Nonnull Collection<String> fileIds) {
+    public void deleteByIds(@NotNull Collection<String> fileIds) {
         for (String fileId : fileIds) {
             deleteById(fileId);
         }
     }
 
     @SneakyThrows
-    public void deleteById(@Nonnull String fileId) {
+    public void deleteById(@NotNull String fileId) {
         if (StringUtils.isBlank(fileId)) {
             return;
         }
@@ -197,13 +193,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
-    @Nonnull
-    public Optional<StorageFile> detail(@Nonnull String fileId) {
+    @NotNull public Optional<StorageFile> detail(@NotNull String fileId) {
         return Optional.ofNullable(baseMapper.selectById(fileId));
     }
 
     @SneakyThrows
-    public void downloadFile(@Nonnull String fileId) {
+    public void downloadFile(@NotNull String fileId) {
         StorageFile storageFile = baseMapper.selectById(fileId);
         if (storageFile == null) {
             throw new NoSuchElementException("文件不存在");
@@ -222,7 +217,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     @SneakyThrows
-    public void downloadZip(@Nonnull List<String> fileIds) {
+    public void downloadZip(@NotNull List<String> fileIds) {
         NetUtil.getResponse()
                 .setHeader(
                         Header.CONTENT_DISPOSITION.getValue(), "attachment; filename=" + urlCodec.encode("文件压缩包.zip"));
@@ -244,7 +239,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     /** 批量确认文件使用，将临时文件转换为正式文件 */
-    public void confirmFiles(@Nonnull List<String> fileIds) {
+    public void confirmFiles(@NotNull List<String> fileIds) {
         if (fileIds.isEmpty()) {
             return;
         }
@@ -254,7 +249,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     /** 确认文件使用，将临时文件转换为正式文件 */
-    public void confirmFile(@Nonnull String fileId) {
+    public void confirmFile(@NotNull String fileId) {
         baseMapper.confirmFile(fileId, CurrentUtil.getCurrentUserId());
     }
 
@@ -263,9 +258,8 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     /** 处理压缩包文件重名问题 */
-    @Nonnull
-    private static String dealFileName(
-            @Nonnull StorageFile storageFile, @Nonnull Map<String, Integer> fileNameCountMap) {
+    @NotNull private static String dealFileName(
+            @NotNull StorageFile storageFile, @NotNull Map<String, Integer> fileNameCountMap) {
         String fileName = storageFile.getOriginalFileName();
         if (fileNameCountMap.containsKey(fileName)) {
             String[] fileNames = fileName.split("\\.");

@@ -19,17 +19,16 @@ package com.zerolinck.passiflora.common.util;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.StringJoiner;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 /** @author 林常坤 on 2024/08/16 */
 @UtilityClass
 public class StrUtil {
 
-    @Nonnull
-    public static String str(@Nullable Object obj, @Nonnull Charset charset) {
+    @NotNull public static String str(@Nullable Object obj, @NotNull Charset charset) {
         return switch (obj) {
             case null -> "null";
             case String s -> s;
@@ -40,8 +39,7 @@ public class StrUtil {
     }
 
     /** 驼峰字符串，转换为使用 _ 连接的字符串 */
-    @Nonnull
-    @SuppressWarnings("unused")
+    @NotNull @SuppressWarnings("unused")
     public static String camelToUnderline(@Nullable String str) {
         if (str == null) {
             return "";
@@ -55,8 +53,7 @@ public class StrUtil {
     }
 
     /** 驼峰字符串，转换为使用 - 连接的字符串 */
-    @Nonnull
-    public static String camelToMidline(@Nullable String str) {
+    @NotNull public static String camelToMidline(@Nullable String str) {
         if (str == null) {
             return "";
         }

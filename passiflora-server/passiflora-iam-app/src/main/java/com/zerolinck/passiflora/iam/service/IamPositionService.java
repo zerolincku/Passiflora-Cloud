@@ -28,12 +28,12 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +53,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param condition 搜索条件
      * @since 2024-08-12
      */
-    @Nonnull
-    public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
+    @NotNull public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamPosition.class), condition.sortWrapper(IamPosition.class));
@@ -66,8 +65,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param positionIds 职位集合
      * @since 2024-08-12
      */
-    @Nonnull
-    @SuppressWarnings("unused")
+    @NotNull @SuppressWarnings("unused")
     public List<IamPosition> listByIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return baseMapper.selectList(new LambdaQueryWrapper<IamPosition>().in(IamPosition::getPositionId, positionIds));
@@ -79,7 +77,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param iamPosition 新增职位
      * @since 2024-08-12
      */
-    public void add(@Nonnull IamPosition iamPosition) {
+    public void add(@NotNull IamPosition iamPosition) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
@@ -97,7 +95,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param iamPosition 更新职位
      * @since 2024-08-12
      */
-    public boolean update(@Nonnull IamPosition iamPosition) {
+    public boolean update(@NotNull IamPosition iamPosition) {
         return LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
@@ -138,8 +136,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param positionId 职位ID
      * @since 2024-08-12
      */
-    @Nonnull
-    public Optional<IamPosition> detail(@Nonnull String positionId) {
+    @NotNull public Optional<IamPosition> detail(@NotNull String positionId) {
         return Optional.ofNullable(baseMapper.selectById(positionId));
     }
 
@@ -148,8 +145,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      *
      * @since 2024-08-12
      */
-    @Nonnull
-    public List<IamPositionVo> positionTree() {
+    @NotNull public List<IamPositionVo> positionTree() {
         List<IamPositionVo> iamPositionVos = baseMapper.listByParentId("0");
         iamPositionVos.forEach(this::recursionTree);
         return iamPositionVos;
@@ -211,7 +207,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param iamPositionVo 职位
      * @since 2024-08-12
      */
-    private void recursionTree(@Nonnull IamPositionVo iamPositionVo) {
+    private void recursionTree(@NotNull IamPositionVo iamPositionVo) {
         iamPositionVo.setChildren(baseMapper.listByParentId(iamPositionVo.getPositionId()));
         iamPositionVo.getChildren().forEach(this::recursionTree);
     }
@@ -222,7 +218,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @param iamPosition 职位
      * @since 2024-08-12
      */
-    private void generateIdPathAndLevel(@Nonnull IamPosition iamPosition) {
+    private void generateIdPathAndLevel(@NotNull IamPosition iamPosition) {
         StringBuilder codeBuffer = new StringBuilder();
         String positionParentId = iamPosition.getParentPositionId();
         int level = 0;

@@ -46,6 +46,7 @@ dependencies {
     api("commons-codec:commons-codec")
     api("commons-io:commons-io")
     api("com.google.guava:guava")
+    api("org.jetbrains:annotations")
 }
 
 tasks {

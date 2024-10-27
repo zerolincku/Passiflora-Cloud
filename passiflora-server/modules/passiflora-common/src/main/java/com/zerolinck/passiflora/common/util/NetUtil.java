@@ -25,8 +25,8 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -35,8 +35,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class NetUtil {
 
     /** 查询网卡 ip 地址 */
-    @Nonnull
-    public static String findOutIp() throws SocketException {
+    @NotNull public static String findOutIp() throws SocketException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         AtomicReference<String> ip = new AtomicReference<>(null);
         for (NetworkInterface face : Collections.list(interfaces)) {
@@ -54,16 +53,14 @@ public class NetUtil {
         return ip.get();
     }
 
-    @Nonnull
-    public static HttpServletRequest getRequest() {
+    @NotNull public static HttpServletRequest getRequest() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
         return servletRequestAttributes.getRequest();
     }
 
-    @Nonnull
-    public static HttpServletResponse getResponse() {
+    @NotNull public static HttpServletResponse getResponse() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;

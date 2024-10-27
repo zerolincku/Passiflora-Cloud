@@ -27,14 +27,14 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -51,14 +51,13 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamDict:";
 
-    @Nonnull
-    public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
+    @NotNull public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamDict.class), condition.sortWrapper(IamDict.class));
     }
 
-    public void add(@Nonnull IamDict iamDict) {
+    public void add(@NotNull IamDict iamDict) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamDict>()
@@ -72,7 +71,7 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public boolean update(@Nonnull IamDict iamDict) {
+    public boolean update(@NotNull IamDict iamDict) {
         return LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamDict>()
@@ -93,7 +92,7 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public int deleteByIds(@Nonnull Collection<String> dictIds) {
+    public int deleteByIds(@NotNull Collection<String> dictIds) {
         List<IamDict> iamDicts = baseMapper.selectByIds(dictIds);
         iamDicts.forEach(iamDict -> {
             if (YesOrNoEnum.YES.equals(iamDict.getIsSystem())) {
@@ -105,8 +104,7 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
         return rowCount;
     }
 
-    @Nonnull
-    public Optional<IamDict> detail(@Nonnull String dictId) {
+    @NotNull public Optional<IamDict> detail(@NotNull String dictId) {
         return Optional.ofNullable(baseMapper.selectById(dictId));
     }
 }

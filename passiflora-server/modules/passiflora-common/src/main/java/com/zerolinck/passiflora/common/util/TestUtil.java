@@ -19,6 +19,7 @@ package com.zerolinck.passiflora.common.util;
 import com.redis.testcontainers.RedisContainer;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -28,6 +29,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
  *
  * @author 林常坤 on 2024-10-07
  */
+@TestOnly
 @UtilityClass
 public class TestUtil {
 

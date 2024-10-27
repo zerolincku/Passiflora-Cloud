@@ -18,33 +18,33 @@ package com.zerolinck.passiflora.common.util;
 
 import com.google.common.base.Strings;
 import java.util.Collection;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-03-18 */
 @UtilityClass
 public class AssertUtil {
 
-    public static void notEmpty(@Nullable Collection<?> collection, @Nonnull String message) {
+    public static void notEmpty(@Nullable Collection<?> collection, @NotNull String message) {
         if (collection == null || collection.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
     }
 
-    public static void notBlank(@Nullable CharSequence charSequence, @Nonnull String message) {
+    public static void notBlank(@Nullable CharSequence charSequence, @NotNull String message) {
         if (charSequence == null || charSequence.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
     }
 
-    public static void notNull(@Nullable Object object, @Nonnull String message) {
+    public static void notNull(@Nullable Object object, @NotNull String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
         }
     }
 
-    public static void notNull(@Nullable Object object, @Nonnull String message, @Nonnull Object... args) {
+    public static void notNull(@Nullable Object object, @NotNull String message, @NotNull Object... args) {
         if (object == null) {
             throw new IllegalArgumentException(Strings.lenientFormat(message, args));
         }

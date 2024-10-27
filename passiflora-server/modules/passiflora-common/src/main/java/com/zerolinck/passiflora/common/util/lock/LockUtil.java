@@ -22,8 +22,13 @@ import com.zerolinck.passiflora.common.util.lock.suppert.LambdaMeta;
 import com.zerolinck.passiflora.common.util.lock.suppert.LambdaUtils;
 import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
 import com.zerolinck.passiflora.common.util.lock.suppert.reflect.PropertyNamer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,10 +36,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
-import lombok.Setter;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
-import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * 分布式锁工具类，保证在并发情况下的数据正确
@@ -58,23 +59,23 @@ public class LockUtil {
 
     private static final Map<Class<?>, Map<String, String>> FIELD_NAME_CACHE = new ConcurrentHashMap<>();
 
-    public static void lock(@Nonnull String lockKey, @Nonnull Runnable runnable) {
+    public static void lock(@NotNull String lockKey, @NotNull Runnable runnable) {
         lock(lockKey, null, false, runnable);
     }
 
-    public static void lock(@Nonnull String lockKey, boolean useTransaction, @Nonnull Runnable runnable) {
+    public static void lock(@NotNull String lockKey, boolean useTransaction, @NotNull Runnable runnable) {
         lock(lockKey, null, useTransaction, runnable);
     }
 
-    public static void lock(@Nonnull String lockKey, @Nullable LockWrapper<?> lockWrapper, @Nonnull Runnable runnable) {
+    public static void lock(@NotNull String lockKey, @Nullable LockWrapper<?> lockWrapper, @NotNull Runnable runnable) {
         lock(lockKey, lockWrapper, false, runnable);
     }
 
     public static void lock(
-            @Nonnull String lockKey,
+            @NotNull String lockKey,
             @Nullable LockWrapper<?> lockWrapper,
             boolean useTransaction,
-            @Nonnull Runnable runnable) {
+            @NotNull Runnable runnable) {
         lock(lockKey, lockWrapper, useTransaction, () -> {
             runnable.run();
             return null;
@@ -82,15 +83,15 @@ public class LockUtil {
     }
 
     public static <T> T lock(
-            @Nonnull String lockKey, @Nullable LockWrapper<?> lockWrapper, @Nonnull Supplier<T> supplier) {
+            @NotNull String lockKey, @Nullable LockWrapper<?> lockWrapper, @NotNull Supplier<T> supplier) {
         return lock(lockKey, lockWrapper, false, supplier);
     }
 
     public static <T> T lock(
-            @Nonnull String lockKey,
+            @NotNull String lockKey,
             @Nullable LockWrapper<?> lockWrapper,
             boolean useTransaction,
-            @Nonnull Supplier<T> supplier) {
+            @NotNull Supplier<T> supplier) {
         RLock[] locks;
         if (lockWrapper == null) {
             locks = new RLock[1];
@@ -141,7 +142,7 @@ public class LockUtil {
         }
     }
 
-    public static void unlock(@Nonnull Lock... locks) {
+    public static void unlock(@Nullable Lock... locks) {
         for (Lock lock : locks) {
             if (lock != null) {
                 lock.unlock();
@@ -149,8 +150,7 @@ public class LockUtil {
         }
     }
 
-    @Nonnull
-    private static String getFieldName(@Nonnull SFunction<?, ?> column) {
+    @NotNull private static String getFieldName(@NotNull SFunction<?, ?> column) {
         if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
             LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
         }

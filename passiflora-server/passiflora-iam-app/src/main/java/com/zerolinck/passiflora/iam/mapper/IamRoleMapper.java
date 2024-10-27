@@ -22,10 +22,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 角色 Mybatis Mapper
@@ -42,11 +42,10 @@ public interface IamRoleMapper extends BaseMapper<IamRole> {
      * @param sortWrapper 排序条件
      * @since 2024-08-17
      */
-    @Nonnull
-    Page<IamRole> page(
-            @Nonnull IPage<IamRole> page,
-            @Nonnull @Param(Constants.WRAPPER) QueryWrapper<IamRole> searchWrapper,
-            @Nonnull @Param("sortWrapper") QueryWrapper<IamRole> sortWrapper);
+    @NotNull Page<IamRole> page(
+            @NotNull IPage<IamRole> page,
+            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamRole> searchWrapper,
+            @NotNull @Param("sortWrapper") QueryWrapper<IamRole> sortWrapper);
 
     /**
      * 更新 del_flag = 1，保证 update_by 和 update_time 正确
@@ -55,9 +54,9 @@ public interface IamRoleMapper extends BaseMapper<IamRole> {
      * @since 2024-08-17
      */
     int deleteByIds(
-            @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 
-    void disable(@Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+    void disable(@NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 
-    void enable(@Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+    void enable(@NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 }

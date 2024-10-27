@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
@@ -27,10 +27,10 @@ public interface ${mapperClass} extends BaseMapper<${entityClass}> {
      * @param sortWrapper 排序条件
      * @since ${date}
      */
-    @Nonnull
-    Page<${entityClass}> page(@Nonnull IPage<${entityClass}> page,
-            @Nonnull @Param(Constants.WRAPPER) QueryWrapper<${entityClass}> searchWrapper,
-            @Nonnull @Param("sortWrapper") QueryWrapper<${entityClass}> sortWrapper);
+    @NotNull
+    Page<${entityClass}> page(@NotNull IPage<${entityClass}> page,
+            @NotNull @Param(Constants.WRAPPER) QueryWrapper<${entityClass}> searchWrapper,
+            @NotNull @Param("sortWrapper") QueryWrapper<${entityClass}> sortWrapper);
 
     /**
      * 更新 del_flag = 1，保证 update_by 和 update_time 正确
@@ -38,6 +38,6 @@ public interface ${mapperClass} extends BaseMapper<${entityClass}> {
      * @param ${table.pkFieldName}s ${table.description}主键集合
      * @since ${date}
      */
-    int deleteByIds(@Nonnull @Param("${table.pkFieldName}s") Collection<String> ${table.pkFieldName}s,
+    int deleteByIds(@NotNull @Param("${table.pkFieldName}s") Collection<String> ${table.pkFieldName}s,
                     @Nullable @Param("updateBy") String updateBy);
 }

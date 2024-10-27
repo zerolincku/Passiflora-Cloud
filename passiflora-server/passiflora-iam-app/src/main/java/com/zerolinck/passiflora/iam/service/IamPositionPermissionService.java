@@ -24,11 +24,11 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +39,7 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
 
     private static final String LOCK_KEY = "passiflora:lock:iamPositionPermission:";
 
-    @Nonnull
-    public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {
+    @NotNull public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
@@ -48,14 +47,14 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
                 condition.sortWrapper(IamPositionPermission.class));
     }
 
-    public void add(@Nonnull IamPositionPermission iamPositionPermission) {
+    public void add(@NotNull IamPositionPermission iamPositionPermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamPositionPermission);
             baseMapper.insert(iamPositionPermission);
         });
     }
 
-    public boolean update(@Nonnull IamPositionPermission iamPositionPermission) {
+    public boolean update(@NotNull IamPositionPermission iamPositionPermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamPositionPermission);
             int changeRowCount = baseMapper.updateById(iamPositionPermission);
@@ -80,20 +79,18 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public Optional<IamPositionPermission> detail(@Nonnull String id) {
+    @NotNull public Optional<IamPositionPermission> detail(@NotNull String id) {
         return Optional.ofNullable(baseMapper.selectById(id));
     }
 
-    @Nonnull
-    public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
+    @NotNull public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return Collections.emptyList();
         }
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
-    public void savePositionPermission(@Nonnull PositionPermissionSaveArgs args) {
+    public void savePositionPermission(@NotNull PositionPermissionSaveArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<PositionPermissionSaveArgs>()

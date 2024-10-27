@@ -24,10 +24,9 @@ import com.zerolinck.passiflora.codegen.service.impl.PostgresDbService;
 import com.zerolinck.passiflora.common.util.MapUtil;
 import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
-import lombok.SneakyThrows;
-
 import java.util.List;
 import java.util.Map;
+import lombok.SneakyThrows;
 
 /** @author linck on 2024-02-06 */
 public class GenerateCode {

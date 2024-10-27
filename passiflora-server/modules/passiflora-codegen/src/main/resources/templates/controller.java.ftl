@@ -9,8 +9,8 @@ import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import com.zerolinck.passiflora.${moduleName}.service.${serviceClass};
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,23 +30,23 @@ public class ${controllerClass} implements ${apiClass} {
 
     private final ${serviceClass} ${serviceName};
 
-    @Nonnull
+    @NotNull
     @Override
     public Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition) {
         return Result.ok(${serviceName}.page(condition));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Result<String> add(@Nonnull ${entityClass} ${entityName}) {
+    public Result<String> add(@NotNull ${entityClass} ${entityName}) {
         ${entityName}.set${table.pkFieldName[0..0]?upper_case}${table.pkFieldName[1..]}(null);
         ${serviceName}.add(${entityName});
         return Result.ok(${entityName}.get${table.pkFieldName[0..0]?upper_case}${table.pkFieldName[1..]}());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Result<String> update(@Nonnull ${entityClass} ${entityName}) {
+    public Result<String> update(@NotNull ${entityClass} ${entityName}) {
         boolean success = ${serviceName}.update(${entityName});
         if (success) {
             return Result.ok(${entityName}.get${table.pkFieldName[0..0]?upper_case}${table.pkFieldName[1..]}());
@@ -55,18 +55,18 @@ public class ${controllerClass} implements ${apiClass} {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Result<${entityClass}> detail(@Nonnull String ${table.pkFieldName}) {
+    public Result<${entityClass}> detail(@NotNull String ${table.pkFieldName}) {
         AssertUtil.notBlank(${table.pkFieldName}, "${table.description} ID 不能为空");
         return Result.ok(${serviceName}
                 .detail(${table.pkFieldName})
                 .orElseThrow(() -> new NoSuchElementException("${table.description}不存在")));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Result<String> delete(@Nonnull List<String> ${table.pkFieldName}s) {
+    public Result<String> delete(@NotNull List<String> ${table.pkFieldName}s) {
         AssertUtil.notEmpty(${table.pkFieldName}s, "${table.description} ID 不能为空");
         ${serviceName}.deleteByIds(${table.pkFieldName}s);
         return Result.ok();

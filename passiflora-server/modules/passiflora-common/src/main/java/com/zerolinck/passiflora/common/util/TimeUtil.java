@@ -16,13 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import jakarta.annotation.Nonnull;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
@@ -47,9 +47,8 @@ public class TimeUtil {
 
     public static final DateTimeFormatter NORMAL_TIME_FORMATTER_NO_SECOND = DateTimeFormatter.ofPattern("HH:mm");
 
-    @Nonnull
-    @SuppressWarnings("unused")
-    public static LocalDateTime commonStrDate2LocalDateTime(@Nonnull String dateStr) {
+    @NotNull @SuppressWarnings("unused")
+    public static LocalDateTime commonStrDate2LocalDateTime(@NotNull String dateStr) {
         if (NORMAL.matcher(dateStr).matches()) {
             return LocalDateTime.parse(dateStr, NORMAL_DATE_TIME_FORMATTER);
         } else if (NO_SECOND.matcher(dateStr).matches()) {
@@ -63,8 +62,7 @@ public class TimeUtil {
     }
 
     /** 时间戳转换为 LocalDateTime */
-    @Nonnull
-    public static LocalDateTime timestamp2LocalDateTime(@Nonnull String timestamp) {
+    @NotNull public static LocalDateTime timestamp2LocalDateTime(@NotNull String timestamp) {
         long epoch;
         if (timestamp.length() == 10) {
             // 秒级时间戳，转换为毫秒
@@ -78,8 +76,7 @@ public class TimeUtil {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
     }
 
-    @Nonnull
-    public static String getDateStrNow() {
+    @NotNull public static String getDateStrNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 }

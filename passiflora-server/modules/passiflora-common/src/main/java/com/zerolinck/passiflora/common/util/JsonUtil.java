@@ -24,9 +24,9 @@ import com.zerolinck.passiflora.common.config.jackson.JacksonConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 /** @author 林常坤 on 2024/09/28 */
 @UtilityClass
@@ -94,9 +94,8 @@ public class JsonUtil {
         return objectMapper.readTree(json);
     }
 
-    @Nonnull
-    @SneakyThrows
-    private static <T> T parse(@Nonnull String jsonString, JavaType javaType) {
+    @NotNull @SneakyThrows
+    private static <T> T parse(@NotNull String jsonString, JavaType javaType) {
         return objectMapper.readValue(jsonString, javaType);
     }
 

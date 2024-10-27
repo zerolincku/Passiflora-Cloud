@@ -22,10 +22,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 应用 Mybatis Mapper
@@ -42,11 +42,10 @@ public interface IamAppMapper extends BaseMapper<IamApp> {
      * @param sortWrapper 排序条件
      * @since 2024-09-30
      */
-    @Nonnull
-    Page<IamApp> page(
-            @Nonnull IPage<IamApp> page,
-            @Nonnull @Param(Constants.WRAPPER) QueryWrapper<IamApp> searchWrapper,
-            @Nonnull @Param("sortWrapper") QueryWrapper<IamApp> sortWrapper);
+    @NotNull Page<IamApp> page(
+            @NotNull IPage<IamApp> page,
+            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamApp> searchWrapper,
+            @NotNull @Param("sortWrapper") QueryWrapper<IamApp> sortWrapper);
 
     /**
      * 更新 del_flag = 1，保证 update_by 和 update_time 正确
@@ -54,9 +53,9 @@ public interface IamAppMapper extends BaseMapper<IamApp> {
      * @param appIds 应用主键集合
      * @since 2024-09-30
      */
-    int deleteByIds(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+    int deleteByIds(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
 
-    int disable(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+    int disable(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
 
-    int enable(@Nonnull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+    int enable(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
 }

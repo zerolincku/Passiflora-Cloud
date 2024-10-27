@@ -25,12 +25,14 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamAppMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +54,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @param condition 搜索条件
      * @since 2024-09-30
      */
-    @Nonnull
-    public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
+    @NotNull public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamApp.class), condition.sortWrapper(IamApp.class));
@@ -65,7 +66,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @param iamApp 应用
      * @since 2024-09-30
      */
-    public void add(@Nonnull IamApp iamApp) {
+    public void add(@NotNull IamApp iamApp) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamApp);
             baseMapper.insert(iamApp);
@@ -78,7 +79,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @param iamApp 应用
      * @since 2024-09-30
      */
-    public boolean update(@Nonnull IamApp iamApp) {
+    public boolean update(@NotNull IamApp iamApp) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamApp);
             int changeRowCount = baseMapper.updateById(iamApp);
@@ -122,8 +123,7 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @param appId 应用ID
      * @since 2024-09-30
      */
-    @Nonnull
-    public Optional<IamApp> detail(@Nonnull String appId) {
+    @NotNull public Optional<IamApp> detail(@NotNull String appId) {
         return Optional.ofNullable(baseMapper.selectById(appId));
     }
 }

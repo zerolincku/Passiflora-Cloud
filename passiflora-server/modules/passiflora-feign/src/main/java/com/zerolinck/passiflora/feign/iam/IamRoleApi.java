@@ -25,12 +25,15 @@ import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /** @author 林常坤 on 2024-08-17 */
 @Tag(name = "角色")
@@ -41,53 +44,43 @@ import org.springframework.web.bind.annotation.*;
         configuration = FeignConfiguration.class)
 public interface IamRoleApi {
 
-    @Nonnull
-    @Operation(summary = "分页查询")
+    @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
     Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition);
 
-    @Nonnull
-    @Operation(summary = "列表查询")
+    @NotNull @Operation(summary = "列表查询")
     @GetMapping("list")
     Result<List<IamRole>> list(@Nullable QueryCondition<IamRole> condition);
 
-    @Nonnull
-    @Operation(summary = "新增")
+    @NotNull @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) IamRole iamRole);
+    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) IamRole iamRole);
 
-    @Nonnull
-    @Operation(summary = "更新")
+    @NotNull @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) IamRole iamRole);
+    Result<String> update(@NotNull @RequestBody @Validated(Update.class) IamRole iamRole);
 
-    @Nonnull
-    @Operation(summary = "详情")
+    @NotNull @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamRole> detail(@Nonnull @RequestParam(value = "roleId") String roleId);
+    Result<IamRole> detail(@NotNull @RequestParam(value = "roleId") String roleId);
 
-    @Nonnull
-    @Operation(summary = "删除")
+    @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@Nonnull @RequestBody List<String> roleIds);
+    Result<String> delete(@NotNull @RequestBody List<String> roleIds);
 
-    @Nonnull
-    @Operation(summary = "根据角色ids获取权限ids")
+    @NotNull @Operation(summary = "根据角色ids获取权限ids")
     @PostMapping("permission-ids-by-role-ids")
-    Result<List<String>> permissionIdsByRoleIds(@Nonnull @RequestBody List<String> roleIds);
+    Result<List<String>> permissionIdsByRoleIds(@NotNull @RequestBody List<String> roleIds);
 
-    @Nonnull
-    @Operation(summary = "保存角色权限")
+    @NotNull @Operation(summary = "保存角色权限")
     @PostMapping("save-role-permission")
-    Result<String> saveRolePermission(@Nonnull @RequestBody @Validated RolePermissionSaveArgs args);
+    Result<String> saveRolePermission(@NotNull @RequestBody @Validated RolePermissionSaveArgs args);
 
-    @Nonnull
-    @Operation(summary = "禁用")
+    @NotNull @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@Nonnull @RequestBody List<String> roleIds);
+    Result<String> disable(@NotNull @RequestBody List<String> roleIds);
 
-    @Nonnull
-    @Operation(summary = "启用")
+    @NotNull @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@Nonnull @RequestBody List<String> roleIds);
+    Result<String> enable(@NotNull @RequestBody List<String> roleIds);
 }

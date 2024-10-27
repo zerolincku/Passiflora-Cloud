@@ -25,12 +25,15 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRoleMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,8 +57,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @param condition 搜索条件
      * @since 2024-08-17
      */
-    @Nonnull
-    public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
+    @NotNull public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamRole.class), condition.sortWrapper(IamRole.class));
@@ -67,8 +69,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @param condition 搜索条件
      * @since 2024-08-18
      */
-    @Nonnull
-    public List<IamRole> list(@Nullable QueryCondition<IamRole> condition) {
+    @NotNull public List<IamRole> list(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.selectList(condition.searchWrapper(IamRole.class));
     }
@@ -79,7 +80,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @param iamRole 角色
      * @since 2024-08-17
      */
-    public void add(@Nonnull IamRole iamRole) {
+    public void add(@NotNull IamRole iamRole) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamRole);
             baseMapper.insert(iamRole);
@@ -92,7 +93,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @param iamRole 角色
      * @since 2024-08-17
      */
-    public boolean update(@Nonnull IamRole iamRole) {
+    public boolean update(@NotNull IamRole iamRole) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamRole);
             int changeRowCount = baseMapper.updateById(iamRole);
@@ -122,8 +123,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @param roleId 角色ID
      * @since 2024-08-17
      */
-    @Nonnull
-    public Optional<IamRole> detail(@Nonnull String roleId) {
+    @NotNull public Optional<IamRole> detail(@NotNull String roleId) {
         return Optional.ofNullable(baseMapper.selectById(roleId));
     }
 

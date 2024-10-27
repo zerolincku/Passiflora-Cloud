@@ -23,12 +23,12 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-05-06 */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {
@@ -57,12 +57,9 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
                     + " permission_level , \"order\", permission_title")
     List<IamPermission> listSelfAndSub(@Param("permissionId") String permissionId);
 
-    @Nonnull
-    List<IamPermission> listByPositionId(@Nonnull @Param("positionId") String positionId);
+    @NotNull List<IamPermission> listByPositionId(@NotNull @Param("positionId") String positionId);
 
-    @Nonnull
-    List<IamPermission> listByRoleId(@Nonnull @Param("roleId") String roleId);
+    @NotNull List<IamPermission> listByRoleId(@NotNull @Param("roleId") String roleId);
 
-    @Nonnull
-    List<IamPermission> listByUserId(@Nonnull @Param("userId") String userId);
+    @NotNull List<IamPermission> listByUserId(@NotNull @Param("userId") String userId);
 }

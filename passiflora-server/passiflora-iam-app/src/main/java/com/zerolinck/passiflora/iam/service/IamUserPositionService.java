@@ -27,12 +27,12 @@ import com.zerolinck.passiflora.iam.mapper.IamUserPositionMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
 import com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 /** @author linck on 2024-05-14 */
@@ -42,15 +42,14 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
 
     private static final String LOCK_KEY = "passiflora:lock:iamUserPosition:";
 
-    @Nonnull
-    public List<IamUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {
+    @NotNull public List<IamUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
         return baseMapper.selectByUserIds(userIds);
     }
 
-    public void updateRelation(@Nonnull IamUserSaveArgs args) {
+    public void updateRelation(@NotNull IamUserSaveArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamUserPosition>().lock(IamUserPosition::getUserId, args.getUserId()),
@@ -82,14 +81,12 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
                 });
     }
 
-    @Nonnull
-    public List<IamUserPosition> findByUserIds(@Nullable List<String> userIds) {
+    @NotNull public List<IamUserPosition> findByUserIds(@Nullable List<String> userIds) {
         userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
         return baseMapper.selectList(new LambdaQueryWrapper<IamUserPosition>().in(IamUserPosition::getUserId, userIds));
     }
 
-    @Nonnull
-    @SuppressWarnings("unused")
+    @NotNull @SuppressWarnings("unused")
     public List<IamUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return baseMapper.selectList(
@@ -113,7 +110,7 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public int deleteByUserIdAndPositionIds(@Nonnull String userId, @Nullable Collection<String> positionIds) {
+    public int deleteByUserIdAndPositionIds(@NotNull String userId, @Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }

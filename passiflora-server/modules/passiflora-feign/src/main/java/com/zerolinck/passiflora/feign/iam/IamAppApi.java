@@ -24,16 +24,15 @@ import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 /** @author linck on 2024-09-30 */
 @Tag(name = "应用")
@@ -44,38 +43,31 @@ import java.util.List;
         configuration = FeignConfiguration.class)
 public interface IamAppApi {
 
-    @Nonnull
-    @Operation(summary = "分页查询")
+    @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
     Result<List<IamApp>> page(@Nullable QueryCondition<IamApp> condition);
 
-    @Nonnull
-    @Operation(summary = "新增")
+    @NotNull @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) IamApp iamApp);
+    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) IamApp iamApp);
 
-    @Nonnull
-    @Operation(summary = "更新")
+    @NotNull @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) IamApp iamApp);
+    Result<String> update(@NotNull @RequestBody @Validated(Update.class) IamApp iamApp);
 
-    @Nonnull
-    @Operation(summary = "详情")
+    @NotNull @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamApp> detail(@Nonnull @RequestParam(value = "appId") String appId);
+    Result<IamApp> detail(@NotNull @RequestParam(value = "appId") String appId);
 
-    @Nonnull
-    @Operation(summary = "删除")
+    @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@Nonnull @RequestBody List<String> appIds);
+    Result<String> delete(@NotNull @RequestBody List<String> appIds);
 
-    @Nonnull
-    @Operation(summary = "禁用")
+    @NotNull @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@Nonnull @RequestBody List<String> appIds);
+    Result<String> disable(@NotNull @RequestBody List<String> appIds);
 
-    @Nonnull
-    @Operation(summary = "启用")
+    @NotNull @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@Nonnull @RequestBody List<String> appIds);
+    Result<String> enable(@NotNull @RequestBody List<String> appIds);
 }

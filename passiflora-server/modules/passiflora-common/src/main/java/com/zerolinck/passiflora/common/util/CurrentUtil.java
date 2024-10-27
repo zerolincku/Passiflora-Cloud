@@ -21,11 +21,11 @@ import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.model.common.constant.Constants;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** @author linck on 2023-12-15 */
 @UtilityClass
@@ -65,8 +65,7 @@ public class CurrentUtil {
         return currentUser.getUserId();
     }
 
-    @Nonnull
-    public static String requireCurrentUserId() {
+    @NotNull public static String requireCurrentUserId() {
         IamUser currentUser = getCurrentUser();
         if (currentUser == null) {
             throw new BizException(ResultCode.UNAUTHORIZED);

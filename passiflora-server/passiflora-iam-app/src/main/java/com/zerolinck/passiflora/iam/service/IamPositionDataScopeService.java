@@ -25,13 +25,13 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionDataScopeMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +42,7 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
 
     private static final String LOCK_KEY = "passiflora:lock:iamPositionDataScope:";
 
-    @Nonnull
-    public Page<IamPositionDataScope> page(@Nullable QueryCondition<IamPositionDataScope> condition) {
+    @NotNull public Page<IamPositionDataScope> page(@Nullable QueryCondition<IamPositionDataScope> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
@@ -51,14 +50,14 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
                 condition.sortWrapper(IamPositionDataScope.class));
     }
 
-    public void add(@Nonnull IamPositionDataScope iamPositionDataScope) {
+    public void add(@NotNull IamPositionDataScope iamPositionDataScope) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamPositionDataScope);
             baseMapper.insert(iamPositionDataScope);
         });
     }
 
-    public boolean update(@Nonnull IamPositionDataScope iamPositionDataScope) {
+    public boolean update(@NotNull IamPositionDataScope iamPositionDataScope) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamPositionDataScope);
             int changeRowCount = baseMapper.updateById(iamPositionDataScope);
@@ -74,8 +73,7 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
         return baseMapper.deleteByIds(scopeIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public Optional<IamPositionDataScope> detail(@Nonnull String scopeId) {
+    @NotNull public Optional<IamPositionDataScope> detail(@NotNull String scopeId) {
         return Optional.ofNullable(baseMapper.selectById(scopeId));
     }
 }

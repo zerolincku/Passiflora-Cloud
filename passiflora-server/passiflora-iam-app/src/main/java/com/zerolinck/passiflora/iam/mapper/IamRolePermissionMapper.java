@@ -22,11 +22,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 角色权限 Mybatis Mapper
@@ -43,11 +43,10 @@ public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
      * @param sortWrapper 排序条件
      * @since 2024-08-17
      */
-    @Nonnull
-    Page<IamRolePermission> page(
-            @Nonnull IPage<IamRolePermission> page,
-            @Nonnull @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
-            @Nonnull @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper);
+    @NotNull Page<IamRolePermission> page(
+            @NotNull IPage<IamRolePermission> page,
+            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
+            @NotNull @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper);
 
     /**
      * 更新 del_flag = 1，保证 update_by 和 update_time 正确
@@ -55,11 +54,10 @@ public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
      * @param ids 角色权限主键集合
      * @since 2024-08-17
      */
-    int deleteByIds(@Nonnull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+    int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
     int deleteByRoleIds(
-            @Nonnull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 
-    @Nonnull
-    List<String> permissionIdsByRoleIds(@Nonnull @Param("roleIds") List<String> roleIds);
+    @NotNull List<String> permissionIdsByRoleIds(@NotNull @Param("roleIds") List<String> roleIds);
 }

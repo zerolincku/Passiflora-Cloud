@@ -24,11 +24,11 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionSaveArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +49,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @param condition 搜索条件
      * @since 2024-08-17
      */
-    @Nonnull
-    public Page<IamRolePermission> page(@Nullable QueryCondition<IamRolePermission> condition) {
+    @NotNull public Page<IamRolePermission> page(@Nullable QueryCondition<IamRolePermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
@@ -64,7 +63,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @param iamRolePermission 角色权限
      * @since 2024-08-17
      */
-    public void add(@Nonnull IamRolePermission iamRolePermission) {
+    public void add(@NotNull IamRolePermission iamRolePermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, iamRolePermission);
             baseMapper.insert(iamRolePermission);
@@ -77,7 +76,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @param iamRolePermission 角色权限
      * @since 2024-08-17
      */
-    public boolean update(@Nonnull IamRolePermission iamRolePermission) {
+    public boolean update(@NotNull IamRolePermission iamRolePermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(baseMapper, iamRolePermission);
             int changeRowCount = baseMapper.updateById(iamRolePermission);
@@ -105,8 +104,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @param id 角色权限ID
      * @since 2024-08-17
      */
-    @Nonnull
-    public Optional<IamRolePermission> detail(@Nonnull String id) {
+    @NotNull public Optional<IamRolePermission> detail(@NotNull String id) {
         return Optional.ofNullable(baseMapper.selectById(id));
     }
 
@@ -118,15 +116,14 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         return baseMapper.deleteByRoleIds(roleIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
+    @NotNull public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
         return baseMapper.permissionIdsByRoleIds(roleIds);
     }
 
-    public void saveRolePermission(@Nonnull RolePermissionSaveArgs args) {
+    public void saveRolePermission(@NotNull RolePermissionSaveArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<RolePermissionSaveArgs>().lock(RolePermissionSaveArgs::getRoleId, args.getRoleId()),

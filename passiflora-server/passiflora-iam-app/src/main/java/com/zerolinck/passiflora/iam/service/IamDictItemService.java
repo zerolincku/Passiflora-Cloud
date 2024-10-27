@@ -29,12 +29,12 @@ import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
 import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -55,15 +55,14 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
      * @param condition 搜索条件
      * @since 2024-08-12
      */
-    @Nonnull
-    public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
+    @NotNull public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamDictItem.class), condition.sortWrapper(IamDictItem.class));
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public void add(@Nonnull IamDictItem iamDictItem) {
+    public void add(@NotNull IamDictItem iamDictItem) {
         IamDict iamDict =
                 iamDictService.detail(iamDictItem.getDictId()).orElseThrow(() -> new NoSuchElementException("无此字典"));
 
@@ -96,7 +95,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public boolean update(@Nonnull IamDictItem iamDictItem) {
+    public boolean update(@NotNull IamDictItem iamDictItem) {
         IamDict iamDict = iamDictService
                 .detail(iamDictItem.getDictId())
                 .orElseThrow(() -> new BizException(ResultCode.ILLEGAL_ARGUMENT, "无此字典"));
@@ -141,7 +140,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
-    public int deleteByIds(@Nonnull Collection<String> dictItemIds) {
+    public int deleteByIds(@NotNull Collection<String> dictItemIds) {
         List<IamDictItem> iamDictItems = baseMapper.selectByIds(dictItemIds);
         iamDictItems.forEach(iamDictItem -> {
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
@@ -160,26 +159,22 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         baseMapper.deleteByDictIds(dictIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public Optional<IamDictItem> detail(@Nonnull String dictItemId) {
+    @NotNull public Optional<IamDictItem> detail(@NotNull String dictItemId) {
         return Optional.ofNullable(baseMapper.selectById(dictItemId));
     }
 
-    @Nonnull
-    @Cacheable(value = "passiflora:dict:id", key = "#dictId")
-    public List<IamDictItem> listByDictId(@Nonnull String dictId) {
+    @NotNull @Cacheable(value = "passiflora:dict:id", key = "#dictId")
+    public List<IamDictItem> listByDictId(@NotNull String dictId) {
         return baseMapper.listByDictId(dictId);
     }
 
-    @Nonnull
-    @Cacheable(value = "passiflora:dict:name", key = "#dictName")
-    public List<IamDictItem> listByDictName(@Nonnull String dictName) {
+    @NotNull @Cacheable(value = "passiflora:dict:name", key = "#dictName")
+    public List<IamDictItem> listByDictName(@NotNull String dictName) {
         return baseMapper.listByDictName(dictName);
     }
 
-    @Nonnull
-    @Cacheable(value = "passiflora:dict:tag", key = "#dictTag")
-    public List<IamDictItem> listByDictTag(@Nonnull String dictTag) {
+    @NotNull @Cacheable(value = "passiflora:dict:tag", key = "#dictTag")
+    public List<IamDictItem> listByDictTag(@NotNull String dictTag) {
         return baseMapper.listByDictTag(dictTag);
     }
 }

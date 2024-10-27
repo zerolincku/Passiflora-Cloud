@@ -28,12 +28,12 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamOrgMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,14 +44,13 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamOrg:";
 
-    @Nonnull
-    public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
+    @Nullable public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamOrg.class), condition.sortWrapper(IamOrg.class));
     }
 
-    public void add(@Nonnull IamOrg iamOrg) {
+    public void add(@NotNull IamOrg iamOrg) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamOrg>()
@@ -71,7 +70,7 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                 });
     }
 
-    public boolean update(@Nonnull IamOrg iamOrg) {
+    public boolean update(@NotNull IamOrg iamOrg) {
         return LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamOrg>()
@@ -106,7 +105,7 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
 
     /** 此方法会级联删除下级机构 */
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByIds(@Nonnull Collection<String> orgIds) {
+    public int deleteByIds(@NotNull Collection<String> orgIds) {
         int rowCount = 0;
         for (String orgId : orgIds) {
             rowCount += baseMapper.deleteById(orgId, CurrentUtil.getCurrentUserId());
@@ -114,13 +113,11 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
         return rowCount;
     }
 
-    @Nonnull
-    public Optional<IamOrg> detail(@Nonnull String orgId) {
+    @NotNull public Optional<IamOrg> detail(@NotNull String orgId) {
         return Optional.ofNullable(baseMapper.selectById(orgId));
     }
 
-    @Nonnull
-    public Map<String, String> orgId2NameMap(@Nonnull Collection<String> orgIds) {
+    @NotNull public Map<String, String> orgId2NameMap(@NotNull Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
         }
@@ -129,12 +126,11 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
     }
 
     @Nullable @SuppressWarnings("unused")
-    public IamOrg selectByOrgCode(@Nonnull String orgCode) {
+    public IamOrg selectByOrgCode(@NotNull String orgCode) {
         return baseMapper.selectByOrgCode(orgCode);
     }
 
-    @Nonnull
-    public List<IamOrgVo> listByParentId(@Nonnull String orgParentId) {
+    @NotNull public List<IamOrgVo> listByParentId(@NotNull String orgParentId) {
         return baseMapper.listByParentId(orgParentId);
     }
 
@@ -144,12 +140,12 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
         return iamOrgVos;
     }
 
-    private void recursionTree(@Nonnull IamOrgVo iamOrgVo) {
+    private void recursionTree(@NotNull IamOrgVo iamOrgVo) {
         iamOrgVo.setChildren(listByParentId(iamOrgVo.getOrgId()));
         iamOrgVo.getChildren().forEach(this::recursionTree);
     }
 
-    private void generateIadPathAndLevel(@Nonnull IamOrg iamOrg) {
+    private void generateIadPathAndLevel(@NotNull IamOrg iamOrg) {
         StringBuilder codeBuffer = new StringBuilder();
         String orgParentId = iamOrg.getParentOrgId();
         int level = 0;

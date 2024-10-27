@@ -25,15 +25,14 @@ import com.zerolinck.passiflora.feign.iam.IamAppApi;
 import com.zerolinck.passiflora.iam.service.IamAppService;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 应用 Controller
@@ -48,15 +47,13 @@ public class IamAppController implements IamAppApi {
 
     private final IamAppService iamAppService;
 
-    @Nonnull
-    @Override
+    @NotNull @Override
     public Result<List<IamApp>> page(@Nullable QueryCondition<IamApp> condition) {
         return Result.ok(iamAppService.page(condition));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> add(@Nonnull IamApp iamApp) {
+    @NotNull @Override
+    public Result<String> add(@NotNull IamApp iamApp) {
         iamApp.setAppId(null);
         iamApp.setAppKey(RandomUtil.lowerCharAndNum(32));
         iamApp.setAppSecret(RandomUtil.lowerCharAndNum(32));
@@ -65,9 +62,8 @@ public class IamAppController implements IamAppApi {
         return Result.ok(iamApp.getAppId());
     }
 
-    @Nonnull
-    @Override
-    public Result<String> update(@Nonnull IamApp iamApp) {
+    @NotNull @Override
+    public Result<String> update(@NotNull IamApp iamApp) {
         iamApp.setAppKey(null);
         iamApp.setAppSecret(null);
         boolean success = iamAppService.update(iamApp);
@@ -78,32 +74,28 @@ public class IamAppController implements IamAppApi {
         }
     }
 
-    @Nonnull
-    @Override
-    public Result<IamApp> detail(@Nonnull String appId) {
+    @NotNull @Override
+    public Result<IamApp> detail(@NotNull String appId) {
         AssertUtil.notBlank(appId, "应用 ID 不能为空");
         return Result.ok(iamAppService.detail(appId).orElseThrow(() -> new NoSuchElementException("应用不存在")));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> delete(@Nonnull List<String> appIds) {
+    @NotNull @Override
+    public Result<String> delete(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.deleteByIds(appIds);
         return Result.ok();
     }
 
-    @Nonnull
-    @Override
-    public Result<String> disable(@Nonnull List<String> appIds) {
+    @NotNull @Override
+    public Result<String> disable(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.disable(appIds);
         return Result.ok();
     }
 
-    @Nonnull
-    @Override
-    public Result<String> enable(@Nonnull List<String> appIds) {
+    @NotNull @Override
+    public Result<String> enable(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.enable(appIds);
         return Result.ok();

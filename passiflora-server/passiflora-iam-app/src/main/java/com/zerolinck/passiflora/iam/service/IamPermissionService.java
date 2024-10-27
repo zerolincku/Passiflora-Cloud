@@ -33,12 +33,12 @@ import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
 import com.zerolinck.passiflora.model.iam.vo.IamPermissionVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +49,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
 
     private static final String LOCK_KEY = "passiflora:lock:iamPermission:";
 
-    @Nonnull
-    public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
+    @NotNull public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(),
@@ -58,7 +57,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                 condition.sortWrapper(IamPermission.class));
     }
 
-    public void add(@Nonnull IamPermission iamPermission) {
+    public void add(@NotNull IamPermission iamPermission) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPermission>()
@@ -71,7 +70,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                 });
     }
 
-    public boolean update(@Nonnull IamPermission iamPermission) {
+    public boolean update(@NotNull IamPermission iamPermission) {
         return LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPermission>()
@@ -91,8 +90,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                 });
     }
 
-    @Nonnull
-    public List<IamPermission> listByParentId(@Nonnull String permissionParentId) {
+    @NotNull public List<IamPermission> listByParentId(@NotNull String permissionParentId) {
         return baseMapper.listByParentId(permissionParentId);
     }
 
@@ -104,13 +102,11 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return baseMapper.deleteByIds(permissionIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    public Optional<IamPermission> detail(@Nonnull String permissionId) {
+    @NotNull public Optional<IamPermission> detail(@NotNull String permissionId) {
         return Optional.ofNullable(baseMapper.selectById(permissionId));
     }
 
-    @Nonnull
-    public List<IamPermissionVo> menuTree() {
+    @NotNull public List<IamPermissionVo> menuTree() {
         Map<String, List<IamPermissionVo>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
                 .filter(permission -> PermissionTypeEnum.MENU.equals(permission.getPermissionType())
                         || PermissionTypeEnum.MENU_SET.equals(permission.getPermissionType()))
@@ -126,8 +122,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
-    @Nonnull
-    public List<IamPermissionTableVo> permissionTableTree() {
+    @NotNull public List<IamPermissionTableVo> permissionTableTree() {
         Map<String, List<IamPermissionTableVo>> menuMap =
                 this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
                         .map(IamPermissionConvert.INSTANCE::entity2tableVo)
@@ -174,9 +169,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
     }
 
-    @Nonnull
-    @SuppressWarnings("unused")
-    public List<IamPermission> listSelfAndSub(@Nonnull String permissionId) {
+    @NotNull @SuppressWarnings("unused")
+    public List<IamPermission> listSelfAndSub(@NotNull String permissionId) {
         return baseMapper.listSelfAndSub(permissionId);
     }
 
@@ -186,9 +180,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      * @param positionId 职位ID
      * @since 2024-08-12
      */
-    @Nonnull
-    @SuppressWarnings("unused")
-    List<IamPermission> listByPositionIds(@Nonnull String positionId) {
+    @NotNull @SuppressWarnings("unused")
+    List<IamPermission> listByPositionIds(@NotNull String positionId) {
         return baseMapper.listByPositionId(positionId);
     }
 
@@ -198,9 +191,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      * @param roleId 角色ID
      * @author 林常坤 on 2024/8/17
      */
-    @Nonnull
-    @SuppressWarnings("unused")
-    List<IamPermission> listByRoleId(@Nonnull String roleId) {
+    @NotNull @SuppressWarnings("unused")
+    List<IamPermission> listByRoleId(@NotNull String roleId) {
         return baseMapper.listByRoleId(roleId);
     }
 
@@ -210,9 +202,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      * @param userId 用户ID
      * @since 2024-08-12
      */
-    @Nonnull
-    @SuppressWarnings("unused")
-    List<IamPermission> listByUserIds(@Nonnull String userId) {
+    @NotNull @SuppressWarnings("unused")
+    List<IamPermission> listByUserIds(@NotNull String userId) {
         if (Constants.SUPER_ADMIN_ID.equals(userId)) {
             return baseMapper.selectList(new LambdaQueryWrapper<IamPermission>()
                     .orderByAsc(IamPermission::getPermissionLevel)
@@ -223,7 +214,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     }
 
     private void dealMenuTree(
-            @Nullable Collection<IamPermissionVo> menuVos, @Nonnull Map<String, List<IamPermissionVo>> menuMap) {
+            @Nullable Collection<IamPermissionVo> menuVos, @NotNull Map<String, List<IamPermissionVo>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
@@ -237,7 +228,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
 
     private void permissionTableTree(
             @Nullable Collection<IamPermissionTableVo> menuVos,
-            @Nonnull Map<String, List<IamPermissionTableVo>> menuMap) {
+            @NotNull Map<String, List<IamPermissionTableVo>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
@@ -249,7 +240,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         }
     }
 
-    private void generateIadPathAndLevel(@Nonnull IamPermission iamPermission) {
+    private void generateIadPathAndLevel(@NotNull IamPermission iamPermission) {
         StringBuilder codeBuffer = new StringBuilder();
         String permissionParentId = iamPermission.getPermissionParentId();
         int level = 1;

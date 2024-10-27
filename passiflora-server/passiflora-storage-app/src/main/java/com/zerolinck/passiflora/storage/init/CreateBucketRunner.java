@@ -20,10 +20,10 @@ import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
-import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class CreateBucketRunner implements ApplicationRunner {
     }
 
     @SneakyThrows
-    private void createBucket(@Nonnull String bucketName) {
+    private void createBucket(@NotNull String bucketName) {
         boolean bucketExists = OssS3Util.doesBucketExist(bucketName);
         if (log.isDebugEnabled()) {
             log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);

@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -44,13 +44,13 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 
     /** 实现ApplicationContextAware接口, 注入Context到静态变量中. */
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
         SpringContextHolder.applicationContext = applicationContext;
     }
 
     /** 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型. */
     @Nullable @SuppressWarnings({"unchecked", "unused"})
-    public static <T> T getBean(@Nonnull String name) {
+    public static <T> T getBean(@NotNull String name) {
         if (applicationContext == null) {
             return null;
         }
@@ -58,7 +58,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     }
 
     /** 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型. */
-    @Nullable public static <T> T getBean(@Nonnull Class<T> requiredType) {
+    @Nullable public static <T> T getBean(@NotNull Class<T> requiredType) {
         if (applicationContext == null) {
             return null;
         }
@@ -81,7 +81,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 
     /** 发布事件 */
     @SuppressWarnings("unused")
-    public static void publishEvent(@Nonnull ApplicationEvent event) {
+    public static void publishEvent(@NotNull ApplicationEvent event) {
         if (applicationContext == null) {
             return;
         }

@@ -10,8 +10,8 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import com.zerolinck.passiflora.${moduleName}.mapper.${mapperClass};
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      * @param condition 搜索条件
      * @since ${date}
      */
-    @Nonnull
+    @NotNull
     public Page<${entityClass}> page(@Nullable QueryCondition<${entityClass}> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(condition.page(), condition.searchWrapper(${entityClass}.class), condition.sortWrapper(${entityClass}.class));
@@ -49,7 +49,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      * @param ${entityName} ${table.description}
      * @since ${date}
      */
-    public void add(@Nonnull ${entityClass} ${entityName}) {
+    public void add(@NotNull ${entityClass} ${entityName}) {
         LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
@@ -65,7 +65,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      * @param ${entityName} ${table.description}
      * @since ${date}
      */
-    public boolean update(@Nonnull ${entityClass} ${entityName}) {
+    public boolean update(@NotNull ${entityClass} ${entityName}) {
         return LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
@@ -96,8 +96,8 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      * @param ${table.pkFieldName} ${table.description}ID
      * @since ${date}
      */
-    @Nonnull
-    public Optional<${entityClass}> detail(@Nonnull String ${table.pkFieldName}) {
+    @NotNull
+    public Optional<${entityClass}> detail(@NotNull String ${table.pkFieldName}) {
         return Optional.ofNullable(baseMapper.selectById(${table.pkFieldName}));
     }
             

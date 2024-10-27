@@ -27,8 +27,8 @@ import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nonnull;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,15 +49,13 @@ public interface IamUserApi {
     Result<List<IamUserVo>> page(
             @RequestParam(value = "orgId", required = false) String orgId, QueryCondition<IamUser> condition);
 
-    @Nonnull
-    @Operation(summary = "新增")
+    @NotNull @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@Nonnull @RequestBody @Validated(Insert.class) IamUserSaveArgs iamUser);
+    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) IamUserSaveArgs iamUser);
 
-    @Nonnull
-    @Operation(summary = "更新")
+    @NotNull @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@Nonnull @RequestBody @Validated(Update.class) IamUserSaveArgs iamUser);
+    Result<String> update(@NotNull @RequestBody @Validated(Update.class) IamUserSaveArgs iamUser);
 
     @Operation(summary = "详情")
     @GetMapping("detail")

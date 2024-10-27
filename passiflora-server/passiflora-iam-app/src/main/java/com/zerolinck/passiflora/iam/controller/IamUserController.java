@@ -27,10 +27,10 @@ import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.valid.Login;
 import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,17 +50,15 @@ public class IamUserController implements IamUserApi {
         return Result.ok(iamUserService.page(orgId, condition));
     }
 
-    @Nonnull
-    @Override
-    public Result<String> add(@Nonnull IamUserSaveArgs args) {
+    @NotNull @Override
+    public Result<String> add(@NotNull IamUserSaveArgs args) {
         args.setUserId(null);
         iamUserService.add(args);
         return Result.ok(args.getUserId());
     }
 
-    @Nonnull
-    @Override
-    public Result<String> update(@Nonnull IamUserSaveArgs args) {
+    @NotNull @Override
+    public Result<String> update(@NotNull IamUserSaveArgs args) {
         args.setUserPassword(null);
         args.setUserName(null);
         boolean success = iamUserService.update(args);

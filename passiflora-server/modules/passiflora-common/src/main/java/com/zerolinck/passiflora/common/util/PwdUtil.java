@@ -16,10 +16,10 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 密码工具类
@@ -35,8 +35,7 @@ public class PwdUtil {
      * @param password 明文密码
      * @since 2024-08-13
      */
-    @Nonnull
-    public static String hashPassword(@Nonnull String password) {
+    @NotNull public static String hashPassword(@NotNull String password) {
         String salt = RandomStringUtils.random(10, true, true);
         String hashPwd = DigestUtils.sha1Hex(salt + password);
         return salt + hashPwd;
@@ -49,7 +48,7 @@ public class PwdUtil {
      * @param hashPwd hash 密码
      * @since 2024-08-13
      */
-    public static boolean verifyPassword(@Nonnull String password, @Nonnull String hashPwd) {
+    public static boolean verifyPassword(@NotNull String password, @NotNull String hashPwd) {
         String salt = hashPwd.substring(0, 10);
         return hashPwd.equals(salt + DigestUtils.sha1Hex(salt + password));
     }

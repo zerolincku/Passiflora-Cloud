@@ -32,6 +32,7 @@ dependencies {
         api("software.amazon.awssdk:s3:2.28.23")
         api("software.amazon.awssdk:apache-client:2.28.24")
         api("com.redis:testcontainers-redis:2.2.2")
+        api("org.jetbrains:annotations:26.0.1")
     }
 }
 

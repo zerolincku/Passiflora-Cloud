@@ -16,13 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -41,17 +41,17 @@ public class RedisUtils {
         RedisUtils.redisTemplate = redisTemplate;
     }
 
-    @Nullable public static Set<String> keys(@Nonnull String keys) {
+    @Nullable public static Set<String> keys(@NotNull String keys) {
         return redisTemplate.keys(keys);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public static Boolean expire(@Nonnull String key, long time) {
+    public static Boolean expire(@NotNull String key, long time) {
         return redisTemplate.expire(key, time, TimeUnit.SECONDS);
     }
 
     @SuppressWarnings("unchecked")
-    public static void del(@Nonnull String... key) {
+    public static void del(@NotNull String... key) {
         if (key.length > 0) {
             if (key.length == 1) {
                 redisTemplate.delete(key[0]);
@@ -61,15 +61,15 @@ public class RedisUtils {
         }
     }
 
-    @Nullable public static Object get(@Nonnull String key) {
+    @Nullable public static Object get(@NotNull String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public static void set(@Nonnull String key, @Nonnull Object value) {
+    public static void set(@NotNull String key, @NotNull Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public static void set(@Nonnull String key, @Nonnull Object value, long time) {
+    public static void set(@NotNull String key, @NotNull Object value, long time) {
         if (time > 0) {
             redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
         } else {

@@ -22,14 +22,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 通用文件 Mybatis Mapper
@@ -38,27 +38,26 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface StorageFileMapper extends BaseMapper<StorageFile> {
 
-    @Nonnull
-    Page<StorageFile> page(
-            @Nonnull IPage<StorageFile> page,
-            @Nonnull @Param(Constants.WRAPPER) QueryWrapper<StorageFile> searchWrapper,
-            @Nonnull @Param("sortWrapper") QueryWrapper<StorageFile> sortWrapper);
+    @NotNull Page<StorageFile> page(
+            @NotNull IPage<StorageFile> page,
+            @NotNull @Param(Constants.WRAPPER) QueryWrapper<StorageFile> searchWrapper,
+            @NotNull @Param("sortWrapper") QueryWrapper<StorageFile> sortWrapper);
 
     /** 使用更新删除，保证 update_by 和 update_time 正确 */
     int deleteByIds(
-            @Nonnull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
+            @NotNull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
 
     @Select("SELECT * FROM storage_file WHERE file_md5 = #{fileMd5} AND del_flag = 0")
-    List<StorageFile> listByFileMd5(@Nonnull @Param("fileMd5") String fileMd5);
+    List<StorageFile> listByFileMd5(@NotNull @Param("fileMd5") String fileMd5);
 
     @Select("SELECT count(*) FROM storage_file WHERE file_md5 = #{fileMd5} AND del_flag = 0")
-    Integer countByFileMd5(@Nonnull @Param("fileMd5") String fileMd5);
+    Integer countByFileMd5(@NotNull @Param("fileMd5") String fileMd5);
 
     @Update(
             "UPDATE storage_file SET last_download_time = now(), download_count = download_count + 1 WHERE file_id = #{fileId}")
-    void incrDownCount(@Nonnull @Param("fileId") String fileId);
+    void incrDownCount(@NotNull @Param("fileId") String fileId);
 
-    int confirmFile(@Nonnull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy);
+    int confirmFile(@NotNull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy);
 
     /** 查询创建时间大于 24h 的临时文件ID */
     @Select(

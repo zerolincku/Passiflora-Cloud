@@ -37,13 +37,13 @@ import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo;
 import com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo;
 import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,8 +61,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamUser:";
 
-    @Nonnull
-    public Page<IamUserVo> page(@Nonnull String orgId, @Nullable QueryCondition<IamUser> condition) {
+    @NotNull public Page<IamUserVo> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         Page<IamUser> page = baseMapper.page(
                 orgId, condition.page(), condition.searchWrapper(IamUser.class), condition.sortWrapper(IamUser.class));
@@ -113,7 +112,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return new Page<IamUserVo>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(recordsVo);
     }
 
-    public void add(@Nonnull IamUserSaveArgs args) {
+    public void add(@NotNull IamUserSaveArgs args) {
         args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
@@ -124,7 +123,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         });
     }
 
-    public boolean update(@Nonnull IamUserSaveArgs args) {
+    public boolean update(@NotNull IamUserSaveArgs args) {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, args);
@@ -145,13 +144,11 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return count;
     }
 
-    @Nonnull
-    public Optional<IamUser> detail(@Nonnull String userId) {
+    @NotNull public Optional<IamUser> detail(@NotNull String userId) {
         return Optional.ofNullable(baseMapper.selectById(userId));
     }
 
-    @Nonnull
-    public IamUserInfo currentUserInfo() {
+    @NotNull public IamUserInfo currentUserInfo() {
         String userId = CurrentUtil.getCurrentUserId();
         IamUser iamUser = this.getById(userId);
         if (StringUtils.isBlank(userId) || Objects.isNull(iamUser)) {
@@ -172,8 +169,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return iamUserInfo;
     }
 
-    @Nonnull
-    public String login(@Nonnull IamUser iamUser) {
+    @NotNull public String login(@NotNull IamUser iamUser) {
         IamUser dbIamUser =
                 baseMapper.selectOne(new LambdaQueryWrapper<IamUser>().eq(IamUser::getUserName, iamUser.getUserName()));
         if (dbIamUser == null) {
