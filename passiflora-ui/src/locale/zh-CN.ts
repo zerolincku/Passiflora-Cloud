@@ -27,6 +27,8 @@ export default {
   'menu.organization': '组织管理',
   'menu.organization.user': '用户管理',
   'menu.organization.org': '机构管理',
+  'menu.platform': '平台管理',
+  'menu.platform.app': '应用管理',
   'navbar.docs': '文档中心',
   'navbar.action.locale': '切换为中文',
   ...localeSettings,

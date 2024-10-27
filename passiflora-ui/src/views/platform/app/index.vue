@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.organization', 'menu.system.role']" />
+    <Breadcrumb :items="['menu.organization', 'menu.system.app']" />
     <a-grid class="inner-container" :cols="24" :col-gap="16" :row-gap="16">
       <a-grid-item class="h-full" :span="24">
         <a-card class="general-card h-full" title="查询表格">
@@ -16,8 +16,8 @@
                   <a-col :span="6">
                     <a-form-item field="dictName" :hide-label="true">
                       <a-input
-                        v-model="searchForm['like[roleName]']"
-                        placeholder="请输入角色名称"
+                        v-model="searchForm['like[appName]']"
+                        placeholder="请输入应用名称"
                         @press-enter="search"
                       />
                     </a-form-item>
@@ -25,8 +25,8 @@
                   <a-col :span="6">
                     <a-form-item field="dictTag" :hide-label="true">
                       <a-input
-                        v-model="searchForm['like[roleCode]']"
-                        placeholder="请输入角色标签"
+                        v-model="searchForm['like[appCode]']"
+                        placeholder="请输入应用标签"
                         @press-enter="search"
                       />
                     </a-form-item>
@@ -102,7 +102,7 @@
               <a-tooltip content="列设置">
                 <a-popover
                   trigger="click"
-                  role="bl"
+                  app="bl"
                   @popup-visible-change="popupVisibleChange"
                 >
                   <div class="action-icon"><icon-settings size="18" /></div>
@@ -141,7 +141,7 @@
           </a-row>
           <a-table
             v-model:selectedKeys="selectedKeys"
-            row-key="roleId"
+            row-key="appId"
             :loading="loading"
             :pagination="pagination"
             :columns="(cloneColumns as TableColumnData[])"
@@ -153,13 +153,13 @@
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
-            <template #roleStatus="{ record }">
-              <span v-if="record.roleStatus === 1" class="circle pass"></span>
+            <template #appStatus="{ record }">
+              <span v-if="record.appStatus === 1" class="circle pass"></span>
               <span v-else class="circle err"></span>
               {{
                 getLabelByValue(
-                  roleStatusOptions as EnumRecord[],
-                  record.roleStatus
+                  appStatusOptions as EnumRecord[],
+                  record.appStatus
                 )
               }}
             </template>
@@ -168,19 +168,13 @@
                 <a-button type="text" size="small" @click="updateButton(record)"
                   >编辑</a-button
                 >
-                <a-button
-                  type="text"
-                  size="small"
-                  @click="permissionButton(record)"
-                  >权限</a-button
-                >
                 <a-popconfirm
-                  v-if="record.roleStatus === 1"
+                  v-if="record.appStatus === 1"
                   content="确认禁用吗？"
-                  @ok="batchDisable([record.roleId])"
+                  @ok="batchDisable([record.appId])"
                 >
                   <a-button
-                    v-if="record.roleStatus === 1"
+                    v-if="record.appStatus === 1"
                     type="text"
                     size="small"
                     status="warning"
@@ -188,12 +182,12 @@
                   >
                 </a-popconfirm>
                 <a-popconfirm
-                  v-if="record.roleStatus === 0"
+                  v-if="record.appStatus === 0"
                   content="确认启用吗？"
-                  @ok="batchEnable([record.roleId])"
+                  @ok="batchEnable([record.appId])"
                 >
                   <a-button
-                    v-if="record.roleStatus === 0"
+                    v-if="record.appStatus === 0"
                     type="text"
                     size="small"
                     status="success"
@@ -202,7 +196,7 @@
                 </a-popconfirm>
                 <a-popconfirm
                   content="确认删除吗？"
-                  @ok="batchDelete([record.roleId])"
+                  @ok="batchDelete([record.appId])"
                 >
                   <a-button type="text" size="small" status="danger">
                     <template #icon> <icon-delete /> </template
@@ -222,7 +216,7 @@
       @ok="handleOk"
       @cancel="handleCancel"
     >
-      <template #title>{{ editFormModelTitle }}角色</template>
+      <template #title>{{ editFormModelTitle }}应用</template>
       <div>
         <a-form
           ref="editFormRef"
@@ -231,51 +225,25 @@
           layout="vertical"
           scroll-to-first-error
         >
-          <a-form-item field="roleName" label="角色名称" required>
+          <a-form-item field="appName" label="应用名称" required>
             <a-input
-              v-model="editFormModel.roleName"
-              placeholder="请输入角色名称"
+              v-model="editFormModel.appName"
+              placeholder="请输入应用名称"
             />
           </a-form-item>
-          <a-form-item field="roleCode" label="角色标识" required>
+          <a-form-item field="appCode" label="应用标识" required>
             <a-input
-              v-model="editFormModel.roleCode"
-              placeholder="请输入角色标识"
+              v-model="editFormModel.appKey"
+              placeholder="请输入应用标识"
             />
           </a-form-item>
-          <a-form-item field="roleStatus" label="状态" required>
+          <a-form-item field="appStatus" label="状态" required>
             <a-radio-group
-              v-model="editFormModel.roleStatus"
-              :options="roleStatusOptions"
+              v-model="editFormModel.appStatus"
+              :options="appStatusOptions"
             />
           </a-form-item>
         </a-form>
-      </div>
-    </a-drawer>
-    <a-drawer
-      :width="490"
-      :visible="permissionFormVisible"
-      unmount-on-close
-      @ok="permissionHandleOk"
-      @cancel="permissionHandleCancel"
-    >
-      <template #title>权限</template>
-      <div>
-        <a-tree
-          v-model:checked-keys="permissionCheckedKeys"
-          :field-names="{
-            key: 'permissionId',
-            title: 'permissionTitle',
-          }"
-          :check-strictly="true"
-          :checkable="true"
-          :data="permissionTreeModel"
-          @expandAll="
-            () => {
-              return true;
-            }
-          "
-        />
       </div>
     </a-drawer>
   </div>
@@ -285,22 +253,16 @@
   import { computed, ref, reactive, watch, nextTick, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
-    PermissionRecord,
-    permissionTableTree,
-  } from '@/api/system/permission';
-  import {
-    rolePermissionSaveDto,
-    RoleRecord,
-    roleDelete,
-    roleAdd,
-    roleUpdate,
-    roleDisable,
-    roleEnable,
-    permissionIdsByRoleIds,
-    saveRolePermission,
-    rolePage,
-    rolePageParams,
-  } from '@/api/system/role';
+    appPermissionSaveDto,
+    AppRecord,
+    appDelete,
+    appAdd,
+    appUpdate,
+    appDisable,
+    appEnable,
+    appPage,
+    appPageParams,
+  } from '@/api/platform/app';
   import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
   import cloneDeep from 'lodash/cloneDeep';
   import { densityList, rowSelection } from '@/utils';
@@ -316,19 +278,17 @@
 
   const generateSearchFormModel = () => {
     return {
-      'like[roleName]': '',
-      'like[roleCode]': '',
+      'like[appName]': '',
+      'like[appCode]': '',
     };
   };
 
   const { loading, setLoading } = useLoading(true);
-  const renderData = ref<RoleRecord[]>([]);
+  const renderData = ref<AppRecord[]>([]);
   const searchForm = ref(generateSearchFormModel());
   const cloneColumns = ref<Column[]>([]);
   const showColumns = ref<Column[]>([]);
   const selectedKeys = ref<string[]>([]);
-  const permissionCheckedKeys = ref<string[]>([]);
-  const permissionTreeModel = ref<PermissionRecord[]>([]);
 
   const size = ref<SizeProps>('large');
 
@@ -345,19 +305,19 @@
 
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: '角色名称',
-      dataIndex: 'roleName',
-      slotName: 'roleName',
+      title: '应用名称',
+      dataIndex: 'appName',
+      slotName: 'appName',
     },
     {
-      title: '角色标识',
-      dataIndex: 'roleCode',
-      slotName: 'roleCode',
+      title: '应用标识',
+      dataIndex: 'appCode',
+      slotName: 'appCode',
     },
     {
       title: '状态',
-      dataIndex: 'roleStatus',
-      slotName: 'roleStatus',
+      dataIndex: 'appStatus',
+      slotName: 'appStatus',
     },
     {
       title: '操作',
@@ -380,11 +340,11 @@
   );
 
   const fetchData = async (
-    params: rolePageParams = { current: 1, pageSize: 10 }
+    params: appPageParams = { current: 1, pageSize: 10 }
   ) => {
     setLoading(true);
     try {
-      const { data } = await rolePage(params);
+      const { data } = await appPage(params);
       renderData.value = data.data;
       pagination.current = params.current;
       pagination.total = data.total;
@@ -399,7 +359,7 @@
     fetchData({
       ...basePagination,
       ...searchForm.value,
-    } as unknown as rolePageParams);
+    } as unknown as appPageParams);
   };
 
   const onPageChange = (current: number) => {
@@ -413,9 +373,11 @@
     search();
   };
 
-  const roleStatusOptions = ref<EnumRecord[] | undefined>([]);
+  const appStatusOptions = ref<EnumRecord[] | undefined>([]);
+  const appTypeOptions = ref<EnumRecord[] | undefined>([]);
   onMounted(async () => {
-    roleStatusOptions.value = await useEnumStore().getEnums('status-enum');
+    appStatusOptions.value = await useEnumStore().getEnums('status-enum');
+    appTypeOptions.value = await useEnumStore().getEnums('app-type-enum');
     await fetchData();
   });
 
@@ -444,37 +406,28 @@
   const editFormRef = ref();
   const editFormVisible = ref(false);
   const editFormModelTitle = ref<string>('');
-  let editFormModel = reactive<Partial<RoleRecord>>({
-    roleStatus: 1,
+  let editFormModel = reactive<Partial<AppRecord>>({
+    appStatus: 1,
   });
 
   const rules = {};
 
-  const addButton = (record: RoleRecord) => {
+  const addButton = (record: AppRecord) => {
     editFormModelTitle.value = '新增';
-    editFormModel = reactive<Partial<RoleRecord>>({
-      roleStatus: 1,
+    editFormModel = reactive<Partial<AppRecord>>({
+      appStatus: 1,
     });
     editFormVisible.value = true;
   };
 
-  const updateButton = async (recode: RoleRecord) => {
+  const updateButton = async (recode: AppRecord) => {
     editFormModelTitle.value = '编辑';
-    editFormModel = reactive<RoleRecord>(cloneDeep(recode));
+    editFormModel = reactive<AppRecord>(cloneDeep(recode));
     editFormVisible.value = true;
   };
 
-  const permissionButton = async (recode: RoleRecord) => {
-    const { data } = await permissionTableTree();
-    permissionTreeModel.value = data.data;
-    const req = await permissionIdsByRoleIds([recode.roleId as string]);
-    permissionCheckedKeys.value = req.data.data;
-    rolePermission.roleId = recode.roleId;
-    permissionFormVisible.value = true;
-  };
-
   const batchDisable = async (ids: string[]) => {
-    const { data } = await roleDisable(ids);
+    const { data } = await appDisable(ids);
     if (data.code === 200) {
       Message.success({
         content: '禁用成功',
@@ -485,7 +438,7 @@
   };
 
   const batchEnable = async (ids: string[]) => {
-    const { data } = await roleEnable(ids);
+    const { data } = await appEnable(ids);
     if (data.code === 200) {
       Message.success({
         content: '启用成功',
@@ -495,13 +448,8 @@
     }
   };
 
-  const reset = () => {
-    searchForm.value = generateSearchFormModel();
-    search();
-  };
-
   const batchDelete = async (ids: string[]) => {
-    const { data } = await roleDelete(ids);
+    const { data } = await appDelete(ids);
     selectedKeys.value = [];
     if (data.code === 200) {
       Message.success({
@@ -518,7 +466,7 @@
     const err = await editFormRef.value.validate();
     if (!err) {
       const saveAction =
-        editFormModelTitle.value === '新增' ? roleAdd : roleUpdate;
+        editFormModelTitle.value === '新增' ? appAdd : appUpdate;
       const { data } = await saveAction(editFormModel);
 
       if (data.code === 200) {
@@ -531,30 +479,14 @@
         search();
       }
     }
-    editFormModel = reactive<Partial<RoleRecord>>({
-      roleStatus: 1,
+    editFormModel = reactive<Partial<AppRecord>>({
+      appStatus: 1,
     });
   };
 
-  const rolePermission: rolePermissionSaveDto = {
-    roleId: '',
-    permissionIds: [],
-  };
-  // 权限抽屉
-  const permissionFormVisible = ref(false);
-  const permissionHandleCancel = () => {
-    permissionFormVisible.value = false;
-  };
-  const permissionHandleOk = async () => {
-    rolePermission.permissionIds = permissionCheckedKeys.value;
-    const { data } = await saveRolePermission(rolePermission);
-    if (data.code === 200) {
-      Message.success({
-        content: `保存成功`,
-        duration: 5 * 1000,
-      });
-      permissionFormVisible.value = false;
-    }
+  const reset = () => {
+    searchForm.value = generateSearchFormModel();
+    search();
   };
 
   const popupVisibleChange = (val: boolean) => {
@@ -593,7 +525,7 @@
 
 <script lang="ts">
   export default {
-    name: 'SysRole',
+    name: 'SysApp',
   };
 </script>
 
@@ -602,7 +534,7 @@
     padding: 0 20px 20px 20px;
     height: calc(100% - 40px);
     :deep(.content) {
-      role: relative;
+      app: relative;
       display: flex;
       flex-direction: column;
       align-items: center;

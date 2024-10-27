@@ -61,15 +61,12 @@ export function dictDelete(data: string[]) {
 }
 
 export function dictItemPage(params: dictPageParams) {
-  return axios.get<Result<DictItemRecord[]>>(
-    '/iam-api/iam-dict-item/page',
-    {
-      params,
-      paramsSerializer: (obj) => {
-        return qs.stringify(obj);
-      },
-    }
-  );
+  return axios.get<Result<DictItemRecord[]>>('/iam-api/iam-dict-item/page', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
 
 export function dictItemListByDictTag(params: string) {

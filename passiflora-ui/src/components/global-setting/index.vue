@@ -28,14 +28,12 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { Message } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
   import { useAppStore } from '@/store';
   import Block from './block.vue';
 
   const emit = defineEmits(['cancel']);
 
   const appStore = useAppStore();
-  const { t } = useI18n();
   const visible = computed(() => appStore.globalSettings);
   const contentOpts = computed(() => [
     {

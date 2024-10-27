@@ -24,15 +24,12 @@ export interface positionPageParams
     BasePageParam {}
 
 export function positionPage(params: positionPageParams) {
-  return axios.get<Result<PositionRecord[]>>(
-    '/iam-api/iam-position/page',
-    {
-      params,
-      paramsSerializer: (obj) => {
-        return qs.stringify(obj);
-      },
-    }
-  );
+  return axios.get<Result<PositionRecord[]>>('/iam-api/iam-position/page', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
 
 export function positionAdd(data: PositionRecord) {
@@ -64,10 +61,7 @@ export function positionTree(positionName: string) {
 }
 
 export function positionUpdateOrder(data: PositionRecord[]) {
-  return axios.post<Result<string>>(
-    '/iam-api/iam-position/update-order',
-    data
-  );
+  return axios.post<Result<string>>('/iam-api/iam-position/update-order', data);
 }
 
 export function positionDisable(data: string[]) {

@@ -23,15 +23,12 @@ export interface permissionPageParams
     BasePageParam {}
 
 export function permissionPage(params: permissionPageParams) {
-  return axios.get<Result<PermissionRecord[]>>(
-    '/iam-api/iam-permission/page',
-    {
-      params,
-      paramsSerializer: (obj) => {
-        return qs.stringify(obj);
-      },
-    }
-  );
+  return axios.get<Result<PermissionRecord[]>>('/iam-api/iam-permission/page', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
 
 export function permissionTableTree() {

@@ -48,8 +48,8 @@ export interface Result<T = unknown> {
 export interface BaseEntity {
   createBy?: string;
   updateBy?: string;
-  createTime?: string;
-  updateTime?: string;
+  createTime?: number;
+  updateTime?: number;
   delFlag?: number;
   version?: number;
   disabled?: boolean;
