@@ -13,6 +13,19 @@ spring:
     nacos:
       discovery:
         server-addr: "@nacos.serverAddr@"
+    openfeign:
+      compression:
+        request:
+          enabled: true
+          mime-types: "text/html,application/xml,application/json"
+          min-request-size: 2048
+        response:
+          enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 600000
   datasource:
     url: "@storage_app.database.url@"
     username: "@storage_app.database.username@"
@@ -25,19 +38,6 @@ spring:
       port: "@redis.port@"
   liquibase:
     enabled: false
-feign:
-  compression:
-    request:
-      enabled: true
-      mime-types: "text/html,application/xml,application/json"
-      min-request-size: 2048
-    response:
-      enabled: true
-  client:
-    config:
-      default:
-        connect-timeout: 5000
-        read-timeout: 600000
 mybatis-plus:
   configuration:
     log-impl: "org.apache.ibatis.logging.slf4j.Slf4jImpl"
