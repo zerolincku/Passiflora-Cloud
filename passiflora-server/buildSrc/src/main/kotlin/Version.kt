@@ -10,4 +10,5 @@ object Version {
     const val liquibasePluginVersion = "2.2.2"
     const val pmdToolVersion = "7.6.0"
     const val palantirJavaVersion = "2.50.0"
+    const val graalvmBuildtoolsVersion = "0.10.3"
 }

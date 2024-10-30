@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** @author linck on 2024-05-13 */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "passiflora.config", name = "lock", havingValue = "true")
 public class LockConfig {
 

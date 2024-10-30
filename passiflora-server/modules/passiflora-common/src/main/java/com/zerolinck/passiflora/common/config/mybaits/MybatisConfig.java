@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /** @author linck on 2024-02-07 */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")
 public class MybatisConfig {
 

@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /** @author linck on 2024-02-06 */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class JacksonConfig {
 
     @Bean

@@ -36,7 +36,7 @@ import org.springframework.data.redis.serializer.*;
  *
  * @author linck
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableCaching
 @ConditionalOnProperty(prefix = "passiflora.config", name = "cache", havingValue = "true")
 public class CacheConfig {

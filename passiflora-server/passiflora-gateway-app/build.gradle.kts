@@ -4,6 +4,7 @@ import java.util.*
 plugins {
     java
     id("org.springframework.boot") version Version.springBootVersion
+    id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
 configurations.all {
@@ -62,4 +63,5 @@ tasks {
     jar {
         enabled = false
     }
+
 }

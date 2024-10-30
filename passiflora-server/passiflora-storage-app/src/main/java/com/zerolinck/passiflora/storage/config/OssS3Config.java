@@ -30,7 +30,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 
 /** @author linck on 2023-12-15 */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class OssS3Config {
     private final PassifloraProperties passifloraProperties;

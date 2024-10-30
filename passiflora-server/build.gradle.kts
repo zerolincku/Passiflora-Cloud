@@ -4,6 +4,7 @@ plugins {
     pmd
     id("io.spring.dependency-management") version Version.springDependencyManagementPluginVersion
     id("com.diffplug.spotless") version Version.spotlessPluginVersion
+    id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
 allprojects {
