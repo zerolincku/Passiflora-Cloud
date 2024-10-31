@@ -26,6 +26,7 @@
     </appender>
 
     <springProfile name="local,dev">
+        <logger name="com.zerolinck.passiflora.storage.mapper" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>
