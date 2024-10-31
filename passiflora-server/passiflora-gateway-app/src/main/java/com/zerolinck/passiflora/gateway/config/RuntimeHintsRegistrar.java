@@ -17,22 +17,14 @@
 package com.zerolinck.passiflora.gateway.config;
 
 import com.alibaba.nacos.api.remote.response.ServerCheckResponse;
-import java.util.List;
-import org.springframework.aot.hint.ExecutableMode;
+import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
-import org.springframework.aot.hint.TypeReference;
 
 /** @author 林常坤 on 2024/10/31 */
 public class RuntimeHintsRegistrar implements org.springframework.aot.hint.RuntimeHintsRegistrar {
 
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        hints.reflection()
-                .registerType(
-                        ServerCheckResponse.class,
-                        hint -> hint.withMethod(
-                                "setSupportAbilityNegotiation",
-                                List.of(TypeReference.of(Boolean.class)),
-                                ExecutableMode.INVOKE));
+        hints.reflection().registerType(ServerCheckResponse.class, MemberCategory.values());
     }
 }

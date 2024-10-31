@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
     <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+                    class="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
     <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%0.30t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-){faint} %clr([%0.20t]){faint} %clr(%-1.40logger{20}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="FILE_LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-4level [%thread] %logger{50} - %msg%n" />
 
@@ -13,7 +13,7 @@
     <property name="FILE_MAX_SIZE" value="10MB"/>
     <!--日志文件保留天数-->
     <property name="FILE_MAX_HISTORY" value="30"/>
-    <property name="APPLICATION_NAME" value="${spring.application.name}"/>
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name"/>
     <property name="FILE_PATH" value="logs" />
     <property name="FILE_NAME" value="${APPLICATION_NAME}.log" />
 
@@ -26,7 +26,6 @@
     </appender>
 
     <springProfile name="local,dev">
-        <logger name="com.zerolinck.passiflora.storage.mapper" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>
