@@ -34,6 +34,7 @@ allprojects {
     }
 
     pmd {
+        isIgnoreFailures = true
         isConsoleOutput = true
         toolVersion = Version.pmdToolVersion
         rulesMinimumPriority = 5

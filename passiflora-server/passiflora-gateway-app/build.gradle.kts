@@ -60,8 +60,25 @@ tasks {
             print("> Task :${project.name}: 使用 $env 环境编译")
         }
     }
-    jar {
-        enabled = false
+    bootJar {
+        exclude("META-INF/*.SF")
+        exclude("META-INF/*.DSA")
+        exclude("META-INF/*.RSA")
     }
-
+    graalvmNative {
+        binaries {
+            named("main") {
+                mainClass.set("com.zerolinck.passiflora.gateway.PassifloraGatewayApplication")
+                buildArgs.add("-march=compatibility")
+                buildArgs.add("-H:+AddAllCharsets")
+                buildArgs.add("-H:+PrintMethodHistogram")
+            }
+            named("test") {
+                buildArgs.add("-O0")
+            }
+        }
+        binaries.all {
+            buildArgs.add("--verbose")
+        }
+    }
 }
