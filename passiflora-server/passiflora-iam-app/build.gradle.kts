@@ -9,11 +9,6 @@ plugins {
     id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
-configurations.all {
-    exclude("org.springframework.boot", "spring-boot-starter-logging")
-    exclude("commons-logging", "commons-logging")
-}
-
 val env: String = System.getProperty("env", Constans.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
@@ -56,7 +51,6 @@ dependencies {
         }
     }
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
 
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
@@ -79,6 +73,9 @@ dependencies {
 }
 
 tasks {
+    pmdAot {
+        enabled = false
+    }
     processResources {
         exclude("db/**")
         filter<ReplaceTokens>("tokens" to configMap)

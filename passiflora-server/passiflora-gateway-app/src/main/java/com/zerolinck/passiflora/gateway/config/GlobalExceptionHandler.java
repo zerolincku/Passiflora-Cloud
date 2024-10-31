@@ -36,7 +36,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import reactor.core.publisher.Mono;
 
-/** 网关异常通用处理器，只作用在webflux 环境下 , 优先级低于 {@link ResponseStatusExceptionHandler} 执行 */
+/** 网关异常通用处理器，只作用在webflux 环境下, 优先级低于 {@link ResponseStatusExceptionHandler} 执行 */
 @Slf4j
 @Order(-1)
 @RequiredArgsConstructor
@@ -44,6 +44,13 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
     private final ObjectMapper objectMapper;
 
+    /**
+     * 处理服务器端发生的异常
+     *
+     * @param exchange 服务器端交换对象
+     * @param throwable 抛出的异常
+     * @return 处理结果
+     */
     @Override
     @SuppressWarnings("all")
     public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
@@ -69,6 +76,14 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
                 })));
     }
 
+    /**
+     * 处理异常
+     *
+     * @param request 服务器请求
+     * @param response 服务器响应
+     * @param throwable 抛出的异常
+     * @return 处理结果
+     */
     private Mono<Result<String>> handleException(
             ServerHttpRequest request, ServerHttpResponse response, Throwable throwable) {
         if (throwable instanceof ResponseStatusException e) {
@@ -89,6 +104,12 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         }
     }
 
+    /**
+     * 记录异常信息
+     *
+     * @param request 服务器请求
+     * @param throwable 抛出的异常
+     */
     private void logException(ServerHttpRequest request, Throwable throwable) {
         if (throwable instanceof BizException) {
             log.warn("Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());

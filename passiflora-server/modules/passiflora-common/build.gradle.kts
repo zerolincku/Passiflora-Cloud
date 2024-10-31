@@ -36,7 +36,6 @@ dependencies {
     api("org.yaml:snakeyaml")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("org.apache.tomcat.embed:tomcat-embed-core")
-    api("org.springframework.boot:spring-boot-starter-log4j2")
     api("org.springframework:spring-webmvc")
     api("org.springframework.data:spring-data-redis")
     api("com.baomidou:mybatis-plus-extension")

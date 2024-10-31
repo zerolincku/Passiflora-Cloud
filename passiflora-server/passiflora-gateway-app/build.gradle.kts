@@ -7,11 +7,6 @@ plugins {
     id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
-configurations.all {
-    exclude("org.springframework.boot", "spring-boot-starter-logging")
-    exclude("commons-logging", "commons-logging")
-}
-
 val env: String = System.getProperty("env", Constans.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
@@ -41,7 +36,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     // 非开发环境，排除 Swagger UI
@@ -51,6 +45,9 @@ dependencies {
 }
 
 tasks {
+    pmdAot {
+        enabled = false
+    }
     processResources {
         filter<ReplaceTokens>("tokens" to configMap)
     }

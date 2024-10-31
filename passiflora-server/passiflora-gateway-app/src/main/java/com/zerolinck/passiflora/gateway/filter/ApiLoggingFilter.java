@@ -45,25 +45,31 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // 在交换属性中设置请求开始时间
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
+        // 执行过滤链，并在完成后记录请求日志
         return chain.filter(exchange).then(logRequest(exchange));
     }
 
     private Mono<Void> logRequest(ServerWebExchange exchange) {
+        // 记录请求摘要和详细信息
         return logRequestSummary(exchange).flatMap(clientIpAddress -> logRequestDetails(exchange, clientIpAddress));
     }
 
     private Mono<String> logRequestSummary(ServerWebExchange exchange) {
+        // 记录请求的基本信息，如方法、URI和头
         return Mono.fromSupplier(() -> {
             ServerHttpRequest request = exchange.getRequest();
             if (log.isDebugEnabled()) {
                 log.debug("Received request: {}:{} {}", request.getMethod(), request.getURI(), request.getHeaders());
             }
+            // 解析客户端IP地址
             return resolveClientIpAddress(request);
         });
     }
 
     private String resolveClientIpAddress(ServerHttpRequest request) {
+        // 从请求头中获取客户端IP地址，如果未配置则使用远程地址
         String clientIpAddress = request.getHeaders().getFirst(X_FORWARDED_FOR);
         if (clientIpAddress == null) {
             if (log.isDebugEnabled()) {
@@ -71,12 +77,14 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
             }
             clientIpAddress = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
         } else {
+            // 如果有多个IP地址，只取第一个
             clientIpAddress = clientIpAddress.split(",")[0];
         }
         return clientIpAddress;
     }
 
     private Mono<Void> logRequestDetails(ServerWebExchange exchange, String clientIpAddress) {
+        // 记录请求的详细信息，如客户端IP、URI、状态码和执行时间
         return Mono.fromRunnable(() -> {
             Long startTime = exchange.getAttribute(START_TIME);
             if (startTime != null) {
@@ -94,6 +102,7 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
+        // 返回最低优先级，确保在其他过滤器之后执行
         return Ordered.LOWEST_PRECEDENCE;
     }
 }

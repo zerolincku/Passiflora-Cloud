@@ -19,6 +19,7 @@ package com.zerolinck.passiflora.common.config;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /** @author linck on 2024-05-27 */
 @Data
@@ -31,10 +32,13 @@ public class PassifloraProperties {
     /** 编译时间 */
     private String buildTime;
 
+    @NestedConfigurationProperty
     private IamConfig iam;
 
+    @NestedConfigurationProperty
     private Config config;
 
+    @NestedConfigurationProperty
     private Storage storage;
 
     @Data

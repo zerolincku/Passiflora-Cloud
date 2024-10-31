@@ -22,15 +22,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
-/** 网关配置 */
+/** 网关配置类 该类负责配置网关的全局异常处理器和WebClient构建器 */
 @Configuration(proxyBeanMethods = false)
 public class GatewayConfiguration {
 
+    /**
+     * 创建并注册全局异常处理器
+     *
+     * @param objectMapper Jackson对象映射器，用于处理JSON数据
+     * @return 全局异常处理器实例
+     */
     @Bean
     public GlobalExceptionHandler globalExceptionHandler(ObjectMapper objectMapper) {
         return new GlobalExceptionHandler(objectMapper);
     }
 
+    /**
+     * 创建并注册WebClient构建器
+     *
+     * @param balancedExchangeFilterFunction 负载均衡交换过滤器函数
+     * @return WebClient构建器实例
+     */
     @Bean
     public WebClient.Builder webClientBuilder(LoadBalancedExchangeFilterFunction balancedExchangeFilterFunction) {
         return WebClient.builder().filter(balancedExchangeFilterFunction);
