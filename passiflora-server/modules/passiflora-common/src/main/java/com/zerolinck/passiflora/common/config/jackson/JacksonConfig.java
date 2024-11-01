@@ -31,15 +31,16 @@ import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /** @author linck on 2024-02-06 */
 @Configuration(proxyBeanMethods = false)
@@ -69,7 +70,7 @@ public class JacksonConfig {
         classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer<>() {
             @Override
             public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
-                Integer value = jsonParser.getIntValue();
+                Integer value = jsonParser.getValueAsInt();
                 return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
             }
         }));
