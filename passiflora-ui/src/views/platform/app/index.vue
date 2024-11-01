@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.organization', 'menu.system.app']" />
+    <Breadcrumb :items="['menu.platform', 'menu.platform.app']" />
     <a-grid class="inner-container" :cols="24" :col-gap="16" :row-gap="16">
       <a-grid-item class="h-full" :span="24">
         <a-card class="general-card h-full" title="查询表格">
@@ -25,7 +25,7 @@
                   <a-col :span="6">
                     <a-form-item field="dictTag" :hide-label="true">
                       <a-input
-                        v-model="searchForm['like[appCode]']"
+                        v-model="searchForm['like[appKey]']"
                         placeholder="请输入应用标签"
                         @press-enter="search"
                       />
@@ -231,10 +231,28 @@
               placeholder="请输入应用名称"
             />
           </a-form-item>
-          <a-form-item field="appCode" label="应用标识" required>
+          <a-form-item field="appUrl" label="应用地址" required>
             <a-input
-              v-model="editFormModel.appKey"
-              placeholder="请输入应用标识"
+                v-model="editFormModel.appUrl"
+                placeholder="请输入应用地址"
+            />
+          </a-form-item>
+          <a-form-item field="appIcon" label="应用图标" required>
+            <a-input
+                v-model="editFormModel.appIcon"
+                placeholder="请输入应用图标"
+            />
+          </a-form-item>
+          <a-form-item field="appType" label="应用类型" required>
+            <a-input
+                v-model="editFormModel.appType"
+                placeholder="请输入应用类型"
+            />
+          </a-form-item>
+          <a-form-item field="appRemark" label="应用描述" required>
+            <a-input
+                v-model="editFormModel.appRemark"
+                placeholder="请输入应用描述"
             />
           </a-form-item>
           <a-form-item field="appStatus" label="状态" required>
@@ -253,7 +271,6 @@
   import { computed, ref, reactive, watch, nextTick, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
-    appPermissionSaveDto,
     AppRecord,
     appDelete,
     appAdd,
@@ -279,7 +296,7 @@
   const generateSearchFormModel = () => {
     return {
       'like[appName]': '',
-      'like[appCode]': '',
+      'like[appKey]': '',
     };
   };
 
@@ -310,9 +327,29 @@
       slotName: 'appName',
     },
     {
-      title: '应用标识',
-      dataIndex: 'appCode',
-      slotName: 'appCode',
+      title: '应用令牌',
+      dataIndex: 'appKey',
+      slotName: 'appKey',
+    },
+    {
+      title: '应用秘钥',
+      dataIndex: 'appSecret',
+      slotName: 'appSecret',
+    },
+    {
+      title: '应用地址',
+      dataIndex: 'appUrl',
+      slotName: 'appUrl',
+    },
+    {
+      title: '应用类型',
+      dataIndex: 'appType',
+      slotName: 'appType',
+    },
+    {
+      title: '应用令牌有效期',
+      dataIndex: 'appPeriod',
+      slotName: 'appPeriod',
     },
     {
       title: '状态',
