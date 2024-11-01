@@ -57,6 +57,7 @@ tasks {
             print("> Task :${project.name}: 使用 $env 环境编译")
         }
     }
+    // 适配 graalvm
     bootJar {
         exclude("META-INF/*.SF")
         exclude("META-INF/*.DSA")
@@ -75,6 +76,7 @@ tasks {
             }
         }
         binaries.all {
+            resources.autodetect()
             buildArgs.add("--verbose")
         }
     }
