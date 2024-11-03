@@ -18,10 +18,11 @@ package com.zerolinck.passiflora.model.iam.vo;
 
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.ArrayList;
-import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /** @author linck on 2024-03-19 */
 @Data
@@ -29,7 +30,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class IamUserInfo extends IamUser {
 
-    private Collection<String> permission = new ArrayList<>();
+    private Collection<String> permission = new HashSet<>();
 
-    private Collection<String> menu = new ArrayList<>();
+    private Collection<String> menu = new HashSet<>();
 }
