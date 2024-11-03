@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -53,10 +54,12 @@ public class NetUtil {
         return ip.get();
     }
 
-    @NotNull public static HttpServletRequest getRequest() {
+    @Nullable public static HttpServletRequest getRequest() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert servletRequestAttributes != null;
+        if (servletRequestAttributes == null) {
+            return null;
+        }
         return servletRequestAttributes.getRequest();
     }
 

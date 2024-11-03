@@ -44,7 +44,7 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamOrg:";
 
-    @Nullable public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
+    @NotNull public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return baseMapper.page(
                 condition.page(), condition.searchWrapper(IamOrg.class), condition.sortWrapper(IamOrg.class));

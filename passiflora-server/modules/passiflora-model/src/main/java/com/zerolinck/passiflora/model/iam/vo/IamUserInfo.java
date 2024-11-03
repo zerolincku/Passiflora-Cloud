@@ -18,11 +18,10 @@ package com.zerolinck.passiflora.model.iam.vo;
 
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import java.util.Collection;
 import java.util.HashSet;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-03-19 */
 @Data

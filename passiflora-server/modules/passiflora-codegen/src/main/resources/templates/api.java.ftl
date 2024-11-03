@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,13 @@ import java.util.List;
  * @author ${author} on ${date}
  */
 @Tag(name = "${table.description}")
-@FeignClient(value = "${entityName}", contextId = "${entityName}", path="${contextPath}/${entityNameUrl}", configuration = FeignConfiguration.class)
+@FeignClient(value = "passiflora-${moduleName}-app", contextId = "${entityName}", path="${contextPath}/${entityNameUrl}", configuration = FeignConfiguration.class)
 public interface ${apiClass} {
 
     @NotNull
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition);
+    Result<List<${entityClass}>> page(@NotNull @SpringQueryMap QueryCondition<${entityClass}> condition);
 
     @NotNull
     @Operation(summary = "新增")

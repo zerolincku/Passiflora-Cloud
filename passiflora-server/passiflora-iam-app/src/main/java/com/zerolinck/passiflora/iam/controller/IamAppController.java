@@ -30,7 +30,6 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +47,7 @@ public class IamAppController implements IamAppApi {
     private final IamAppService iamAppService;
 
     @NotNull @Override
-    public Result<List<IamApp>> page(@Nullable QueryCondition<IamApp> condition) {
+    public Result<List<IamApp>> page(@NotNull QueryCondition<IamApp> condition) {
         return Result.ok(iamAppService.page(condition));
     }
 

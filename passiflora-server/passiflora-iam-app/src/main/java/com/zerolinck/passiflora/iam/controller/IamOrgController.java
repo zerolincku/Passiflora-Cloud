@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +44,7 @@ public class IamOrgController implements IamOrgApi {
     private final IamOrgService iamOrgService;
 
     @Override
-    public Result<List<IamOrg>> page(QueryCondition<IamOrg> condition) {
+    public Result<List<IamOrg>> page(@NotNull QueryCondition<IamOrg> condition) {
         return Result.ok(iamOrgService.page(condition));
     }
 

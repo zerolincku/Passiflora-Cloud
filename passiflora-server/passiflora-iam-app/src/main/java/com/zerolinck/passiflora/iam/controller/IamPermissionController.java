@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +45,7 @@ public class IamPermissionController implements IamPermissionApi {
     private final IamPermissionService iamPermissionService;
 
     @Override
-    public Result<List<IamPermission>> page(QueryCondition<IamPermission> condition) {
+    public Result<List<IamPermission>> page(@NotNull QueryCondition<IamPermission> condition) {
         return Result.ok(iamPermissionService.page(condition));
     }
 

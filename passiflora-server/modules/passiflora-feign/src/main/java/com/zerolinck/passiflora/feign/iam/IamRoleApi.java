@@ -29,6 +29,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author 林常坤 on 2024-08-17 */
 @Tag(name = "角色")
 @FeignClient(
-        value = "iamRole",
+        value = "passiflora-iam-app",
         contextId = "iamRole",
         path = "/passiflora/iam-api/iam-role",
         configuration = FeignConfiguration.class)
@@ -46,11 +47,11 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition);
+    Result<List<IamRole>> page(@NotNull @SpringQueryMap QueryCondition<IamRole> condition);
 
     @NotNull @Operation(summary = "列表查询")
     @GetMapping("list")
-    Result<List<IamRole>> list(@Nullable QueryCondition<IamRole> condition);
+    Result<List<IamRole>> list(@Nullable @SpringQueryMap QueryCondition<IamRole> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

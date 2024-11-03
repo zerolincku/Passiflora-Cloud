@@ -27,7 +27,9 @@ import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +39,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author linck on 2024-05-14 */
 @Tag(name = "职位")
 @FeignClient(
-        value = "iamPosition",
+        value = "passiflora-iam-app",
         contextId = "iamPosition",
         path = "/passiflora/iam-api/iam-position",
         configuration = FeignConfiguration.class)
 public interface IamPositionApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamPosition>> page(QueryCondition<IamPosition> condition);
+    Result<List<IamPosition>> page(@NotNull @SpringQueryMap QueryCondition<IamPosition> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

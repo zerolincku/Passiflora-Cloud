@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 /** @author linck on 2023-12-13 */
 @FeignClient(
-        value = "enum",
+        value = "passiflora-iam-app",
         contextId = "enum",
         path = "/passiflora/iam-api/enum",
         configuration = FeignConfiguration.class)

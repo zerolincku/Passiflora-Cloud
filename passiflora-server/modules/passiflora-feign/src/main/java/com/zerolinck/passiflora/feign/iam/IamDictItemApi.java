@@ -25,7 +25,9 @@ import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,14 +37,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author linck on 2024-04-01 */
 @Tag(name = "字典项")
 @FeignClient(
-        value = "iamDictItem",
+        value = "passiflora-iam-app",
         contextId = "iamDictItem",
         path = "/passiflora/iam-api/iam-dict-item",
         configuration = FeignConfiguration.class)
 public interface IamDictItemApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamDictItem>> page(QueryCondition<IamDictItem> condition);
+    Result<List<IamDictItem>> page(@NotNull @SpringQueryMap QueryCondition<IamDictItem> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

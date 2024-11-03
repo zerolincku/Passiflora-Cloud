@@ -27,7 +27,9 @@ import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +39,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author linck on 2024-05-06 */
 @Tag(name = "菜单")
 @FeignClient(
-        value = "iamPermission",
+        value = "passiflora-iam-app",
         contextId = "iamPermission",
         path = "/passiflora/iam-api/iam-permission",
         configuration = FeignConfiguration.class)
 public interface IamPermissionApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamPermission>> page(QueryCondition<IamPermission> condition);
+    Result<List<IamPermission>> page(@NotNull @SpringQueryMap QueryCondition<IamPermission> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

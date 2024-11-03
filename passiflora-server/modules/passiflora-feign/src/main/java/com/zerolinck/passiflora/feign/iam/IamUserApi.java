@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author linck on 2024-03-19 */
 @Tag(name = "用户")
 @FeignClient(
-        value = "iamUser",
+        value = "passiflora-iam-app",
         contextId = "iamUser",
         path = "/passiflora/iam-api/iam-user",
         configuration = FeignConfiguration.class)
@@ -47,7 +48,8 @@ public interface IamUserApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
     Result<List<IamUserVo>> page(
-            @RequestParam(value = "orgId", required = false) String orgId, QueryCondition<IamUser> condition);
+            @RequestParam(value = "orgId", required = false) String orgId,
+            @NotNull @SpringQueryMap QueryCondition<IamUser> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

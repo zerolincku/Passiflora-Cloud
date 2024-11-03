@@ -26,8 +26,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** @author linck on 2024-09-30 */
 @Tag(name = "应用")
 @FeignClient(
-        value = "iamApp",
+        value = "passiflora-iam-app",
         contextId = "iamApp",
         path = "/passiflora/iam-api/iam-app",
         configuration = FeignConfiguration.class)
@@ -45,7 +45,7 @@ public interface IamAppApi {
 
     @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamApp>> page(@Nullable QueryCondition<IamApp> condition);
+    Result<List<IamApp>> page(@NotNull @SpringQueryMap QueryCondition<IamApp> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

@@ -26,6 +26,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class IamDictController implements IamDictApi {
     private final IamDictService iamDictService;
 
     @Override
-    public Result<List<IamDict>> page(QueryCondition<IamDict> condition) {
+    public Result<List<IamDict>> page(@NotNull QueryCondition<IamDict> condition) {
         return Result.ok(iamDictService.page(condition));
     }
 

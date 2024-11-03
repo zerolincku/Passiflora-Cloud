@@ -32,7 +32,7 @@ public class ${controllerClass} implements ${apiClass} {
 
     @NotNull
     @Override
-    public Result<List<${entityClass}>> page(@Nullable QueryCondition<${entityClass}> condition) {
+    public Result<List<${entityClass}>> page(@NotNull QueryCondition<${entityClass}> condition) {
         return Result.ok(${serviceName}.page(condition));
     }
 

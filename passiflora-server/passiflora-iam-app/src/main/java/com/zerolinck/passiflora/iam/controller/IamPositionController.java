@@ -32,6 +32,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,7 +47,7 @@ public class IamPositionController implements IamPositionApi {
     private final IamPositionPermissionService iamPositionPermissionService;
 
     @Override
-    public Result<List<IamPosition>> page(QueryCondition<IamPosition> condition) {
+    public Result<List<IamPosition>> page(@NotNull QueryCondition<IamPosition> condition) {
         return Result.ok(iamPositionService.page(condition));
     }
 

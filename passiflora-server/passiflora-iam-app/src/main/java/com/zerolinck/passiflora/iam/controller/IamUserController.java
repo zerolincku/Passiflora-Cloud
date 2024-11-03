@@ -46,7 +46,7 @@ public class IamUserController implements IamUserApi {
     private final IamUserService iamUserService;
 
     @Override
-    public Result<List<IamUserVo>> page(String orgId, QueryCondition<IamUser> condition) {
+    public Result<List<IamUserVo>> page(String orgId, @NotNull QueryCondition<IamUser> condition) {
         return Result.ok(iamUserService.page(orgId, condition));
     }
 

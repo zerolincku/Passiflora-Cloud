@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CreateBucketRunner implements ApplicationRunner {
-
     private final PassifloraProperties passifloraProperties;
 
     @Override

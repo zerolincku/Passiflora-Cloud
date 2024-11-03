@@ -38,10 +38,13 @@ public class FeignConfiguration implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         HttpServletRequest request = NetUtil.getRequest();
-        String authorization = request.getHeader(Header.AUTHORIZATION.toString());
-        String traceId = request.getHeader(Header.TRACE_ID.toString());
-        requestTemplate.header(Header.AUTHORIZATION.toString(), authorization);
-        requestTemplate.header(Header.TRACE_ID.toString(), traceId);
+        // FIXME 如果请求发起启点不是浏览器，比如定时任务
+        if (request != null) {
+            String authorization = request.getHeader(Header.AUTHORIZATION.toString());
+            String traceId = request.getHeader(Header.TRACE_ID.toString());
+            requestTemplate.header(Header.AUTHORIZATION.toString(), authorization);
+            requestTemplate.header(Header.TRACE_ID.toString(), traceId);
+        }
         requestTemplate.header(Header.REQ_FROM.toString(), SpringContextHolder.getProperty("spring.application.name"));
     }
 }

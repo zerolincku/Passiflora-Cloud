@@ -49,7 +49,7 @@ public class IamRoleController implements IamRoleApi {
     private final IamRolePermissionService iamRolePermissionService;
 
     @NotNull @Override
-    public Result<List<IamRole>> page(@Nullable QueryCondition<IamRole> condition) {
+    public Result<List<IamRole>> page(@NotNull QueryCondition<IamRole> condition) {
         return Result.ok(iamRoleService.page(condition));
     }
 

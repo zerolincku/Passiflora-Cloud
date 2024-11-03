@@ -26,6 +26,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,14 +36,14 @@ import org.springframework.web.multipart.MultipartFile;
 /** @author linck on 2024-05-17 */
 @Tag(name = "通用文件")
 @FeignClient(
-        value = "storageFile",
+        value = "passiflora-storage-app",
         contextId = "storageFile",
         path = "/passiflora/storage-api/storage-file",
         configuration = FeignConfiguration.class)
 public interface StorageFileApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<StorageFile>> page(QueryCondition<StorageFile> condition);
+    Result<List<StorageFile>> page(@NotNull @SpringQueryMap QueryCondition<StorageFile> condition);
 
     @Operation(summary = "根据文件ids获取列表")
     @PostMapping("list-by-file-ids")

@@ -46,7 +46,7 @@ public class StorageFileController implements StorageFileApi {
     private final StorageFileService storageFileService;
 
     @NotNull @Override
-    public Result<List<StorageFile>> page(@Nullable QueryCondition<StorageFile> condition) {
+    public Result<List<StorageFile>> page(@NotNull QueryCondition<StorageFile> condition) {
         return Result.ok(storageFileService.page(condition));
     }
 
