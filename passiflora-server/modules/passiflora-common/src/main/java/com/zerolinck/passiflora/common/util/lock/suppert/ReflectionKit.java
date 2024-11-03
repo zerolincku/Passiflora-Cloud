@@ -16,10 +16,8 @@
  */
 package com.zerolinck.passiflora.common.util.lock.suppert;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
+import com.zerolinck.passiflora.common.util.Asserts;
 
-import com.zerolinck.passiflora.common.util.AssertUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -27,6 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /** 反射工具类，提供反射相关的快捷操作 */
 public final class ReflectionKit {
@@ -59,12 +60,13 @@ public final class ReflectionKit {
      * @param fieldName 字段名称
      * @return 属性值
      */
+    @SuppressWarnings("unused")
     public static Object getFieldValue(Object entity, String fieldName) {
         Class<?> cls = entity.getClass();
         Map<String, Field> fieldMaps = getFieldMap(cls);
         try {
             Field field = fieldMaps.get(fieldName);
-            AssertUtil.notNull(field, "Error: NoSuchField in %s for %s.  Cause:", cls.getSimpleName(), fieldName);
+            Asserts.notNull(field, "Error: NoSuchField in %s for %s.  Cause:", cls.getSimpleName(), fieldName);
             field.setAccessible(true);
             return field.get(entity);
         } catch (ReflectiveOperationException e) {
@@ -81,6 +83,7 @@ public final class ReflectionKit {
      * @param index 泛型所在位置
      * @return Class
      */
+    @SuppressWarnings("unused")
     public static Class<?> getSuperClassGenericType(final Class<?> clazz, final Class<?> genericIfc, final int index) {
         // update by noear @2021-09-03
         Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(ClassUtils.getUserClass(clazz), genericIfc);
@@ -163,10 +166,11 @@ public final class ReflectionKit {
      */
     @Deprecated
     public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
-        AssertUtil.notNull(clazz, "Class must not be null");
+        Asserts.notNull(clazz, "Class must not be null");
         return (clazz.isPrimitive() || PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(clazz));
     }
 
+    @SuppressWarnings("unused")
     public static Class<?> resolvePrimitiveIfNecessary(Class<?> clazz) {
         return (clazz.isPrimitive() && clazz != void.class ? PRIMITIVE_TYPE_TO_WRAPPER_MAP.get(clazz) : clazz);
     }

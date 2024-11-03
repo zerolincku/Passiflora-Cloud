@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictApi;
 import com.zerolinck.passiflora.iam.service.IamDictService;
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,14 +62,14 @@ public class IamDictController implements IamDictApi {
     }
 
     @Override
-    public Result<IamDict> detail(String dictId) {
-        AssertUtil.notBlank(dictId, "字典 ID 不能为空");
+    public Result<IamDict> detail(@Nullable String dictId) {
+        Asserts.notBlank(dictId, "字典 ID 不能为空");
         return Result.ok(iamDictService.detail(dictId).orElseThrow(() -> new NoSuchElementException("字典不存在")));
     }
 
     @Override
     public Result<Void> delete(List<String> dictIds) {
-        AssertUtil.notEmpty(dictIds, "字典 ID 不能为空");
+        Asserts.notEmpty(dictIds, "字典 ID 不能为空");
         iamDictService.deleteByIds(dictIds);
         return Result.ok();
     }

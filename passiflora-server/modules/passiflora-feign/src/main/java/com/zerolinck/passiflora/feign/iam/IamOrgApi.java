@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +58,7 @@ public interface IamOrgApi {
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamOrg> detail(@RequestParam(value = "orgId") String orgId);
+    Result<IamOrg> detail(@Nullable @RequestParam(value = "orgId", required = false) String orgId);
 
     /** 此方法会级联删除下级机构 */
     @Operation(summary = "删除")

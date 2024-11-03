@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +57,7 @@ public interface IamDictItemApi {
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamDictItem> detail(@RequestParam(value = "dictItemId") String dictItemId);
+    Result<IamDictItem> detail(@Nullable @RequestParam(value = "dictItemId", required = false) String dictItemId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")
@@ -64,13 +65,15 @@ public interface IamDictItemApi {
 
     @Operation(summary = "根据字典ID查询")
     @GetMapping("list-by-dict-id")
-    Result<List<IamDictItem>> listByDictId(@RequestParam(value = "dictId") String dictId);
+    Result<List<IamDictItem>> listByDictId(@Nullable @RequestParam(value = "dictId", required = false) String dictId);
 
     @Operation(summary = "根据字典名称查询")
     @GetMapping("list-by-dict-name")
-    Result<List<IamDictItem>> listByDictName(@RequestParam(value = "dictName") String dictName);
+    Result<List<IamDictItem>> listByDictName(
+            @Nullable @RequestParam(value = "dictName", required = false) String dictName);
 
     @Operation(summary = "根据字典标识查询")
     @GetMapping("list-by-dict-tag")
-    Result<List<IamDictItem>> listByDictTag(@RequestParam(value = "dictTag") String dictTag);
+    Result<List<IamDictItem>> listByDictTag(
+            @Nullable @RequestParam(value = "dictTag", required = false) String dictTag);
 }

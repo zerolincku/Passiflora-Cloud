@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamUserApi;
 import com.zerolinck.passiflora.iam.service.IamUserService;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,14 +71,14 @@ public class IamUserController implements IamUserApi {
     }
 
     @Override
-    public Result<IamUser> detail(@RequestParam(value = "userId") String userId) {
-        AssertUtil.notBlank(userId, "用户 ID 不能为空");
+    public Result<IamUser> detail(@Nullable @RequestParam(value = "userId", required = false) String userId) {
+        Asserts.notBlank(userId, "用户 ID 不能为空");
         return Result.ok(iamUserService.detail(userId).orElseThrow(() -> new NoSuchElementException("用户不存在")));
     }
 
     @Override
     public Result<Void> delete(@RequestBody List<String> userIds) {
-        AssertUtil.notEmpty(userIds, "用户 ID 不能为空");
+        Asserts.notEmpty(userIds, "用户 ID 不能为空");
         iamUserService.deleteByIds(userIds);
         return Result.ok();
     }

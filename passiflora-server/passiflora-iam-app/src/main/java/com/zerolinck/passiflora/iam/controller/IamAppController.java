@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.RandomUtil;
 import com.zerolinck.passiflora.feign.iam.IamAppApi;
@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -74,28 +75,28 @@ public class IamAppController implements IamAppApi {
     }
 
     @NotNull @Override
-    public Result<IamApp> detail(@NotNull String appId) {
-        AssertUtil.notBlank(appId, "应用 ID 不能为空");
+    public Result<IamApp> detail(@Nullable String appId) {
+        Asserts.notBlank(appId, "应用 ID 不能为空");
         return Result.ok(iamAppService.detail(appId).orElseThrow(() -> new NoSuchElementException("应用不存在")));
     }
 
     @NotNull @Override
     public Result<Void> delete(@NotNull List<String> appIds) {
-        AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
+        Asserts.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.deleteByIds(appIds);
         return Result.ok();
     }
 
     @NotNull @Override
     public Result<Void> disable(@NotNull List<String> appIds) {
-        AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
+        Asserts.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.disable(appIds);
         return Result.ok();
     }
 
     @NotNull @Override
     public Result<Void> enable(@NotNull List<String> appIds) {
-        AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
+        Asserts.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.enable(appIds);
         return Result.ok();
     }

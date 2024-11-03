@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -58,7 +59,7 @@ public interface IamPermissionApi {
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamPermission> detail(@RequestParam(value = "permissionId") String permissionId);
+    Result<IamPermission> detail(@Nullable @RequestParam(value = "permissionId", required = false) String permissionId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")

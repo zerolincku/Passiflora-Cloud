@@ -16,7 +16,8 @@
  */
 package com.zerolinck.passiflora.common.util.lock.suppert;
 
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -84,7 +85,7 @@ public final class ClassUtils {
      * @return 如果是代理的class，返回父 class，否则返回自身
      */
     public static Class<?> getUserClass(Class<?> clazz) {
-        AssertUtil.notNull(clazz, "Class must not be null");
+        Asserts.notNull(clazz, "Class must not be null");
         return isProxy(clazz) ? clazz.getSuperclass() : clazz;
     }
 
@@ -96,7 +97,7 @@ public final class ClassUtils {
      */
     @SuppressWarnings("unused")
     public static Class<?> getUserClass(Object object) {
-        AssertUtil.notNull(object, "Instance must not be null");
+        Asserts.notNull(object, "Instance must not be null");
         return getUserClass(object.getClass());
     }
 
@@ -172,8 +173,9 @@ public final class ClassUtils {
      * @param clazz the class
      * @return the package name, or the empty String if the class is defined in the default package
      */
+    @SuppressWarnings("unused")
     public static String getPackageName(Class<?> clazz) {
-        AssertUtil.notNull(clazz, "Class must not be null");
+        Asserts.notNull(clazz, "Class must not be null");
         return getPackageName(clazz.getName());
     }
 
@@ -185,7 +187,7 @@ public final class ClassUtils {
      * @return the package name, or the empty String if the class is defined in the default package
      */
     public static String getPackageName(String fqClassName) {
-        AssertUtil.notNull(fqClassName, "Class name must not be null");
+        Asserts.notNull(fqClassName, "Class name must not be null");
         int lastDotIndex = fqClassName.lastIndexOf(com.baomidou.mybatisplus.core.toolkit.StringPool.DOT);
         return (lastDotIndex != -1 ? fqClassName.substring(0, lastDotIndex) : StringPool.EMPTY);
     }

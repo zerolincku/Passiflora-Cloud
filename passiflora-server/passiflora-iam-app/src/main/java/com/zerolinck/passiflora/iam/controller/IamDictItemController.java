@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictItemApi;
 import com.zerolinck.passiflora.iam.service.IamDictItemService;
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,33 +62,33 @@ public class IamDictItemController implements IamDictItemApi {
     }
 
     @Override
-    public Result<IamDictItem> detail(String dictItemId) {
-        AssertUtil.notBlank(dictItemId, "字典项 ID 不能为空");
+    public Result<IamDictItem> detail(@Nullable String dictItemId) {
+        Asserts.notBlank(dictItemId, "字典项 ID 不能为空");
         return Result.ok(iamDictItemService.detail(dictItemId).orElseThrow(() -> new NoSuchElementException("字典项不存在")));
     }
 
     @Override
-    public Result<Void> delete(List<String> dictItemIds) {
-        AssertUtil.notEmpty(dictItemIds, "字典项 ID 不能为空");
+    public Result<Void> delete(@NotNull List<String> dictItemIds) {
+        Asserts.notEmpty(dictItemIds, "字典项 ID 不能为空");
         iamDictItemService.deleteByIds(dictItemIds);
         return Result.ok();
     }
 
     @Override
-    public Result<List<IamDictItem>> listByDictId(String dictId) {
-        AssertUtil.notBlank(dictId, "字典 ID 不能为空");
+    public Result<List<IamDictItem>> listByDictId(@Nullable String dictId) {
+        Asserts.notBlank(dictId, "字典 ID 不能为空");
         return Result.ok(iamDictItemService.listByDictId(dictId));
     }
 
     @Override
-    public Result<List<IamDictItem>> listByDictName(String dictName) {
-        AssertUtil.notBlank(dictName, "字典名称不能为空");
+    public Result<List<IamDictItem>> listByDictName(@Nullable String dictName) {
+        Asserts.notBlank(dictName, "字典名称不能为空");
         return Result.ok(iamDictItemService.listByDictName(dictName));
     }
 
     @Override
-    public Result<List<IamDictItem>> listByDictTag(String dictTag) {
-        AssertUtil.notBlank(dictTag, "字典标签不能为空");
+    public Result<List<IamDictItem>> listByDictTag(@Nullable String dictTag) {
+        Asserts.notBlank(dictTag, "字典标签不能为空");
         return Result.ok(iamDictItemService.listByDictTag(dictTag));
     }
 }

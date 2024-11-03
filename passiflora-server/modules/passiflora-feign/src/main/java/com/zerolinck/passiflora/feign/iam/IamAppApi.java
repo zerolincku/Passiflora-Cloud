@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +58,7 @@ public interface IamAppApi {
 
     @NotNull @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamApp> detail(@NotNull @RequestParam(value = "appId") String appId);
+    Result<IamApp> detail(@Nullable @RequestParam(value = "appId", required = false) String appId);
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")

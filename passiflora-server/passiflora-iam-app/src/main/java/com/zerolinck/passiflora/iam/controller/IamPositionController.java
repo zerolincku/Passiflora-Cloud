@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamPositionApi;
 import com.zerolinck.passiflora.iam.service.IamPositionPermissionService;
@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -75,14 +76,14 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<IamPosition> detail(String positionId) {
-        AssertUtil.notBlank(positionId, "职位 ID 不能为空");
+    public Result<IamPosition> detail(@Nullable String positionId) {
+        Asserts.notBlank(positionId, "职位 ID 不能为空");
         return Result.ok(iamPositionService.detail(positionId).orElseThrow(() -> new NoSuchElementException("职位不存在")));
     }
 
     @Override
     public Result<Void> delete(List<String> positionIds) {
-        AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
+        Asserts.notEmpty(positionIds, "职位 ID 不能为空");
         iamPositionService.deleteByIds(positionIds);
         return Result.ok();
     }
@@ -112,7 +113,7 @@ public class IamPositionController implements IamPositionApi {
 
     @Override
     public Result<List<String>> permissionIdsByPositionIds(List<String> positionIds) {
-        AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
+        Asserts.notEmpty(positionIds, "职位 ID 不能为空");
         return Result.ok(iamPositionPermissionService.permissionIdsByPositionIds(positionIds));
     }
 

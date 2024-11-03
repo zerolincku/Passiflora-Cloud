@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamRoleApi;
 import com.zerolinck.passiflora.iam.service.IamRolePermissionService;
@@ -76,21 +76,21 @@ public class IamRoleController implements IamRoleApi {
     }
 
     @NotNull @Override
-    public Result<IamRole> detail(@NotNull String roleId) {
-        AssertUtil.notBlank(roleId, "角色 ID 不能为空");
+    public Result<IamRole> detail(@Nullable String roleId) {
+        Asserts.notBlank(roleId, "角色 ID 不能为空");
         return Result.ok(iamRoleService.detail(roleId).orElseThrow(() -> new NoSuchElementException("角色不存在")));
     }
 
     @NotNull @Override
     public Result<Void> delete(@NotNull List<String> roleIds) {
-        AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
+        Asserts.notEmpty(roleIds, "角色 ID 不能为空");
         iamRoleService.deleteByIds(roleIds);
         return Result.ok();
     }
 
     @NotNull @Override
     public Result<List<String>> permissionIdsByRoleIds(@NotNull List<String> roleIds) {
-        AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
+        Asserts.notEmpty(roleIds, "角色 ID 不能为空");
         return Result.ok(iamRolePermissionService.permissionIdsByRoleIds(roleIds));
     }
 

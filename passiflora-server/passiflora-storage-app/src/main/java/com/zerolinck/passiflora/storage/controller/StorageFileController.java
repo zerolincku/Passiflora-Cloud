@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.storage.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.storage.StorageFileApi;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
@@ -63,9 +63,9 @@ public class StorageFileController implements StorageFileApi {
      */
     @NotNull @Override
     public Result<String> tryQuicklyUpload(@NotNull StorageFile storageFile) {
-        AssertUtil.notBlank(storageFile.getOriginalFileName(), "文件名称不能为空，请重新填写");
-        AssertUtil.notBlank(storageFile.getContentType(), "文件 contentType 不能为空，请重新填写");
-        AssertUtil.notBlank(storageFile.getFileMd5(), "文件 MD5 不能为空，请重新填写");
+        Asserts.notBlank(storageFile.getOriginalFileName(), "文件名称不能为空，请重新填写");
+        Asserts.notBlank(storageFile.getContentType(), "文件 contentType 不能为空，请重新填写");
+        Asserts.notBlank(storageFile.getFileMd5(), "文件 MD5 不能为空，请重新填写");
         return Result.ok(storageFileService.tryQuicklyUpload(storageFile));
     }
 
@@ -75,14 +75,14 @@ public class StorageFileController implements StorageFileApi {
     }
 
     @NotNull @Override
-    public Result<StorageFile> detail(@NotNull String fileId) {
-        AssertUtil.notBlank(fileId, "文件 ID 不能为空");
+    public Result<StorageFile> detail(@Nullable String fileId) {
+        Asserts.notBlank(fileId, "文件 ID 不能为空");
         return Result.ok(storageFileService.detail(fileId).orElseThrow(() -> new NoSuchElementException("无此文件")));
     }
 
     @NotNull @Override
     public Result<Void> delete(@NotNull List<String> fileIds) {
-        AssertUtil.notEmpty(fileIds, "文件列表不能为空");
+        Asserts.notEmpty(fileIds, "文件列表不能为空");
         storageFileService.deleteByIds(fileIds);
         return Result.ok();
     }

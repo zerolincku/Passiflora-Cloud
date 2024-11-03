@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamOrgApi;
 import com.zerolinck.passiflora.iam.service.IamOrgService;
@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,15 +73,15 @@ public class IamOrgController implements IamOrgApi {
     }
 
     @Override
-    public Result<IamOrg> detail(String orgId) {
-        AssertUtil.notBlank(orgId, "机构 ID 不能为空");
+    public Result<IamOrg> detail(@Nullable String orgId) {
+        Asserts.notBlank(orgId, "机构 ID 不能为空");
         return Result.ok(iamOrgService.detail(orgId).orElseThrow(() -> new NoSuchElementException("机构不存在")));
     }
 
     /** 此方法会级联删除下级机构 */
     @Override
     public Result<Void> delete(List<String> orgIds) {
-        AssertUtil.notEmpty(orgIds, "机构 ID 不能为空");
+        Asserts.notEmpty(orgIds, "机构 ID 不能为空");
         iamOrgService.deleteByIds(orgIds);
         return Result.ok();
     }

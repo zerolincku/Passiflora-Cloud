@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-03-18 */
 @UtilityClass
-public class AssertUtil {
+public class Asserts {
 
     public static void notEmpty(@Nullable Collection<?> collection, @NotNull String message) {
         if (collection == null || collection.isEmpty()) {

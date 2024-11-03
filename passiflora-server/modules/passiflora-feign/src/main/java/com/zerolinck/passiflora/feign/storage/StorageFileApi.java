@@ -68,7 +68,7 @@ public interface StorageFileApi {
 
     @NotNull @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<StorageFile> detail(@NotNull @RequestParam(value = "fileId") String fileId);
+    Result<StorageFile> detail(@Nullable @RequestParam(value = "fileId", required = false) String fileId);
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
@@ -76,7 +76,7 @@ public interface StorageFileApi {
 
     @Operation(summary = "文件下载")
     @GetMapping(value = "/download-file")
-    void downloadFile(@NotNull @RequestParam("fileId") String fileId);
+    void downloadFile(@NotNull @RequestParam(value = "fileId", required = false) String fileId);
 
     @Operation(summary = "文件批量下载")
     @PostMapping(value = "/download-zip")

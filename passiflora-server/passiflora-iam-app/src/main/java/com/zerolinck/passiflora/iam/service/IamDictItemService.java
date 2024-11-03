@@ -141,6 +141,9 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@NotNull Collection<String> dictItemIds) {
+        if (CollectionUtils.isEmpty(dictItemIds)) {
+            return 0;
+        }
         List<IamDictItem> iamDictItems = baseMapper.selectByIds(dictItemIds);
         iamDictItems.forEach(iamDictItem -> {
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {

@@ -63,7 +63,7 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamRole> detail(@NotNull @RequestParam(value = "roleId") String roleId);
+    Result<IamRole> detail(@Nullable @RequestParam(value = "roleId", required = false) String roleId);
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")

@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -61,7 +62,7 @@ public interface IamUserApi {
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamUser> detail(@RequestParam(value = "userId") String userId);
+    Result<IamUser> detail(@Nullable @RequestParam(value = "userId", required = false) String userId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")

@@ -42,7 +42,7 @@ public interface ${apiClass} {
     @NotNull
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<${entityClass}> detail(@NotNull @RequestParam(value = "${table.pkFieldName}") String ${table.pkFieldName});
+    Result<${entityClass}> detail(@Nullable @RequestParam(value = "${table.pkFieldName}", required = false) String ${table.pkFieldName});
 
     @NotNull
     @Operation(summary = "删除")

@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamPermissionApi;
 import com.zerolinck.passiflora.iam.service.IamPermissionService;
@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,15 +74,15 @@ public class IamPermissionController implements IamPermissionApi {
     }
 
     @Override
-    public Result<IamPermission> detail(String permissionId) {
-        AssertUtil.notBlank(permissionId, "权限 ID 不能为空");
+    public Result<IamPermission> detail(@Nullable String permissionId) {
+        Asserts.notBlank(permissionId, "权限 ID 不能为空");
         return Result.ok(
                 iamPermissionService.detail(permissionId).orElseThrow(() -> new NoSuchElementException("权限不存在")));
     }
 
     @Override
     public Result<Void> delete(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
+        Asserts.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.deleteByIds(permissionIds);
         return Result.ok();
     }
@@ -104,14 +105,14 @@ public class IamPermissionController implements IamPermissionApi {
 
     @Override
     public Result<Void> disable(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
+        Asserts.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.disable(permissionIds);
         return Result.ok();
     }
 
     @Override
     public Result<Void> enable(List<String> permissionIds) {
-        AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
+        Asserts.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.enable(permissionIds);
         return Result.ok();
     }

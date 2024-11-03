@@ -2,7 +2,7 @@ package com.zerolinck.passiflora.${moduleName}.controller;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.AssertUtil;
+import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
@@ -57,7 +57,7 @@ public class ${controllerClass} implements ${apiClass} {
 
     @NotNull
     @Override
-    public Result<${entityClass}> detail(@NotNull String ${table.pkFieldName}) {
+    public Result<${entityClass}> detail(@Nullable String ${table.pkFieldName}) {
         AssertUtil.notBlank(${table.pkFieldName}, "${table.description} ID 不能为空");
         return Result.ok(${serviceName}
                 .detail(${table.pkFieldName})
