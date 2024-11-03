@@ -82,7 +82,7 @@ public class IamRoleController implements IamRoleApi {
     }
 
     @NotNull @Override
-    public Result<String> delete(@NotNull List<String> roleIds) {
+    public Result<Void> delete(@NotNull List<String> roleIds) {
         AssertUtil.notEmpty(roleIds, "角色 ID 不能为空");
         iamRoleService.deleteByIds(roleIds);
         return Result.ok();
@@ -95,19 +95,19 @@ public class IamRoleController implements IamRoleApi {
     }
 
     @NotNull @Override
-    public Result<String> saveRolePermission(@NotNull RolePermissionSaveArgs args) {
+    public Result<Void> saveRolePermission(@NotNull RolePermissionSaveArgs args) {
         iamRolePermissionService.saveRolePermission(args);
         return Result.ok();
     }
 
     @NotNull @Override
-    public Result<String> disable(@NotNull List<String> roleIds) {
+    public Result<Void> disable(@NotNull List<String> roleIds) {
         iamRoleService.disable(roleIds);
         return Result.ok();
     }
 
     @NotNull @Override
-    public Result<String> enable(@NotNull List<String> roleIds) {
+    public Result<Void> enable(@NotNull List<String> roleIds) {
         iamRoleService.enable(roleIds);
         return Result.ok();
     }

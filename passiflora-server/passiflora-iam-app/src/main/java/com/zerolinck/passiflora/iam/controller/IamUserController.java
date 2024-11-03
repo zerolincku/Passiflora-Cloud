@@ -76,7 +76,7 @@ public class IamUserController implements IamUserApi {
     }
 
     @Override
-    public Result<String> delete(@RequestBody List<String> userIds) {
+    public Result<Void> delete(@RequestBody List<String> userIds) {
         AssertUtil.notEmpty(userIds, "用户 ID 不能为空");
         iamUserService.deleteByIds(userIds);
         return Result.ok();
@@ -88,7 +88,7 @@ public class IamUserController implements IamUserApi {
     }
 
     @Override
-    public Result<String> logout() {
+    public Result<Void> logout() {
         iamUserService.logout();
         return Result.ok();
     }

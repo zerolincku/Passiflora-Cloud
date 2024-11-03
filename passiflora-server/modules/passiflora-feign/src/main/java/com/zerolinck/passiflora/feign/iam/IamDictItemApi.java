@@ -60,7 +60,7 @@ public interface IamDictItemApi {
 
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> dictItemIds);
+    Result<Void> delete(@RequestBody List<String> dictItemIds);
 
     @Operation(summary = "根据字典ID查询")
     @GetMapping("list-by-dict-id")

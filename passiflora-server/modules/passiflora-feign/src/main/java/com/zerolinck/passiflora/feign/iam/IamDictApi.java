@@ -60,5 +60,5 @@ public interface IamDictApi {
 
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> dictIds);
+    Result<Void> delete(@RequestBody List<String> dictIds);
 }

@@ -61,13 +61,13 @@ public interface IamAppApi {
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@NotNull @RequestBody List<String> appIds);
+    Result<Void> delete(@NotNull @RequestBody List<String> appIds);
 
     @NotNull @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@NotNull @RequestBody List<String> appIds);
+    Result<Void> disable(@NotNull @RequestBody List<String> appIds);
 
     @NotNull @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@NotNull @RequestBody List<String> appIds);
+    Result<Void> enable(@NotNull @RequestBody List<String> appIds);
 }

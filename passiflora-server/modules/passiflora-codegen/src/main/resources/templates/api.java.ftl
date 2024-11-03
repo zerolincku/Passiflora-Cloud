@@ -47,5 +47,5 @@ public interface ${apiClass} {
     @NotNull
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@NotNull @RequestBody List<String> ${table.pkFieldName}s);
+    Result<Void> delete(@NotNull @RequestBody List<String> ${table.pkFieldName}s);
 }

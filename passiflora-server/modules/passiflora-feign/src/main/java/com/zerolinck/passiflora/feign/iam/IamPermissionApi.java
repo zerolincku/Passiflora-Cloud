@@ -62,7 +62,7 @@ public interface IamPermissionApi {
 
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> permissionIds);
+    Result<Void> delete(@RequestBody List<String> permissionIds);
 
     @Operation(summary = "菜单树")
     @GetMapping("menu-tree")
@@ -74,13 +74,13 @@ public interface IamPermissionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("update-order")
-    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> iamPermissionTableVos);
+    Result<Void> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> iamPermissionTableVos);
 
     @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@RequestBody List<String> permissionIds);
+    Result<Void> disable(@RequestBody List<String> permissionIds);
 
     @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@RequestBody List<String> permissionIds);
+    Result<Void> enable(@RequestBody List<String> permissionIds);
 }

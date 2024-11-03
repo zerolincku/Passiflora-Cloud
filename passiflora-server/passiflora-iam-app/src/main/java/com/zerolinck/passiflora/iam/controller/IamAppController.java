@@ -80,21 +80,21 @@ public class IamAppController implements IamAppApi {
     }
 
     @NotNull @Override
-    public Result<String> delete(@NotNull List<String> appIds) {
+    public Result<Void> delete(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.deleteByIds(appIds);
         return Result.ok();
     }
 
     @NotNull @Override
-    public Result<String> disable(@NotNull List<String> appIds) {
+    public Result<Void> disable(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.disable(appIds);
         return Result.ok();
     }
 
     @NotNull @Override
-    public Result<String> enable(@NotNull List<String> appIds) {
+    public Result<Void> enable(@NotNull List<String> appIds) {
         AssertUtil.notEmpty(appIds, "应用 ID 不能为空");
         iamAppService.enable(appIds);
         return Result.ok();

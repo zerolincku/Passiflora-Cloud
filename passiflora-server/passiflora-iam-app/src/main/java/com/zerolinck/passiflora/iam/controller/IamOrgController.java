@@ -79,7 +79,7 @@ public class IamOrgController implements IamOrgApi {
 
     /** 此方法会级联删除下级机构 */
     @Override
-    public Result<String> delete(List<String> orgIds) {
+    public Result<Void> delete(List<String> orgIds) {
         AssertUtil.notEmpty(orgIds, "机构 ID 不能为空");
         iamOrgService.deleteByIds(orgIds);
         return Result.ok();

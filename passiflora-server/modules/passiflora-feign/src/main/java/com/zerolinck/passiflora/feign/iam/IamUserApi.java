@@ -65,7 +65,7 @@ public interface IamUserApi {
 
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(List<String> userIds);
+    Result<Void> delete(List<String> userIds);
 
     @Operation(summary = "登录", description = "需要参数：userName，userPassword")
     @PostMapping("login")
@@ -73,7 +73,7 @@ public interface IamUserApi {
 
     @Operation(summary = "退出登录")
     @GetMapping("logout")
-    Result<String> logout();
+    Result<Void> logout();
 
     @Operation(summary = "获取当前登录用户信息")
     @GetMapping("current-user-info")

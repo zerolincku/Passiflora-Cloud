@@ -81,7 +81,7 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<String> delete(List<String> positionIds) {
+    public Result<Void> delete(List<String> positionIds) {
         AssertUtil.notEmpty(positionIds, "职位 ID 不能为空");
         iamPositionService.deleteByIds(positionIds);
         return Result.ok();
@@ -93,19 +93,19 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<String> disable(List<String> positionIds) {
+    public Result<Void> disable(List<String> positionIds) {
         iamPositionService.disable(positionIds);
         return Result.ok();
     }
 
     @Override
-    public Result<String> enable(List<String> positionIds) {
+    public Result<Void> enable(List<String> positionIds) {
         iamPositionService.enable(positionIds);
         return Result.ok();
     }
 
     @Override
-    public Result<String> updateOrder(List<IamPositionVo> iamPositionVos) {
+    public Result<Void> updateOrder(List<IamPositionVo> iamPositionVos) {
         iamPositionService.updateOrder(iamPositionVos);
         return Result.ok();
     }
@@ -117,7 +117,7 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<String> savePositionPermission(PositionPermissionSaveArgs args) {
+    public Result<Void> savePositionPermission(PositionPermissionSaveArgs args) {
         iamPositionPermissionService.savePositionPermission(args);
         return Result.ok();
     }

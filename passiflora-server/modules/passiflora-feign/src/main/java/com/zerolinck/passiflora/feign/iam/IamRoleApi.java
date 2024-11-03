@@ -67,7 +67,7 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@NotNull @RequestBody List<String> roleIds);
+    Result<Void> delete(@NotNull @RequestBody List<String> roleIds);
 
     @NotNull @Operation(summary = "根据角色ids获取权限ids")
     @PostMapping("permission-ids-by-role-ids")
@@ -75,13 +75,13 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "保存角色权限")
     @PostMapping("save-role-permission")
-    Result<String> saveRolePermission(@NotNull @RequestBody @Validated RolePermissionSaveArgs args);
+    Result<Void> saveRolePermission(@NotNull @RequestBody @Validated RolePermissionSaveArgs args);
 
     @NotNull @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@NotNull @RequestBody List<String> roleIds);
+    Result<Void> disable(@NotNull @RequestBody List<String> roleIds);
 
     @NotNull @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@NotNull @RequestBody List<String> roleIds);
+    Result<Void> enable(@NotNull @RequestBody List<String> roleIds);
 }

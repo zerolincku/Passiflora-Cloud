@@ -72,7 +72,7 @@ public interface StorageFileApi {
 
     @NotNull @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@NotNull @RequestBody List<String> fileIds);
+    Result<Void> delete(@NotNull @RequestBody List<String> fileIds);
 
     @Operation(summary = "文件下载")
     @GetMapping(value = "/download-file")
@@ -84,5 +84,5 @@ public interface StorageFileApi {
 
     @NotNull @Operation(summary = "确认文件使用", description = "文件由临时文件转换为正式文件")
     @PostMapping(value = "/confirm-file")
-    Result<String> confirmFile(@NotNull @RequestBody List<String> fileIds);
+    Result<Void> confirmFile(@NotNull @RequestBody List<String> fileIds);
 }

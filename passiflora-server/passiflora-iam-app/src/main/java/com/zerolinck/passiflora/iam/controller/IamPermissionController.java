@@ -80,7 +80,7 @@ public class IamPermissionController implements IamPermissionApi {
     }
 
     @Override
-    public Result<String> delete(List<String> permissionIds) {
+    public Result<Void> delete(List<String> permissionIds) {
         AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.deleteByIds(permissionIds);
         return Result.ok();
@@ -97,20 +97,20 @@ public class IamPermissionController implements IamPermissionApi {
     }
 
     @Override
-    public Result<String> updateOrder(List<IamPermissionTableVo> iamPermissionTableVos) {
+    public Result<Void> updateOrder(List<IamPermissionTableVo> iamPermissionTableVos) {
         iamPermissionService.updateOrder(iamPermissionTableVos);
         return Result.ok();
     }
 
     @Override
-    public Result<String> disable(List<String> permissionIds) {
+    public Result<Void> disable(List<String> permissionIds) {
         AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.disable(permissionIds);
         return Result.ok();
     }
 
     @Override
-    public Result<String> enable(List<String> permissionIds) {
+    public Result<Void> enable(List<String> permissionIds) {
         AssertUtil.notEmpty(permissionIds, "权限 ID 不能为空");
         iamPermissionService.enable(permissionIds);
         return Result.ok();

@@ -67,7 +67,7 @@ public class IamDictController implements IamDictApi {
     }
 
     @Override
-    public Result<String> delete(List<String> dictIds) {
+    public Result<Void> delete(List<String> dictIds) {
         AssertUtil.notEmpty(dictIds, "字典 ID 不能为空");
         iamDictService.deleteByIds(dictIds);
         return Result.ok();

@@ -54,8 +54,8 @@ public class Result<T> {
     }
 
     /** 成功返回结果 */
-    public static Result<String> ok() {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), "");
+    public static Result<Void> ok() {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
     /**

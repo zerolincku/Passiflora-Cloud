@@ -62,7 +62,7 @@ public interface IamOrgApi {
     /** 此方法会级联删除下级机构 */
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> orgIds);
+    Result<Void> delete(@RequestBody List<String> orgIds);
 
     @Operation(summary = "根据父级ID查询子机构列表")
     @GetMapping("list-by-parent-id")

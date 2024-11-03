@@ -62,7 +62,7 @@ public interface IamPositionApi {
 
     @Operation(summary = "删除")
     @PostMapping("delete")
-    Result<String> delete(@RequestBody List<String> positionIds);
+    Result<Void> delete(@RequestBody List<String> positionIds);
 
     @Operation(summary = "职位树")
     @GetMapping("position-tree")
@@ -70,15 +70,15 @@ public interface IamPositionApi {
 
     @Operation(summary = "禁用")
     @PostMapping("disable")
-    Result<String> disable(@RequestBody List<String> positionIds);
+    Result<Void> disable(@RequestBody List<String> positionIds);
 
     @Operation(summary = "启用")
     @PostMapping("enable")
-    Result<String> enable(@RequestBody List<String> positionIds);
+    Result<Void> enable(@RequestBody List<String> positionIds);
 
     @Operation(summary = "更新排序")
     @PostMapping("update-order")
-    Result<String> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> iamPositionVos);
+    Result<Void> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> iamPositionVos);
 
     @Operation(summary = "根据职位ids获取权限ids")
     @PostMapping("permission-ids-by-position-ids")
@@ -86,6 +86,5 @@ public interface IamPositionApi {
 
     @Operation(summary = "保存职位权限")
     @PostMapping("save-position-permission")
-    Result<String> savePositionPermission(
-            @RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs);
+    Result<Void> savePositionPermission(@RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs);
 }

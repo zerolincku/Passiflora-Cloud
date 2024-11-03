@@ -81,7 +81,7 @@ public class StorageFileController implements StorageFileApi {
     }
 
     @NotNull @Override
-    public Result<String> delete(@NotNull List<String> fileIds) {
+    public Result<Void> delete(@NotNull List<String> fileIds) {
         AssertUtil.notEmpty(fileIds, "文件列表不能为空");
         storageFileService.deleteByIds(fileIds);
         return Result.ok();
@@ -98,7 +98,7 @@ public class StorageFileController implements StorageFileApi {
     }
 
     @NotNull @Override
-    public Result<String> confirmFile(@NotNull List<String> fileIds) {
+    public Result<Void> confirmFile(@NotNull List<String> fileIds) {
         storageFileService.confirmFiles(fileIds);
         return Result.ok();
     }

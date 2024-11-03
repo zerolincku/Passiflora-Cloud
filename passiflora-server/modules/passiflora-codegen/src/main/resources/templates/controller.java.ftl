@@ -66,7 +66,7 @@ public class ${controllerClass} implements ${apiClass} {
 
     @NotNull
     @Override
-    public Result<String> delete(@NotNull List<String> ${table.pkFieldName}s) {
+    public Result<Void> delete(@NotNull List<String> ${table.pkFieldName}s) {
         AssertUtil.notEmpty(${table.pkFieldName}s, "${table.description} ID 不能为空");
         ${serviceName}.deleteByIds(${table.pkFieldName}s);
         return Result.ok();
