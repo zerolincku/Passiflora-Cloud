@@ -17,13 +17,20 @@
 package com.zerolinck.passiflora.model.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** @author linck on 2024-05-01 */
-public class ListUtil {
+public class CollectionUtil {
 
     @SuppressWarnings("rawtypes")
     public static List emptyList() {
         return new ArrayList<>();
+    }
+
+    @SuppressWarnings({"rawtypes", "unused"})
+    public static Set emptySet() {
+        return new HashSet<>();
     }
 }

@@ -28,6 +28,6 @@ import org.mapstruct.factory.Mappers;
 public interface IamOrgConvert {
     IamOrgConvert INSTANCE = Mappers.getMapper(IamOrgConvert.class);
 
-    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.ListUtil.emptyList())")
+    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.CollectionUtil.emptyList())")
     IamOrgVo entity2Vo(IamOrg iamOrg);
 }
