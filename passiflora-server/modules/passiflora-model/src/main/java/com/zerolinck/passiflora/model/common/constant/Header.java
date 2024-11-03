@@ -37,6 +37,9 @@ public enum Header {
     COOKIE("Cookie"),
     CONTENT_LENGTH("Content-Length"),
     CONTENT_DISPOSITION("Content-Disposition"),
+    TRACE_ID("Trace-Id"),
+    /** 请求来源，内部区分请求来自于哪个服务 */
+    REQ_FROM("Req-From"),
     ;
 
     private final String value;

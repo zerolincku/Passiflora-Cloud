@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.common.constant.Constants;
+import com.zerolinck.passiflora.model.common.constant.Header;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -132,7 +132,7 @@ class IamUserControllerTest {
     @Test
     @Order(6)
     public void testCheckToken() throws Exception {
-        mockMvc.perform(get("/iam-user/check-token").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/check-token").header(Header.AUTHORIZATION.toString(), testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -140,7 +140,7 @@ class IamUserControllerTest {
     @Test
     @Order(7)
     public void testCurrentUserInfo() throws Exception {
-        mockMvc.perform(get("/iam-user/current-user-info").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/current-user-info").header(Header.AUTHORIZATION.toString(), testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -148,7 +148,7 @@ class IamUserControllerTest {
     @Test
     @Order(8)
     public void testLogout() throws Exception {
-        mockMvc.perform(get("/iam-user/logout").header(Constants.Authorization, testToken))
+        mockMvc.perform(get("/iam-user/logout").header(Header.AUTHORIZATION.toString(), testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

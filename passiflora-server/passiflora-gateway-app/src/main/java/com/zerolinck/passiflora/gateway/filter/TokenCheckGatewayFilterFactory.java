@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.gateway.filter;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.model.common.constant.Constants;
+import com.zerolinck.passiflora.model.common.constant.Header;
 import jakarta.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
@@ -70,7 +70,7 @@ public class TokenCheckGatewayFilterFactory
             }
 
             HttpHeaders headers = exchange.getRequest().getHeaders();
-            List<String> tokens = headers.get(Constants.Authorization);
+            List<String> tokens = headers.get(Header.AUTHORIZATION.toString());
             String token = "";
             if (CollectionUtils.isNotEmpty(tokens)) {
                 token = tokens.getFirst();
@@ -80,7 +80,7 @@ public class TokenCheckGatewayFilterFactory
                     .build()
                     .get()
                     .uri("/passiflora/iam-api/iam-user/check-token")
-                    .header(Constants.Authorization, token)
+                    .header(Header.AUTHORIZATION.toString(), token)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Result<Boolean>>() {})
                     .flatMap(result -> {

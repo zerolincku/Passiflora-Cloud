@@ -18,9 +18,7 @@ package com.zerolinck.passiflora.model.common.constant;
 
 /** @author linck */
 public interface Constants {
-    String Authorization = "Authorization";
 
-    String traceId = "traceId";
-
+    /** 超级管理员账号ID */
     String SUPER_ADMIN_ID = "1";
 }

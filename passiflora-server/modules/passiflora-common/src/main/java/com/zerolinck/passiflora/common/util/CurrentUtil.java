@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.model.common.constant.Constants;
+import com.zerolinck.passiflora.model.common.constant.Header;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class CurrentUtil {
         if (userMap.get() != null) {
             return userMap.get();
         }
-        String token = NetUtil.getRequest().getHeader(Constants.Authorization);
+        String token = NetUtil.getRequest().getHeader(Header.AUTHORIZATION.toString());
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + token);
         if (keys == null || keys.isEmpty()) {
             return null;
@@ -78,7 +78,7 @@ public class CurrentUtil {
         if (tokenMap.get() != null) {
             return tokenMap.get();
         }
-        String token = NetUtil.getRequest().getHeader(Constants.Authorization);
+        String token = NetUtil.getRequest().getHeader(Header.AUTHORIZATION.toString());
         tokenMap.set(token);
         return token;
     }
