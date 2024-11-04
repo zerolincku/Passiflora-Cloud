@@ -16,17 +16,45 @@
  */
 package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamPosition;
+import com.zerolinck.passiflora.model.common.enums.StatusEnum;
+import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-05-28 */
 @Data
 @Schema(description = "职位")
-@EqualsAndHashCode(callSuper = true)
-public class IamPositionResp extends IamPosition {
+public class IamPositionResp {
 
-    private Collection<IamPositionResp> children;
+    @Schema(description = "职位ID")
+    private String positionId;
+
+    @Schema(description = "职位名称")
+    private String positionName;
+
+    @Schema(description = "职位级别")
+    private Integer positionLevel;
+
+    @Schema(description = "父职位ID")
+    private String parentPositionId;
+
+    @Schema(description = "数据范围类型")
+    private PositionDataScopeTypeEnum dataScopeType;
+
+    @Schema(description = "职位ID路径")
+    private String positionIdPath;
+
+    @Schema(description = "职位状态")
+    private StatusEnum positionStatus;
+
+    @Schema(description = "排序")
+    private Integer order;
+
+    @Schema(description = "乐观锁版本")
+    private Long version;
+
+    @Schema(description = "子职位")
+    private Collection<IamPositionResp> children = new ArrayList<>();
 }

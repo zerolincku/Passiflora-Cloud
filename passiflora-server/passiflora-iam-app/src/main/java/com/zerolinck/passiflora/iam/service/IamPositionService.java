@@ -27,6 +27,7 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
+import com.zerolinck.passiflora.model.iam.mapperstruct.IamPositionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -105,10 +106,11 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
                     generateIdPathAndLevel(iamPosition);
                     int changeRowCount = baseMapper.updateById(iamPosition);
                     // 子机构数据变更
-                    List<IamPositionResp> positionVoList = baseMapper.listByParentId(iamPosition.getPositionId());
-                    positionVoList.forEach(positionVo -> {
-                        generateIdPathAndLevel(positionVo);
-                        baseMapper.updateById(positionVo);
+                    List<IamPositionResp> positionResps = baseMapper.listByParentId(iamPosition.getPositionId());
+                    positionResps.forEach(resp -> {
+                        IamPosition position = IamPositionConvert.INSTANCE.respToEntity(resp);
+                        generateIdPathAndLevel(position);
+                        baseMapper.updateById(position);
                     });
                     return changeRowCount > 0;
                 });

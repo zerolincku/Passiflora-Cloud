@@ -16,6 +16,8 @@
  */
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
+import com.zerolinck.passiflora.model.iam.entity.IamPosition;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -24,4 +26,8 @@ import org.mapstruct.factory.Mappers;
 @SuppressWarnings("all")
 public interface IamPositionConvert {
     IamPositionConvert INSTANCE = Mappers.getMapper(IamPositionConvert.class);
+
+    IamPositionResp entityToResp(IamPosition entity);
+
+    IamPosition respToEntity(IamPositionResp resp);
 }
