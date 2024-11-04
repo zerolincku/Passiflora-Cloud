@@ -24,9 +24,9 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamPositionApi;
 import com.zerolinck.passiflora.iam.service.IamPositionPermissionService;
 import com.zerolinck.passiflora.iam.service.IamPositionService;
-import com.zerolinck.passiflora.model.iam.args.PositionPermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +89,7 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<List<IamPositionVo>> positionTree() {
+    public Result<List<IamPositionResp>> positionTree() {
         return Result.ok(iamPositionService.positionTree());
     }
 
@@ -106,8 +106,8 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<Void> updateOrder(List<IamPositionVo> iamPositionVos) {
-        iamPositionService.updateOrder(iamPositionVos);
+    public Result<Void> updateOrder(List<IamPositionResp> iamPositionResps) {
+        iamPositionService.updateOrder(iamPositionResps);
         return Result.ok();
     }
 
@@ -118,7 +118,7 @@ public class IamPositionController implements IamPositionApi {
     }
 
     @Override
-    public Result<Void> savePositionPermission(PositionPermissionSaveArgs args) {
+    public Result<Void> savePositionPermission(PositionPermissionArgs args) {
         iamPositionPermissionService.savePositionPermission(args);
         return Result.ok();
     }

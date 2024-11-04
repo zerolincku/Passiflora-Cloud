@@ -14,20 +14,58 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.vo;
+package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-04-29 */
 @Data
 @Schema(description = "用户")
-@EqualsAndHashCode(callSuper = true)
-public class IamUserVo extends IamUser {
+public class IamUserResp {
+
+    @Schema(description = "主键")
+    private String userId;
+
+    @Schema(description = "用户名")
+    private String userName;
+
+    @Schema(description = "真实姓名")
+    private String realName;
+
+    /** 取值参见字典：gender */
+    @Schema(description = "性别")
+    private Integer gender;
+
+    @Schema(description = "身份证号")
+    private String idCardNo;
+
+    @Schema(description = "出生日期")
+    private LocalDate dateOfBirth;
+
+    @Schema(description = "手机号")
+    private String phoneNum;
+
+    @Schema(description = "电子邮箱")
+    private String email;
+
+    @Schema(description = "备注")
+    private String remark;
+
+    @Schema(description = "用户密码")
+    private String userPassword;
+
+    @Schema(description = "用户头像")
+    private String avatarFile;
+
+    @Schema(description = "所属机构")
+    private String orgId;
+
+    @Schema(description = "乐观锁版本")
+    private Long version;
 
     @Schema(description = "机构名称")
     private String orgName = "";

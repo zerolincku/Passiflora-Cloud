@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
+import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -28,6 +28,8 @@ import org.mapstruct.factory.Mappers;
 public interface IamOrgConvert {
     IamOrgConvert INSTANCE = Mappers.getMapper(IamOrgConvert.class);
 
-    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.CollectionUtil.emptyList())")
-    IamOrgVo entity2Vo(IamOrg iamOrg);
+    @Mapping(target = "children", ignore = true)
+    IamOrgResp entityToResp(IamOrg iamOrg);
+
+    IamOrg respToEntity(IamOrgResp orgResp);
 }

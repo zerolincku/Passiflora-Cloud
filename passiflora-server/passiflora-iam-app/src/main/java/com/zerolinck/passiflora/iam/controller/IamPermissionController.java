@@ -24,8 +24,8 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamPermissionApi;
 import com.zerolinck.passiflora.iam.service.IamPermissionService;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -88,18 +88,18 @@ public class IamPermissionController implements IamPermissionApi {
     }
 
     @Override
-    public Result<List<IamPermissionVo>> menuTree() {
+    public Result<List<IamPermissionResp>> menuTree() {
         return Result.ok(iamPermissionService.menuTree());
     }
 
     @Override
-    public Result<List<IamPermissionTableVo>> permissionTableTree() {
+    public Result<List<IamPermissionTableResp>> permissionTableTree() {
         return Result.ok(iamPermissionService.permissionTableTree());
     }
 
     @Override
-    public Result<Void> updateOrder(List<IamPermissionTableVo> iamPermissionTableVos) {
-        iamPermissionService.updateOrder(iamPermissionTableVos);
+    public Result<Void> updateOrder(List<IamPermissionTableResp> iamPermissionTableResps) {
+        iamPermissionService.updateOrder(iamPermissionTableResps);
         return Result.ok();
     }
 

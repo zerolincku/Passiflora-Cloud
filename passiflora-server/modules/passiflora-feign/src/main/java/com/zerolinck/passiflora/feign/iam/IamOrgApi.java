@@ -20,7 +20,7 @@ import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
+import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,9 +67,9 @@ public interface IamOrgApi {
 
     @Operation(summary = "根据父级ID查询子机构列表")
     @GetMapping("list-by-parent-id")
-    Result<List<IamOrgVo>> listByParentId(@RequestParam(required = false, value = "orgParentId") String orgParentId);
+    Result<List<IamOrgResp>> listByParentId(@RequestParam(required = false, value = "orgParentId") String orgParentId);
 
     @Operation(summary = "机构树")
     @GetMapping("org-tree")
-    Result<List<IamOrgVo>> orgTree();
+    Result<List<IamOrgResp>> orgTree();
 }

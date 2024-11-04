@@ -24,7 +24,7 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamOrgApi;
 import com.zerolinck.passiflora.iam.service.IamOrgService;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
+import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +87,7 @@ public class IamOrgController implements IamOrgApi {
     }
 
     @Override
-    public Result<List<IamOrgVo>> listByParentId(String orgParentId) {
+    public Result<List<IamOrgResp>> listByParentId(String orgParentId) {
         if (StringUtils.isBlank(orgParentId)) {
             orgParentId = "0";
         }
@@ -95,7 +95,7 @@ public class IamOrgController implements IamOrgApi {
     }
 
     @Override
-    public Result<List<IamOrgVo>> orgTree() {
+    public Result<List<IamOrgResp>> orgTree() {
         return Result.ok(iamOrgService.orgTree());
     }
 }

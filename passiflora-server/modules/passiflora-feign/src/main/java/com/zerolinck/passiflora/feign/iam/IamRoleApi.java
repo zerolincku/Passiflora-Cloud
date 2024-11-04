@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.feign.iam;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
-import com.zerolinck.passiflora.model.iam.args.RolePermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
@@ -75,7 +75,7 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "保存角色权限")
     @PostMapping("save-role-permission")
-    Result<Void> saveRolePermission(@NotNull @RequestBody @Validated RolePermissionSaveArgs args);
+    Result<Void> saveRolePermission(@NotNull @RequestBody @Validated RolePermissionArgs args);
 
     @NotNull @Operation(summary = "禁用")
     @PostMapping("disable")

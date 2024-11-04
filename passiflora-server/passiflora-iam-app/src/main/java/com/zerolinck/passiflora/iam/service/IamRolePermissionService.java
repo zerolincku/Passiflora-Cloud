@@ -22,7 +22,7 @@ import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
-import com.zerolinck.passiflora.model.iam.args.RolePermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -123,10 +123,10 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         return baseMapper.permissionIdsByRoleIds(roleIds);
     }
 
-    public void saveRolePermission(@NotNull RolePermissionSaveArgs args) {
+    public void saveRolePermission(@NotNull RolePermissionArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
-                new LockWrapper<RolePermissionSaveArgs>().lock(RolePermissionSaveArgs::getRoleId, args.getRoleId()),
+                new LockWrapper<RolePermissionArgs>().lock(RolePermissionArgs::getRoleId, args.getRoleId()),
                 true,
                 () -> {
                     Set<String> exitPermissionIdSet =

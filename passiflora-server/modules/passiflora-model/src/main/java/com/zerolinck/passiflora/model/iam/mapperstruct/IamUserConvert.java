@@ -16,9 +16,10 @@
  */
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
-import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -34,10 +35,12 @@ public interface IamUserConvert {
     @Mapping(target = "positionNames", ignore = true)
     @Mapping(target = "roleIds", ignore = true)
     @Mapping(target = "roleNames", ignore = true)
-    IamUserVo entity2vo(IamUser iamUser);
+    IamUserResp entityToResp(IamUser iamUser);
 
     @Mapping(target = "permission", ignore = true)
     @Mapping(target = "menu", ignore = true)
     @Mapping(target = "userPassword", ignore = true)
-    IamUserInfo entity2info(IamUser iamUser);
+    IamUserInfo entityToInfo(IamUser iamUser);
+
+    IamUser argsToEntity(IamUserArgs args);
 }

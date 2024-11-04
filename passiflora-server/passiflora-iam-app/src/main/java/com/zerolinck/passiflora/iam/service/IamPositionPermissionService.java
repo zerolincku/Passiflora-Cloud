@@ -22,7 +22,7 @@ import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
-import com.zerolinck.passiflora.model.iam.args.PositionPermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -90,11 +90,11 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         return baseMapper.permissionIdsByPositionIds(positionIds);
     }
 
-    public void savePositionPermission(@NotNull PositionPermissionSaveArgs args) {
+    public void savePositionPermission(@NotNull PositionPermissionArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
-                new LockWrapper<PositionPermissionSaveArgs>()
-                        .lock(PositionPermissionSaveArgs::getPositionId, args.getPositionId()),
+                new LockWrapper<PositionPermissionArgs>()
+                        .lock(PositionPermissionArgs::getPositionId, args.getPositionId()),
                 true,
                 () -> {
                     Set<String> exitPermissionIdSet =

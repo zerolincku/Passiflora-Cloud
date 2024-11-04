@@ -23,7 +23,7 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamRoleApi;
 import com.zerolinck.passiflora.iam.service.IamRolePermissionService;
 import com.zerolinck.passiflora.iam.service.IamRoleService;
-import com.zerolinck.passiflora.model.iam.args.RolePermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -95,7 +95,7 @@ public class IamRoleController implements IamRoleApi {
     }
 
     @NotNull @Override
-    public Result<Void> saveRolePermission(@NotNull RolePermissionSaveArgs args) {
+    public Result<Void> saveRolePermission(@NotNull RolePermissionArgs args) {
         iamRolePermissionService.saveRolePermission(args);
         return Result.ok();
     }

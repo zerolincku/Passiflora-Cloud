@@ -14,17 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.vo;
+package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamPermission;
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
+import java.util.HashSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/** @author linck on 2024-05-06 */
+/** @author linck on 2024-03-19 */
 @Data
+@Schema(description = "用户")
 @EqualsAndHashCode(callSuper = false)
-public class IamPermissionTableVo extends IamPermission {
+public class IamUserInfo extends IamUser {
 
-    private Collection<IamPermissionTableVo> children;
+    private Collection<String> permission = new HashSet<>();
+
+    private Collection<String> menu = new HashSet<>();
 }

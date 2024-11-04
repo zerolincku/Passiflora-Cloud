@@ -19,10 +19,10 @@ package com.zerolinck.passiflora.feign.iam;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
-import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
-import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,21 +48,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface IamUserApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamUserVo>> page(
+    Result<List<IamUserResp>> page(
             @RequestParam(value = "orgId", required = false) String orgId,
             @NotNull @SpringQueryMap QueryCondition<IamUser> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")
-    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) IamUserSaveArgs iamUser);
+    Result<String> add(@NotNull @RequestBody @Validated(Insert.class) IamUserArgs iamUser);
 
     @NotNull @Operation(summary = "更新")
     @PostMapping("update")
-    Result<String> update(@NotNull @RequestBody @Validated(Update.class) IamUserSaveArgs iamUser);
+    Result<String> update(@NotNull @RequestBody @Validated(Update.class) IamUserArgs iamUser);
 
     @Operation(summary = "详情")
     @GetMapping("detail")
-    Result<IamUser> detail(@Nullable @RequestParam(value = "userId", required = false) String userId);
+    Result<IamUserResp> detail(@Nullable @RequestParam(value = "userId", required = false) String userId);
 
     @Operation(summary = "删除")
     @PostMapping("delete")

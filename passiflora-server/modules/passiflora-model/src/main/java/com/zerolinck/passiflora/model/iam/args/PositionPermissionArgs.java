@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.Length;
 
 /** @author linck on 2024-06-29 */
 @Data
-public class PositionPermissionSaveArgs {
+public class PositionPermissionArgs {
 
     @Schema(description = "职位ID", maxLength = 20)
     @Length(max = 20, message = "职位ID长度不能大于20") @NotBlank(message = "职位ID不能为空")

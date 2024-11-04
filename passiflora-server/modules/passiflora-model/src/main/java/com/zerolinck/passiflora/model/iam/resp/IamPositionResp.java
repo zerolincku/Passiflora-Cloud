@@ -14,22 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.args;
+package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/** @author 林常坤 on 2024-08-04 */
+/** @author linck on 2024-05-28 */
 @Data
+@Schema(description = "职位")
 @EqualsAndHashCode(callSuper = true)
-public class IamUserSaveArgs extends IamUser {
+public class IamPositionResp extends IamPosition {
 
-    @Schema(description = "职位ID集合")
-    private Collection<String> positionIds;
-
-    @Schema(description = "角色ID集合")
-    private Collection<String> roleIds;
+    private Collection<IamPositionResp> children;
 }

@@ -17,8 +17,8 @@
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -29,14 +29,12 @@ import org.mapstruct.factory.Mappers;
 public interface IamPermissionConvert {
     IamPermissionConvert INSTANCE = Mappers.getMapper(IamPermissionConvert.class);
 
-    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.CollectionUtil.emptyList())")
     @Mapping(target = "name", source = "permissionName")
     @Mapping(target = "meta.title", source = "permissionTitle")
     @Mapping(target = "meta.icon", source = "permissionIcon")
     @Mapping(target = "meta.order", source = "order")
     @Mapping(target = "meta.permissionType", source = "permissionType")
-    IamPermissionVo entity2vo(IamPermission menu);
+    IamPermissionResp entityToResp(IamPermission menu);
 
-    @Mapping(target = "children", expression = "java(com.zerolinck.passiflora.model.util.CollectionUtil.emptyList())")
-    IamPermissionTableVo entity2tableVo(IamPermission menu);
+    IamPermissionTableResp entityToTableResp(IamPermission menu);
 }

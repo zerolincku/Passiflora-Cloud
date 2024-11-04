@@ -22,11 +22,11 @@ import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamUserApi;
 import com.zerolinck.passiflora.iam.service.IamUserService;
-import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.valid.Login;
-import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -47,19 +47,19 @@ public class IamUserController implements IamUserApi {
     private final IamUserService iamUserService;
 
     @Override
-    public Result<List<IamUserVo>> page(String orgId, @NotNull QueryCondition<IamUser> condition) {
+    public Result<List<IamUserResp>> page(String orgId, @NotNull QueryCondition<IamUser> condition) {
         return Result.ok(iamUserService.page(orgId, condition));
     }
 
     @NotNull @Override
-    public Result<String> add(@NotNull IamUserSaveArgs args) {
+    public Result<String> add(@NotNull IamUserArgs args) {
         args.setUserId(null);
         iamUserService.add(args);
         return Result.ok(args.getUserId());
     }
 
     @NotNull @Override
-    public Result<String> update(@NotNull IamUserSaveArgs args) {
+    public Result<String> update(@NotNull IamUserArgs args) {
         args.setUserPassword(null);
         args.setUserName(null);
         boolean success = iamUserService.update(args);
@@ -71,7 +71,7 @@ public class IamUserController implements IamUserApi {
     }
 
     @Override
-    public Result<IamUser> detail(@Nullable @RequestParam(value = "userId", required = false) String userId) {
+    public Result<IamUserResp> detail(@Nullable @RequestParam(value = "userId", required = false) String userId) {
         Asserts.notBlank(userId, "用户 ID 不能为空");
         return Result.ok(iamUserService.detail(userId).orElseThrow(() -> new NoSuchElementException("用户不存在")));
     }

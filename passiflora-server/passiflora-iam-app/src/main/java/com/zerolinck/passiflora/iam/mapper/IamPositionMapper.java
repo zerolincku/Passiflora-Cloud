@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -45,7 +45,7 @@ public interface IamPositionMapper extends BaseMapper<IamPosition> {
 
     @Select("SELECT * FROM iam_position WHERE del_flag = 0 AND parent_position_id = #{positionParentId} ORDER BY"
             + " position_level , \"order\", position_name")
-    List<IamPositionVo> listByParentId(@Param("positionParentId") String positionParentId);
+    List<IamPositionResp> listByParentId(@Param("positionParentId") String positionParentId);
 
     void disable(@Param("positionIds") Collection<String> positionIds, @Param("updateBy") String updateBy);
 
@@ -53,5 +53,5 @@ public interface IamPositionMapper extends BaseMapper<IamPosition> {
 
     @Update("UPDATE iam_position SET \"order\" = #{iamPositionVo.order} WHERE"
             + " position_id = #{iamPositionVo.positionId} ")
-    void updateOrder(@Param("iamPositionVo") IamPositionVo iamPositionVo);
+    void updateOrder(@Param("iamPositionResp") IamPositionResp iamPositionResp);
 }

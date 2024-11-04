@@ -27,7 +27,7 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,7 +105,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
                     generateIdPathAndLevel(iamPosition);
                     int changeRowCount = baseMapper.updateById(iamPosition);
                     // 子机构数据变更
-                    List<IamPositionVo> positionVoList = baseMapper.listByParentId(iamPosition.getPositionId());
+                    List<IamPositionResp> positionVoList = baseMapper.listByParentId(iamPosition.getPositionId());
                     positionVoList.forEach(positionVo -> {
                         generateIdPathAndLevel(positionVo);
                         baseMapper.updateById(positionVo);
@@ -145,10 +145,10 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      *
      * @since 2024-08-12
      */
-    @NotNull public List<IamPositionVo> positionTree() {
-        List<IamPositionVo> iamPositionVos = baseMapper.listByParentId("0");
-        iamPositionVos.forEach(this::recursionTree);
-        return iamPositionVos;
+    @NotNull public List<IamPositionResp> positionTree() {
+        List<IamPositionResp> iamPositionResps = baseMapper.listByParentId("0");
+        iamPositionResps.forEach(this::recursionTree);
+        return iamPositionResps;
     }
 
     /**
@@ -188,14 +188,14 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
     /**
      * 更新职位排序
      *
-     * @param iamPositionVos 职位数数据
+     * @param iamPositionResps 职位数数据
      * @since 2024-08-12
      */
-    public void updateOrder(@Nullable Collection<IamPositionVo> iamPositionVos) {
-        if (CollectionUtils.isEmpty(iamPositionVos)) {
+    public void updateOrder(@Nullable Collection<IamPositionResp> iamPositionResps) {
+        if (CollectionUtils.isEmpty(iamPositionResps)) {
             return;
         }
-        for (IamPositionVo iamPositionTableVo : iamPositionVos) {
+        for (IamPositionResp iamPositionTableVo : iamPositionResps) {
             baseMapper.updateOrder(iamPositionTableVo);
             updateOrder(iamPositionTableVo.getChildren());
         }
@@ -204,12 +204,12 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
     /**
      * 递归处理职位树
      *
-     * @param iamPositionVo 职位
+     * @param iamPositionResp 职位
      * @since 2024-08-12
      */
-    private void recursionTree(@NotNull IamPositionVo iamPositionVo) {
-        iamPositionVo.setChildren(baseMapper.listByParentId(iamPositionVo.getPositionId()));
-        iamPositionVo.getChildren().forEach(this::recursionTree);
+    private void recursionTree(@NotNull IamPositionResp iamPositionResp) {
+        iamPositionResp.setChildren(baseMapper.listByParentId(iamPositionResp.getPositionId()));
+        iamPositionResp.getChildren().forEach(this::recursionTree);
     }
 
     /**

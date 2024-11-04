@@ -7,7 +7,7 @@
         id, user_id, position_id, create_by, update_by, create_time, update_time, del_flag, version
     </sql>
 
-    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo">
+    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp">
         SELECT a.user_id, b.position_id, b.position_name FROM
          (SELECT user_id, position_id
             FROM iam_user_position

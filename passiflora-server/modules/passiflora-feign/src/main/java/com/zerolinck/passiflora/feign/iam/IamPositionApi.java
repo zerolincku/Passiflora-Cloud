@@ -19,9 +19,9 @@ package com.zerolinck.passiflora.feign.iam;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
-import com.zerolinck.passiflora.model.iam.args.PositionPermissionSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +67,7 @@ public interface IamPositionApi {
 
     @Operation(summary = "职位树")
     @GetMapping("position-tree")
-    Result<List<IamPositionVo>> positionTree();
+    Result<List<IamPositionResp>> positionTree();
 
     @Operation(summary = "禁用")
     @PostMapping("disable")
@@ -79,7 +79,7 @@ public interface IamPositionApi {
 
     @Operation(summary = "更新排序")
     @PostMapping("update-order")
-    Result<Void> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionVo> iamPositionVos);
+    Result<Void> updateOrder(@RequestBody @Validated(Update.class) List<IamPositionResp> iamPositionResps);
 
     @Operation(summary = "根据职位ids获取权限ids")
     @PostMapping("permission-ids-by-position-ids")
@@ -87,5 +87,5 @@ public interface IamPositionApi {
 
     @Operation(summary = "保存职位权限")
     @PostMapping("save-position-permission")
-    Result<Void> savePositionPermission(@RequestBody @Validated PositionPermissionSaveArgs positionPermissionSaveArgs);
+    Result<Void> savePositionPermission(@RequestBody @Validated PositionPermissionArgs positionPermissionArgs);
 }

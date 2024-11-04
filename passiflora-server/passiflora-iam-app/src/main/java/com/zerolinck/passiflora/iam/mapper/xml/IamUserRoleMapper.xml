@@ -43,7 +43,7 @@
         </foreach>
     </delete>
 
-    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo">
+    <select id="selectByUserIds" resultType="com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp">
         SELECT a.user_id, b.role_id, b.role_name FROM
         (SELECT user_id, role_id
         FROM iam_user_role

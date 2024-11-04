@@ -14,19 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.vo;
+package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-/** @author linck on 2024-04-09 */
+/** @author 林常坤 on 2024-08-10 */
 @Data
-@Schema(description = "机构")
-@EqualsAndHashCode(callSuper = true)
-public class IamOrgVo extends IamOrg {
+public class IamUserPositionResp {
 
-    List<IamOrgVo> children;
+    private String userId;
+
+    private String positionId;
+
+    private String positionName;
 }

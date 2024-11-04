@@ -31,8 +31,8 @@ import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -106,15 +106,15 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return Optional.ofNullable(baseMapper.selectById(permissionId));
     }
 
-    @NotNull public List<IamPermissionVo> menuTree() {
-        Map<String, List<IamPermissionVo>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
+    @NotNull public List<IamPermissionResp> menuTree() {
+        Map<String, List<IamPermissionResp>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
                 .filter(permission -> PermissionTypeEnum.MENU.equals(permission.getPermissionType())
                         || PermissionTypeEnum.MENU_SET.equals(permission.getPermissionType()))
                 .filter(permission -> StatusEnum.ENABLE.equals(permission.getPermissionStatus()))
-                .map(IamPermissionConvert.INSTANCE::entity2vo)
-                .collect(Collectors.groupingBy(IamPermissionVo::getPermissionParentId, Collectors.toList()));
+                .map(IamPermissionConvert.INSTANCE::entityToResp)
+                .collect(Collectors.groupingBy(IamPermissionResp::getPermissionParentId, Collectors.toList()));
         // 顶层菜单
-        List<IamPermissionVo> topMenu = menuMap.get("0");
+        List<IamPermissionResp> topMenu = menuMap.get("0");
         if (CollectionUtils.isEmpty(topMenu)) {
             return new ArrayList<>();
         }
@@ -122,14 +122,14 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
-    @NotNull public List<IamPermissionTableVo> permissionTableTree() {
-        Map<String, List<IamPermissionTableVo>> menuMap =
+    @NotNull public List<IamPermissionTableResp> permissionTableTree() {
+        Map<String, List<IamPermissionTableResp>> menuMap =
                 this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
-                        .map(IamPermissionConvert.INSTANCE::entity2tableVo)
+                        .map(IamPermissionConvert.INSTANCE::entityToTableResp)
                         .collect(Collectors.groupingBy(
-                                IamPermissionTableVo::getPermissionParentId, Collectors.toList()));
+                                IamPermissionTableResp::getPermissionParentId, Collectors.toList()));
         // 顶层菜单
-        List<IamPermissionTableVo> topMenu = menuMap.get("0");
+        List<IamPermissionTableResp> topMenu = menuMap.get("0");
         if (CollectionUtils.isEmpty(topMenu)) {
             return new ArrayList<>();
         }
@@ -137,13 +137,13 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
-    public void updateOrder(@Nullable Collection<IamPermissionTableVo> iamPermissionTableVos) {
-        if (CollectionUtils.isEmpty(iamPermissionTableVos)) {
+    public void updateOrder(@Nullable Collection<IamPermissionTableResp> iamPermissionTableResps) {
+        if (CollectionUtils.isEmpty(iamPermissionTableResps)) {
             return;
         }
-        for (IamPermissionTableVo iamPermissionTableVo : iamPermissionTableVos) {
-            baseMapper.updateOrder(iamPermissionTableVo);
-            updateOrder(iamPermissionTableVo.getChildren());
+        for (IamPermissionTableResp iamPermissionTableResp : iamPermissionTableResps) {
+            baseMapper.updateOrder(iamPermissionTableResp);
+            updateOrder(iamPermissionTableResp.getChildren());
         }
     }
 
@@ -214,11 +214,11 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     }
 
     private void dealMenuTree(
-            @Nullable Collection<IamPermissionVo> menuVos, @NotNull Map<String, List<IamPermissionVo>> menuMap) {
+            @Nullable Collection<IamPermissionResp> menuVos, @NotNull Map<String, List<IamPermissionResp>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
-        for (IamPermissionVo menu : menuVos) {
+        for (IamPermissionResp menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));
                 dealMenuTree(menu.getChildren(), menuMap);
@@ -227,12 +227,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     }
 
     private void permissionTableTree(
-            @Nullable Collection<IamPermissionTableVo> menuVos,
-            @NotNull Map<String, List<IamPermissionTableVo>> menuMap) {
+            @Nullable Collection<IamPermissionTableResp> menuVos,
+            @NotNull Map<String, List<IamPermissionTableResp>> menuMap) {
         if (CollectionUtils.isEmpty(menuVos)) {
             return;
         }
-        for (IamPermissionTableVo menu : menuVos) {
+        for (IamPermissionTableResp menu : menuVos) {
             if (menuMap.containsKey(menu.getPermissionId())) {
                 menu.setChildren(menuMap.get(menu.getPermissionId()));
                 permissionTableTree(menu.getChildren(), menuMap);

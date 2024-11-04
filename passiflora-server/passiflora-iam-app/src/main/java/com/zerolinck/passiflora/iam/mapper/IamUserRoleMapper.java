@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
-import com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -60,7 +60,7 @@ public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
     int deleteByUserIds(
             @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);
 
-    @NotNull List<IamUserRoleVo> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    @NotNull List<IamUserRoleResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
 
     int deleteByUserIdAndRoleIds(
             @NotNull @Param("userId") String userId,

@@ -28,15 +28,15 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserMapper;
 import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
-import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamUserConvert;
-import com.zerolinck.passiflora.model.iam.vo.IamUserInfo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo;
-import com.zerolinck.passiflora.model.iam.vo.IamUserVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
+import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
+import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +61,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamUser:";
 
-    @NotNull public Page<IamUserVo> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
+    @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         Page<IamUser> page = baseMapper.page(
                 orgId, condition.page(), condition.searchWrapper(IamUser.class), condition.sortWrapper(IamUser.class));
@@ -75,59 +75,62 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         Map<String, String> orgId2NameMap = iamOrgService.orgId2NameMap(orgIds);
 
         // 查询职位信息
-        Map<String, List<IamUserPositionVo>> userPositionMap = iamUserPositionService.selectByUserIds(userIds).stream()
-                .collect(Collectors.groupingBy(IamUserPositionVo::getUserId));
+        Map<String, List<IamUserPositionResp>> userPositionMap =
+                iamUserPositionService.selectByUserIds(userIds).stream()
+                        .collect(Collectors.groupingBy(IamUserPositionResp::getUserId));
 
         // 查询角色信息
-        Map<String, List<IamUserRoleVo>> userRoleMap = iamUserRoleService.selectByUserIds(userIds).stream()
-                .collect(Collectors.groupingBy(IamUserRoleVo::getUserId));
+        Map<String, List<IamUserRoleResp>> userRoleMap = iamUserRoleService.selectByUserIds(userIds).stream()
+                .collect(Collectors.groupingBy(IamUserRoleResp::getUserId));
 
-        List<IamUserVo> recordsVo = page.getRecords().stream()
+        List<IamUserResp> recordsVo = page.getRecords().stream()
                 .map(iamUser -> {
-                    IamUserVo iamUserVo = IamUserConvert.INSTANCE.entity2vo(iamUser);
+                    IamUserResp iamUserResp = IamUserConvert.INSTANCE.entityToResp(iamUser);
                     // 填充机构信息
-                    iamUserVo.setOrgName(orgId2NameMap.get(iamUser.getOrgId()));
+                    iamUserResp.setOrgName(orgId2NameMap.get(iamUser.getOrgId()));
 
                     // 填充职位信息
-                    List<IamUserPositionVo> positionVoList =
+                    List<IamUserPositionResp> positionVoList =
                             userPositionMap.getOrDefault(iamUser.getUserId(), new ArrayList<>());
-                    iamUserVo.setPositionIds(positionVoList.stream()
-                            .map(IamUserPositionVo::getPositionId)
+                    iamUserResp.setPositionIds(positionVoList.stream()
+                            .map(IamUserPositionResp::getPositionId)
                             .collect(Collectors.toList()));
-                    iamUserVo.setPositionNames(positionVoList.stream()
-                            .map(IamUserPositionVo::getPositionName)
+                    iamUserResp.setPositionNames(positionVoList.stream()
+                            .map(IamUserPositionResp::getPositionName)
                             .collect(Collectors.toList()));
 
                     // 填充角色信息
-                    List<IamUserRoleVo> userRoleVos = userRoleMap.getOrDefault(iamUser.getUserId(), new ArrayList<>());
-                    iamUserVo.setRoleIds(
-                            userRoleVos.stream().map(IamUserRoleVo::getRoleId).collect(Collectors.toList()));
-                    iamUserVo.setRoleNames(
-                            userRoleVos.stream().map(IamUserRoleVo::getRoleName).collect(Collectors.toList()));
+                    List<IamUserRoleResp> userRoleVos =
+                            userRoleMap.getOrDefault(iamUser.getUserId(), new ArrayList<>());
+                    iamUserResp.setRoleIds(
+                            userRoleVos.stream().map(IamUserRoleResp::getRoleId).collect(Collectors.toList()));
+                    iamUserResp.setRoleNames(userRoleVos.stream()
+                            .map(IamUserRoleResp::getRoleName)
+                            .collect(Collectors.toList()));
 
-                    return iamUserVo;
+                    return iamUserResp;
                 })
                 .toList();
 
-        return new Page<IamUserVo>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(recordsVo);
+        return new Page<IamUserResp>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(recordsVo);
     }
 
-    public void add(@NotNull IamUserSaveArgs args) {
+    public void add(@NotNull IamUserArgs args) {
         args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
             OnlyFieldCheck.checkInsert(baseMapper, args);
-            baseMapper.insert(args);
+            baseMapper.insert(IamUserConvert.INSTANCE.argsToEntity(args));
             userPositionService.updateRelation(args);
             iamUserRoleService.updateRelation(args);
         });
     }
 
-    public boolean update(@NotNull IamUserSaveArgs args) {
+    public boolean update(@NotNull IamUserArgs args) {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
                     OnlyFieldCheck.checkUpdate(baseMapper, args);
-                    int changeRowCount = baseMapper.updateById(args);
+                    int changeRowCount = baseMapper.updateById(IamUserConvert.INSTANCE.argsToEntity(args));
                     userPositionService.updateRelation(args);
                     iamUserRoleService.updateRelation(args);
                     return changeRowCount > 0;
@@ -144,8 +147,8 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return count;
     }
 
-    @NotNull public Optional<IamUser> detail(@NotNull String userId) {
-        return Optional.ofNullable(baseMapper.selectById(userId));
+    @NotNull public Optional<IamUserResp> detail(@NotNull String userId) {
+        return Optional.ofNullable(IamUserConvert.INSTANCE.entityToResp(baseMapper.selectById(userId)));
     }
 
     @NotNull public IamUserInfo currentUserInfo() {
@@ -155,7 +158,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
             throw new BizException(ResultCode.UNAUTHORIZED);
         }
 
-        IamUserInfo iamUserInfo = IamUserConvert.INSTANCE.entity2info(iamUser);
+        IamUserInfo iamUserInfo = IamUserConvert.INSTANCE.entityToInfo(iamUser);
         List<IamPermission> permissionList = iamPermissionService.listByUserIds(userId);
 
         permissionList.forEach(iamPermission -> {

@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
+import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -46,5 +46,5 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
 
     @Select("SELECT * FROM iam_org WHERE del_flag = 0 AND parent_org_id = #{orgParentId} ORDER BY"
             + " org_level, \"order\", org_name")
-    List<IamOrgVo> listByParentId(@Param("orgParentId") String orgParentId);
+    List<IamOrgResp> listByParentId(@Param("orgParentId") String orgParentId);
 }

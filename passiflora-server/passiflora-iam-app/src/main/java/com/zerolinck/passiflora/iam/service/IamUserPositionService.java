@@ -24,9 +24,9 @@ import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserPositionMapper;
-import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
-import com.zerolinck.passiflora.model.iam.vo.IamUserPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -42,14 +42,14 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
 
     private static final String LOCK_KEY = "passiflora:lock:iamUserPosition:";
 
-    @NotNull public List<IamUserPositionVo> selectByUserIds(@Nullable Collection<String> userIds) {
+    @NotNull public List<IamUserPositionResp> selectByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
         return baseMapper.selectByUserIds(userIds);
     }
 
-    public void updateRelation(@NotNull IamUserSaveArgs args) {
+    public void updateRelation(@NotNull IamUserArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
                 new LockWrapper<IamUserPosition>().lock(IamUserPosition::getUserId, args.getUserId()),

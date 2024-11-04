@@ -14,21 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.args;
+package com.zerolinck.passiflora.model.iam.resp;
 
+import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
-/** @author 林常坤 on 2024/08/18 */
+/** @author linck on 2024-05-06 */
 @Data
-public class RolePermissionSaveArgs {
+public class IamPermissionResp {
 
-    @Schema(description = "角色ID", maxLength = 20)
-    @Length(max = 20, message = "角色ID长度不能大于20") @NotBlank(message = "角色ID不能为空")
-    private String roleId;
+    private String permissionId;
 
-    private Collection<String> permissionIds;
+    @Schema(description = "名称", maxLength = 50)
+    private String name;
+
+    private String permissionParentId;
+
+    private MenuMeta meta;
+
+    private Collection<IamPermissionResp> children;
+
+    @Data
+    public static class MenuMeta {
+
+        private String title;
+
+        private String icon;
+
+        private String order;
+
+        @Schema(description = "类型")
+        private PermissionTypeEnum permissionType;
+    }
 }

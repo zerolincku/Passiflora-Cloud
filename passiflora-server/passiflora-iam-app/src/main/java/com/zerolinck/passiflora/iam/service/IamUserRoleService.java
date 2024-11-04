@@ -22,9 +22,9 @@ import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
-import com.zerolinck.passiflora.model.iam.args.IamUserSaveArgs;
+import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
-import com.zerolinck.passiflora.model.iam.vo.IamUserRoleVo;
+import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -116,14 +116,14 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
     }
 
-    @NotNull public List<IamUserRoleVo> selectByUserIds(@NotNull Collection<String> userIds) {
+    @NotNull public List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
         return baseMapper.selectByUserIds(userIds);
     }
 
-    public void updateRelation(@NotNull IamUserSaveArgs args) {
+    public void updateRelation(@NotNull IamUserArgs args) {
         LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUserRole>().lock(IamUserRole::getUserId, args.getUserId()), true, () -> {
                     if (CollectionUtils.isEmpty(args.getRoleIds())) {
@@ -131,7 +131,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
                         return;
                     }
                     Set<String> existRoleIds = selectByUserIds(List.of(args.getUserId())).stream()
-                            .map(IamUserRoleVo::getRoleId)
+                            .map(IamUserRoleResp::getRoleId)
                             .collect(Collectors.toSet());
                     Set<String> newRoleIds = new HashSet<>(args.getRoleIds());
                     Set<String> addRoleIds = SetUtil.set2MoreOutSet1(existRoleIds, newRoleIds);

@@ -30,7 +30,7 @@ import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
-import com.zerolinck.passiflora.model.iam.vo.IamPositionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import jakarta.annotation.Resource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ class IamPositionControllerTest {
 
     private static String testSysPositionId;
     private static IamPosition testIamPosition;
-    private static List<IamPositionVo> positionTree;
+    private static List<IamPositionResp> positionTree;
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {

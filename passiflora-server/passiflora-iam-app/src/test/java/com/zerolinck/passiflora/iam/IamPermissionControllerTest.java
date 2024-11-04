@@ -29,7 +29,7 @@ import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import jakarta.annotation.Resource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ class IamPermissionControllerTest {
 
     private static String testSysPermissionId;
     private static IamPermission testIamPermission;
-    private static List<IamPermissionTableVo> permissionTree;
+    private static List<IamPermissionTableResp> permissionTree;
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {

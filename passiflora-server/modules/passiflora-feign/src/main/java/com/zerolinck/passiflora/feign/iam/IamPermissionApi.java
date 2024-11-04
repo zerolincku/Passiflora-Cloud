@@ -20,8 +20,8 @@ import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,15 +67,16 @@ public interface IamPermissionApi {
 
     @Operation(summary = "菜单树")
     @GetMapping("menu-tree")
-    Result<List<IamPermissionVo>> menuTree();
+    Result<List<IamPermissionResp>> menuTree();
 
     @Operation(summary = "权限树-列表使用")
     @GetMapping("permission-table-tree")
-    Result<List<IamPermissionTableVo>> permissionTableTree();
+    Result<List<IamPermissionTableResp>> permissionTableTree();
 
     @Operation(summary = "更新排序")
     @PostMapping("update-order")
-    Result<Void> updateOrder(@RequestBody @Validated(Update.class) List<IamPermissionTableVo> iamPermissionTableVos);
+    Result<Void> updateOrder(
+            @RequestBody @Validated(Update.class) List<IamPermissionTableResp> iamPermissionTableResps);
 
     @Operation(summary = "禁用")
     @PostMapping("disable")

@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import com.zerolinck.passiflora.model.iam.vo.IamPermissionTableVo;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -42,7 +42,7 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
 
     @Update("UPDATE iam_permission SET \"order\" = #{iamPermissionTableVo.order} WHERE"
             + " permission_id = #{iamPermissionTableVo.permissionId} ")
-    void updateOrder(@Param("iamPermissionTableVo") IamPermissionTableVo iamPermissionTableVo);
+    void updateOrder(@Param("iamPermissionTableResp") IamPermissionTableResp iamPermissionTableResp);
 
     void disable(@Param("permissionIds") Collection<String> permissionIds, @Param("updateBy") String updateBy);
 

@@ -27,7 +27,8 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamOrgMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
-import com.zerolinck.passiflora.model.iam.vo.IamOrgVo;
+import com.zerolinck.passiflora.model.iam.mapperstruct.IamOrgConvert;
+import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -94,8 +95,9 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                     generateIadPathAndLevel(iamOrg);
                     int changeRowCount = baseMapper.updateById(iamOrg);
                     // 子机构数据变更
-                    List<IamOrgVo> iamOrgList = listByParentId(iamOrg.getOrgId());
-                    iamOrgList.forEach(org -> {
+                    List<IamOrgResp> iamOrgList = listByParentId(iamOrg.getOrgId());
+                    iamOrgList.forEach(orgResp -> {
+                        IamOrg org = IamOrgConvert.INSTANCE.respToEntity(orgResp);
                         generateIadPathAndLevel(org);
                         baseMapper.updateById(org);
                     });
@@ -130,19 +132,19 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
         return baseMapper.selectByOrgCode(orgCode);
     }
 
-    @NotNull public List<IamOrgVo> listByParentId(@NotNull String orgParentId) {
+    @NotNull public List<IamOrgResp> listByParentId(@NotNull String orgParentId) {
         return baseMapper.listByParentId(orgParentId);
     }
 
-    @Nullable public List<IamOrgVo> orgTree() {
-        List<IamOrgVo> iamOrgVos = baseMapper.listByParentId("0");
-        iamOrgVos.forEach(this::recursionTree);
-        return iamOrgVos;
+    @Nullable public List<IamOrgResp> orgTree() {
+        List<IamOrgResp> iamOrgResps = baseMapper.listByParentId("0");
+        iamOrgResps.forEach(this::recursionTree);
+        return iamOrgResps;
     }
 
-    private void recursionTree(@NotNull IamOrgVo iamOrgVo) {
-        iamOrgVo.setChildren(listByParentId(iamOrgVo.getOrgId()));
-        iamOrgVo.getChildren().forEach(this::recursionTree);
+    private void recursionTree(@NotNull IamOrgResp iamOrgResp) {
+        iamOrgResp.setChildren(listByParentId(iamOrgResp.getOrgId()));
+        iamOrgResp.getChildren().forEach(this::recursionTree);
     }
 
     private void generateIadPathAndLevel(@NotNull IamOrg iamOrg) {
