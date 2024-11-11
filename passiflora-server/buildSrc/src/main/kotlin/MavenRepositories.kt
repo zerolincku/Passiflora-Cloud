@@ -12,3 +12,7 @@ fun RepositoryHandler.tencentRepository() {
 fun RepositoryHandler.huaweiRepository() {
     maven { url = URI( "https://mirrors.huaweicloud.com/repository/maven/") }
 }
+
+fun RepositoryHandler.springRepository() {
+    maven { url = URI( "https://repo.spring.io/milestone") }
+}

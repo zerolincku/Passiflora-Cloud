@@ -1,9 +1,9 @@
 object Version {
     const val passifloraVersion = "0.2"
 
-    const val springBootVersion = "3.3.5"
+    const val springBootVersion = "3.4.0-RC1"
     const val aliCloudVersion = "2023.0.1.2"
-    const val springCloudVersion = "2023.0.3"
+    const val springCloudVersion = "2024.0.0-RC1"
 
     const val springDependencyManagementPluginVersion = "1.1.6"
     const val spotlessPluginVersion = "6.25.0"

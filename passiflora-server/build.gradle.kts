@@ -20,6 +20,7 @@ allprojects {
         aliyunCentral()
         tencentRepository()
         huaweiRepository()
+        springRepository()
         mavenCentral()
         google()
     }

@@ -1,3 +1,15 @@
+pluginManagement {
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/central")}
+        maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/")}
+        maven { url = uri("https://mirrors.huaweicloud.com/repository/maven/")}
+        maven { url = uri("https://repo.spring.io/milestone") }
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
 rootProject.name = "passiflora"
 
 include("modules:passiflora-common")
