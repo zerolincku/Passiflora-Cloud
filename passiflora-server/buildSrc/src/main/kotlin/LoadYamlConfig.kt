@@ -1,8 +1,7 @@
-import java.io.File
 import org.yaml.snakeyaml.Yaml
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 @Suppress("unchecked_cast")
 fun configMap(path: String, env: String, projectVersion: String): MutableMap<String, String> {
@@ -20,7 +19,7 @@ fun configMap(path: String, env: String, projectVersion: String): MutableMap<Str
 
 @Suppress("unchecked_cast")
 fun processConfigMap(configMap: MutableMap<String, String>, map: Map<String, Any>, parentKey: String = "") {
-    map.forEach { key, value ->
+    map.forEach { (key, value) ->
         val keyWithPrefix = if (parentKey.isEmpty()) key else "${parentKey}.${key}"
         when (value) {
             is Map<*, *> -> {
