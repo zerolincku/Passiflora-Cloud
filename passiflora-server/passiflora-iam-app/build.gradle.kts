@@ -9,7 +9,7 @@ plugins {
     id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
-val env: String = System.getProperty("env", Constans.DEL_ENV)
+val env: String = System.getProperty("env", Constants.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 val os = System.getProperty("os.name").lowercase(Locale.getDefault())

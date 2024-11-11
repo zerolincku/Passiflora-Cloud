@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-val env: String = System.getProperty("env", Constans.DEL_ENV)
+val env: String = System.getProperty("env", Constants.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
