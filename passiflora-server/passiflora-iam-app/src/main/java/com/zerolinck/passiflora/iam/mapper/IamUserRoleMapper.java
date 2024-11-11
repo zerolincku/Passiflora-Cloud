@@ -23,11 +23,12 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import java.util.Collection;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 用户角色绑定 Mybatis Mapper
@@ -49,19 +50,16 @@ public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
             @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamUserRole> searchWrapper,
             @NotNull @Param("sortWrapper") QueryWrapper<IamUserRole> sortWrapper);
 
-    /**
-     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
-     *
-     * @param ids 用户角色绑定主键集合
-     * @since 2024-08-17
-     */
+    /** 真实删除 */
     int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
+    /** 真实删除 */
     int deleteByUserIds(
             @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);
 
     @NotNull List<IamUserRoleResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
 
+    /** 真实删除 */
     int deleteByUserIdAndRoleIds(
             @NotNull @Param("userId") String userId,
             @NotNull @Param("roleIds") Collection<String> roleIds,

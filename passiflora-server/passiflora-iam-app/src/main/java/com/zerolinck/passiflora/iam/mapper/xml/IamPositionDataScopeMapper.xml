@@ -24,9 +24,7 @@
     </select>
 
     <delete id="deleteByIds">
-        UPDATE iam_position_data_scope SET update_time = now(),
-                                update_by = #{updateBy},
-                                del_flag = 1
+        DELETE FROM iam_position_data_scope
         WHERE scope_id IN
         <foreach item="id" index="index" collection="scopeIds" open="(" separator="," close=")">
             #{id}

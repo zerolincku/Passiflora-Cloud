@@ -22,8 +22,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
 
 /** @author linck on 2024-05-14 */
 public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {
@@ -32,6 +33,6 @@ public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataSc
             @Param(Constants.WRAPPER) QueryWrapper<IamPositionDataScope> searchWrapper,
             @Param("sortWrapper") QueryWrapper<IamPositionDataScope> sortWrapper);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
+    /** 真实删除 */
     int deleteByIds(@Param("scopeIds") Collection<String> scopeIds, @Param("updateBy") String updateBy);
 }

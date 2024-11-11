@@ -24,9 +24,7 @@
     </select>
 
     <delete id="deleteByIds">
-        UPDATE iam_user_role SET update_time = now(),
-                                update_by = #{updateBy},
-                                del_flag = 1
+        DELETE FROM iam_user_role
         WHERE id IN
         <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
             #{id}
@@ -34,9 +32,7 @@
     </delete>
 
     <delete id="deleteByUserIds">
-        UPDATE iam_user_role SET update_time = now(),
-        update_by = #{updateBy},
-        del_flag = 1
+        DELETE FROM iam_user_role
         WHERE user_id IN
         <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
             #{id}
@@ -57,9 +53,7 @@
     </select>
 
     <delete id="deleteByUserIdAndRoleIds">
-        UPDATE iam_user_role SET update_time = now(),
-        update_by = #{updateBy},
-        del_flag = 1
+        DELETE FROM iam_user_role
         WHERE user_id = #{userId} AND role_id IN
         <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
             #{id}

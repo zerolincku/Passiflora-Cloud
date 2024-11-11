@@ -22,11 +22,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
-import java.util.Collection;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
 
 /** @author linck on 2024-05-06 */
 public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermission> {
@@ -35,9 +36,10 @@ public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermi
             @Param(Constants.WRAPPER) QueryWrapper<IamPositionPermission> searchWrapper,
             @Param("sortWrapper") QueryWrapper<IamPositionPermission> sortWrapper);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
+    /** 真实删除 */
     int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
+    /** 真实删除 */
     int deleteByPositionIds(
             @NotNull @Param("positionIds") Collection<String> positionIds,
             @Nullable @Param("updateBy") String updateBy);

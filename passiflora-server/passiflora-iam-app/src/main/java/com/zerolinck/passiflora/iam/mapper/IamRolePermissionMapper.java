@@ -22,11 +22,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
-import java.util.Collection;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 角色权限 Mybatis Mapper
@@ -48,14 +49,10 @@ public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
             @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
             @NotNull @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper);
 
-    /**
-     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
-     *
-     * @param ids 角色权限主键集合
-     * @since 2024-08-17
-     */
+    /** 真实删除 */
     int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
 
+    /** 真实删除 */
     int deleteByRoleIds(
             @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
 
