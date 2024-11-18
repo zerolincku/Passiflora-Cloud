@@ -22,9 +22,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.Collection;
+import org.apache.ibatis.annotations.Param;
 
 /** @author linck on 2024-05-14 */
 public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {

@@ -19,12 +19,11 @@ package com.zerolinck.passiflora.iam.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
+import java.util.Collection;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.List;
 
 /** @author linck on 2024-05-14 */
 public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
