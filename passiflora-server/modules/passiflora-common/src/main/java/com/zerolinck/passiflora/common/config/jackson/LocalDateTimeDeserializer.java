@@ -19,6 +19,8 @@ package com.zerolinck.passiflora.common.config.jackson;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -28,7 +30,11 @@ import java.time.ZoneId;
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
-        long timestamp = Long.parseLong(p.getValueAsString());
+        String longStr = p.getValueAsString();
+        if (StringUtils.isBlank(longStr)) {
+            return null;
+        }
+        long timestamp = Long.parseLong(longStr);
         if (timestamp < 1_000_000_000_000L) {
             // 秒级时间戳
             return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault());

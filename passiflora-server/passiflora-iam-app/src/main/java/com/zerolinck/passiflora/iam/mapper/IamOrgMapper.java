@@ -17,29 +17,83 @@
 package com.zerolinck.passiflora.iam.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import java.util.Collection;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
 /** @author linck on 2024-04-09 */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
-    Page<IamOrg> page(
+    default Page<IamOrg> page(
             IPage<IamOrg> page,
             @Param(Constants.WRAPPER) QueryWrapper<IamOrg> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamOrg> sortWrapper);
+            @Param("sortWrapper") QueryWrapper<IamOrg> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Param("orgIds") Collection<String> orgIds, @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("org_level", "\"order\"", "org_name");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    /** 此方法会级联删除下级机构 */
-    int deleteById(@Param("orgId") String orgId, @Param("updateBy") String updateBy);
+        return (Page<IamOrg>) this.selectPage(page, searchWrapper);
+    }
+
+    /**
+     * 逻辑删除指定 ID 的记录
+     *
+     * @param orgIds   需要删除的组织 ID 集合
+     * @param updateBy 更新者
+     * @return 更新的行数
+     */
+    default int deleteByIds(Collection<String> orgIds, String updateBy) {
+        if (orgIds == null || orgIds.isEmpty()) {
+            return 0;
+        }
+
+        UpdateWrapper<IamOrg> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.in("org_id", orgIds)
+                .set("update_time", LocalDateTime.now())
+                .set("update_by", updateBy)
+                .set("del_flag", 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    /**
+     * 逻辑删除指定 ID 及其路径匹配的记录
+     *
+     * @param orgId    组织 ID
+     * @param updateBy 更新者
+     * @return 更新的行数
+     */
+    default int deleteById(String orgId, String updateBy) {
+        if (orgId == null || orgId.isEmpty()) {
+            return 0;
+        }
+
+        UpdateWrapper<IamOrg> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.like("org_id_path", "%" + orgId + "%")
+                .set("update_time", LocalDateTime.now())
+                .set("update_by", updateBy)
+                .set("del_flag", 1);
+
+        return this.update(null, updateWrapper);
+    }
 
     @Select("SELECT * FROM iam_org WHERE del_flag = 0 AND org_code = #{orgCode}")
     IamOrg selectByOrgCode(@Param("orgCode") String orgCode);
