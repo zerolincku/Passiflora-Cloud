@@ -17,11 +17,12 @@
 package com.zerolinck.passiflora.iam.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import org.apache.ibatis.annotations.Param;
@@ -65,11 +66,11 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
             return 0;
         }
 
-        UpdateWrapper<IamOrg> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.in("org_id", orgIds)
-                .set("update_time", LocalDateTime.now())
-                .set("update_by", updateBy)
-                .set("del_flag", 1);
+        LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(IamOrg::getOrgId, orgIds)
+                .set(IamOrg::getUpdateTime, LocalDateTime.now())
+                .set(IamOrg::getUpdateBy, updateBy)
+                .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);
 
         return this.update(null, updateWrapper);
     }
@@ -86,11 +87,11 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
             return 0;
         }
 
-        UpdateWrapper<IamOrg> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.like("org_id_path", "%" + orgId + "%")
-                .set("update_time", LocalDateTime.now())
-                .set("update_by", updateBy)
-                .set("del_flag", 1);
+        LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.like(IamOrg::getOrgIdPath, "%" + orgId + "%")
+                .set(IamOrg::getUpdateTime, LocalDateTime.now())
+                .set(IamOrg::getUpdateBy, updateBy)
+                .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);
 
         return this.update(null, updateWrapper);
     }

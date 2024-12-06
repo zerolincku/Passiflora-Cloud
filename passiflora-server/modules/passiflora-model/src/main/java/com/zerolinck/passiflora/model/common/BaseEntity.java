@@ -20,8 +20,10 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
-import java.time.LocalDateTime;
+import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /** @author linck on 2024-02-06 */
 @Data
@@ -45,7 +47,7 @@ public class BaseEntity {
 
     /** 删除标识 */
     @TableLogic
-    private Integer delFlag;
+    private DelFlagEnum delFlag;
 
     /** 乐观锁版本 */
     @Version
