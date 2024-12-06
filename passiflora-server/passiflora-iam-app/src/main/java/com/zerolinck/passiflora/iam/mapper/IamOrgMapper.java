@@ -41,7 +41,7 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
         if (searchWrapper == null) {
             searchWrapper = new QueryWrapper<>();
         }
-        searchWrapper.eq("del_flag", 0);
+        searchWrapper.eq("del_flag", DelFlagEnum.NOT_DELETE.getValue());
 
         if (sortWrapper == null
                 || sortWrapper.getSqlSegment() == null
