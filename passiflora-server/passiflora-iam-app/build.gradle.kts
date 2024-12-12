@@ -6,7 +6,6 @@ plugins {
     jacoco
     id("org.liquibase.gradle") version Version.liquibasePluginVersion
     id("org.springframework.boot") version Version.springBootVersion
-    id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
 val env: String = System.getProperty("env", Constants.DEL_ENV)
@@ -73,9 +72,6 @@ dependencies {
 }
 
 tasks {
-    pmdAot {
-        enabled = false
-    }
     processResources {
         exclude("db/**")
         filter<ReplaceTokens>("tokens" to configMap)

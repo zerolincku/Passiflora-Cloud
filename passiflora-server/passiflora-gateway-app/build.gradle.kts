@@ -4,7 +4,6 @@ import java.util.*
 plugins {
     java
     id("org.springframework.boot") version Version.springBootVersion
-    id("org.graalvm.buildtools.native") version Version.graalvmBuildtoolsVersion
 }
 
 val env: String = System.getProperty("env", Constants.DEL_ENV)
@@ -45,9 +44,6 @@ dependencies {
 }
 
 tasks {
-    pmdAot {
-        enabled = false
-    }
     processResources {
         filter<ReplaceTokens>("tokens" to configMap)
     }
@@ -55,29 +51,6 @@ tasks {
         options.compilerArgs.add("-Xlint:deprecation")
         doFirst {
             print("> Task :${project.name}: 使用 $env 环境编译")
-        }
-    }
-    // 适配 graalvm
-    bootJar {
-        exclude("META-INF/*.SF")
-        exclude("META-INF/*.DSA")
-        exclude("META-INF/*.RSA")
-    }
-    graalvmNative {
-        binaries {
-            named("main") {
-                mainClass.set("com.zerolinck.passiflora.gateway.PassifloraGatewayApplication")
-                buildArgs.add("-march=compatibility")
-                buildArgs.add("-H:+AddAllCharsets")
-                buildArgs.add("-H:+PrintMethodHistogram")
-            }
-            named("test") {
-                buildArgs.add("-O0")
-            }
-        }
-        binaries.all {
-            resources.autodetect()
-            buildArgs.add("--verbose")
         }
     }
 }

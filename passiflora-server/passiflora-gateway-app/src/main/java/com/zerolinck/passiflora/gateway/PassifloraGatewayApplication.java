@@ -18,19 +18,16 @@ package com.zerolinck.passiflora.gateway;
 
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.util.NetUtil;
-import com.zerolinck.passiflora.gateway.config.RuntimeHintsRegistrar;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 @Slf4j
 @SpringBootApplication
-@ImportRuntimeHints(RuntimeHintsRegistrar.class)
 @EnableConfigurationProperties(PassifloraProperties.class)
 public class PassifloraGatewayApplication {
 
