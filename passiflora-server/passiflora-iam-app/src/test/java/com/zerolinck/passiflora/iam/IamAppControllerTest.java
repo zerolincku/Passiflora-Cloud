@@ -16,12 +16,6 @@
  */
 package com.zerolinck.passiflora.iam;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
@@ -42,6 +36,12 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 应用 Unit Test
@@ -72,7 +72,7 @@ class IamAppControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/iamApp/page").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/iam-app/page").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -90,7 +90,7 @@ class IamAppControllerTest {
         iamApp.setAppIcon("test");
         iamApp.setAppUrl("test");
         iamApp.setAppRemark("test");
-        mockMvc.perform(post("/iamApp/add")
+        mockMvc.perform(post("/iam-app/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamApp)))
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ class IamAppControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/iamApp/detail").param("appId", testIamAppId))
+        mockMvc.perform(get("/iam-app/detail").param("appId", testIamAppId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -117,7 +117,7 @@ class IamAppControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/iamApp/update")
+        mockMvc.perform(post("/iam-app/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testIamApp)))
                 .andExpect(status().isOk())
@@ -127,7 +127,7 @@ class IamAppControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/iamApp/delete")
+        mockMvc.perform(post("/iam-app/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(new String[] {testIamAppId})))
                 .andExpect(status().isOk())

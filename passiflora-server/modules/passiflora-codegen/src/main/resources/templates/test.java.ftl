@@ -51,7 +51,7 @@ public class ${entityClass}ControllerTest {
     @Test
     @Order(1)
     public void testPage() throws Exception {
-        mockMvc.perform(get("/${entityName}/page")
+        mockMvc.perform(get("//${entityNameUrl}/page")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
@@ -60,17 +60,17 @@ public class ${entityClass}ControllerTest {
     @Test
     @Order(2)
     public void testAdd() throws Exception {
-        ${entityClass} ${entityName} = new ${entityClass}();
+        ${entityClass} /${entityNameUrl} = new ${entityClass}();
         <#list table.columnList as column>
             <#if column.nullable>
                 <#if column.fieldType.getSimpleName() == "String">
-        ${entityName}.set${column.fieldName[0..0]?upper_case}${column.fieldName[1..]}("test");
+        /${entityNameUrl}.set${column.fieldName[0..0]?upper_case}${column.fieldName[1..]}("test");
                 </#if>
             </#if>
         </#list>
-        mockMvc.perform(post("/${entityName}/add")
+        mockMvc.perform(post("//${entityNameUrl}/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtil.toJson(${entityName})))
+            .content(JsonUtil.toJson(/${entityNameUrl})))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
             .andDo(result -> test${entityClass}Id = JsonUtil.readTree(result.getResponse().getContentAsString()).get("data").asText());
@@ -79,7 +79,7 @@ public class ${entityClass}ControllerTest {
     @Test
     @Order(3)
     public void testDetail() throws Exception {
-        mockMvc.perform(get("/${entityName}/detail")
+        mockMvc.perform(get("//${entityNameUrl}/detail")
             .param("${table.pkFieldName}", test${entityClass}Id))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
@@ -93,7 +93,7 @@ public class ${entityClass}ControllerTest {
     @Test
     @Order(4)
     public void testUpdate() throws Exception {
-        mockMvc.perform(post("/${entityName}/update")
+        mockMvc.perform(post("//${entityNameUrl}/update")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.toJson(test${entityClass})))
             .andExpect(status().isOk())
@@ -103,7 +103,7 @@ public class ${entityClass}ControllerTest {
     @Test
     @Order(5)
     public void testDelete() throws Exception {
-        mockMvc.perform(post("/${entityName}/delete")
+        mockMvc.perform(post("//${entityNameUrl}/delete")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.toJson(new String[]{test${entityClass}Id})))
             .andExpect(status().isOk())
