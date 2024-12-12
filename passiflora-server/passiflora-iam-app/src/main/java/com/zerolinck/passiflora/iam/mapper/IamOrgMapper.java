@@ -25,12 +25,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /** @author linck on 2024-04-09 */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
@@ -57,7 +56,7 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
     /**
      * 逻辑删除指定 ID 的记录
      *
-     * @param orgIds   需要删除的组织 ID 集合
+     * @param orgIds 需要删除的组织 ID 集合
      * @param updateBy 更新者
      * @return 更新的行数
      */
@@ -67,7 +66,8 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
         }
 
         LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.in(IamOrg::getOrgId, orgIds)
+        updateWrapper
+                .in(IamOrg::getOrgId, orgIds)
                 .set(IamOrg::getUpdateTime, LocalDateTime.now())
                 .set(IamOrg::getUpdateBy, updateBy)
                 .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);
@@ -78,7 +78,7 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
     /**
      * 逻辑删除指定 ID 及其路径匹配的记录
      *
-     * @param orgId    组织 ID
+     * @param orgId 组织 ID
      * @param updateBy 更新者
      * @return 更新的行数
      */
@@ -88,7 +88,8 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
         }
 
         LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.like(IamOrg::getOrgIdPath, "%" + orgId + "%")
+        updateWrapper
+                .like(IamOrg::getOrgIdPath, "%" + orgId + "%")
                 .set(IamOrg::getUpdateTime, LocalDateTime.now())
                 .set(IamOrg::getUpdateBy, updateBy)
                 .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);

@@ -114,6 +114,7 @@ public class JsonUtil {
             addSerializer(module, entry.getKey(), entry.getValue());
         }
         objectMapper.registerModule(module);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @SuppressWarnings("unchecked")

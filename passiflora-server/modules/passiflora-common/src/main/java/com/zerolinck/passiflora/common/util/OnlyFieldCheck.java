@@ -21,44 +21,50 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.google.common.base.CaseFormat;
 import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.model.common.BaseEntity;
 import com.zerolinck.passiflora.model.valid.OnlyField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
-/** @author linck on 2023-12-18 */
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 通过唯一字段检测数据是否已经存在
+ *
+ * @author linck on 2023-12-18
+ */
 public class OnlyFieldCheck {
 
     private static final Map<Class<?>, List<CheckField>> map = new HashMap<>();
 
     @SneakyThrows
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void checkInsert(BaseMapper baseMapper, Object entity) {
+    public static <T extends BaseEntity> void checkInsert(BaseMapper baseMapper, T entity) {
         checkCache(entity);
-        List<CheckField> fields = map.get(entity.getClass());
-        for (CheckField field : fields) {
-            field.getField().setAccessible(true);
+        List<CheckField> checkFields = map.get(entity.getClass());
+        for (CheckField checkField : checkFields) {
+            checkField.getField().setAccessible(true);
 
-            Object fieldValue = field.getField().get(entity);
+            Object fieldValue = checkField.getField().get(entity);
             if (fieldValue == null) {
                 continue;
             }
 
-            Long count = baseMapper.selectCount(new QueryWrapper<>().eq(field.getFieldName(), fieldValue));
+            Long count = baseMapper.selectCount(new QueryWrapper<>().eq(checkField.getFieldName(), fieldValue));
             if (count > 0) {
                 String message;
-                if (StringUtils.isNotBlank(field.getMessage())) {
-                    message = field.getMessage();
+                if (StringUtils.isNotBlank(checkField.getMessage())) {
+                    message = checkField.getMessage();
                 } else {
-                    message = field.getFieldDesc() + "已存在，请重新填写";
+                    message = checkField.getFieldDesc() + "已存在，请重新填写";
                 }
                 throw new BizException(message);
             }
@@ -67,38 +73,45 @@ public class OnlyFieldCheck {
 
     @SneakyThrows
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void checkUpdate(BaseMapper baseMapper, Object entity) {
+    public static <T extends BaseEntity> void checkUpdate(BaseMapper baseMapper, T entity) {
         checkCache(entity);
-        List<CheckField> fields = map.get(entity.getClass());
-        for (CheckField field : fields) {
-            field.getField().setAccessible(true);
-            field.getIdField().setAccessible(true);
+        List<CheckField> checkFields = map.get(entity.getClass());
+        for (CheckField checkField : checkFields) {
+            checkField.getField().setAccessible(true);
+            checkField.getIdField().setAccessible(true);
 
-            Object fieldValue = field.getField().get(entity);
+            Object fieldValue = checkField.getField().get(entity);
             if (fieldValue == null) {
                 continue;
             }
 
             Long count = baseMapper.selectCount(new QueryWrapper<>()
-                    .eq(field.getFieldName(), fieldValue)
+                    .eq(checkField.getFieldName(), fieldValue)
                     .ne(
                             CaseFormat.LOWER_CAMEL.to(
                                     CaseFormat.LOWER_UNDERSCORE,
-                                    field.getIdField().getName()),
-                            field.getIdField().get(entity)));
+                                    checkField.getIdField().getName()),
+                            checkField.getIdField().get(entity)));
             if (count > 0) {
                 String message;
-                if (StringUtils.isNotBlank(field.getMessage())) {
-                    message = field.getMessage();
+                if (StringUtils.isNotBlank(checkField.getMessage())) {
+                    message = checkField.getMessage();
                 } else {
-                    message = field.getFieldDesc() + "已存在，请重新填写";
+                    message = checkField.getFieldDesc() + "已存在，请重新填写";
                 }
                 throw new BizException(message);
             }
         }
     }
 
-    private static void checkCache(Object entity) {
+    /**
+     * 获取实体类字段熟悉添加到缓存中
+     *
+     * @param entity 实体类对象
+     * @param <T> BaseEntity 子类
+     * @author 林常坤 on 2024/12/12
+     */
+    private static <T extends BaseEntity> void checkCache(T entity) {
         if (!map.containsKey(entity.getClass())) {
             Field[] fields = entity.getClass().getDeclaredFields();
             List<CheckField> result = new ArrayList<>();

@@ -119,8 +119,10 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, args);
-            baseMapper.insert(IamUserConvert.INSTANCE.argsToEntity(args));
+            IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
+            OnlyFieldCheck.checkInsert(baseMapper, iamUser);
+            baseMapper.insert(iamUser);
+            args.setUserId(iamUser.getUserId());
             userPositionService.updateRelation(args);
             iamUserRoleService.updateRelation(args);
         });
@@ -129,8 +131,9 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
     public boolean update(@NotNull IamUserArgs args) {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
-                    OnlyFieldCheck.checkUpdate(baseMapper, args);
-                    int changeRowCount = baseMapper.updateById(IamUserConvert.INSTANCE.argsToEntity(args));
+                    IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
+                    OnlyFieldCheck.checkUpdate(baseMapper, iamUser);
+                    int changeRowCount = baseMapper.updateById(iamUser);
                     userPositionService.updateRelation(args);
                     iamUserRoleService.updateRelation(args);
                     return changeRowCount > 0;
