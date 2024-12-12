@@ -16,6 +16,13 @@
  */
 package com.zerolinck.passiflora.iam.controller;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
@@ -23,13 +30,8 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictItemApi;
 import com.zerolinck.passiflora.iam.service.IamDictItemService;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
-import java.util.List;
-import java.util.NoSuchElementException;
+
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /** @author linck on 2024-04-01 */
 @RestController

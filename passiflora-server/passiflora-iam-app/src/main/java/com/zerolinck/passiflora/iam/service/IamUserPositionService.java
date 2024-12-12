@@ -16,6 +16,13 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
@@ -27,13 +34,8 @@ import com.zerolinck.passiflora.iam.mapper.IamUserPositionMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
-import java.util.*;
-import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
 
 /** @author linck on 2024-05-14 */
 @Slf4j

@@ -16,10 +16,11 @@
  */
 package com.zerolinck.passiflora.codegen.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /** @author linck on 2024-02-06 */
 public class TypeConvert {

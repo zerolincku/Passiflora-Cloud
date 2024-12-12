@@ -16,17 +16,12 @@
  */
 package com.zerolinck.passiflora.gateway.filter;
 
-import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.model.common.constant.Header;
-import jakarta.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -35,6 +30,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.RequestPath;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.model.common.constant.Header;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import reactor.core.publisher.Mono;
 
 /** @author linck on 2024-04-30 */

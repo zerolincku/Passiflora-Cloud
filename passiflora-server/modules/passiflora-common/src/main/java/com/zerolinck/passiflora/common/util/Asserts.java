@@ -16,11 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.google.common.base.Strings;
 import java.util.Collection;
 import javax.annotation.Nullable;
-import lombok.experimental.UtilityClass;
+
 import org.jetbrains.annotations.NotNull;
+import com.google.common.base.Strings;
+
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-03-18 */
 @UtilityClass

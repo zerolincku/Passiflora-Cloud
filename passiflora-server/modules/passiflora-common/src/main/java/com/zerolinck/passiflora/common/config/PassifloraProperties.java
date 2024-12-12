@@ -16,10 +16,11 @@
  */
 package com.zerolinck.passiflora.common.config;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /** @author linck on 2024-05-27 */
 @Data

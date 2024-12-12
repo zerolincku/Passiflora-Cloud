@@ -16,14 +16,15 @@
  */
 package com.zerolinck.passiflora.common.config;
 
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
 
 /** @author linck on 2024-05-13 */
 @Configuration(proxyBeanMethods = false)

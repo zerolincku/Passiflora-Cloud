@@ -16,12 +16,13 @@
  */
 package com.zerolinck.passiflora.iam.aop;
 
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import com.zerolinck.passiflora.model.common.BaseEntity;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 拦截 update 方法，置空 createAt 和 createBy

@@ -16,6 +16,16 @@
  */
 package com.zerolinck.passiflora.common.config.jackson;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
+
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -31,15 +41,6 @@ import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.*;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /** @author linck on 2024-02-06 */
 @Configuration(proxyBeanMethods = false)

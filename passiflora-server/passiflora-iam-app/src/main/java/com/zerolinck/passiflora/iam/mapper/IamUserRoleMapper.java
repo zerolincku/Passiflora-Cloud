@@ -16,6 +16,12 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -23,11 +29,6 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import java.util.Collection;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * 用户角色绑定 Mybatis Mapper

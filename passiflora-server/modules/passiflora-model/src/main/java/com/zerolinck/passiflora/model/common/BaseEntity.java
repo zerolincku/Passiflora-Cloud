@@ -16,12 +16,14 @@
  */
 package com.zerolinck.passiflora.model.common;
 
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
-import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /** @author linck on 2024-02-06 */

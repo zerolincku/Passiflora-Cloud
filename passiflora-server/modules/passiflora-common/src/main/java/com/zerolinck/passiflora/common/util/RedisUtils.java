@@ -19,12 +19,14 @@ package com.zerolinck.passiflora.common.util;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
+
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 需要再 Configuration 中注册 redisTemplate 时，将 redisTemplate 注入此工具类

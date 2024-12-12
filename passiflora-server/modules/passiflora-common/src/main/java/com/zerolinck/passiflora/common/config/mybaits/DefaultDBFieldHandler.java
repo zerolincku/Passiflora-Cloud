@@ -16,17 +16,19 @@
  */
 package com.zerolinck.passiflora.common.config.mybaits;
 
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.springframework.util.ClassUtils;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.StrUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
+
+import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-02-07 */
 @Slf4j

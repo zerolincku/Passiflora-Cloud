@@ -16,16 +16,18 @@
  */
 package com.zerolinck.passiflora.model.iam.entity;
 
+import jakarta.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.zerolinck.passiflora.model.common.BaseEntity;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Length;
 
 /**
  * 用户角色绑定 Entity

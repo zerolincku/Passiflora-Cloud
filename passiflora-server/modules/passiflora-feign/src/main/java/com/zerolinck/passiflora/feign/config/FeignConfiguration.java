@@ -16,15 +16,18 @@
  */
 package com.zerolinck.passiflora.feign.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.context.annotation.Bean;
 import com.zerolinck.passiflora.common.util.NetUtil;
 import com.zerolinck.passiflora.common.util.SpringContextHolder;
 import com.zerolinck.passiflora.model.common.constant.Header;
+
+import lombok.extern.slf4j.Slf4j;
+
 import feign.Logger;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 
 /** @author linck on 2023-12-15 */
 @Slf4j

@@ -16,8 +16,6 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.net.Inet4Address;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -25,11 +23,15 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicReference;
-import lombok.experimental.UtilityClass;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2023-12-11 */
 @UtilityClass

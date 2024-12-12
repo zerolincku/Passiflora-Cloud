@@ -16,13 +16,15 @@
  */
 package com.zerolinck.passiflora.storage.task;
 
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
-import com.zerolinck.passiflora.storage.service.StorageFileService;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.storage.service.StorageFileService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 自动删除超过 24h 的临时文件

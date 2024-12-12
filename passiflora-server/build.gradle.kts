@@ -45,10 +45,10 @@ allprojects {
 spotless {
     java {
         target("**/*.java")
-        importOrder()
         removeUnusedImports()
         palantirJavaFormat(Version.palantirJavaVersion).formatJavadoc(true)
         formatAnnotations()
+        importOrder("java|javax|jakarta", "org|com|io", "lombok")
         licenseHeader(header)
     }
     yaml {

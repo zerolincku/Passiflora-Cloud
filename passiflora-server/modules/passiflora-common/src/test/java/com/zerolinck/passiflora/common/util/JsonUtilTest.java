@@ -19,12 +19,14 @@ package com.zerolinck.passiflora.common.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.*;
+
+import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.Test;
 
 /** @author 林常坤 on 2024/09/28 */
 public class JsonUtilTest {

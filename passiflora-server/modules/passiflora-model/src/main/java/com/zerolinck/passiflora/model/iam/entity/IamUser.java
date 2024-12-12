@@ -16,11 +16,13 @@
  */
 package com.zerolinck.passiflora.model.iam.entity;
 
+import java.time.LocalDate;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.zerolinck.passiflora.model.common.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

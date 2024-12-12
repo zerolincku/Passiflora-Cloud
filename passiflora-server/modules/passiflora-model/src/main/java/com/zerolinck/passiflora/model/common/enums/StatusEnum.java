@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.model.common.enums;
 
 import com.zerolinck.passiflora.model.common.LabelValueInterface;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

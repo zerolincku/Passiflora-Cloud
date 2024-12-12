@@ -16,17 +16,19 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.zerolinck.passiflora.common.config.jackson.JacksonConfig;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.NotNull;
 
 /** @author 林常坤 on 2024/09/28 */
 @UtilityClass

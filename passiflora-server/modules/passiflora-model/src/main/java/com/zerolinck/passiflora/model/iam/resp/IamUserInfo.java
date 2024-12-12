@@ -16,10 +16,12 @@
  */
 package com.zerolinck.passiflora.model.iam.resp;
 
-import com.zerolinck.passiflora.model.iam.entity.IamUser;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import java.util.HashSet;
+
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

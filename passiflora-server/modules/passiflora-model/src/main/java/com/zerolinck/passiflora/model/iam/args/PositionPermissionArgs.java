@@ -16,11 +16,13 @@
  */
 package com.zerolinck.passiflora.model.iam.args;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+
 import org.hibernate.validator.constraints.Length;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import lombok.Data;
 
 /** @author linck on 2024-06-29 */
 @Data

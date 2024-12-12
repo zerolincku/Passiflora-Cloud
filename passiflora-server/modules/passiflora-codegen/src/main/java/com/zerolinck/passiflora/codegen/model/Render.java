@@ -17,6 +17,7 @@
 package com.zerolinck.passiflora.codegen.model;
 
 import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

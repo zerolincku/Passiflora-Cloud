@@ -16,18 +16,20 @@
  */
 package com.zerolinck.passiflora.model.iam.args;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
 import com.zerolinck.passiflora.model.iam.valid.Login;
 import com.zerolinck.passiflora.model.valid.Insert;
 import com.zerolinck.passiflora.model.valid.OnlyField;
 import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.util.Collection;
+
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 /** @author 林常坤 on 2024-08-04 */
 @Data

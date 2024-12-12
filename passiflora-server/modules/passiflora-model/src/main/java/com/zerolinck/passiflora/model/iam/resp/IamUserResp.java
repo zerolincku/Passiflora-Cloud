@@ -16,10 +16,12 @@
  */
 package com.zerolinck.passiflora.model.iam.resp;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 
 /** @author linck on 2024-04-29 */

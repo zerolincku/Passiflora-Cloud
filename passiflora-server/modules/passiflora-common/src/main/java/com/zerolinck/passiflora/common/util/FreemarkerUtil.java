@@ -16,13 +16,14 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /** @author 林常坤 on 2024/10/24 */
 public class FreemarkerUtil {

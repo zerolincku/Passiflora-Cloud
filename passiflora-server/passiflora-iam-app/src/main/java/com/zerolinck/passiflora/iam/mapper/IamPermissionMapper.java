@@ -16,6 +16,13 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.jetbrains.annotations.NotNull;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -23,12 +30,6 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
-import java.util.Collection;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-05-06 */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {

@@ -16,9 +16,10 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.zerolinck.passiflora.model.common.LabelValueInterface;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import com.zerolinck.passiflora.model.common.LabelValueInterface;
+
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass

@@ -16,10 +16,11 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import lombok.experimental.UtilityClass;
 
 /**
  * 密码工具类

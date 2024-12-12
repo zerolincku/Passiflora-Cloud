@@ -21,8 +21,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
-import lombok.experimental.UtilityClass;
+
 import org.jetbrains.annotations.NotNull;
+
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass

@@ -16,17 +16,18 @@
  */
 package com.zerolinck.passiflora.storage.init;
 
-import com.zerolinck.passiflora.common.config.PassifloraProperties;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
-import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.storage.util.OssS3Util;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import com.zerolinck.passiflora.common.config.PassifloraProperties;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.storage.util.OssS3Util;
+
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 检查 bucket 是否存在，不存在，则创建

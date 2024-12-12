@@ -16,13 +16,15 @@
  */
 package com.zerolinck.passiflora.common.util.lock;
 
-import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.Getter;
+
 import org.apache.commons.collections4.CollectionUtils;
+import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
+
+import lombok.Getter;
 
 /** @author linck on 2024-05-04 */
 @SuppressWarnings("all")

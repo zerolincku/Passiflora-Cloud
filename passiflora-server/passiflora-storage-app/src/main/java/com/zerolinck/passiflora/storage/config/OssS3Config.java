@@ -16,12 +16,15 @@
  */
 package com.zerolinck.passiflora.storage.config;
 
-import com.zerolinck.passiflora.common.config.PassifloraProperties;
-import com.zerolinck.passiflora.storage.util.OssS3Util;
 import java.net.URI;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.zerolinck.passiflora.common.config.PassifloraProperties;
+import com.zerolinck.passiflora.storage.util.OssS3Util;
+
+import lombok.RequiredArgsConstructor;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;

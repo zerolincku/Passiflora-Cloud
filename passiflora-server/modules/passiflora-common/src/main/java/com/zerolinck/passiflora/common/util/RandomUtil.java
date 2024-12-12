@@ -16,8 +16,9 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/10/08 */
 @UtilityClass

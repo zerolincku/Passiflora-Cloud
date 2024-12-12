@@ -16,9 +16,11 @@
  */
 package com.zerolinck.passiflora.model.iam.resp;
 
+import java.util.Collection;
+
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Collection;
+
 import lombok.Data;
 
 /** @author linck on 2024-05-06 */
