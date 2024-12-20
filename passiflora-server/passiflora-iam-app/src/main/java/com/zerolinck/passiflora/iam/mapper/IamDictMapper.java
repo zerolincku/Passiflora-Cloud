@@ -16,6 +16,11 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -23,16 +28,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
 
 /** @author linck on 2024-04-01 */
 public interface IamDictMapper extends BaseMapper<IamDict> {
-    @NotNull
-    default Page<IamDict> page(
+    @NotNull default Page<IamDict> page(
             @NotNull IPage<IamDict> page,
             @Param(Constants.WRAPPER) QueryWrapper<IamDict> searchWrapper,
             @Param("sortWrapper") QueryWrapper<IamDict> sortWrapper) {
@@ -42,8 +41,8 @@ public interface IamDictMapper extends BaseMapper<IamDict> {
         searchWrapper.eq("del_flag", 0);
 
         if (sortWrapper == null
-            || sortWrapper.getSqlSegment() == null
-            || sortWrapper.getSqlSegment().isEmpty()) {
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
             searchWrapper.orderByAsc("dict_id");
         } else {
             searchWrapper.last(sortWrapper.getSqlSegment());
