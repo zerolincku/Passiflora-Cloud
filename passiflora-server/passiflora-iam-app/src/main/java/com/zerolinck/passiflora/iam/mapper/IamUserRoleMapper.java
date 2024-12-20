@@ -16,13 +16,17 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -37,31 +41,89 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
  */
 public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
 
-    /**
-     * 分页查询
-     *
-     * @param page 分页条件
-     * @param searchWrapper 搜索条件
-     * @param sortWrapper 排序条件
-     * @since 2024-08-17
-     */
-    @NotNull Page<IamUserRole> page(
+    @NotNull default Page<IamUserRole> page(
             @NotNull IPage<IamUserRole> page,
             @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamUserRole> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<IamUserRole> sortWrapper);
+            @NotNull @Param("sortWrapper") QueryWrapper<IamUserRole> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 真实删除 */
-    int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    /** 真实删除 */
-    int deleteByUserIds(
-            @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy);
+        return (Page<IamUserRole>) this.selectPage(page, searchWrapper);
+    }
 
-    @NotNull List<IamUserRoleResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    default int deleteByIds(
+            @NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return 0;
+        }
 
-    /** 真实删除 */
-    int deleteByUserIdAndRoleIds(
+        LambdaUpdateWrapper<IamUserRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamUserRole::getId, ids)
+                .set(IamUserRole::getUpdateTime, LocalDateTime.now())
+                .set(IamUserRole::getUpdateBy, updateBy)
+                .set(IamUserRole::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default int deleteByUserIds(
+            @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamUserRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamUserRole::getUserId, userIds)
+                .set(IamUserRole::getUpdateTime, LocalDateTime.now())
+                .set(IamUserRole::getUpdateBy, updateBy)
+                .set(IamUserRole::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    @NotNull @Select(
+            """
+        SELECT a.user_id, b.role_id, b.role_name FROM
+        (SELECT user_id, role_id
+        FROM iam_user_role
+        WHERE del_flag = 0 AND user_id IN
+        <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ) as a
+        INNER JOIN iam_role as b ON a.role_id = b.role_id
+        WHERE b.del_flag = 0 AND b.role_status = 1
+    """)
+    List<IamUserRoleResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+
+    default int deleteByUserIdAndRoleIds(
             @NotNull @Param("userId") String userId,
             @NotNull @Param("roleIds") Collection<String> roleIds,
-            @Nullable @Param("updateBy") String updateBy);
+            @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamUserRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .eq(IamUserRole::getUserId, userId)
+                .in(IamUserRole::getRoleId, roleIds)
+                .set(IamUserRole::getUpdateTime, LocalDateTime.now())
+                .set(IamUserRole::getUpdateBy, updateBy)
+                .set(IamUserRole::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
 }

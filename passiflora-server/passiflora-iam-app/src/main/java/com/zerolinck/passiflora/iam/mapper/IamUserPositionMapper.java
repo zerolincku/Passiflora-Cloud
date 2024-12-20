@@ -16,26 +16,26 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
-import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
+import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
+
 /** @author linck on 2024-05-14 */
 public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
 
-    @NotNull
-    List<IamUserPositionResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    @NotNull List<IamUserPositionResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
 
-    default int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @NotNull @Param("updateBy") String updateBy) {
+    default int deleteByIds(
+            @NotNull @Param("ids") Collection<String> ids, @NotNull @Param("updateBy") String updateBy) {
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
@@ -50,7 +50,8 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
         return this.update(null, updateWrapper);
     }
 
-    default int deleteByUserIds(@NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByUserIds(
+            @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
@@ -65,7 +66,9 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
         return this.update(null, updateWrapper);
     }
 
-    default int deleteByPositionIds(@NotNull @Param("positionIds") Collection<String> positionIds, @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByPositionIds(
+            @NotNull @Param("positionIds") Collection<String> positionIds,
+            @Nullable @Param("updateBy") String updateBy) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
@@ -80,7 +83,10 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
         return this.update(null, updateWrapper);
     }
 
-    default int deleteByUserIdAndPositionIds(@NotNull @Param("userId") String userId, @NotNull @Param("positionIds") Collection<String> positionIds, @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByUserIdAndPositionIds(
+            @NotNull @Param("userId") String userId,
+            @NotNull @Param("positionIds") Collection<String> positionIds,
+            @Nullable @Param("updateBy") String updateBy) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
