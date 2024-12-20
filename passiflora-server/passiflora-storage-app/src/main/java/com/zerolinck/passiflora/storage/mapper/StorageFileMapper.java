@@ -16,16 +16,19 @@
  */
 package com.zerolinck.passiflora.storage.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -39,14 +42,41 @@ import com.zerolinck.passiflora.model.storage.entity.StorageFile;
  */
 public interface StorageFileMapper extends BaseMapper<StorageFile> {
 
-    @NotNull Page<StorageFile> page(
+    @NotNull default Page<StorageFile> page(
             @NotNull IPage<StorageFile> page,
-            @NotNull @Param(Constants.WRAPPER) QueryWrapper<StorageFile> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<StorageFile> sortWrapper);
+            @Param(Constants.WRAPPER) QueryWrapper<StorageFile> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<StorageFile> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(
-            @NotNull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("file_id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
+
+        return (Page<StorageFile>) this.selectPage(page, searchWrapper);
+    }
+
+    default int deleteByIds(
+            @NotNull @Param("fileIds") Collection<String> fileIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(fileIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<StorageFile> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(StorageFile::getFileId, fileIds)
+                .set(StorageFile::getUpdateTime, LocalDateTime.now())
+                .set(StorageFile::getUpdateBy, updateBy)
+                .set(StorageFile::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
 
     @Select("SELECT * FROM storage_file WHERE file_md5 = #{fileMd5} AND del_flag = 0")
     List<StorageFile> listByFileMd5(@NotNull @Param("fileMd5") String fileMd5);
@@ -58,9 +88,17 @@ public interface StorageFileMapper extends BaseMapper<StorageFile> {
             "UPDATE storage_file SET last_download_time = now(), download_count = download_count + 1 WHERE file_id = #{fileId}")
     void incrDownCount(@NotNull @Param("fileId") String fileId);
 
-    int confirmFile(@NotNull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy);
+    default int confirmFile(@NotNull @Param("fileId") String fileId, @Nullable @Param("updateBy") String updateBy) {
+        LambdaUpdateWrapper<StorageFile> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .eq(StorageFile::getFileId, fileId)
+                .set(StorageFile::getUpdateTime, LocalDateTime.now())
+                .set(StorageFile::getUpdateBy, updateBy)
+                .set(StorageFile::getFileStatus, 1);
 
-    /** 查询创建时间大于 24h 的临时文件ID */
+        return this.update(null, updateWrapper);
+    }
+
     @Select(
             "SELECT file_id from storage_file WHERE file_status = 0 AND create_time <= DATE_SUB(NOW(), INTERVAL 24 HOUR)")
     Set<String> expiredTempFileIds();
