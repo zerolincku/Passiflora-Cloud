@@ -16,6 +16,14 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,15 +41,8 @@ import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-05-06 */
 @Slf4j
@@ -236,6 +237,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
 
     /**
      * 递归处理权限树
+     *
      * @param menuVos 权限
      * @param menuMap 权限Map
      * @author 林常坤 on 2024/12/20
@@ -256,6 +258,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
 
     /**
      * 生成权限路径和层级
+     *
      * @param iamPermission 权限
      * @author 林常坤 on 2024/12/20
      */
