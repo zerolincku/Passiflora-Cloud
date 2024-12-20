@@ -26,6 +26,7 @@
     </appender>
 
     <springProfile name="local,dev">
+        <logger name="com.baomidou.mybatisplus.core.injector.methods" level="error"/>
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>

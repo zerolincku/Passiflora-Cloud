@@ -15,6 +15,10 @@ allprojects {
 
     tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
 
+    configurations.all {
+        exclude(group = "commons-logging", module = "commons-logging")
+    }
+
     repositories {
         aliyunCentral()
         tencentRepository()
