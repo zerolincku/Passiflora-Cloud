@@ -16,18 +16,22 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 角色权限 Mybatis Mapper
@@ -36,25 +40,68 @@ import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
  */
 public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
 
-    /**
-     * 分页查询
-     *
-     * @param page 分页条件
-     * @param searchWrapper 搜索条件
-     * @param sortWrapper 排序条件
-     * @since 2024-08-17
-     */
-    @NotNull Page<IamRolePermission> page(
+    @NotNull
+    default Page<IamRolePermission> page(
             @NotNull IPage<IamRolePermission> page,
-            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper);
+            @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 真实删除 */
-    int deleteByIds(@NotNull @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+            || sortWrapper.getSqlSegment() == null
+            || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    /** 真实删除 */
-    int deleteByRoleIds(
-            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+        return (Page<IamRolePermission>) this.selectPage(page, searchWrapper);
+    }
 
-    @NotNull List<String> permissionIdsByRoleIds(@NotNull @Param("roleIds") List<String> roleIds);
+    default int deleteByIds(@Nullable @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamRolePermission> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamRolePermission::getId, ids)
+                .set(IamRolePermission::getUpdateTime, LocalDateTime.now())
+                .set(IamRolePermission::getUpdateBy, updateBy)
+                .set(IamRolePermission::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default int deleteByRoleIds(@Nullable @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamRolePermission> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamRolePermission::getRoleId, roleIds)
+                .set(IamRolePermission::getUpdateTime, LocalDateTime.now())
+                .set(IamRolePermission::getUpdateBy, updateBy)
+                .set(IamRolePermission::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    @Select("""
+        SELECT permission_id from iam_permission
+        WHERE permission_status = 1 AND del_flag = 0
+        AND permission_id IN (
+            SELECT permission_id from iam_role_permission
+            WHERE del_flag = 0 AND role_id IN
+            <foreach item="id" index="index" collection="roleIds" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        )
+    """)
+    @NotNull
+    List<String> permissionIdsByRoleIds(@NotNull @Param("roleIds") List<String> roleIds);
 }
