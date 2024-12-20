@@ -16,12 +16,15 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -35,29 +38,71 @@ import com.zerolinck.passiflora.model.iam.entity.IamRole;
  */
 public interface IamRoleMapper extends BaseMapper<IamRole> {
 
-    /**
-     * 分页查询
-     *
-     * @param page 分页条件
-     * @param searchWrapper 搜索条件
-     * @param sortWrapper 排序条件
-     * @since 2024-08-17
-     */
-    @NotNull Page<IamRole> page(
+    @NotNull default Page<IamRole> page(
             @NotNull IPage<IamRole> page,
-            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamRole> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<IamRole> sortWrapper);
+            @Param(Constants.WRAPPER) QueryWrapper<IamRole> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<IamRole> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /**
-     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
-     *
-     * @param roleIds 角色主键集合
-     * @since 2024-08-17
-     */
-    int deleteByIds(
-            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("role_id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    void disable(@NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+        return (Page<IamRole>) this.selectPage(page, searchWrapper);
+    }
 
-    void enable(@NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy);
+    default int deleteByIds(
+            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamRole::getRoleId, roleIds)
+                .set(IamRole::getUpdateTime, LocalDateTime.now())
+                .set(IamRole::getUpdateBy, updateBy)
+                .set(IamRole::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default void disable(
+            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+
+        LambdaUpdateWrapper<IamRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamRole::getRoleId, roleIds)
+                .set(IamRole::getUpdateTime, LocalDateTime.now())
+                .set(IamRole::getUpdateBy, updateBy)
+                .set(IamRole::getRoleStatus, 0);
+
+        this.update(null, updateWrapper);
+    }
+
+    default void enable(
+            @NotNull @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+
+        LambdaUpdateWrapper<IamRole> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamRole::getRoleId, roleIds)
+                .set(IamRole::getUpdateTime, LocalDateTime.now())
+                .set(IamRole::getUpdateBy, updateBy)
+                .set(IamRole::getRoleStatus, 1);
+
+        this.update(null, updateWrapper);
+    }
 }

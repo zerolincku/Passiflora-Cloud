@@ -16,12 +16,14 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -30,15 +32,55 @@ import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 
 /** @author linck on 2024-04-01 */
 public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
-    Page<IamDictItem> page(
+    default Page<IamDictItem> page(
             IPage<IamDictItem> page,
             @Param(Constants.WRAPPER) QueryWrapper<IamDictItem> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamDictItem> sortWrapper);
+            @Param("sortWrapper") QueryWrapper<IamDictItem> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Param("dictItemIds") Collection<String> dictItemIds, @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("dict_item_id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    int deleteByDictIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy);
+        return (Page<IamDictItem>) this.selectPage(page, searchWrapper);
+    }
+
+    default int deleteByIds(@Param("dictItemIds") Collection<String> dictItemIds, @Param("updateBy") String updateBy) {
+        if (dictItemIds == null || dictItemIds.isEmpty()) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamDictItem> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamDictItem::getDictItemId, dictItemIds)
+                .set(IamDictItem::getUpdateTime, LocalDateTime.now())
+                .set(IamDictItem::getUpdateBy, updateBy)
+                .set(IamDictItem::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default int deleteByDictIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy) {
+        if (dictIds == null || dictIds.isEmpty()) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamDictItem> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamDictItem::getDictId, dictIds)
+                .set(IamDictItem::getUpdateTime, LocalDateTime.now())
+                .set(IamDictItem::getUpdateBy, updateBy)
+                .set(IamDictItem::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
 
     @Select("SELECT * FROM iam_dict_item WHERE del_flag = 0 AND dict_id = #{dictId}")
     List<IamDictItem> listByDictId(@Param("dictId") String dictId);

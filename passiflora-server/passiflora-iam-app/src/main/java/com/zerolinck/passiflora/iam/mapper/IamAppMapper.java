@@ -16,12 +16,15 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -35,28 +38,71 @@ import com.zerolinck.passiflora.model.iam.entity.IamApp;
  */
 public interface IamAppMapper extends BaseMapper<IamApp> {
 
-    /**
-     * 分页查询
-     *
-     * @param page 分页条件
-     * @param searchWrapper 搜索条件
-     * @param sortWrapper 排序条件
-     * @since 2024-09-30
-     */
-    @NotNull Page<IamApp> page(
+    @NotNull default Page<IamApp> page(
             @NotNull IPage<IamApp> page,
-            @NotNull @Param(Constants.WRAPPER) QueryWrapper<IamApp> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<IamApp> sortWrapper);
+            @Param(Constants.WRAPPER) QueryWrapper<IamApp> searchWrapper,
+            @Param("sortWrapper") QueryWrapper<IamApp> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /**
-     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
-     *
-     * @param appIds 应用主键集合
-     * @since 2024-09-30
-     */
-    int deleteByIds(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+                || sortWrapper.getSqlSegment() == null
+                || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("app_id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
 
-    int disable(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+        return (Page<IamApp>) this.selectPage(page, searchWrapper);
+    }
 
-    int enable(@NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy);
+    default int deleteByIds(
+            @NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(appIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamApp> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamApp::getAppId, appIds)
+                .set(IamApp::getUpdateTime, LocalDateTime.now())
+                .set(IamApp::getUpdateBy, updateBy)
+                .set(IamApp::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default int disable(
+            @NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(appIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamApp> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamApp::getAppId, appIds)
+                .set(IamApp::getUpdateTime, LocalDateTime.now())
+                .set(IamApp::getUpdateBy, updateBy)
+                .set(IamApp::getAppStatus, 0);
+
+        return this.update(null, updateWrapper);
+    }
+
+    default int enable(
+            @NotNull @Param("appIds") Collection<String> appIds, @Nullable @Param("updateBy") String updateBy) {
+        if (CollectionUtils.isEmpty(appIds)) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamApp> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamApp::getAppId, appIds)
+                .set(IamApp::getUpdateTime, LocalDateTime.now())
+                .set(IamApp::getUpdateBy, updateBy)
+                .set(IamApp::getAppStatus, 1);
+
+        return this.update(null, updateWrapper);
+    }
 }

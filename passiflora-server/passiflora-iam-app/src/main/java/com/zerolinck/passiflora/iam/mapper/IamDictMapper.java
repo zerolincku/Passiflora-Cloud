@@ -16,23 +16,54 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.util.Collection;
-
-import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
+import org.apache.ibatis.annotations.Param;
+import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 /** @author linck on 2024-04-01 */
 public interface IamDictMapper extends BaseMapper<IamDict> {
-    Page<IamDict> page(
-            IPage<IamDict> page,
+    @NotNull
+    default Page<IamDict> page(
+            @NotNull IPage<IamDict> page,
             @Param(Constants.WRAPPER) QueryWrapper<IamDict> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamDict> sortWrapper);
+            @Param("sortWrapper") QueryWrapper<IamDict> sortWrapper) {
+        if (searchWrapper == null) {
+            searchWrapper = new QueryWrapper<>();
+        }
+        searchWrapper.eq("del_flag", 0);
 
-    /** 使用更新删除，保证 update_by 和 update_time 正确 */
-    int deleteByIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy);
+        if (sortWrapper == null
+            || sortWrapper.getSqlSegment() == null
+            || sortWrapper.getSqlSegment().isEmpty()) {
+            searchWrapper.orderByAsc("dict_id");
+        } else {
+            searchWrapper.last(sortWrapper.getSqlSegment());
+        }
+
+        return (Page<IamDict>) this.selectPage(page, searchWrapper);
+    }
+
+    default int deleteByIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy) {
+        if (dictIds == null || dictIds.isEmpty()) {
+            return 0;
+        }
+
+        LambdaUpdateWrapper<IamDict> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
+                .in(IamDict::getDictId, dictIds)
+                .set(IamDict::getUpdateTime, LocalDateTime.now())
+                .set(IamDict::getUpdateBy, updateBy)
+                .set(IamDict::getDelFlag, 1);
+
+        return this.update(null, updateWrapper);
+    }
 }
