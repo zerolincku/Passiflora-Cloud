@@ -22,23 +22,22 @@ import java.util.Objects;
 import java.util.Optional;
 import jakarta.annotation.Resource;
 
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
+import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
+import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
-import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
-import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
-import com.zerolinck.passiflora.model.iam.entity.IamDict;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,8 +54,8 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
 
     @NotNull public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamDict.class), condition.sortWrapper(IamDict.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamDict.class));
     }
 
     public void add(@NotNull IamDict iamDict) {
@@ -67,8 +66,8 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
                         .lock(IamDict::getDictTag, iamDict.getDictTag()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(baseMapper, iamDict);
-                    baseMapper.insert(iamDict);
+                    OnlyFieldCheck.checkInsert(mapper, iamDict);
+                    mapper.insert(iamDict);
                 });
     }
 
@@ -81,13 +80,13 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
                         .lock(IamDict::getDictTag, iamDict.getDictTag()),
                 true,
                 () -> {
-                    IamDict dbIamDict = baseMapper.selectById(iamDict.getDictId());
+                    IamDict dbIamDict = mapper.selectOneById(iamDict.getDictId());
                     if (YesOrNoEnum.YES.equals(dbIamDict.getIsSystem())) {
                         throw new BizException("系统内置数据，不允许修改");
                     }
 
-                    OnlyFieldCheck.checkUpdate(baseMapper, iamDict);
-                    int changeRowCount = baseMapper.updateById(iamDict);
+                    OnlyFieldCheck.checkUpdate(mapper, iamDict);
+                    int changeRowCount = mapper.update(iamDict);
                     return changeRowCount > 0;
                 });
     }
@@ -95,18 +94,18 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@NotNull Collection<String> dictIds) {
-        List<IamDict> iamDicts = baseMapper.selectByIds(dictIds);
+        List<IamDict> iamDicts = mapper.selectListByIds(dictIds);
         iamDicts.forEach(iamDict -> {
             if (YesOrNoEnum.YES.equals(iamDict.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许删除");
             }
         });
-        int rowCount = baseMapper.deleteByIds(dictIds, CurrentUtil.getCurrentUserId());
+        int rowCount = mapper.deleteBatchByIds(dictIds, 500);
         iamDictItemService.deleteByDictIds(dictIds);
         return rowCount;
     }
 
     @NotNull public Optional<IamDict> detail(@NotNull String dictId) {
-        return Optional.ofNullable(baseMapper.selectById(dictId));
+        return Optional.ofNullable(mapper.selectOneById(dictId));
     }
 }

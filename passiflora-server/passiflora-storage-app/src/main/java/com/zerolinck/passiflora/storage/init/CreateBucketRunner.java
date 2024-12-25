@@ -16,14 +16,14 @@
  */
 package com.zerolinck.passiflora.storage.init;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

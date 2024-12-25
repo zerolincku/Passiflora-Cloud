@@ -102,8 +102,6 @@
     <rule ref="category/java/design.xml/LogicInversion" />
     <!-- 避免在布尔表达式中进行不必要的比较 -->
     <rule ref="category/java/design.xml/SimplifyBooleanExpressions" />
-    <!-- 简化布尔返回 -->
-    <rule ref="category/java/design.xml/SimplifyBooleanReturns" />
     <!-- 避免无用的 override -->
     <rule ref="category/java/design.xml/UselessOverridingMethod" />
     <!-- 避免无条件 If 语句 -->

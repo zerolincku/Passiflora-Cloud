@@ -38,16 +38,6 @@ spring:
       port: "@redis.port@"
   liquibase:
     enabled: false
-mybatis-plus:
-  configuration:
-    log-impl: "org.apache.ibatis.logging.slf4j.Slf4jImpl"
-  mapper-locations: "classpath*:com/zerolinck/**/mapper/xml/*Mapper.xml"
-  global-config:
-    db-config:
-      logic-delete-value: 1
-      logic-not-delete-value: 0
-      insert-strategy: "not_null"
-      update-strategy: "not_null"
 passiflora:
   iam:
     token:

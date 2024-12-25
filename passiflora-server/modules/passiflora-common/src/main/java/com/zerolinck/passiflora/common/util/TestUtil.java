@@ -18,11 +18,11 @@ package com.zerolinck.passiflora.common.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.redis.testcontainers.RedisContainer;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import com.redis.testcontainers.RedisContainer;
 
 import lombok.experimental.UtilityClass;
 

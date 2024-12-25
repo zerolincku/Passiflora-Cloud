@@ -16,56 +16,45 @@
  */
 package com.zerolinck.passiflora.common.config.mybaits;
 
-import org.apache.ibatis.session.SqlSessionFactory;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.core.FlexGlobalConfig;
+import com.mybatisflex.core.audit.AuditManager;
+import com.mybatisflex.core.keygen.KeyGenerators;
+import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.common.util.SpringContextHolder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-02-07 */
+@Slf4j
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")
-public class MybatisConfig {
+public class MybatisConfig implements MyBatisFlexCustomizer {
 
-    /** 添加分页插件 */
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
-        return interceptor;
-    }
+    @Override
+    public void customize(FlexGlobalConfig flexGlobalConfig) {
+        flexGlobalConfig.registerInsertListener(new FlexInsertListener(), BaseEntity.class);
+        flexGlobalConfig.registerUpdateListener(new FlexUpdateListener(), BaseEntity.class);
 
-    /**
-     * 乐观锁插件 整数类型下 newVersion = oldVersion + 1 newVersion 会回写到 entity 中 仅支持 updateById(id) 与 update(entity, wrapper) 方法
-     * 在 update(entity, wrapper) 方法下, wrapper 不能复用!!!
-     */
-    @Bean
-    public MybatisPlusInterceptor optimisticLockerInnerInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
-        return interceptor;
-    }
+        // 主键生成策略
+        FlexGlobalConfig.KeyConfig keyConfig = new FlexGlobalConfig.KeyConfig();
+        keyConfig.setKeyType(KeyType.Generator);
+        keyConfig.setValue(KeyGenerators.flexId);
+        FlexGlobalConfig.getDefaultConfig().setKeyConfig(keyConfig);
 
-    /** 阻止恶意的全表更新删除 */
-    @Bean
-    public MybatisPlusInterceptor blockAttackInnerInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
-        return interceptor;
-    }
+        // 本地环境打印日志
+        String property = SpringContextHolder.getProperty("spring.profiles.active");
+        if (!"local".equals(property)) {
+            // return;
+        }
+        // 开启审计功能
+        AuditManager.setAuditEnable(true);
 
-    @Bean
-    public DefaultDBFieldHandler defaultDBFieldHandler() {
-        return new DefaultDBFieldHandler();
-    }
-
-    @Bean
-    public TypeHandlerRegister enumHandler(SqlSessionFactory sqlSessionFactory, ObjectMapper objectMapper) {
-        return new TypeHandlerRegister(sqlSessionFactory, objectMapper);
+        // 设置 SQL 审计收集器
+        AuditManager.setMessageCollector(auditMessage ->
+                log.info("sql took {}ms >> {}", auditMessage.getElapsedTime(), auditMessage.getFullSql()));
     }
 }

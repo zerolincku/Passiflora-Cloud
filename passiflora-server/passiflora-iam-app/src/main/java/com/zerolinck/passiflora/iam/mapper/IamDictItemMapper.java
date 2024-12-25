@@ -16,80 +16,46 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
+import static com.mybatisflex.core.query.QueryMethods.select;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamDictItemTableDef.IAM_DICT_ITEM;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamDictTableDef.IAM_DICT;
+
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryCondition;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** @author linck on 2024-04-01 */
 public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
-    default Page<IamDictItem> page(
-            IPage<IamDictItem> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamDictItem> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamDictItem> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0);
 
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("dict_item_id");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamDictItem>) this.selectPage(page, searchWrapper);
-    }
-
-    default int deleteByIds(@Param("dictItemIds") Collection<String> dictItemIds, @Param("updateBy") String updateBy) {
-        if (dictItemIds == null || dictItemIds.isEmpty()) {
+    @SuppressWarnings("UnusedReturnValue")
+    default int deleteByDictIds(@Nullable Collection<String> dictIds) {
+        if (CollectionUtils.isEmpty(dictIds)) {
             return 0;
         }
 
-        LambdaUpdateWrapper<IamDictItem> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamDictItem::getDictItemId, dictItemIds)
-                .set(IamDictItem::getUpdateTime, LocalDateTime.now())
-                .set(IamDictItem::getUpdateBy, updateBy)
-                .set(IamDictItem::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+        return this.deleteByCondition(QueryCondition.createEmpty().and(IAM_DICT_ITEM.DICT_ID.in(dictIds)));
     }
 
-    default int deleteByDictIds(@Param("dictIds") Collection<String> dictIds, @Param("updateBy") String updateBy) {
-        if (dictIds == null || dictIds.isEmpty()) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamDictItem> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamDictItem::getDictId, dictIds)
-                .set(IamDictItem::getUpdateTime, LocalDateTime.now())
-                .set(IamDictItem::getUpdateBy, updateBy)
-                .set(IamDictItem::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+    default List<IamDictItem> listByDictId(@NotNull String dictId) {
+        return this.selectListByQuery(QueryWrapper.create().where(IAM_DICT_ITEM.DICT_ID.eq(dictId)));
     }
 
-    @Select("SELECT * FROM iam_dict_item WHERE del_flag = 0 AND dict_id = #{dictId}")
-    List<IamDictItem> listByDictId(@Param("dictId") String dictId);
+    default List<IamDictItem> listByDictName(@NotNull String dictName) {
+        return this.selectListByQuery(QueryWrapper.create()
+                .where(IAM_DICT_ITEM.DICT_ID.in(
+                        select(IAM_DICT.DICT_ID).from(IAM_DICT).where(IAM_DICT.DICT_NAME.eq(dictName)))));
+    }
 
-    @Select("SELECT * FROM iam_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from"
-            + " iam_dict WHERE dict_name = #{dictName})")
-    List<IamDictItem> listByDictName(@Param("dictName") String dictName);
-
-    @Select("SELECT * FROM iam_dict_item WHERE del_flag = 0 AND dict_id = (SELECT dict_id from"
-            + " iam_dict WHERE dict_tag = #{dictTag})")
-    List<IamDictItem> listByDictTag(@Param("dictTag") String dictTag);
+    default List<IamDictItem> listByDictTag(@NotNull String dictTag) {
+        return this.selectListByQuery(QueryWrapper.create()
+                .where(IAM_DICT_ITEM.DICT_ID.in(
+                        select(IAM_DICT.DICT_ID).from(IAM_DICT).where(IAM_DICT.DICT_TAG.eq(dictTag)))));
+    }
 }

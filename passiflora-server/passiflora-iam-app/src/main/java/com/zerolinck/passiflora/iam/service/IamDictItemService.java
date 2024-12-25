@@ -18,6 +18,18 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
+import com.zerolinck.passiflora.model.iam.entity.IamDict;
+import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,19 +37,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
-import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
-import com.zerolinck.passiflora.model.common.enums.YesOrNoEnum;
-import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +58,8 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
      */
     @NotNull public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamDictItem.class), condition.sortWrapper(IamDictItem.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamDictItem.class));
     }
 
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
@@ -75,7 +74,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         }
 
         LockUtil.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
-            Long count = baseMapper.selectCount(new LambdaQueryWrapper<IamDictItem>()
+            long count = mapper.selectCountByQuery(new QueryWrapper()
                     .eq(IamDictItem::getLabel, iamDictItem.getLabel())
                     .eq(IamDictItem::getDictId, iamDictItem.getDictId()));
             if (count > 0) {
@@ -84,7 +83,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
 
             IamDict dict = iamDictService.getById(iamDictItem.getDictId());
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                count = baseMapper.selectCount(new LambdaQueryWrapper<IamDictItem>()
+                count = mapper.selectCountByQuery(new QueryWrapper()
                         .eq(IamDictItem::getValue, iamDictItem.getValue())
                         .eq(IamDictItem::getDictId, iamDictItem.getDictId()));
                 if (count > 0) {
@@ -92,7 +91,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
                 }
             }
 
-            baseMapper.insert(iamDictItem);
+            mapper.insert(iamDictItem);
         });
     }
 
@@ -109,13 +108,13 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         }
 
         return LockUtil.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
-            IamDictItem dbIamDictItem = baseMapper.selectById(iamDictItem.getDictItemId());
+            IamDictItem dbIamDictItem = mapper.selectOneById(iamDictItem.getDictItemId());
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许修改");
             }
 
             if (iamDictItem.getLabel() != null && !iamDictItem.getLabel().equals(dbIamDictItem.getLabel())) {
-                Long count = baseMapper.selectCount(new LambdaQueryWrapper<IamDictItem>()
+                long count = mapper.selectCountByQuery(new QueryWrapper()
                         .eq(IamDictItem::getLabel, iamDictItem.getLabel())
                         .eq(IamDictItem::getDictId, iamDictItem.getDictId())
                         .ne(IamDictItem::getDictId, iamDictItem.getDictId()));
@@ -126,7 +125,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
 
             IamDict dict = iamDictService.getById(iamDictItem.getDictId());
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                Long count = baseMapper.selectCount(new LambdaQueryWrapper<IamDictItem>()
+                long count = mapper.selectCountByQuery(new QueryWrapper()
                         .eq(IamDictItem::getValue, iamDictItem.getValue())
                         .eq(IamDictItem::getDictId, iamDictItem.getDictId())
                         .ne(IamDictItem::getDictItemId, iamDictItem.getDictItemId()));
@@ -135,7 +134,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
                 }
             }
 
-            int changeRowCount = baseMapper.updateById(iamDictItem);
+            int changeRowCount = mapper.update(iamDictItem);
             return changeRowCount > 0;
         });
     }
@@ -146,13 +145,13 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         if (CollectionUtils.isEmpty(dictItemIds)) {
             return 0;
         }
-        List<IamDictItem> iamDictItems = baseMapper.selectByIds(dictItemIds);
+        List<IamDictItem> iamDictItems = mapper.selectListByIds(dictItemIds);
         iamDictItems.forEach(iamDictItem -> {
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许删除");
             }
         });
-        return baseMapper.deleteByIds(dictItemIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(dictItemIds, 500);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -161,25 +160,25 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         if (CollectionUtils.isEmpty(dictIds)) {
             return;
         }
-        baseMapper.deleteByDictIds(dictIds, CurrentUtil.getCurrentUserId());
+        mapper.deleteByDictIds(dictIds);
     }
 
     @NotNull public Optional<IamDictItem> detail(@NotNull String dictItemId) {
-        return Optional.ofNullable(baseMapper.selectById(dictItemId));
+        return Optional.ofNullable(mapper.selectOneById(dictItemId));
     }
 
     @NotNull @Cacheable(value = "passiflora:dict:id", key = "#dictId")
     public List<IamDictItem> listByDictId(@NotNull String dictId) {
-        return baseMapper.listByDictId(dictId);
+        return mapper.listByDictId(dictId);
     }
 
     @NotNull @Cacheable(value = "passiflora:dict:name", key = "#dictName")
     public List<IamDictItem> listByDictName(@NotNull String dictName) {
-        return baseMapper.listByDictName(dictName);
+        return mapper.listByDictName(dictName);
     }
 
     @NotNull @Cacheable(value = "passiflora:dict:tag", key = "#dictTag")
     public List<IamDictItem> listByDictTag(@NotNull String dictTag) {
-        return baseMapper.listByDictTag(dictTag);
+        return mapper.listByDictTag(dictTag);
     }
 }

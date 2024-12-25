@@ -14,9 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.common.constant;
+package com.zerolinck.passiflora.base.valid;
 
-/** @author linck on 2024-04-01 */
-public interface RedisPrefix {
-    String TOKEN_KEY = "passiflora:token:";
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 唯一值检测注解，显示名称，根据 swagger 注解来，如果没有 swagger 注解，则显示字段英文名称
+ *
+ * <p>只支持单一字段校验，不支持联合字段唯一校验
+ */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface OnlyField {
+    /** 自定义错误返回信息 */
+    String message() default "";
 }

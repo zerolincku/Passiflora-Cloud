@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.*;
 
-import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

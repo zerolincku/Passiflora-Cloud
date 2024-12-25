@@ -18,19 +18,22 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.*;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.common.util.ProxyUtil;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,23 +46,23 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
 
     @NotNull public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(),
-                condition.searchWrapper(IamPositionPermission.class),
-                condition.sortWrapper(IamPositionPermission.class));
+        return mapper.paginate(
+                condition.getPageNumber(),
+                condition.getPageSize(),
+                condition.searchWrapper(IamPositionPermission.class));
     }
 
     public void add(@NotNull IamPositionPermission iamPositionPermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamPositionPermission);
-            baseMapper.insert(iamPositionPermission);
+            OnlyFieldCheck.checkInsert(mapper, iamPositionPermission);
+            mapper.insert(iamPositionPermission);
         });
     }
 
     public boolean update(@NotNull IamPositionPermission iamPositionPermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamPositionPermission);
-            int changeRowCount = baseMapper.updateById(iamPositionPermission);
+            OnlyFieldCheck.checkUpdate(mapper, iamPositionPermission);
+            int changeRowCount = mapper.update(iamPositionPermission);
             return changeRowCount > 0;
         });
     }
@@ -69,7 +72,7 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return baseMapper.deleteByIds(ids, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(ids, 500);
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -78,18 +81,18 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByPositionIds(positionIds);
     }
 
     @NotNull public Optional<IamPositionPermission> detail(@NotNull String id) {
-        return Optional.ofNullable(baseMapper.selectById(id));
+        return Optional.ofNullable(mapper.selectOneById(id));
     }
 
     @NotNull public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return Collections.emptyList();
         }
-        return baseMapper.permissionIdsByPositionIds(positionIds);
+        return mapper.permissionIdsByPositionIds(positionIds);
     }
 
     public void savePositionPermission(@NotNull PositionPermissionArgs args) {

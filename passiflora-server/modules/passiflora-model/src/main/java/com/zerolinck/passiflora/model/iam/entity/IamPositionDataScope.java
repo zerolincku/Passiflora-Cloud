@@ -19,12 +19,12 @@ package com.zerolinck.passiflora.model.iam.entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.Table;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.Update;
 import org.hibernate.validator.constraints.Length;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -32,11 +32,12 @@ import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-05-14 */
 @Data
+@Table("iam_position_data_scope")
 @Schema(description = "职位数据权限")
 @EqualsAndHashCode(callSuper = false)
 public class IamPositionDataScope extends BaseEntity {
 
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     @Schema(description = "主键", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},

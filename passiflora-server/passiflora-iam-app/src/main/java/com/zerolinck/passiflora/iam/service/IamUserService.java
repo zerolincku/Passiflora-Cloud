@@ -19,16 +19,10 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -36,7 +30,6 @@ import com.zerolinck.passiflora.common.util.*;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserMapper;
-import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
@@ -46,6 +39,12 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -65,8 +64,8 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
 
     @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        Page<IamUser> page = baseMapper.page(
-                orgId, condition.page(), condition.searchWrapper(IamUser.class), condition.sortWrapper(IamUser.class));
+        Page<IamUser> page = mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamUser.class));
 
         Set<String> userIds = page.getRecords().stream().map(IamUser::getUserId).collect(Collectors.toSet());
         Set<String> orgIds = page.getRecords().stream()
@@ -113,8 +112,9 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
                     return iamUserResp;
                 })
                 .toList();
-
-        return new Page<IamUserResp>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(recordsVo);
+        Page<IamUserResp> iamUserRespPage = new Page<>(page.getPageNumber(), page.getPageSize(), page.getTotalRow());
+        iamUserRespPage.setRecords(recordsVo);
+        return iamUserRespPage;
     }
 
     public void add(@NotNull IamUserArgs args) {
@@ -122,8 +122,8 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
             IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-            OnlyFieldCheck.checkInsert(baseMapper, iamUser);
-            baseMapper.insert(iamUser);
+            OnlyFieldCheck.checkInsert(mapper, iamUser);
+            mapper.insert(iamUser);
             args.setUserId(iamUser.getUserId());
             userPositionService.updateRelation(args);
             iamUserRoleService.updateRelation(args);
@@ -134,8 +134,8 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
                     IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-                    OnlyFieldCheck.checkUpdate(baseMapper, iamUser);
-                    int changeRowCount = baseMapper.updateById(iamUser);
+                    OnlyFieldCheck.checkUpdate(mapper, iamUser);
+                    int changeRowCount = mapper.update(iamUser);
                     userPositionService.updateRelation(args);
                     iamUserRoleService.updateRelation(args);
                     return changeRowCount > 0;
@@ -147,13 +147,13 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
-        int count = baseMapper.deleteByIds(userIds, CurrentUtil.getCurrentUserId());
+        int count = mapper.deleteBatchByIds(userIds, 500);
         userPositionService.deleteByUserIds(userIds);
         return count;
     }
 
     @NotNull public Optional<IamUserResp> detail(@NotNull String userId) {
-        return Optional.ofNullable(IamUserConvert.INSTANCE.entityToResp(baseMapper.selectById(userId)));
+        return Optional.ofNullable(IamUserConvert.INSTANCE.entityToResp(mapper.selectOneById(userId)));
     }
 
     @NotNull public IamUserInfo currentUserInfo() {
@@ -178,15 +178,14 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
     }
 
     @NotNull public String login(@NotNull IamUser iamUser) {
-        IamUser dbIamUser =
-                baseMapper.selectOne(new LambdaQueryWrapper<IamUser>().eq(IamUser::getUserName, iamUser.getUserName()));
+        IamUser dbIamUser = mapper.selectOneById(new QueryWrapper().eq(IamUser::getUserName, iamUser.getUserName()));
         if (dbIamUser == null) {
             throw new BizException("账号或密码错误");
         }
         if (!PwdUtil.verifyPassword(iamUser.getUserPassword(), dbIamUser.getUserPassword())) {
             throw new BizException("账号或密码错误");
         }
-        String token = IdWorker.getIdStr();
+        String token = StrUtil.randomString(10);
         RedisUtils.set(
                 RedisPrefix.TOKEN_KEY + dbIamUser.getUserId() + ":" + token,
                 dbIamUser,

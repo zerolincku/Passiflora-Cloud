@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.util.StringJoiner;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,5 +99,15 @@ public class StrUtil {
             }
         }
         return result.toString();
+    }
+
+    /**
+     * 生成指定长度的随机字符串
+     *
+     * @param length 字符串长度
+     * @return 随机字符串
+     */
+    public static String randomString(int length) {
+        return RandomStringUtils.secure().next(length);
     }
 }

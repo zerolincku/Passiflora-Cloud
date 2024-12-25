@@ -20,20 +20,19 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamAppMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +57,8 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      */
     @NotNull public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamApp.class), condition.sortWrapper(IamApp.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamApp.class));
     }
 
     /**
@@ -70,8 +69,8 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      */
     public void add(@NotNull IamApp iamApp) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamApp);
-            baseMapper.insert(iamApp);
+            OnlyFieldCheck.checkInsert(mapper, iamApp);
+            mapper.insert(iamApp);
         });
     }
 
@@ -83,8 +82,8 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      */
     public boolean update(@NotNull IamApp iamApp) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamApp);
-            int changeRowCount = baseMapper.updateById(iamApp);
+            OnlyFieldCheck.checkUpdate(mapper, iamApp);
+            int changeRowCount = mapper.update(iamApp);
             return changeRowCount > 0;
         });
     }
@@ -100,23 +99,17 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
         if (CollectionUtils.isEmpty(appIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(appIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(appIds, 500);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int disable(@Nullable Collection<String> appIds) {
-        if (CollectionUtils.isEmpty(appIds)) {
-            return 0;
-        }
-        return baseMapper.disable(appIds, CurrentUtil.getCurrentUserId());
+    public boolean disable(@Nullable Collection<String> appIds) {
+        return mapper.disable(appIds);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int enable(@Nullable Collection<String> appIds) {
-        if (CollectionUtils.isEmpty(appIds)) {
-            return 0;
-        }
-        return baseMapper.enable(appIds, CurrentUtil.getCurrentUserId());
+    public boolean enable(@Nullable Collection<String> appIds) {
+        return mapper.enable(appIds);
     }
 
     /**
@@ -126,6 +119,6 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
      * @since 2024-09-30
      */
     @NotNull public Optional<IamApp> detail(@NotNull String appId) {
-        return Optional.ofNullable(baseMapper.selectById(appId));
+        return Optional.ofNullable(mapper.selectOneById(appId));
     }
 }

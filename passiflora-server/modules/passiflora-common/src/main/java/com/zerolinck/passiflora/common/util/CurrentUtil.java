@@ -19,13 +19,13 @@ package com.zerolinck.passiflora.common.util;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.zerolinck.passiflora.base.IUser;
+import com.zerolinck.passiflora.base.constant.Header;
+import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.model.common.constant.Header;
-import com.zerolinck.passiflora.model.common.constant.RedisPrefix;
-import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.UtilityClass;
 
@@ -34,13 +34,13 @@ import lombok.experimental.UtilityClass;
 public class CurrentUtil {
 
     /** 当前登录账户，线程级别缓存 */
-    private static final ThreadLocal<IamUser> userMap = new ThreadLocal<>();
+    private static final ThreadLocal<IUser> userMap = new ThreadLocal<>();
 
     /** 当前token */
     private static final ThreadLocal<String> tokenMap = new ThreadLocal<>();
 
     /** 获取当前登录用户 */
-    @Nullable public static IamUser getCurrentUser() {
+    @Nullable public static IUser getCurrentUser() {
         if (userMap.get() != null) {
             return userMap.get();
         }
@@ -54,13 +54,13 @@ public class CurrentUtil {
             return null;
         }
         @SuppressWarnings("unchecked")
-        IamUser iamUser = JsonUtil.convertValue((Map<String, Object>) o, IamUser.class);
+        IUser iamUser = JsonUtil.convertValue((Map<String, Object>) o, IUser.UserInfo.class);
         userMap.set(iamUser);
         return iamUser;
     }
 
     @Nullable public static String getCurrentUserId() {
-        IamUser currentUser = getCurrentUser();
+        IUser currentUser = getCurrentUser();
         if (currentUser == null) {
             return null;
         }
@@ -68,7 +68,7 @@ public class CurrentUtil {
     }
 
     @NotNull public static String requireCurrentUserId() {
-        IamUser currentUser = getCurrentUser();
+        IUser currentUser = getCurrentUser();
         if (currentUser == null) {
             throw new BizException(ResultCode.UNAUTHORIZED);
         }

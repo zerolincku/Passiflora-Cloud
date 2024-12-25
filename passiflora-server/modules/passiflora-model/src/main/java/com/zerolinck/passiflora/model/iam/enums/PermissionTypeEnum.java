@@ -16,7 +16,8 @@
  */
 package com.zerolinck.passiflora.model.iam.enums;
 
-import com.zerolinck.passiflora.model.common.LabelValueInterface;
+import com.mybatisflex.annotation.EnumValue;
+import com.zerolinck.passiflora.base.LabelValueInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +32,6 @@ public enum PermissionTypeEnum implements LabelValueInterface {
 
     private final String label;
 
+    @EnumValue
     private final Integer value;
 }

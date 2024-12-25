@@ -18,16 +18,10 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -36,6 +30,11 @@ import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPositionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +57,8 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      */
     @NotNull public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamPosition.class), condition.sortWrapper(IamPosition.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamPosition.class));
     }
 
     /**
@@ -71,7 +70,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
     @NotNull @SuppressWarnings("unused")
     public List<IamPosition> listByIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
-        return baseMapper.selectList(new LambdaQueryWrapper<IamPosition>().in(IamPosition::getPositionId, positionIds));
+        return mapper.selectListByQuery(new QueryWrapper().in(IamPosition::getPositionId, positionIds));
     }
 
     /**
@@ -86,9 +85,9 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(baseMapper, iamPosition);
+                    OnlyFieldCheck.checkInsert(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
-                    baseMapper.insert(iamPosition);
+                    mapper.insert(iamPosition);
                 });
     }
 
@@ -104,15 +103,15 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(baseMapper, iamPosition);
+                    OnlyFieldCheck.checkUpdate(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
-                    int changeRowCount = baseMapper.updateById(iamPosition);
+                    int changeRowCount = mapper.update(iamPosition);
                     // 子机构数据变更
-                    List<IamPositionResp> positionResps = baseMapper.listByParentId(iamPosition.getPositionId());
+                    List<IamPositionResp> positionResps = mapper.listByParentId(iamPosition.getPositionId());
                     positionResps.forEach(resp -> {
                         IamPosition position = IamPositionConvert.INSTANCE.respToEntity(resp);
                         generateIdPathAndLevel(position);
-                        baseMapper.updateById(position);
+                        mapper.update(position);
                     });
                     return changeRowCount > 0;
                 });
@@ -129,7 +128,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
-        int changeRowNum = baseMapper.deleteByIds(positionIds, CurrentUtil.getCurrentUserId());
+        int changeRowNum = mapper.deleteBatchByIds(positionIds, 500);
         iamPositionPermissionService.deleteByPositionIds(positionIds);
         return changeRowNum;
     }
@@ -141,7 +140,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @since 2024-08-12
      */
     @NotNull public Optional<IamPosition> detail(@NotNull String positionId) {
-        return Optional.ofNullable(baseMapper.selectById(positionId));
+        return Optional.ofNullable(mapper.selectOneById(positionId));
     }
 
     /**
@@ -150,7 +149,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @since 2024-08-12
      */
     @NotNull public List<IamPositionResp> positionTree() {
-        List<IamPositionResp> iamPositionResps = baseMapper.listByParentId("0");
+        List<IamPositionResp> iamPositionResps = mapper.listByParentId("0");
         iamPositionResps.forEach(this::recursionTree);
         return iamPositionResps;
     }
@@ -166,7 +165,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
         if (CollectionUtils.isEmpty(positionIds)) {
             return;
         }
-        baseMapper.disable(positionIds, CurrentUtil.getCurrentUserId());
+        mapper.disable(positionIds);
     }
 
     /**
@@ -182,11 +181,11 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
         }
         List<String> pathIds = new ArrayList<>();
         positionIds.forEach(positionId -> {
-            IamPosition iamPosition = baseMapper.selectById(positionId);
+            IamPosition iamPosition = mapper.selectOneById(positionId);
             String[] positionIdList = iamPosition.getPositionIdPath().split("/");
             Collections.addAll(pathIds, positionIdList);
         });
-        baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
+        mapper.enable(pathIds);
     }
 
     /**
@@ -200,7 +199,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
             return;
         }
         for (IamPositionResp iamPositionTableVo : iamPositionResps) {
-            baseMapper.updateOrder(iamPositionTableVo);
+            mapper.updateOrder(iamPositionTableVo);
             updateOrder(iamPositionTableVo.getChildren());
         }
     }
@@ -212,7 +211,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * @since 2024-08-12
      */
     private void recursionTree(@NotNull IamPositionResp iamPositionResp) {
-        iamPositionResp.setChildren(baseMapper.listByParentId(iamPositionResp.getPositionId()));
+        iamPositionResp.setChildren(mapper.listByParentId(iamPositionResp.getPositionId()));
         iamPositionResp.getChildren().forEach(this::recursionTree);
     }
 

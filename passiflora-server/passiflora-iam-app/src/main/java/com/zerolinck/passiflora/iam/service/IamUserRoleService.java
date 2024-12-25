@@ -19,20 +19,23 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.*;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.common.util.ProxyUtil;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,8 +58,8 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      */
     @NotNull public Page<IamUserRole> page(@Nullable QueryCondition<IamUserRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamUserRole.class), condition.sortWrapper(IamUserRole.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamUserRole.class));
     }
 
     /**
@@ -67,8 +70,8 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      */
     public void add(@NotNull IamUserRole iamUserRole) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamUserRole);
-            baseMapper.insert(iamUserRole);
+            OnlyFieldCheck.checkInsert(mapper, iamUserRole);
+            mapper.insert(iamUserRole);
         });
     }
 
@@ -80,8 +83,8 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      */
     public boolean update(@NotNull IamUserRole iamUserRole) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamUserRole);
-            int changeRowCount = baseMapper.updateById(iamUserRole);
+            OnlyFieldCheck.checkUpdate(mapper, iamUserRole);
+            int changeRowCount = mapper.update(iamUserRole);
             return changeRowCount > 0;
         });
     }
@@ -97,7 +100,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return baseMapper.deleteByIds(ids, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(ids, 500);
     }
 
     /**
@@ -107,7 +110,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * @since 2024-08-17
      */
     @NotNull public Optional<IamUserRole> detail(@NotNull String id) {
-        return Optional.ofNullable(baseMapper.selectById(id));
+        return Optional.ofNullable(mapper.selectOneById(id));
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -115,14 +118,14 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByUserIds(userIds);
     }
 
     @NotNull public List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
-        return baseMapper.selectByUserIds(userIds);
+        return mapper.selectByUserIds(userIds);
     }
 
     public void updateRelation(@NotNull IamUserArgs args) {
@@ -159,6 +162,6 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIdAndRoleIds(userId, roleIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByUserIdAndRoleIds(userId, roleIds);
     }
 }

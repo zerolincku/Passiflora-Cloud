@@ -14,15 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.common;
+package com.zerolinck.passiflora.base;
 
 import java.time.LocalDateTime;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.Version;
-import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
+import com.mybatisflex.annotation.Column;
+import com.zerolinck.passiflora.base.enums.DelFlagEnum;
 
 import lombok.Data;
 
@@ -31,26 +28,24 @@ import lombok.Data;
 public class BaseEntity {
 
     /** 创建用户id */
-    @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
     /** 更新用户id */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
 
     /** 创建时间 */
-    @TableField(fill = FieldFill.INSERT)
+    @Column(onInsertValue = "now()")
     private LocalDateTime createTime;
 
     /** 更新时间 */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @Column(onInsertValue = "now()", onUpdateValue = "now()")
     private LocalDateTime updateTime;
 
     /** 删除标识 */
-    @TableLogic
+    @Column(isLogicDelete = true)
     private DelFlagEnum delFlag;
 
     /** 乐观锁版本 */
-    @Version
+    @Column(version = true)
     private Long version;
 }

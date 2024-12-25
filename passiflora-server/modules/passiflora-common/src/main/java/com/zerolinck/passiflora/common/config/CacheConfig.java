@@ -18,6 +18,8 @@ package com.zerolinck.passiflora.common.config;
 
 import java.time.Duration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerolinck.passiflora.common.util.RedisUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -29,8 +31,6 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zerolinck.passiflora.common.util.RedisUtils;
 
 /**
  * Spring Cache 配置

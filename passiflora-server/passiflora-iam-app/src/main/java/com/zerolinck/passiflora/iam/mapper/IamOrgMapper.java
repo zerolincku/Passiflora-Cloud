@@ -16,92 +16,30 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef.IAM_ORG;
+
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zerolinck.passiflora.model.common.enums.DelFlagEnum;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryCondition;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
+import org.apache.ibatis.annotations.Param;
 
 /** @author linck on 2024-04-09 */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
-    default Page<IamOrg> page(
-            IPage<IamOrg> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamOrg> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamOrg> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", DelFlagEnum.NOT_DELETE.getValue());
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("org_level", "\"order\"", "org_name");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamOrg>) this.selectPage(page, searchWrapper);
+    default IamOrg selectByOrgCode(@Param("orgCode") String orgCode) {
+        return selectOneByCondition(QueryCondition.create(IAM_ORG.ORG_CODE, orgCode));
     }
 
-    /**
-     * 逻辑删除指定 ID 的记录
-     *
-     * @param orgIds 需要删除的组织 ID 集合
-     * @param updateBy 更新者
-     * @return 更新的行数
-     */
-    default int deleteByIds(Collection<String> orgIds, String updateBy) {
-        if (orgIds == null || orgIds.isEmpty()) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamOrg::getOrgId, orgIds)
-                .set(IamOrg::getUpdateTime, LocalDateTime.now())
-                .set(IamOrg::getUpdateBy, updateBy)
-                .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);
-
-        return this.update(null, updateWrapper);
+    default List<IamOrgResp> listByParentId(@Param("orgParentId") String orgParentId) {
+        return selectListByQueryAs(
+                QueryWrapper.create()
+                        .where(IAM_ORG.PARENT_ORG_ID.eq(orgParentId))
+                        .orderBy(IAM_ORG.ORG_LEVEL, true)
+                        .orderBy(IAM_ORG.ORDER, true)
+                        .orderBy(IAM_ORG.ORG_NAME, true),
+                IamOrgResp.class);
     }
-
-    /**
-     * 逻辑删除指定 ID 及其路径匹配的记录
-     *
-     * @param orgId 组织 ID
-     * @param updateBy 更新者
-     * @return 更新的行数
-     */
-    default int deleteById(String orgId, String updateBy) {
-        if (orgId == null || orgId.isEmpty()) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamOrg> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .like(IamOrg::getOrgIdPath, "%" + orgId + "%")
-                .set(IamOrg::getUpdateTime, LocalDateTime.now())
-                .set(IamOrg::getUpdateBy, updateBy)
-                .set(IamOrg::getDelFlag, DelFlagEnum.DELETED);
-
-        return this.update(null, updateWrapper);
-    }
-
-    @Select("SELECT * FROM iam_org WHERE del_flag = 0 AND org_code = #{orgCode}")
-    IamOrg selectByOrgCode(@Param("orgCode") String orgCode);
-
-    @Select("SELECT * FROM iam_org WHERE del_flag = 0 AND parent_org_id = #{orgParentId} ORDER BY"
-            + " org_level, \"order\", org_name")
-    List<IamOrgResp> listByParentId(@Param("orgParentId") String orgParentId);
 }

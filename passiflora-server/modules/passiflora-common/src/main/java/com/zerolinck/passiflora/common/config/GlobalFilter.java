@@ -20,9 +20,9 @@ import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 
+import com.zerolinck.passiflora.common.util.CurrentUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

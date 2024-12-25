@@ -16,45 +16,8 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.util.Collection;
-
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.BaseMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
 
 /** @author linck on 2024-05-14 */
-public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {
-
-    @NotNull default Page<IamPositionDataScope> page(
-            @NotNull IPage<IamPositionDataScope> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamPositionDataScope> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamPositionDataScope> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0);
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("scope_id");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamPositionDataScope>) this.selectPage(page, searchWrapper);
-    }
-
-    default int deleteByIds(@Param("scopeIds") Collection<String> scopeIds, @Param("updateBy") String updateBy) {
-        if (scopeIds == null || scopeIds.isEmpty()) {
-            return 0;
-        }
-
-        return this.deleteBatchIds(scopeIds);
-    }
-}
+public interface IamPositionDataScopeMapper extends BaseMapper<IamPositionDataScope> {}

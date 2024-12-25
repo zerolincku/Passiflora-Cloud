@@ -19,11 +19,11 @@ package com.zerolinck.passiflora.feign.iam;
 import java.util.List;
 import java.util.Map;
 
+import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

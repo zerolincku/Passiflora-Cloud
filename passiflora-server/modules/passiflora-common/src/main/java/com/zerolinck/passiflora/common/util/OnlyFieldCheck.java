@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.google.common.base.CaseFormat;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.valid.OnlyField;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import com.zerolinck.passiflora.model.valid.OnlyField;
+import org.apache.commons.lang3.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +48,7 @@ public class OnlyFieldCheck {
 
     @SneakyThrows
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T extends BaseEntity> void checkInsert(BaseMapper baseMapper, T entity) {
+    public static <T extends BaseEntity> void checkInsert(BaseMapper mapper, T entity) {
         checkCache(entity);
         List<CheckField> checkFields = map.get(entity.getClass());
         for (CheckField checkField : checkFields) {
@@ -59,7 +59,7 @@ public class OnlyFieldCheck {
                 continue;
             }
 
-            Long count = baseMapper.selectCount(new QueryWrapper<>().eq(checkField.getFieldName(), fieldValue));
+            long count = mapper.selectCountByQuery(new QueryWrapper().eq(checkField.getFieldName(), fieldValue));
             if (count > 0) {
                 String message;
                 if (StringUtils.isNotBlank(checkField.getMessage())) {
@@ -73,8 +73,8 @@ public class OnlyFieldCheck {
     }
 
     @SneakyThrows
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T extends BaseEntity> void checkUpdate(BaseMapper baseMapper, T entity) {
+    @SuppressWarnings({"rawtypes"})
+    public static <T extends BaseEntity> void checkUpdate(BaseMapper mapper, T entity) {
         checkCache(entity);
         List<CheckField> checkFields = map.get(entity.getClass());
         for (CheckField checkField : checkFields) {
@@ -86,7 +86,7 @@ public class OnlyFieldCheck {
                 continue;
             }
 
-            Long count = baseMapper.selectCount(new QueryWrapper<>()
+            long count = mapper.selectCountByQuery(new QueryWrapper()
                     .eq(checkField.getFieldName(), fieldValue)
                     .ne(
                             CaseFormat.LOWER_CAMEL.to(
@@ -118,7 +118,7 @@ public class OnlyFieldCheck {
             List<CheckField> result = new ArrayList<>();
             Field idField = null;
             for (Field field : fields) {
-                if (field.getAnnotation(TableId.class) != null) {
+                if (field.getAnnotation(Id.class) != null) {
                     idField = field;
                     break;
                 }

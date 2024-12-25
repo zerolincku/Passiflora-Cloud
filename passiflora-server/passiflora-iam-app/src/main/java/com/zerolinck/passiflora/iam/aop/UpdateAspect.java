@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.iam.aop;
 
+import com.zerolinck.passiflora.base.BaseEntity;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import com.zerolinck.passiflora.model.common.BaseEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UpdateAspect {
 
     @Before("execution(*"
-            + " com.zerolinck.passiflora.iam.*.*Controller.update(com.zerolinck.passiflora.model.common.BaseEntity+))"
+            + " com.zerolinck.passiflora.iam.*.*Controller.update(com.zerolinck.passiflora.base.BaseEntity+))"
             + " && args(entity)")
     public void beforeUpdate(JoinPoint joinPoint, BaseEntity entity) {
         if (log.isDebugEnabled()) {

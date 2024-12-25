@@ -24,10 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zerolinck.passiflora.model.common.LabelValueInterface;
+import com.mybatisflex.core.constant.SqlConsts;
+import com.mybatisflex.core.query.QueryColumn;
+import com.mybatisflex.core.query.QueryOrderBy;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.LabelValueInterface;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -113,7 +114,7 @@ public class QueryCondition<T> {
     private Map<String, List<String>> sort;
 
     /** 页数 */
-    private Integer current;
+    private Integer pageNumber;
 
     /** 每页行数 */
     private Integer pageSize;
@@ -132,19 +133,20 @@ public class QueryCondition<T> {
         sort = new HashMap<>();
     }
 
-    /** 开启分页查询，如果没有分页参数，则查询第一页，20行数据，单页最大允许查询 5000 条数据 */
-    public Page<T> page() {
-        if (current == null) {
-            current = 1;
+    public Integer getPageNumber() {
+        if (pageNumber == null) {
+            pageNumber = 1;
         }
+        return pageNumber;
+    }
+
+    public Integer getPageSize() {
         if (pageSize == null) {
-            pageSize = 20;
-        }
-        // 请求允许一次最大查询 5000 条数据
-        if (pageSize > 5000) {
+            pageSize = 10;
+        } else if (pageSize > 5000) {
             pageSize = 5000;
         }
-        return new Page<>(current, pageSize);
+        return pageSize;
     }
 
     /** 设置表别名 */
@@ -166,10 +168,10 @@ public class QueryCondition<T> {
      *
      * @param clazz list 查询的实体类
      */
-    public QueryWrapper<T> searchWrapper(Class<?> clazz) {
+    public QueryWrapper searchWrapper(Class<?> clazz) {
         this.entityClazz = clazz;
 
-        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        QueryWrapper queryWrapper = new QueryWrapper();
         this.getEq()
                 .forEach((column, values) -> values.forEach(value -> {
                     String coverColumn = fieldCover(column);
@@ -232,16 +234,16 @@ public class QueryCondition<T> {
         return queryWrapper;
     }
 
-    public QueryWrapper<T> sortWrapper(Class<?> clazz) {
+    public QueryWrapper sortWrapper(Class<?> clazz) {
         this.entityClazz = clazz;
-        QueryWrapper<T> sortWrapper = new QueryWrapper<>();
+        QueryWrapper sortWrapper = new QueryWrapper();
         this.getSort()
                 .forEach((column, values) -> values.forEach(value -> {
                     String coverColumn = fieldCover(column);
                     if ("desc".equals(value)) {
-                        sortWrapper.orderByDesc(coverColumn);
+                        sortWrapper.orderBy(new QueryOrderBy(new QueryColumn(coverColumn), SqlConsts.DESC));
                     } else {
-                        sortWrapper.orderByAsc(coverColumn);
+                        sortWrapper.orderBy(new QueryOrderBy(new QueryColumn(coverColumn), SqlConsts.ASC));
                     }
                 }));
         return sortWrapper;
@@ -260,7 +262,7 @@ public class QueryCondition<T> {
         Map<String, Field> fieldMap = this.getFields();
         if (fieldMap.containsKey(column)) {
             // 驼峰转下划线
-            return this.tableAlise == null ? "" : this.tableAlise + "." + StringUtils.camelToUnderline(column);
+            return this.tableAlise == null ? "" : this.tableAlise + "." + StrUtil.camelToUnderline(column);
         }
         throw new IllegalArgumentException(String.format("不允许的搜索条件: %s", column));
     }

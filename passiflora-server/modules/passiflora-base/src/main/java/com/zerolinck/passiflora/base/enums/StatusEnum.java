@@ -14,11 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.common;
+package com.zerolinck.passiflora.base.enums;
 
-/** @author linck on 2024-02-06 */
-public interface LabelValueInterface {
-    String getLabel();
+import com.mybatisflex.annotation.EnumValue;
+import com.zerolinck.passiflora.base.LabelValueInterface;
 
-    Integer getValue();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/** @author linck on 2024-05-08 */
+@Getter
+@AllArgsConstructor
+public enum StatusEnum implements LabelValueInterface {
+    DISABLE("禁用", 0),
+    ENABLE("启用", 1);
+
+    private final String label;
+
+    @EnumValue
+    private final Integer value;
 }

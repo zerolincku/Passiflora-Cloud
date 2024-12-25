@@ -1,12 +1,12 @@
 package com.zerolinck.passiflora.model.${moduleName}.entity;
 
 <#if table.extendsBase>
-import com.zerolinck.passiflora.model.common.BaseEntity;
+import com.zerolinck.passiflora.base.BaseEntity;
 </#if>
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.Update;
+
+
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class ${entityClass} <#if table.extendsBase>extends BaseEntity </#if>{
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.columnList as column>
     <#if column.pk>
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     </#if>
     <#if column.fieldType.getSimpleName() == "String" && column.length??>
     <#if column.defaultValue?? && column.defaultValue != "''::character varying">

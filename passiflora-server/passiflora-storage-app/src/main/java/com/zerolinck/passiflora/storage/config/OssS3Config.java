@@ -18,10 +18,10 @@ package com.zerolinck.passiflora.storage.config;
 
 import java.net.URI;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 

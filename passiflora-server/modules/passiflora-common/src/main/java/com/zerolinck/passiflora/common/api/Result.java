@@ -18,8 +18,8 @@ package com.zerolinck.passiflora.common.api;
 
 import java.util.List;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mybatisflex.core.paginate.Page;
 
 import lombok.Data;
 
@@ -36,6 +36,12 @@ public class Result<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+    /** 页数 */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long pageNumber;
+    /** 每页条数 */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long pageSize;
     /** 总条数 */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long total;
@@ -48,10 +54,12 @@ public class Result<T> {
         this.data = data;
     }
 
-    protected Result(int code, String message, T data, Long total) {
+    public Result(int code, String message, T data, Long pageNumber, Long pageSize, Long total) {
         this.code = code;
         this.message = message;
         this.data = data;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
         this.total = total;
     }
 
@@ -69,9 +77,14 @@ public class Result<T> {
         return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
-    public static <T> Result<List<T>> ok(Page<T> data) {
+    public static <T> Result<List<T>> ok(Page<T> page) {
         return new Result<>(
-                ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data.getRecords(), data.getTotal());
+                ResultCode.SUCCESS.getCode(),
+                ResultCode.SUCCESS.getMessage(),
+                page.getRecords(),
+                page.getPageNumber(),
+                page.getPageSize(),
+                page.getTotalRow());
     }
 
     /**

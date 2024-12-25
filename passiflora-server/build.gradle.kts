@@ -52,7 +52,7 @@ spotless {
         removeUnusedImports()
         palantirJavaFormat(Version.palantirJavaVersion).formatJavadoc(true)
         formatAnnotations()
-        importOrder("java|javax|jakarta", "org|com|io", "lombok")
+        importOrder("java|javax|jakarta", "com|cn|org|io", "lombok")
         licenseHeader(header)
     }
     yaml {

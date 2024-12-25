@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
+import org.apache.commons.collections4.CollectionUtils;
 
 import lombok.Getter;
 

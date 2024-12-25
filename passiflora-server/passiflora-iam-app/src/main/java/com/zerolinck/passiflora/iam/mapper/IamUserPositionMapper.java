@@ -16,89 +16,61 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** @author linck on 2024-05-14 */
 public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
 
-    @NotNull List<IamUserPositionResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    @NotNull @Select(
+            """
+            SELECT a.user_id, b.position_id, b.position_name FROM
+                 (SELECT user_id, position_id
+                    FROM iam_user_position
+                    WHERE del_flag = 0 AND user_id IN
+                    <foreach item="userId" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{userId}
+                    </foreach>
+                ) as a
+                INNER JOIN iam_position as b ON a.position_id = b.position_id
+                WHERE b.del_flag = 0 AND b.position_status = 1
+    """)
+    List<IamUserPositionResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
 
-    default int deleteByIds(
-            @NotNull @Param("ids") Collection<String> ids, @NotNull @Param("updateBy") String updateBy) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamUserPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamUserPosition::getId, ids)
-                .set(IamUserPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamUserPosition::getUpdateBy, updateBy)
-                .set(IamUserPosition::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
-    }
-
-    default int deleteByUserIds(
-            @NotNull @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByUserIds(@NotNull @Param("userIds") Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
 
-        LambdaUpdateWrapper<IamUserPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamUserPosition::getUserId, userIds)
-                .set(IamUserPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamUserPosition::getUpdateBy, updateBy)
-                .set(IamUserPosition::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+        return this.deleteByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
     }
 
-    default int deleteByPositionIds(
-            @NotNull @Param("positionIds") Collection<String> positionIds,
-            @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByPositionIds(@NotNull @Param("positionIds") Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
 
-        LambdaUpdateWrapper<IamUserPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamUserPosition::getPositionId, positionIds)
-                .set(IamUserPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamUserPosition::getUpdateBy, updateBy)
-                .set(IamUserPosition::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+        return this.deleteByQuery(new QueryWrapper().in(IamUserPosition::getPositionId, positionIds));
     }
 
     default int deleteByUserIdAndPositionIds(
-            @NotNull @Param("userId") String userId,
-            @NotNull @Param("positionIds") Collection<String> positionIds,
-            @Nullable @Param("updateBy") String updateBy) {
+            @NotNull @Param("userId") String userId, @Nullable @Param("positionIds") Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
 
-        LambdaUpdateWrapper<IamUserPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
+        return this.deleteByQuery(new QueryWrapper()
                 .eq(IamUserPosition::getUserId, userId)
-                .in(IamUserPosition::getPositionId, positionIds)
-                .set(IamUserPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamUserPosition::getUpdateBy, updateBy)
-                .set(IamUserPosition::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+                .in(IamUserPosition::getPositionId, positionIds));
     }
 }

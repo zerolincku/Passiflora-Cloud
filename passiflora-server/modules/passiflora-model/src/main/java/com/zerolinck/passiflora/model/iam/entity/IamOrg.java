@@ -19,14 +19,14 @@ package com.zerolinck.passiflora.model.iam.entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.Table;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.Update;
 import org.hibernate.validator.constraints.Length;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.OnlyField;
-import com.zerolinck.passiflora.model.valid.Update;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -34,11 +34,12 @@ import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-04-09 */
 @Data
+@Table("iam_org")
 @Schema(description = "机构")
 @EqualsAndHashCode(callSuper = false)
 public class IamOrg extends BaseEntity {
 
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     @Schema(description = "机构ID", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},
@@ -97,7 +98,7 @@ public class IamOrg extends BaseEntity {
     private String orgIdPath;
 
     @Schema(description = "排序")
-    @TableField(value = "\"order\"")
+    @Column(value = "order")
     @NotNull(
             groups = {Update.class},
             message = "排序不能为空")

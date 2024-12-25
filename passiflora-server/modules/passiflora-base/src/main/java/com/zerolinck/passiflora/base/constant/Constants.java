@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.util.lock.suppert.reflect;
+package com.zerolinck.passiflora.base.constant;
 
-import org.springframework.core.GenericTypeResolver;
+/** @author linck */
+public interface Constants {
 
-/**
- * Spring 反射辅助类
- *
- * @author noear
- * @author hubin on 2021-09-03
- */
-public class SpringReflectionHelper {
-
-    public static Class<?>[] resolveTypeArguments(Class<?> clazz, Class<?> genericIfc) {
-        return GenericTypeResolver.resolveTypeArguments(clazz, genericIfc);
-    }
+    /** 超级管理员账号ID */
+    String SUPER_ADMIN_ID = "1";
 }

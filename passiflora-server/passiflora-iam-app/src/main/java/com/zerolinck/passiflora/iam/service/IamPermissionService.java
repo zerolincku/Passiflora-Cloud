@@ -19,14 +19,11 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.base.constant.Constants;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
@@ -34,13 +31,16 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPermissionMapper;
-import com.zerolinck.passiflora.model.common.constant.Constants;
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,10 +53,8 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
 
     @NotNull public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(),
-                condition.searchWrapper(IamPermission.class),
-                condition.sortWrapper(IamPermission.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamPermission.class));
     }
 
     public void add(@NotNull IamPermission iamPermission) {
@@ -66,9 +64,9 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(baseMapper, iamPermission);
+                    OnlyFieldCheck.checkInsert(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
-                    baseMapper.insert(iamPermission);
+                    mapper.insert(iamPermission);
                 });
     }
 
@@ -79,21 +77,21 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(baseMapper, iamPermission);
+                    OnlyFieldCheck.checkUpdate(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
-                    int changeRowCount = baseMapper.updateById(iamPermission);
+                    int changeRowCount = mapper.update(iamPermission);
                     // 子权限数据变更
                     List<IamPermission> permissionList = listByParentId(iamPermission.getPermissionId());
                     permissionList.forEach(permission -> {
                         generateIadPathAndLevel(permission);
-                        baseMapper.updateById(permission);
+                        mapper.update(permission);
                     });
                     return changeRowCount > 0;
                 });
     }
 
     @NotNull public List<IamPermission> listByParentId(@NotNull String permissionParentId) {
-        return baseMapper.listByParentId(permissionParentId);
+        return mapper.listByParentId(permissionParentId);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -101,11 +99,11 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         if (CollectionUtils.isEmpty(permissionIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(permissionIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(permissionIds, 500);
     }
 
     @NotNull public Optional<IamPermission> detail(@NotNull String permissionId) {
-        return Optional.ofNullable(baseMapper.selectById(permissionId));
+        return Optional.ofNullable(mapper.selectOneById(permissionId));
     }
 
     @NotNull public List<IamPermissionResp> menuTree() {
@@ -144,7 +142,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
             return;
         }
         for (IamPermissionTableResp iamPermissionTableResp : iamPermissionTableResps) {
-            baseMapper.updateOrder(iamPermissionTableResp);
+            mapper.updateOrder(iamPermissionTableResp);
             updateOrder(iamPermissionTableResp.getChildren());
         }
     }
@@ -154,7 +152,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         if (CollectionUtils.isEmpty(permissionIds)) {
             return;
         }
-        baseMapper.disable(permissionIds, CurrentUtil.getCurrentUserId());
+        mapper.disable(permissionIds);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -164,16 +162,16 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         }
         List<String> pathIds = new ArrayList<>();
         permissionIds.forEach(permissionId -> {
-            IamPermission iamPermission = baseMapper.selectById(permissionId);
+            IamPermission iamPermission = mapper.selectOneById(permissionId);
             String[] permissionIdList = iamPermission.getPermissionIdPath().split("/");
             Collections.addAll(pathIds, permissionIdList);
         });
-        baseMapper.enable(pathIds, CurrentUtil.getCurrentUserId());
+        mapper.enable(pathIds, CurrentUtil.getCurrentUserId());
     }
 
     @NotNull @SuppressWarnings("unused")
     public List<IamPermission> listSelfAndSub(@NotNull String permissionId) {
-        return baseMapper.listSelfAndSub(permissionId);
+        return mapper.listSelfAndSub(permissionId);
     }
 
     /**
@@ -184,7 +182,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      */
     @NotNull @SuppressWarnings("unused")
     List<IamPermission> listByPositionIds(@NotNull String positionId) {
-        return baseMapper.listByPositionId(positionId);
+        return mapper.listByPositionId(positionId);
     }
 
     /**
@@ -195,7 +193,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      */
     @NotNull @SuppressWarnings("unused")
     List<IamPermission> listByRoleId(@NotNull String roleId) {
-        return baseMapper.listByRoleId(roleId);
+        return mapper.listByRoleId(roleId);
     }
 
     /**
@@ -207,12 +205,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
     @NotNull @SuppressWarnings("unused")
     List<IamPermission> listByUserIds(@NotNull String userId) {
         if (Constants.SUPER_ADMIN_ID.equals(userId)) {
-            return baseMapper.selectList(new LambdaQueryWrapper<IamPermission>()
-                    .orderByAsc(IamPermission::getPermissionLevel)
-                    .orderByAsc(IamPermission::getOrder)
-                    .orderByAsc(IamPermission::getPermissionTitle));
+            return mapper.selectListByQuery(new QueryWrapper()
+                    .orderBy(IamPermission::getPermissionLevel, true)
+                    .orderBy(IamPermission::getOrder, true)
+                    .orderBy(IamPermission::getPermissionTitle, true));
         }
-        return baseMapper.listByUserId(userId);
+        return mapper.listByUserId(userId);
     }
 
     /**

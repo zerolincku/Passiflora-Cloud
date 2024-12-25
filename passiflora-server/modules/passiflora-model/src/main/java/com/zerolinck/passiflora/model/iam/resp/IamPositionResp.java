@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.model.iam.resp;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 

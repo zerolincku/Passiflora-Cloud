@@ -7,6 +7,7 @@ configurations.all {
 }
 
 dependencies {
+    api(project(":modules:passiflora-model"))
     api(project(":modules:passiflora-common"))
     annotationProcessor(platform(project(":modules:passiflora-bom")))
     testAnnotationProcessor(platform(project(":modules:passiflora-bom")))

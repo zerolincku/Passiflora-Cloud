@@ -18,9 +18,10 @@ package com.zerolinck.passiflora.model.iam.entity;
 
 import java.time.LocalDate;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.common.BaseEntity;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.Table;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.IUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -28,11 +29,12 @@ import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-03-19 */
 @Data
+@Table("iam_user")
 @Schema(description = "用户")
 @EqualsAndHashCode(callSuper = false)
-public class IamUser extends BaseEntity {
+public class IamUser extends BaseEntity implements IUser {
     /** 主键 */
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     private String userId;
     /** 用户名 */
     private String userName;

@@ -14,7 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.valid;
+package com.zerolinck.passiflora.base.enums;
 
-/** @author linck on 2024-02-06 */
-public interface Insert {}
+import com.mybatisflex.annotation.EnumValue;
+import com.zerolinck.passiflora.base.LabelValueInterface;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/** @author 林常坤 on 2024/11/22 */
+@Getter
+@AllArgsConstructor
+public enum DelFlagEnum implements LabelValueInterface {
+    NOT_DELETE("未删除", 0),
+    DELETED("已删除", 1);
+
+    private final String label;
+
+    @EnumValue
+    private final Integer value;
+}

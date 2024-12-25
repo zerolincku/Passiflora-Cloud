@@ -16,22 +16,17 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
 
 /**
  * 角色权限 Mybatis Mapper
@@ -40,56 +35,12 @@ import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
  */
 public interface IamRolePermissionMapper extends BaseMapper<IamRolePermission> {
 
-    @NotNull default Page<IamRolePermission> page(
-            @NotNull IPage<IamRolePermission> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamRolePermission> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamRolePermission> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0);
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("id");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamRolePermission>) this.selectPage(page, searchWrapper);
-    }
-
-    default int deleteByIds(
-            @Nullable @Param("ids") Collection<String> ids, @Nullable @Param("updateBy") String updateBy) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamRolePermission> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamRolePermission::getId, ids)
-                .set(IamRolePermission::getUpdateTime, LocalDateTime.now())
-                .set(IamRolePermission::getUpdateBy, updateBy)
-                .set(IamRolePermission::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
-    }
-
-    default int deleteByRoleIds(
-            @Nullable @Param("roleIds") Collection<String> roleIds, @Nullable @Param("updateBy") String updateBy) {
+    default int deleteByRoleIds(@Nullable @Param("roleIds") Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
 
-        LambdaUpdateWrapper<IamRolePermission> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamRolePermission::getRoleId, roleIds)
-                .set(IamRolePermission::getUpdateTime, LocalDateTime.now())
-                .set(IamRolePermission::getUpdateBy, updateBy)
-                .set(IamRolePermission::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+        return this.deleteByQuery(new QueryWrapper().in(IamRolePermission::getRoleId, roleIds));
     }
 
     @Select(

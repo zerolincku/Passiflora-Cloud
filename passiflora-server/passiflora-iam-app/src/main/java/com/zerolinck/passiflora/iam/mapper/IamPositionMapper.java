@@ -16,98 +16,63 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamPositionTableDef.IAM_POSITION;
+
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 
 /** @author linck on 2024-05-14 */
 public interface IamPositionMapper extends BaseMapper<IamPosition> {
-    default Page<IamPosition> page(
-            IPage<IamPosition> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamPosition> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamPosition> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0);
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("position_level", "\"order\"", "position_id");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamPosition>) this.selectPage(page, searchWrapper);
-    }
-
-    default int deleteByIds(Collection<String> positionIds, String updateBy) {
-        if (positionIds == null || positionIds.isEmpty()) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamPosition::getPositionId, positionIds)
-                .set(IamPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamPosition::getUpdateBy, updateBy)
-                .set(IamPosition::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
-    }
-
     @SuppressWarnings("unused")
-    @Select("SELECT * FROM iam_position WHERE del_flag = 0 AND position_name = #{positionName}")
-    IamPosition selectByPositionName(@Param("positionName") String positionName);
-
-    @Select("SELECT * FROM iam_position WHERE del_flag = 0 AND parent_position_id = #{positionParentId} ORDER BY"
-            + " position_level , \"order\", position_name")
-    List<IamPositionResp> listByParentId(@Param("positionParentId") String positionParentId);
-
-    default void disable(Collection<String> positionIds, String updateBy) {
-        if (positionIds == null || positionIds.isEmpty()) {
-            return;
-        }
-
-        LambdaUpdateWrapper<IamPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamPosition::getPositionIdPath, positionIds)
-                .set(IamPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamPosition::getUpdateBy, updateBy)
-                .set(IamPosition::getPositionStatus, 0);
-
-        this.update(null, updateWrapper);
+    default IamPosition selectByPositionName(@Param("positionName") String positionName) {
+        return selectOneByCondition(IAM_POSITION.POSITION_NAME.eq(positionName));
     }
 
-    default void enable(Collection<String> positionIds, String updateBy) {
-        if (positionIds == null || positionIds.isEmpty()) {
-            return;
+    default List<IamPositionResp> listByParentId(@Param("positionParentId") String positionParentId) {
+        return selectListByQueryAs(
+                QueryWrapper.create()
+                        .where(IAM_POSITION.PARENT_POSITION_ID.eq(positionParentId))
+                        .orderBy(IAM_POSITION.POSITION_LEVEL, true)
+                        .orderBy(IAM_POSITION.ORDER, true)
+                        .orderBy(IAM_POSITION.POSITION_NAME, true),
+                IamPositionResp.class);
+    }
+
+    default boolean disable(Collection<String> positionIds) {
+        if (CollectionUtils.isEmpty(positionIds)) {
+            return true;
         }
 
-        LambdaUpdateWrapper<IamPosition> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
+        return UpdateChain.of(IamPosition.class)
+                .set(IamPosition::getPositionStatus, StatusEnum.DISABLE)
                 .in(IamPosition::getPositionId, positionIds)
-                .set(IamPosition::getUpdateTime, LocalDateTime.now())
-                .set(IamPosition::getUpdateBy, updateBy)
-                .set(IamPosition::getPositionStatus, 1);
-
-        this.update(null, updateWrapper);
+                .update();
     }
 
-    @Update("UPDATE iam_position SET \"order\" = #{iamPositionResp.order} WHERE"
-            + " position_id = #{iamPositionResp.positionId} ")
-    void updateOrder(@Param("iamPositionResp") IamPositionResp iamPositionResp);
+    default boolean enable(Collection<String> positionIds) {
+        if (CollectionUtils.isEmpty(positionIds)) {
+            return true;
+        }
+
+        return UpdateChain.of(IamPosition.class)
+                .set(IamPosition::getPositionStatus, StatusEnum.ENABLE)
+                .in(IamPosition::getPositionId, positionIds)
+                .update();
+    }
+
+    default void updateOrder(@Param("iamPositionResp") IamPositionResp iamPositionResp) {
+        UpdateChain.of(IamPosition.class)
+                .set(IamPosition::getOrder, iamPositionResp.getOrder())
+                .eq(IamPosition::getPositionId, iamPositionResp.getPositionId())
+                .update();
+    }
 }

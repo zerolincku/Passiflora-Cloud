@@ -21,20 +21,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRoleMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +60,8 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      */
     @NotNull public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamRole.class), condition.sortWrapper(IamRole.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamRole.class));
     }
 
     /**
@@ -73,7 +72,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      */
     @NotNull public List<IamRole> list(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.selectList(condition.searchWrapper(IamRole.class));
+        return mapper.selectListByQuery(condition.searchWrapper(IamRole.class));
     }
 
     /**
@@ -84,8 +83,8 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      */
     public void add(@NotNull IamRole iamRole) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamRole);
-            baseMapper.insert(iamRole);
+            OnlyFieldCheck.checkInsert(mapper, iamRole);
+            mapper.insert(iamRole);
         });
     }
 
@@ -97,8 +96,8 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      */
     public boolean update(@NotNull IamRole iamRole) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamRole);
-            int changeRowCount = baseMapper.updateById(iamRole);
+            OnlyFieldCheck.checkUpdate(mapper, iamRole);
+            int changeRowCount = mapper.update(iamRole);
             return changeRowCount > 0;
         });
     }
@@ -114,7 +113,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
-        int changeRowNum = baseMapper.deleteByIds(roleIds, CurrentUtil.getCurrentUserId());
+        int changeRowNum = mapper.deleteBatchByIds(roleIds, 500);
         iamRolePermissionService.deleteByRoleIds(roleIds);
         return changeRowNum;
     }
@@ -126,7 +125,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * @since 2024-08-17
      */
     @NotNull public Optional<IamRole> detail(@NotNull String roleId) {
-        return Optional.ofNullable(baseMapper.selectById(roleId));
+        return Optional.ofNullable(mapper.selectOneById(roleId));
     }
 
     /**
@@ -140,7 +139,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
         if (CollectionUtils.isEmpty(roleIds)) {
             return;
         }
-        baseMapper.disable(roleIds, CurrentUtil.getCurrentUserId());
+        mapper.disable(roleIds);
     }
 
     /**
@@ -154,6 +153,6 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
         if (CollectionUtils.isEmpty(roleIds)) {
             return;
         }
-        baseMapper.enable(roleIds, CurrentUtil.getCurrentUserId());
+        mapper.enable(roleIds);
     }
 }

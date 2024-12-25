@@ -18,10 +18,10 @@ package com.zerolinck.passiflora.feign.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.context.annotation.Bean;
+import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.common.util.NetUtil;
 import com.zerolinck.passiflora.common.util.SpringContextHolder;
-import com.zerolinck.passiflora.model.common.constant.Header;
+import org.springframework.context.annotation.Bean;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -24,6 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -35,11 +40,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,6 +80,7 @@ class IamOrgControllerTest {
         iamOrg.setOrgCode("test");
         iamOrg.setOrgLevel(1);
         iamOrg.setOrgType(1);
+        iamOrg.setOrder(1);
         mockMvc.perform(post("/iam-org/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamOrg)))

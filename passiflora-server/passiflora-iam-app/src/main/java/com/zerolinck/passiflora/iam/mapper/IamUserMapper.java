@@ -16,62 +16,8 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.BaseMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 
 /** @author linck on 2024-02-07 */
-public interface IamUserMapper extends BaseMapper<IamUser> {
-
-    @NotNull default Page<IamUser> page(
-            @Param("orgId") String orgId,
-            @NotNull IPage<IamUser> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamUser> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamUser> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0).ne("user_id", "1");
-
-        if (orgId != null && !orgId.isEmpty()) {
-            searchWrapper.inSql("org_id", "SELECT org_id FROM iam_org WHERE org_id_path LIKE '%" + orgId + "%'");
-        }
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("user_name", "user_id");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamUser>) this.selectPage(page, searchWrapper);
-    }
-
-    default int deleteByIds(
-            @Nullable @Param("userIds") Collection<String> userIds, @Nullable @Param("updateBy") String updateBy) {
-        if (CollectionUtils.isEmpty(userIds)) {
-            return 0;
-        }
-
-        LambdaUpdateWrapper<IamUser> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamUser::getUserId, userIds)
-                .set(IamUser::getUpdateTime, LocalDateTime.now())
-                .set(IamUser::getUpdateBy, updateBy)
-                .set(IamUser::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
-    }
-}
+public interface IamUserMapper extends BaseMapper<IamUser> {}

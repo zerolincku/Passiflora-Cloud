@@ -23,15 +23,15 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 import com.zerolinck.passiflora.codegen.model.Column;
 import com.zerolinck.passiflora.codegen.model.Table;
 import com.zerolinck.passiflora.codegen.service.DbService;
 import com.zerolinck.passiflora.codegen.util.DataSourceUtil;
 import com.zerolinck.passiflora.codegen.util.TypeConvert;
 import com.zerolinck.passiflora.common.util.StrUtil;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import lombok.SneakyThrows;
 

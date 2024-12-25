@@ -16,109 +16,69 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import java.time.LocalDateTime;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamPermissionTableDef.IAM_PERMISSION;
+
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import org.jetbrains.annotations.NotNull;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-05-06 */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {
 
-    @NotNull default Page<IamPermission> page(
-            IPage<IamPermission> page,
-            @Param(Constants.WRAPPER) QueryWrapper<IamPermission> searchWrapper,
-            @Param("sortWrapper") QueryWrapper<IamPermission> sortWrapper) {
-        if (searchWrapper == null) {
-            searchWrapper = new QueryWrapper<>();
-        }
-        searchWrapper.eq("del_flag", 0);
-
-        if (sortWrapper == null
-                || sortWrapper.getSqlSegment() == null
-                || sortWrapper.getSqlSegment().isEmpty()) {
-            searchWrapper.orderByAsc("permission_level", "\"order\"", "permission_title");
-        } else {
-            searchWrapper.last(sortWrapper.getSqlSegment());
-        }
-
-        return (Page<IamPermission>) this.selectPage(page, searchWrapper);
+    default void updateOrder(@Param("iamPermissionTableResp") IamPermissionTableResp iamPermissionTableResp) {
+        UpdateChain.of(IamPermission.class)
+                .set(IamPermission::getOrder, iamPermissionTableResp.getOrder())
+                .eq(IamPermission::getPermissionId, iamPermissionTableResp.getPermissionId())
+                .update();
     }
 
-    default int deleteByIds(Collection<String> permissionIds, String updateBy) {
-        if (permissionIds == null || permissionIds.isEmpty()) {
-            return 0;
+    default boolean disable(Collection<String> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
+            return true;
         }
 
-        LambdaUpdateWrapper<IamPermission> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
+        return UpdateChain.of(IamPermission.class)
+                .set(IamPermission::getPermissionStatus, StatusEnum.DISABLE)
                 .in(IamPermission::getPermissionId, permissionIds)
-                .set(IamPermission::getUpdateTime, LocalDateTime.now())
-                .set(IamPermission::getUpdateBy, updateBy)
-                .set(IamPermission::getDelFlag, 1);
-
-        return this.update(null, updateWrapper);
+                .update();
     }
 
-    @Update(
-            """
-        UPDATE iam_permission SET \"order\" = #{iamPermissionTableResp.order}
-        WHERE permission_id = #{iamPermissionTableResp.permissionId}""")
-    void updateOrder(@Param("iamPermissionTableResp") IamPermissionTableResp iamPermissionTableResp);
-
-    default void disable(Collection<String> permissionIds, String updateBy) {
-        if (permissionIds == null || permissionIds.isEmpty()) {
-            return;
+    default boolean enable(Collection<String> permissionIds, String updateBy) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
+            return true;
         }
 
-        LambdaUpdateWrapper<IamPermission> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
-                .in(IamPermission::getPermissionIdPath, permissionIds)
-                .set(IamPermission::getUpdateTime, LocalDateTime.now())
-                .set(IamPermission::getUpdateBy, updateBy)
-                .set(IamPermission::getPermissionStatus, 0);
-
-        this.update(null, updateWrapper);
-    }
-
-    default void enable(Collection<String> permissionIds, String updateBy) {
-        if (permissionIds == null || permissionIds.isEmpty()) {
-            return;
-        }
-
-        LambdaUpdateWrapper<IamPermission> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper
+        return UpdateChain.of(IamPermission.class)
+                .set(IamPermission::getPermissionStatus, StatusEnum.ENABLE)
                 .in(IamPermission::getPermissionId, permissionIds)
-                .set(IamPermission::getUpdateTime, LocalDateTime.now())
-                .set(IamPermission::getUpdateBy, updateBy)
-                .set(IamPermission::getPermissionStatus, 1);
-
-        this.update(null, updateWrapper);
+                .update();
     }
 
-    @NotNull @Select(
-            """
-        SELECT * FROM iam_permission WHERE del_flag = 0 AND permission_parent_id = #{permissionParentId}
-        ORDER BY permission_level , \"order\", permission_title""")
-    List<IamPermission> listByParentId(@Param("permissionParentId") String permissionParentId);
+    default List<IamPermission> listByParentId(@Param("permissionParentId") String permissionParentId) {
+        return selectListByQuery(QueryWrapper.create()
+                .where(IAM_PERMISSION.PERMISSION_PARENT_ID.eq(permissionParentId))
+                .orderBy(IAM_PERMISSION.PERMISSION_LEVEL, true)
+                .orderBy(IAM_PERMISSION.ORDER, true)
+                .orderBy(IAM_PERMISSION.PERMISSION_TITLE, true));
+    }
 
-    @NotNull @Select(
-            """
-        SELECT * FROM iam_permission
-        WHERE del_flag = 0 AND permission_id_path like concat('%', #{permissionId}, '%')
-        ORDER BY permission_level , \"order\", permission_title""")
-    List<IamPermission> listSelfAndSub(@Param("permissionId") String permissionId);
+    default List<IamPermission> listSelfAndSub(@Param("permissionId") String permissionId) {
+        return selectListByQuery(QueryWrapper.create()
+                .where(IAM_PERMISSION.PERMISSION_ID_PATH.like(permissionId))
+                .orderBy(IAM_PERMISSION.PERMISSION_LEVEL, true)
+                .orderBy(IAM_PERMISSION.ORDER, true)
+                .orderBy(IAM_PERMISSION.PERMISSION_TITLE, true));
+    }
 
     @NotNull @Select(
             """

@@ -14,21 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.util.lock.suppert;
+package com.zerolinck.passiflora.common.config.mybaits;
 
-/** Lambda 信息 */
-public interface LambdaMeta {
-    /**
-     * 获取 lambda 表达式实现方法的名称
-     *
-     * @return lambda 表达式对应的实现方法名称
-     */
-    String getImplMethodName();
+import com.mybatisflex.annotation.UpdateListener;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.common.util.CurrentUtil;
+
+/** @author 林常坤 on 2024/12/24 */
+public class FlexUpdateListener implements UpdateListener {
 
     /**
-     * 实例化该方法的类
+     * 更新操作的前置操作。
      *
-     * @return 返回对应的类名称
+     * @param entity 实体类
      */
-    Class<?> getInstantiatedClass();
+    @Override
+    public void onUpdate(Object entity) {
+        String userId = CurrentUtil.getCurrentUserId();
+        if (userId != null && entity instanceof BaseEntity baseEntity) {
+            baseEntity.setUpdateBy(userId);
+        }
+    }
 }

@@ -23,9 +23,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -37,10 +34,13 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.zerolinck.passiflora.base.LabelValueInterface;
 import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
-import com.zerolinck.passiflora.model.common.LabelValueInterface;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /** @author linck on 2024-02-06 */
 @Configuration(proxyBeanMethods = false)

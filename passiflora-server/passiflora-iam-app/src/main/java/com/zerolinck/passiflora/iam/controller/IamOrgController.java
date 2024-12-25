@@ -19,12 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
@@ -33,6 +28,11 @@ import com.zerolinck.passiflora.feign.iam.IamOrgApi;
 import com.zerolinck.passiflora.iam.service.IamOrgService;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("iam-org")
 @RequiredArgsConstructor
 public class IamOrgController implements IamOrgApi {
-
     private final IamOrgService iamOrgService;
+
+    private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
     public Result<List<IamOrg>> page(@NotNull QueryCondition<IamOrg> condition) {
@@ -53,7 +54,7 @@ public class IamOrgController implements IamOrgApi {
 
     @Override
     public Result<String> add(IamOrg iamOrg) {
-        iamOrg.setOrgId(IdWorker.getIdStr());
+        iamOrg.setOrgId(String.valueOf(flexIDKeyGenerator.generate(IamOrg.class, "orgId")));
         if (StringUtils.isBlank(iamOrg.getParentOrgId())) {
             iamOrg.setParentOrgId("0");
         }

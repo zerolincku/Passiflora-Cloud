@@ -14,21 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.valid;
+package com.zerolinck.passiflora.base.enums;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.mybatisflex.annotation.EnumValue;
+import com.zerolinck.passiflora.base.LabelValueInterface;
 
-/**
- * 唯一值检测注解，显示名称，根据 swagger 注解来，如果没有 swagger 注解，则显示字段英文名称
- *
- * <p>只支持单一字段校验，不支持联合字段唯一校验
- */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface OnlyField {
-    /** 自定义错误返回信息 */
-    String message() default "";
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/** @author linck on 2024-04-02 */
+@Getter
+@AllArgsConstructor
+public enum YesOrNoEnum implements LabelValueInterface {
+    NO("否", 0),
+    YES("是", 1);
+
+    private final String label;
+
+    @EnumValue
+    private final Integer value;
 }

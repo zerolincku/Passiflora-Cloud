@@ -12,6 +12,7 @@ pluginManagement {
 
 rootProject.name = "passiflora"
 
+include("modules:passiflora-base")
 include("modules:passiflora-common")
 include("modules:passiflora-bom")
 include("modules:passiflora-model")

@@ -19,12 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
@@ -35,6 +30,11 @@ import com.zerolinck.passiflora.iam.service.IamPositionService;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +48,7 @@ public class IamPositionController implements IamPositionApi {
 
     private final IamPositionService iamPositionService;
     private final IamPositionPermissionService iamPositionPermissionService;
+    private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
     public Result<List<IamPosition>> page(@NotNull QueryCondition<IamPosition> condition) {
@@ -56,7 +57,7 @@ public class IamPositionController implements IamPositionApi {
 
     @Override
     public Result<String> add(IamPosition iamPosition) {
-        iamPosition.setPositionId(IdWorker.getIdStr());
+        iamPosition.setPositionId(String.valueOf(flexIDKeyGenerator.generate(IamPosition.class, "positionId")));
         if (StringUtils.isBlank(iamPosition.getParentPositionId())) {
             iamPosition.setParentPositionId("0");
         }

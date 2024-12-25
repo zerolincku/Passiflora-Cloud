@@ -1,8 +1,8 @@
 package com.zerolinck.passiflora.${moduleName}.service;
 
 import org.apache.commons.collections4.CollectionUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -40,7 +40,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
     @NotNull
     public Page<${entityClass}> page(@Nullable QueryCondition<${entityClass}> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(condition.page(), condition.searchWrapper(${entityClass}.class), condition.sortWrapper(${entityClass}.class));
+        return mapper.paginate(condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(${entityClass}.class));
     }
 
     /**
@@ -53,8 +53,8 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(baseMapper, ${entityName});
-                    baseMapper.insert(${entityName});
+                    OnlyFieldCheck.checkInsert(mapper, ${entityName});
+                    mapper.insert(${entityName});
                 }
         );
     }
@@ -69,8 +69,8 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         return LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(baseMapper, ${entityName});
-                    int changeRowCount = baseMapper.updateById(${entityName});
+                    OnlyFieldCheck.checkUpdate(mapper, ${entityName});
+                    int changeRowCount = mapper.update(${entityName});
                     return changeRowCount > 0;
                 }
         );
@@ -87,7 +87,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         if (CollectionUtils.isEmpty(${table.pkFieldName}s)) {
             return 0;
         }
-        return baseMapper.deleteByIds(${table.pkFieldName}s, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(${table.pkFieldName}s, CurrentUtil.getCurrentUserId());
     }
 
     /**
@@ -98,7 +98,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
      */
     @NotNull
     public Optional<${entityClass}> detail(@NotNull String ${table.pkFieldName}) {
-        return Optional.ofNullable(baseMapper.selectById(${table.pkFieldName}));
+        return Optional.ofNullable(mapper.selectOneById(${table.pkFieldName}));
     }
             
 }

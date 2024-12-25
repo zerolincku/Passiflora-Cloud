@@ -19,12 +19,7 @@ package com.zerolinck.passiflora.iam.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
@@ -34,6 +29,11 @@ import com.zerolinck.passiflora.iam.service.IamPermissionService;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IamPermissionController implements IamPermissionApi {
 
     private final IamPermissionService iamPermissionService;
+    private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
     public Result<List<IamPermission>> page(@NotNull QueryCondition<IamPermission> condition) {
@@ -54,7 +55,7 @@ public class IamPermissionController implements IamPermissionApi {
 
     @Override
     public Result<String> add(IamPermission iamPermission) {
-        iamPermission.setPermissionId(IdWorker.getIdStr());
+        iamPermission.setPermissionId(String.valueOf(flexIDKeyGenerator.generate(IamPermission.class, "permissionId")));
         if (StringUtils.isBlank(iamPermission.getPermissionParentId())) {
             iamPermission.setPermissionParentId("0");
         }

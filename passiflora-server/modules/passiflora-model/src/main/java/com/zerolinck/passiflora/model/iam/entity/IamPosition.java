@@ -19,16 +19,16 @@ package com.zerolinck.passiflora.model.iam.entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.Table;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.OnlyField;
-import com.zerolinck.passiflora.model.valid.Update;
+import org.hibernate.validator.constraints.Length;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -36,11 +36,12 @@ import lombok.EqualsAndHashCode;
 
 /** @author linck on 2024-05-14 */
 @Data
+@Table("iam_position")
 @Schema(description = "职位")
 @EqualsAndHashCode(callSuper = false)
 public class IamPosition extends BaseEntity {
 
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     @Schema(description = "职位ID", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},
@@ -88,7 +89,7 @@ public class IamPosition extends BaseEntity {
     private StatusEnum positionStatus;
 
     @Schema(description = "排序")
-    @TableField(value = "\"order\"")
+    @Column(value = "order")
     @NotNull(
             groups = {Update.class},
             message = "排序不能为空")

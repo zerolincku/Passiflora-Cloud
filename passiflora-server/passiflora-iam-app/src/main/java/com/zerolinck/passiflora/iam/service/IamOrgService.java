@@ -19,16 +19,10 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -37,6 +31,11 @@ import com.zerolinck.passiflora.iam.mapper.IamOrgMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamOrgConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,8 +48,8 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
 
     @NotNull public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(IamOrg.class), condition.sortWrapper(IamOrg.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamOrg.class));
     }
 
     public void add(@NotNull IamOrg iamOrg) {
@@ -62,14 +61,14 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                 true,
                 () -> {
                     // 同一父机构下，机构名称不能重复
-                    Long count = baseMapper.selectCount(new LambdaQueryWrapper<IamOrg>()
+                    long count = mapper.selectCountByQuery(new QueryWrapper()
                             .eq(IamOrg::getOrgName, iamOrg.getOrgName())
                             .eq(IamOrg::getParentOrgId, iamOrg.getParentOrgId()));
                     if (count > 0) {
                         throw new BizException("机构名称重复，请重新填写");
                     }
                     generateIadPathAndLevel(iamOrg);
-                    baseMapper.insert(iamOrg);
+                    mapper.insert(iamOrg);
                 });
     }
 
@@ -81,12 +80,12 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                         .lock(IamOrg::getOrgCode, iamOrg.getOrgCode()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(baseMapper, iamOrg);
+                    OnlyFieldCheck.checkUpdate(mapper, iamOrg);
 
                     // 同一父机构下，机构名称不能重复
-                    IamOrg dbIamOrg = baseMapper.selectById(iamOrg.getOrgId());
+                    IamOrg dbIamOrg = mapper.selectOneById(iamOrg.getOrgId());
                     if (iamOrg.getOrgName() != null && !dbIamOrg.getOrgName().equals(iamOrg.getOrgName())) {
-                        Long count = baseMapper.selectCount(new LambdaQueryWrapper<IamOrg>()
+                        long count = mapper.selectCountByQuery(new QueryWrapper()
                                 .eq(IamOrg::getOrgName, iamOrg.getOrgName())
                                 .eq(IamOrg::getParentOrgId, iamOrg.getParentOrgId())
                                 .ne(IamOrg::getOrgId, iamOrg.getOrgId()));
@@ -95,13 +94,13 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                         }
                     }
                     generateIadPathAndLevel(iamOrg);
-                    int changeRowCount = baseMapper.updateById(iamOrg);
+                    int changeRowCount = mapper.update(iamOrg);
                     // 子机构数据变更
                     List<IamOrgResp> iamOrgList = listByParentId(iamOrg.getOrgId());
                     iamOrgList.forEach(orgResp -> {
                         IamOrg org = IamOrgConvert.INSTANCE.respToEntity(orgResp);
                         generateIadPathAndLevel(org);
-                        baseMapper.updateById(org);
+                        mapper.update(org);
                     });
                     return changeRowCount > 0;
                 });
@@ -112,34 +111,34 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
     public int deleteByIds(@NotNull Collection<String> orgIds) {
         int rowCount = 0;
         for (String orgId : orgIds) {
-            rowCount += baseMapper.deleteById(orgId, CurrentUtil.getCurrentUserId());
+            rowCount += mapper.deleteById(orgId);
         }
         return rowCount;
     }
 
     @NotNull public Optional<IamOrg> detail(@NotNull String orgId) {
-        return Optional.ofNullable(baseMapper.selectById(orgId));
+        return Optional.ofNullable(mapper.selectOneById(orgId));
     }
 
     @NotNull public Map<String, String> orgId2NameMap(@NotNull Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
         }
-        return baseMapper.selectList(new LambdaQueryWrapper<IamOrg>().in(IamOrg::getOrgId, orgIds)).stream()
+        return mapper.selectListByQuery(new QueryWrapper().in(IamOrg::getOrgId, orgIds)).stream()
                 .collect(Collectors.toMap(IamOrg::getOrgId, IamOrg::getOrgName));
     }
 
     @Nullable @SuppressWarnings("unused")
     public IamOrg selectByOrgCode(@NotNull String orgCode) {
-        return baseMapper.selectByOrgCode(orgCode);
+        return mapper.selectByOrgCode(orgCode);
     }
 
     @NotNull public List<IamOrgResp> listByParentId(@NotNull String orgParentId) {
-        return baseMapper.listByParentId(orgParentId);
+        return mapper.listByParentId(orgParentId);
     }
 
     @Nullable public List<IamOrgResp> orgTree() {
-        List<IamOrgResp> iamOrgResps = baseMapper.listByParentId("0");
+        List<IamOrgResp> iamOrgResps = mapper.listByParentId("0");
         iamOrgResps.forEach(this::recursionTree);
         return iamOrgResps;
     }

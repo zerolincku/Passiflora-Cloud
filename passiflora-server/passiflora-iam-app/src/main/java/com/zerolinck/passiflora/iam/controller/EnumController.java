@@ -19,13 +19,13 @@ package com.zerolinck.passiflora.iam.controller;
 import java.util.*;
 import jakarta.annotation.PostConstruct;
 
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.StrUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import com.zerolinck.passiflora.feign.iam.EnumApi;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.SneakyThrows;
 

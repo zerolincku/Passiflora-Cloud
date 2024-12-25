@@ -16,12 +16,12 @@
  */
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 /** @author linck on 2024-03-26 */
 @Mapper

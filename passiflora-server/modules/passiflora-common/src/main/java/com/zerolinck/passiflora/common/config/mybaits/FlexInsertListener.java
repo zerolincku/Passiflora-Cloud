@@ -14,23 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.util;
+package com.zerolinck.passiflora.common.config.mybaits;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.mybatisflex.annotation.InsertListener;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.common.util.CurrentUtil;
 
-/** @author linck on 2024-05-01 */
-public class CollectionUtil {
-
-    @SuppressWarnings("rawtypes")
-    public static List emptyList() {
-        return new ArrayList<>();
-    }
-
-    @SuppressWarnings({"rawtypes", "unused"})
-    public static Set emptySet() {
-        return new HashSet<>();
+/** @author 林常坤 on 2024/12/24 */
+public class FlexInsertListener implements InsertListener {
+    /**
+     * 新增操作的前置操作。
+     *
+     * @param entity 实体类
+     */
+    @Override
+    public void onInsert(Object entity) {
+        String userId = CurrentUtil.getCurrentUserId();
+        if (userId != null && entity instanceof BaseEntity baseEntity) {
+            baseEntity.setCreateBy(userId);
+            baseEntity.setUpdateBy(userId);
+        }
     }
 }

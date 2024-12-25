@@ -19,8 +19,8 @@ package com.zerolinck.passiflora.common.util;
 import java.util.Collection;
 import javax.annotation.Nullable;
 
-import org.jetbrains.annotations.NotNull;
 import com.google.common.base.Strings;
+import org.jetbrains.annotations.NotNull;
 
 import lombok.experimental.UtilityClass;
 

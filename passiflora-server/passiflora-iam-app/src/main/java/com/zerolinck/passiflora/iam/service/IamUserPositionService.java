@@ -19,13 +19,8 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -34,6 +29,10 @@ import com.zerolinck.passiflora.iam.mapper.IamUserPositionMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +47,7 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
         }
-        return baseMapper.selectByUserIds(userIds);
+        return mapper.selectByUserIds(userIds);
     }
 
     public void updateRelation(@NotNull IamUserArgs args) {
@@ -85,14 +84,13 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
 
     @NotNull public List<IamUserPosition> findByUserIds(@Nullable List<String> userIds) {
         userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
-        return baseMapper.selectList(new LambdaQueryWrapper<IamUserPosition>().in(IamUserPosition::getUserId, userIds));
+        return mapper.selectListByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
     }
 
     @NotNull @SuppressWarnings("unused")
     public List<IamUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
-        return baseMapper.selectList(
-                new LambdaQueryWrapper<IamUserPosition>().eq(IamUserPosition::getPositionId, positionIds));
+        return mapper.selectListByQuery(new QueryWrapper().eq(IamUserPosition::getPositionId, positionIds));
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -100,7 +98,7 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIds(userIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByUserIds(userIds);
     }
 
     @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -108,7 +106,7 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByPositionIds(positionIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByPositionIds(positionIds);
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -116,6 +114,6 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
-        return baseMapper.deleteByUserIdAndPositionIds(userId, positionIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByUserIdAndPositionIds(userId, positionIds);
     }
 }

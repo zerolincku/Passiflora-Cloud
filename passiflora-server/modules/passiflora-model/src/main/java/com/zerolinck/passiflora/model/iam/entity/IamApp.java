@@ -20,15 +20,15 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zerolinck.passiflora.model.common.BaseEntity;
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.Table;
+import com.zerolinck.passiflora.base.BaseEntity;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.OnlyField;
-import com.zerolinck.passiflora.model.valid.Update;
+import org.hibernate.validator.constraints.Length;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -40,11 +40,12 @@ import lombok.EqualsAndHashCode;
  * @author linck on 2024-09-30
  */
 @Data
+@Table("iam_app")
 @Schema(description = "应用")
 @EqualsAndHashCode(callSuper = false)
 public class IamApp extends BaseEntity {
 
-    @TableId(type = IdType.ASSIGN_ID)
+    @Id
     @Schema(description = "应用ID", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},

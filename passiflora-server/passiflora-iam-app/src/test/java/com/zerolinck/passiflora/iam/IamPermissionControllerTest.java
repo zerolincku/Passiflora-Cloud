@@ -25,6 +25,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamPermission;
+import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
+import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -36,14 +45,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.iam.entity.IamPermission;
-import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
-import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,6 +87,8 @@ class IamPermissionControllerTest {
         iamPermission.setPermissionName("test");
         iamPermission.setPermissionIdPath("test");
         iamPermission.setPermissionType(PermissionTypeEnum.MENU_SET);
+        iamPermission.setPermissionStatus(StatusEnum.ENABLE);
+        iamPermission.setOrder(1);
         mockMvc.perform(post("/iam-permission/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamPermission)))

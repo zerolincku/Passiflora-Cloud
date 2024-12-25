@@ -16,25 +16,19 @@
  */
 package com.zerolinck.passiflora.common.util.lock;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.transaction.support.TransactionTemplate;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.lock.suppert.LambdaMeta;
-import com.zerolinck.passiflora.common.util.lock.suppert.LambdaUtils;
-import com.zerolinck.passiflora.common.util.lock.suppert.SFunction;
-import com.zerolinck.passiflora.common.util.lock.suppert.reflect.PropertyNamer;
 
 import lombok.Setter;
 
@@ -55,10 +49,6 @@ public class LockUtil {
     private static final Integer COMMON_LOCK_WAIT_SECONDS = 2;
     /** 最长持有锁时间 */
     private static final Integer COMMON_LOCK_LEASE_SECONDS = 60;
-
-    private static final Map<String, LambdaMeta> LAMBDA_META_CACHE = new ConcurrentHashMap<>();
-
-    private static final Map<Class<?>, Map<String, String>> FIELD_NAME_CACHE = new ConcurrentHashMap<>();
 
     public static void lock(@NotNull String lockKey, @NotNull Runnable runnable) {
         lock(lockKey, null, false, runnable);
@@ -152,17 +142,6 @@ public class LockUtil {
     }
 
     @NotNull private static String getFieldName(@NotNull SFunction<?, ?> column) {
-        if (!LAMBDA_META_CACHE.containsKey(column.toString())) {
-            LAMBDA_META_CACHE.put(column.toString(), LambdaUtils.extract(column));
-        }
-        LambdaMeta meta = LAMBDA_META_CACHE.get(column.toString());
-        if (!FIELD_NAME_CACHE.containsKey(meta.getInstantiatedClass())) {
-            FIELD_NAME_CACHE.put(meta.getInstantiatedClass(), new HashMap<>());
-        }
-        if (!FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).containsKey(meta.getImplMethodName())) {
-            String fieldName = PropertyNamer.methodToProperty(meta.getImplMethodName());
-            FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).put(meta.getImplMethodName(), fieldName);
-        }
-        return FIELD_NAME_CACHE.get(meta.getInstantiatedClass()).get(meta.getImplMethodName());
+        return column.getFieldName();
     }
 }

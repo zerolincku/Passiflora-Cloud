@@ -24,6 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamApp;
+import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -35,13 +42,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
-import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 
 import lombok.extern.slf4j.Slf4j;
 

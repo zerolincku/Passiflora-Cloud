@@ -21,6 +21,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.base.constant.Header;
+import com.zerolinck.passiflora.common.config.PassifloraProperties;
+import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.common.util.NetUtil;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.model.storage.entity.StorageFile;
+import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
+import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
+import com.zerolinck.passiflora.storage.util.OssS3Util;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,21 +45,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.config.PassifloraProperties;
-import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.NetUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
-import com.zerolinck.passiflora.common.util.lock.LockWrapper;
-import com.zerolinck.passiflora.model.common.constant.Header;
-import com.zerolinck.passiflora.model.storage.entity.StorageFile;
-import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
-import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
-import com.zerolinck.passiflora.storage.util.OssS3Util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -68,12 +67,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     @NotNull public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(), condition.searchWrapper(StorageFile.class), condition.sortWrapper(StorageFile.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(StorageFile.class));
     }
 
     public List<StorageFile> listByFileIds(List<String> fileIds) {
-        return baseMapper.selectList(new LambdaQueryWrapper<StorageFile>().in(StorageFile::getFileId, fileIds));
+        return mapper.selectListByIds(fileIds);
     }
 
     /**
@@ -94,13 +93,14 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     }
                     StorageFile dbFile = storageFiles.getFirst();
                     dbFile.setFileId(null);
-                    dbFile.setFilePurpose(null);
-                    dbFile.setDownloadCount(null);
+                    // TODO 文件作用
+                    dbFile.setFilePurpose("");
+                    dbFile.setDownloadCount(0L);
                     dbFile.setLastDownloadTime(null);
                     dbFile.setFileStatus(FileStatusEnum.TEMP);
                     dbFile.setOriginalFileName(storageFile.getOriginalFileName());
                     dbFile.setContentType(storageFile.getContentType());
-                    baseMapper.insert(dbFile);
+                    mapper.insert(dbFile);
                     return dbFile.getFileId();
                 });
     }
@@ -118,8 +118,11 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     }
                     storageFile.setContentType(file.getContentType());
                     storageFile.setFileMd5(md5Hex);
+                    // TODO 文件作用
+                    storageFile.setFilePurpose("");
                     storageFile.setFileSize(file.getSize());
                     storageFile.setFileStatus(FileStatusEnum.TEMP);
+                    storageFile.setDownloadCount(0L);
                     String extName = FilenameUtils.getExtension(storageFile.getOriginalFileName());
                     String objectName = md5Hex + "." + extName;
                     storageFile.setBucketName(bucket);
@@ -130,8 +133,8 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                     }
 
                     // 检查文件是否已经上传
-                    List<StorageFile> storageFiles = baseMapper.selectList(
-                            new LambdaQueryWrapper<StorageFile>().eq(StorageFile::getFileMd5, md5Hex));
+                    List<StorageFile> storageFiles =
+                            mapper.selectListByQuery(new QueryWrapper().eq(StorageFile::getFileMd5, md5Hex));
                     boolean exist = false;
                     if (!storageFiles.isEmpty()) {
                         StorageFile dbStorageFile = storageFiles.getFirst();
@@ -158,13 +161,13 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                             throw new BizException(e);
                         }
                     }
-                    this.save(storageFile);
+                    mapper.insert(storageFile);
                     return storageFile.getFileId();
                 });
     }
 
     @NotNull public List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
-        return baseMapper.listByFileMd5(fileMd5);
+        return mapper.listByFileMd5(fileMd5);
     }
 
     public void deleteByIds(@NotNull Collection<String> fileIds) {
@@ -178,7 +181,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         if (StringUtils.isBlank(fileId)) {
             return;
         }
-        StorageFile storageFile = baseMapper.selectById(fileId);
+        StorageFile storageFile = mapper.selectOneById(fileId);
         if (storageFile == null) {
             return;
         }
@@ -187,8 +190,8 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
                 true,
                 () -> {
-                    baseMapper.deleteByIds(List.of(fileId), CurrentUtil.getCurrentUserId());
-                    Integer md5Count = baseMapper.countByFileMd5(storageFile.getFileMd5());
+                    mapper.deleteBatchByIds(List.of(fileId), 500);
+                    long md5Count = mapper.countByFileMd5(storageFile.getFileMd5());
                     if (md5Count == 0) {
                         OssS3Util.deleteFile(storageFile.getBucketName(), storageFile.getObjectName());
                     }
@@ -196,12 +199,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
     }
 
     @NotNull public Optional<StorageFile> detail(@NotNull String fileId) {
-        return Optional.ofNullable(baseMapper.selectById(fileId));
+        return Optional.ofNullable(mapper.selectOneById(fileId));
     }
 
     @SneakyThrows
     public void downloadFile(@NotNull String fileId) {
-        StorageFile storageFile = baseMapper.selectById(fileId);
+        StorageFile storageFile = mapper.selectOneById(fileId);
         if (storageFile == null) {
             throw new NoSuchElementException("文件不存在");
         }
@@ -215,7 +218,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 Header.CONTENT_DISPOSITION.getValue(),
                 "attachment; filename=" + urlCodec.encode(storageFile.getOriginalFileName()));
         OssS3Util.downloadFile(storageFile.getBucketName(), storageFile.getObjectName(), response.getOutputStream());
-        baseMapper.incrDownCount(fileId);
+        mapper.incrDownCount(fileId);
     }
 
     @SneakyThrows
@@ -226,7 +229,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         ZipOutputStream zipOut = new ZipOutputStream(NetUtil.getResponse().getOutputStream());
         Map<String, Integer> fileNameCountMap = new HashMap<>();
         for (String fileId : fileIds) {
-            StorageFile storageFile = baseMapper.selectById(fileId);
+            StorageFile storageFile = mapper.selectOneById(fileId);
             if (storageFile == null) {
                 throw new NoSuchElementException("文件不存在，fileId=" + fileId);
             }
@@ -235,7 +238,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
             zipOut.putNextEntry(new ZipEntry(fileName));
             OssS3Util.downloadFile(storageFile.getBucketName(), storageFile.getObjectName(), zipOut);
             zipOut.closeEntry();
-            baseMapper.incrDownCount(fileId);
+            mapper.incrDownCount(fileId);
         }
         zipOut.close();
     }
@@ -252,11 +255,11 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
 
     /** 确认文件使用，将临时文件转换为正式文件 */
     public void confirmFile(@NotNull String fileId) {
-        baseMapper.confirmFile(fileId, CurrentUtil.getCurrentUserId());
+        mapper.confirmFile(fileId);
     }
 
     public Set<String> expiredTempFileIds() {
-        return baseMapper.expiredTempFileIds();
+        return mapper.expiredTempFileIds();
     }
 
     /** 处理压缩包文件重名问题 */

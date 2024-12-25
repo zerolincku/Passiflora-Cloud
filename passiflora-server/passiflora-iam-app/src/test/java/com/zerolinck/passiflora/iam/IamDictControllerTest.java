@@ -24,6 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamDict;
+import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -35,12 +42,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,6 +90,8 @@ class IamDictControllerTest {
         IamDict iamDict = new IamDict();
         iamDict.setDictName("test");
         iamDict.setDictTag("test");
+        iamDict.setIsSystem(YesOrNoEnum.NO);
+        iamDict.setValueIsOnly(YesOrNoEnum.NO);
         mockMvc.perform(post("/iam-dict/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamDict)))
@@ -107,6 +110,7 @@ class IamDictControllerTest {
         iamDictItem.setDictId(testSysDictId);
         iamDictItem.setLabel("test");
         iamDictItem.setValue("test");
+        iamDictItem.setIsSystem(YesOrNoEnum.NO);
         mockMvc.perform(post("/iam-dict-item/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamDictItem)))

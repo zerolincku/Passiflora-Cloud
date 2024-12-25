@@ -24,6 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -39,11 +44,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,6 +104,7 @@ class StorageFileControllerTest {
         storageFile.setOriginalFileName("quickTest.txt");
         storageFile.setContentType("text/plain");
         storageFile.setFileMd5(DigestUtils.md5Hex(file.getBytes()));
+        log.info("请求参数: {}", JsonUtil.toJson(storageFile));
         mockMvc.perform(post("/storage-file/try-quickly-upload")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(storageFile)))

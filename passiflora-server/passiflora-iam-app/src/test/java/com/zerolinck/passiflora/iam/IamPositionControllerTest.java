@@ -25,6 +25,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.common.api.ResultCode;
+import com.zerolinck.passiflora.common.util.JsonUtil;
+import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.model.iam.entity.IamPosition;
+import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
+import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -36,15 +45,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
-import com.zerolinck.passiflora.model.common.enums.StatusEnum;
-import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
-import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,6 +87,7 @@ class IamPositionControllerTest {
         iamPosition.setDataScopeType(PositionDataScopeTypeEnum.ALL);
         iamPosition.setPositionLevel(1);
         iamPosition.setPositionStatus(StatusEnum.ENABLE);
+        iamPosition.setOrder(1);
         mockMvc.perform(post("/iam-position/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(iamPosition)))

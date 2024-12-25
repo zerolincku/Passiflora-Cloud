@@ -16,11 +16,11 @@
  */
 package com.zerolinck.passiflora.gateway.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancedExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /** 网关配置类 该类负责配置网关的全局异常处理器和WebClient构建器 */
 @Configuration(proxyBeanMethods = false)

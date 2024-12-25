@@ -18,19 +18,22 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.*;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.common.util.ProxyUtil;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,10 +56,8 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      */
     @NotNull public Page<IamRolePermission> page(@Nullable QueryCondition<IamRolePermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(),
-                condition.searchWrapper(IamRolePermission.class),
-                condition.sortWrapper(IamRolePermission.class));
+        return mapper.paginate(
+                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamRolePermission.class));
     }
 
     /**
@@ -67,8 +68,8 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      */
     public void add(@NotNull IamRolePermission iamRolePermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamRolePermission);
-            baseMapper.insert(iamRolePermission);
+            OnlyFieldCheck.checkInsert(mapper, iamRolePermission);
+            mapper.insert(iamRolePermission);
         });
     }
 
@@ -80,8 +81,8 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      */
     public boolean update(@NotNull IamRolePermission iamRolePermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamRolePermission);
-            int changeRowCount = baseMapper.updateById(iamRolePermission);
+            OnlyFieldCheck.checkUpdate(mapper, iamRolePermission);
+            int changeRowCount = mapper.update(iamRolePermission);
             return changeRowCount > 0;
         });
     }
@@ -97,7 +98,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return baseMapper.deleteByIds(ids, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(ids, 500);
     }
 
     /**
@@ -107,7 +108,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
      * @since 2024-08-17
      */
     @NotNull public Optional<IamRolePermission> detail(@NotNull String id) {
-        return Optional.ofNullable(baseMapper.selectById(id));
+        return Optional.ofNullable(mapper.selectOneById(id));
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -115,14 +116,14 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }
-        return baseMapper.deleteByRoleIds(roleIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteByRoleIds(roleIds);
     }
 
     @NotNull public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
-        return baseMapper.permissionIdsByRoleIds(roleIds);
+        return mapper.permissionIdsByRoleIds(roleIds);
     }
 
     public void saveRolePermission(@NotNull RolePermissionArgs args) {

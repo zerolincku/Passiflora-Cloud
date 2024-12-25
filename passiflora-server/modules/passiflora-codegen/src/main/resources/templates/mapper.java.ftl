@@ -1,10 +1,10 @@
 package com.zerolinck.passiflora.${moduleName}.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+
+
+
+
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

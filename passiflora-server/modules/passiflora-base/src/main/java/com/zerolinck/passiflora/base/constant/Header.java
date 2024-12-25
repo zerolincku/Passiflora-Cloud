@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.common.constant;
+package com.zerolinck.passiflora.base.constant;
 
 import lombok.Getter;
 

@@ -18,6 +18,10 @@ package com.zerolinck.passiflora.feign.storage;
 
 import java.util.List;
 
+import com.zerolinck.passiflora.common.api.Result;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.feign.config.FeignConfiguration;
+import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -27,10 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.feign.config.FeignConfiguration;
-import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

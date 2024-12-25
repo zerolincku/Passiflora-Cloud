@@ -22,11 +22,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Length;
+import com.zerolinck.passiflora.base.valid.Insert;
+import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.valid.Login;
-import com.zerolinck.passiflora.model.valid.Insert;
-import com.zerolinck.passiflora.model.valid.OnlyField;
-import com.zerolinck.passiflora.model.valid.Update;
+import org.hibernate.validator.constraints.Length;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;

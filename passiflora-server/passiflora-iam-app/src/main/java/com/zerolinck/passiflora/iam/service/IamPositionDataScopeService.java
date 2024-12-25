@@ -20,20 +20,19 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionDataScopeMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,23 +45,23 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
 
     @NotNull public Page<IamPositionDataScope> page(@Nullable QueryCondition<IamPositionDataScope> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return baseMapper.page(
-                condition.page(),
-                condition.searchWrapper(IamPositionDataScope.class),
-                condition.sortWrapper(IamPositionDataScope.class));
+        return mapper.paginate(
+                condition.getPageNumber(),
+                condition.getPageSize(),
+                condition.searchWrapper(IamPositionDataScope.class));
     }
 
     public void add(@NotNull IamPositionDataScope iamPositionDataScope) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(baseMapper, iamPositionDataScope);
-            baseMapper.insert(iamPositionDataScope);
+            OnlyFieldCheck.checkInsert(mapper, iamPositionDataScope);
+            mapper.insert(iamPositionDataScope);
         });
     }
 
     public boolean update(@NotNull IamPositionDataScope iamPositionDataScope) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(baseMapper, iamPositionDataScope);
-            int changeRowCount = baseMapper.updateById(iamPositionDataScope);
+            OnlyFieldCheck.checkUpdate(mapper, iamPositionDataScope);
+            int changeRowCount = mapper.update(iamPositionDataScope);
             return changeRowCount > 0;
         });
     }
@@ -72,10 +71,10 @@ public class IamPositionDataScopeService extends ServiceImpl<IamPositionDataScop
         if (CollectionUtils.isEmpty(scopeIds)) {
             return 0;
         }
-        return baseMapper.deleteByIds(scopeIds, CurrentUtil.getCurrentUserId());
+        return mapper.deleteBatchByIds(scopeIds, 500);
     }
 
     @NotNull public Optional<IamPositionDataScope> detail(@NotNull String scopeId) {
-        return Optional.ofNullable(baseMapper.selectById(scopeId));
+        return Optional.ofNullable(mapper.selectOneById(scopeId));
     }
 }

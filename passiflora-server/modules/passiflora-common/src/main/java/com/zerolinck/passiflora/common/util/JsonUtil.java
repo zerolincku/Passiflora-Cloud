@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.zerolinck.passiflora.common.config.jackson.JacksonConfig;
+import org.jetbrains.annotations.NotNull;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

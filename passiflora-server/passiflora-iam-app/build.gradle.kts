@@ -34,6 +34,8 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding")
+    annotationProcessor("com.mybatis-flex:mybatis-flex-processor")
+    testAnnotationProcessor("com.mybatis-flex:mybatis-flex-processor")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
@@ -55,9 +57,10 @@ dependencies {
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
 
+    implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
     implementation("org.redisson:redisson-spring-boot-starter")
-    implementation("com.baomidou:mybatis-plus-boot-starter")
     implementation("org.postgresql:postgresql")
+    implementation("com.zaxxer:HikariCP")
 
     // liquibase
     implementation("org.liquibase:liquibase-core")
