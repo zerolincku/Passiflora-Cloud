@@ -17,8 +17,7 @@
 package com.zerolinck.passiflora.model.storage.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -29,7 +28,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum FileStatusEnum implements LabelValueInterface {
+public enum FileStatusEnum implements ILabelValue {
     /** 文件上传默认为临时文件，临时文件在到达设置的时间期限后，将会被删除 */
     TEMP("临时文件", 0),
     /** 被其他服务确认引用，会转换为正式文件 */

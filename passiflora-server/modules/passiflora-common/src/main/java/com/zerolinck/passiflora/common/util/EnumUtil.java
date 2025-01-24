@@ -16,19 +16,18 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import com.zerolinck.passiflora.base.LabelValueInterface;
-import org.jetbrains.annotations.NotNull;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
 public class EnumUtil {
 
-    @NotNull public static LabelValueInterface getEnumByValue(
-            @NotNull Class<? extends LabelValueInterface> clazz, @NotNull Object value) {
-        LabelValueInterface[] enumConstants = clazz.getEnumConstants();
-        for (LabelValueInterface nameValue : enumConstants) {
+    @NotNull public static ILabelValue getEnumByValue(
+            @NotNull Class<? extends ILabelValue> clazz, @NotNull Object value) {
+        ILabelValue[] enumConstants = clazz.getEnumConstants();
+        for (ILabelValue nameValue : enumConstants) {
             if (nameValue.getValue().equals(value)) {
                 return nameValue;
             }
@@ -37,10 +36,10 @@ public class EnumUtil {
     }
 
     @NotNull @SuppressWarnings("unused")
-    public static LabelValueInterface getEnumByName(
-            @NotNull Class<? extends LabelValueInterface> clazz, @NotNull Object name) {
-        LabelValueInterface[] enumConstants = clazz.getEnumConstants();
-        for (LabelValueInterface nameValue : enumConstants) {
+    public static ILabelValue getEnumByName(
+            @NotNull Class<? extends ILabelValue> clazz, @NotNull Object name) {
+        ILabelValue[] enumConstants = clazz.getEnumConstants();
+        for (ILabelValue nameValue : enumConstants) {
             if (nameValue.getLabel().equals(name)) {
                 return nameValue;
             }

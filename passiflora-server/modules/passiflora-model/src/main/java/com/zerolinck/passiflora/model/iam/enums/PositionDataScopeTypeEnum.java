@@ -17,15 +17,14 @@
 package com.zerolinck.passiflora.model.iam.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /** @author linck on 2024-05-29 */
 @Getter
 @AllArgsConstructor
-public enum PositionDataScopeTypeEnum implements LabelValueInterface {
+public enum PositionDataScopeTypeEnum implements ILabelValue {
     USER_ORGANIZATION("用户所属机构", 0),
     USER_ORGANIZATION_AND_SUBORDINATES("用户所属机构及其下级机构", 1),
     SPECIFIED_ORGANIZATION("指定机构", 2),

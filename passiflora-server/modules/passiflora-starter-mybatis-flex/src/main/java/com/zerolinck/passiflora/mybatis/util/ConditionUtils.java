@@ -16,21 +16,20 @@
  */
 package com.zerolinck.passiflora.mybatis.util;
 
+import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.ILabelValue;
+import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.StrUtil;
+import com.zerolinck.passiflora.common.util.TimeUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.experimental.UtilityClass;
+
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.mybatisflex.core.query.QueryWrapper;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.common.util.TimeUtil;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/12/26 */
 @UtilityClass
@@ -165,7 +164,7 @@ public class ConditionUtils {
             return Long.valueOf(value);
         }
         Class<?>[] interfaces = field.getType().getInterfaces();
-        if (interfaces.length > 0 && interfaces[0].equals(LabelValueInterface.class)) {
+        if (interfaces.length > 0 && interfaces[0].equals(ILabelValue.class)) {
             return Integer.valueOf(value);
         }
         throw new IllegalArgumentException("不支持的搜索类型：" + field.getType().getSimpleName());

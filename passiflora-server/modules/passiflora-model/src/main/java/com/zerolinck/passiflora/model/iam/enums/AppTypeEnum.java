@@ -17,15 +17,14 @@
 package com.zerolinck.passiflora.model.iam.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /** @author 林常坤 on 2024/10/04 */
 @Getter
 @AllArgsConstructor
-public enum AppTypeEnum implements LabelValueInterface {
+public enum AppTypeEnum implements ILabelValue {
     CLIENT_APP("客户端应用", 0),
     WEB_APP("web应用", 1),
     ;

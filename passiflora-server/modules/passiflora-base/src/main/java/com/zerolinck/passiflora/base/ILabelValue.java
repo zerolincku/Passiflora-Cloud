@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.base;
 
 /** @author linck on 2024-02-06 */
-public interface LabelValueInterface {
+public interface ILabelValue {
     String getLabel();
 
     Integer getValue();

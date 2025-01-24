@@ -17,15 +17,14 @@
 package com.zerolinck.passiflora.base.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /** @author linck on 2024-05-08 */
 @Getter
 @AllArgsConstructor
-public enum StatusEnum implements LabelValueInterface {
+public enum StatusEnum implements ILabelValue {
     DISABLE("禁用", 0),
     ENABLE("启用", 1);
 

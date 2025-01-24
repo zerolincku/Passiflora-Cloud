@@ -16,13 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util.lock;
 
+import com.google.common.reflect.ClassPath;
+import com.zerolinck.passiflora.base.ILabelValue;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.reflect.ClassPath;
-import com.zerolinck.passiflora.base.LabelValueInterface;
 
 /** @author 林常坤 on 2024-08-14 */
 public class ClassUtil {
@@ -44,7 +44,7 @@ public class ClassUtil {
         Set<Class<?>> result = new HashSet<>();
         allClasses.forEach(classInfo -> {
             Class<?> loadClass = classInfo.load();
-            if (loadClass.isEnum() && LabelValueInterface.class.isAssignableFrom(loadClass)) {
+            if (loadClass.isEnum() && ILabelValue.class.isAssignableFrom(loadClass)) {
                 result.add(loadClass);
             }
         });

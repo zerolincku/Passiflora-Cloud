@@ -17,15 +17,14 @@
 package com.zerolinck.passiflora.base.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /** @author linck on 2024-04-02 */
 @Getter
 @AllArgsConstructor
-public enum YesOrNoEnum implements LabelValueInterface {
+public enum YesOrNoEnum implements ILabelValue {
     NO("否", 0),
     YES("是", 1);
 

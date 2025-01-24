@@ -16,13 +16,6 @@
  */
 package com.zerolinck.passiflora.common.config.jackson;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.*;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -34,13 +27,20 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.zerolinck.passiflora.base.LabelValueInterface;
+import com.zerolinck.passiflora.base.ILabelValue;
 import com.zerolinck.passiflora.common.util.EnumUtil;
 import com.zerolinck.passiflora.common.util.TimeUtil;
 import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * Jackson配置类 配置Jackson的序列化和反序列化规则
@@ -85,7 +85,7 @@ public class JacksonConfig {
             @Override
             public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
                 Integer value = jsonParser.getValueAsInt();
-                return EnumUtil.getEnumByValue((Class<? extends LabelValueInterface>) clazz, value);
+                return EnumUtil.getEnumByValue((Class<? extends ILabelValue>) clazz, value);
             }
         }));
         return deserializers;
@@ -107,10 +107,10 @@ public class JacksonConfig {
         serializers.put(Long.TYPE, ToStringSerializer.instance);
 
         // NameValue 序列化配置
-        serializers.put(LabelValueInterface.class, new JsonSerializer<LabelValueInterface>() {
+        serializers.put(ILabelValue.class, new JsonSerializer<ILabelValue>() {
             @Override
             public void serialize(
-                    LabelValueInterface value, JsonGenerator jsonGenerator, SerializerProvider serializers)
+                    ILabelValue value, JsonGenerator jsonGenerator, SerializerProvider serializers)
                     throws IOException {
                 jsonGenerator.writeObject(value.getValue());
             }

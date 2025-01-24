@@ -17,15 +17,14 @@
 package com.zerolinck.passiflora.model.iam.enums;
 
 import com.mybatisflex.annotation.EnumValue;
-import com.zerolinck.passiflora.base.LabelValueInterface;
-
+import com.zerolinck.passiflora.base.ILabelValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /** @author linck on 2024-05-08 */
 @Getter
 @AllArgsConstructor
-public enum PermissionTypeEnum implements LabelValueInterface {
+public enum PermissionTypeEnum implements ILabelValue {
     MENU_SET("目录", 0),
     MENU("菜单", 1),
     PERMISSION("权限", 2);
