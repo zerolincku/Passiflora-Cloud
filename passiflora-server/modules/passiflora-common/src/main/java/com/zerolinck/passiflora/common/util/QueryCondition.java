@@ -17,18 +17,10 @@
 package com.zerolinck.passiflora.common.util;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mybatisflex.core.constant.SqlConsts;
-import com.mybatisflex.core.query.QueryColumn;
-import com.mybatisflex.core.query.QueryOrderBy;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.zerolinck.passiflora.base.LabelValueInterface;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -114,7 +106,7 @@ public class QueryCondition<T> {
     private Map<String, List<String>> sort;
 
     /** 页数 */
-    private Integer pageNumber;
+    private Integer pageNum;
 
     /** 每页行数 */
     private Integer pageSize;
@@ -133,11 +125,11 @@ public class QueryCondition<T> {
         sort = new HashMap<>();
     }
 
-    public Integer getPageNumber() {
-        if (pageNumber == null) {
-            pageNumber = 1;
+    public Integer getPageNum() {
+        if (pageNum == null) {
+            pageNum = 1;
         }
-        return pageNumber;
+        return pageNum;
     }
 
     public Integer getPageSize() {
@@ -161,168 +153,5 @@ public class QueryCondition<T> {
     public QueryCondition<T> fieldNameCover(Map<String, String> fieldNameCover) {
         this.fieldNameCover = fieldNameCover;
         return this;
-    }
-
-    /**
-     * 根据 condition 内容创建 queryWrapper column 会优先使用别名转换映射进行转换 如果字段在别名转换映射中不存在，则会通过 clazz 获取对应实体类的字段，存在的字段，才允许作为条件
-     *
-     * @param clazz list 查询的实体类
-     */
-    public QueryWrapper searchWrapper(Class<?> clazz) {
-        this.entityClazz = clazz;
-
-        QueryWrapper queryWrapper = new QueryWrapper();
-        this.getEq()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.eq(coverColumn, valueCover(column, value));
-                }));
-
-        this.getNe()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.ne(coverColumn, valueCover(column, value));
-                }));
-
-        this.getGt()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.gt(coverColumn, valueCover(column, value));
-                }));
-
-        this.getGe()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.ge(coverColumn, valueCover(column, value));
-                }));
-
-        this.getLt()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.lt(coverColumn, valueCover(column, value));
-                }));
-
-        this.getLe()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.le(coverColumn, valueCover(column, value));
-                }));
-
-        this.getLike()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.like(coverColumn, valueCover(column, value));
-                }));
-
-        this.getNLike()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.notLike(coverColumn, valueCover(column, value));
-                }));
-
-        this.getLikeL()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.likeLeft(coverColumn, valueCover(column, value));
-                }));
-
-        this.getLikeR()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    queryWrapper.likeRight(coverColumn, valueCover(column, value));
-                }));
-        return queryWrapper;
-    }
-
-    public QueryWrapper sortWrapper(Class<?> clazz) {
-        this.entityClazz = clazz;
-        QueryWrapper sortWrapper = new QueryWrapper();
-        this.getSort()
-                .forEach((column, values) -> values.forEach(value -> {
-                    String coverColumn = fieldCover(column);
-                    if ("desc".equals(value)) {
-                        sortWrapper.orderBy(new QueryOrderBy(new QueryColumn(coverColumn), SqlConsts.DESC));
-                    } else {
-                        sortWrapper.orderBy(new QueryOrderBy(new QueryColumn(coverColumn), SqlConsts.ASC));
-                    }
-                }));
-        return sortWrapper;
-    }
-
-    /**
-     * 字段转换
-     *
-     * @param column 原字段
-     * @return 转换后的字段
-     */
-    public String fieldCover(String column) {
-        if (this.fieldNameCover != null && this.fieldNameCover.containsKey(column)) {
-            return this.fieldNameCover.get(column);
-        }
-        Map<String, Field> fieldMap = this.getFields();
-        if (fieldMap.containsKey(column)) {
-            // 驼峰转下划线
-            return this.tableAlise == null ? "" : this.tableAlise + "." + StrUtil.camelToUnderline(column);
-        }
-        throw new IllegalArgumentException(String.format("不允许的搜索条件: %s", column));
-    }
-
-    /**
-     * 值数据格式转换，针对 postgres，Mysql 不需要
-     *
-     * @param column 原字段
-     * @return 转换后的字段
-     */
-    public Object valueCover(String column, String value) {
-        Field field = this.getFields().get(column);
-        if (field.getType().equals(String.class)) {
-            return value;
-        } else if (field.getType().equals(LocalDateTime.class)) {
-            return TimeUtil.timestamp2LocalDateTime(value);
-        } else if (field.getType().equals(LocalDate.class)) {
-            return LocalDate.parse(value, TimeUtil.NORMAL_DATE_FORMATTER);
-        } else if (field.getType().equals(LocalTime.class)) {
-            return LocalTime.parse(value, TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND);
-        } else if (field.getType().equals(Integer.class)) {
-            return Integer.valueOf(value);
-        } else if (field.getType().equals(Long.class)) {
-            return Long.valueOf(value);
-        }
-        Class<?>[] interfaces = field.getType().getInterfaces();
-        if (interfaces.length > 0 && interfaces[0].equals(LabelValueInterface.class)) {
-            return Integer.valueOf(value);
-        }
-        throw new IllegalArgumentException("不支持的搜索类型：" + field.getType().getSimpleName());
-    }
-
-    /** 获取字段缓存 */
-    private Map<String, Field> getFields() {
-        if (!FIELD_CACHE.containsKey(this.entityClazz)) {
-            FIELD_CACHE.put(this.entityClazz, getClassFields(this.entityClazz));
-        }
-        return FIELD_CACHE.get(this.entityClazz);
-    }
-
-    /**
-     * 初始化实体类字段缓存
-     *
-     * @param clazz 要操作的实体类 class
-     */
-    private static Map<String, Field> getClassFields(Class<?> clazz) {
-        Map<String, Field> fieldMap = new HashMap<>();
-
-        // 如果父类不是 Object，获取其父类字段
-        Class<?> superclass = clazz.getSuperclass();
-        while (!superclass.equals(Object.class)) {
-            for (Field field : superclass.getDeclaredFields()) {
-                fieldMap.put(field.getName(), field);
-            }
-            superclass = superclass.getSuperclass();
-        }
-
-        for (Field field : clazz.getDeclaredFields()) {
-            fieldMap.put(field.getName(), field);
-        }
-        return fieldMap;
     }
 }

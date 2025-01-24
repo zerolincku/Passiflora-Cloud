@@ -54,7 +54,7 @@ public class TestUtil {
             try {
                 lock.lock();
                 if (postgres == null) {
-                    postgres = new PostgreSQLContainer<>("postgres:17.0-alpine").withReuse(true);
+                    postgres = new PostgreSQLContainer<>("postgres:17.2-bookworm").withReuse(true);
                 }
             } finally {
                 lock.unlock();

@@ -23,17 +23,24 @@ import com.mybatisflex.core.update.UpdateChain;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * 应用 Mybatis Mapper
  *
- * @author linck on 2024-09-30
+ * @author linck
+ * @since 2024-09-30
  */
 public interface IamAppMapper extends BaseMapper<IamApp> {
 
-    default boolean disable(@Nullable @Param("appIds") Collection<String> appIds) {
+    /**
+     * 禁用应用
+     *
+     * @param appIds 应用ID集合
+     * @return 如果禁用成功返回true，否则返回false
+     * @since 2024-09-30
+     */
+    default boolean disable(@Nullable Collection<String> appIds) {
         if (CollectionUtils.isEmpty(appIds)) {
             return true;
         }
@@ -44,7 +51,14 @@ public interface IamAppMapper extends BaseMapper<IamApp> {
                 .update();
     }
 
-    default boolean enable(@Nullable @Param("appIds") Collection<String> appIds) {
+    /**
+     * 启用应用
+     *
+     * @param appIds 应用ID集合
+     * @return 如果启用成功返回true，否则返回false
+     * @since 2024-09-30
+     */
+    default boolean enable(@Nullable Collection<String> appIds) {
         if (CollectionUtils.isEmpty(appIds)) {
             return true;
         }

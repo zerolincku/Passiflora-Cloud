@@ -20,9 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
-import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -31,35 +28,43 @@ import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用户角色绑定 Service
  *
- * @author 林常坤 on 2024-08-17
+ * @author 林常坤
+ * @since 2024-08-17
  */
 @Slf4j
 @Service
-public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRole> {
-
+@RequiredArgsConstructor
+public class IamUserRoleService {
+    private final IamUserRoleMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamUserRole:";
 
     /**
      * 分页查询
      *
      * @param condition 搜索条件
+     * @return 用户角色绑定的分页结果
      * @since 2024-08-17
      */
     @NotNull public Page<IamUserRole> page(@Nullable QueryCondition<IamUserRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamUserRole.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamUserRole.class));
     }
 
     /**
@@ -79,6 +84,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * 更新用户角色绑定
      *
      * @param iamUserRole 用户角色绑定
+     * @return 如果更新成功返回true，否则返回false
      * @since 2024-08-17
      */
     public boolean update(@NotNull IamUserRole iamUserRole) {
@@ -93,6 +99,7 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * 删除用户角色绑定
      *
      * @param ids 用户角色绑定ID集合
+     * @return 删除的用户角色绑定数量
      * @since 2024-08-17
      */
     @Transactional(rollbackFor = Exception.class)
@@ -107,12 +114,20 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
      * 用户角色绑定详情
      *
      * @param id 用户角色绑定ID
+     * @return 包含用户角色绑定的Optional对象
      * @since 2024-08-17
      */
     @NotNull public Optional<IamUserRole> detail(@NotNull String id) {
         return Optional.ofNullable(mapper.selectOneById(id));
     }
 
+    /**
+     * 根据用户ID集合删除用户角色绑定
+     *
+     * @param userIds 用户ID集合
+     * @return 删除的用户角色绑定数量
+     * @since 2024-08-17
+     */
     @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
@@ -121,6 +136,13 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         return mapper.deleteByUserIds(userIds);
     }
 
+    /**
+     * 根据用户ID集合查询用户角色绑定
+     *
+     * @param userIds 用户ID集合
+     * @return 用户角色绑定响应列表
+     * @since 2024-08-17
+     */
     @NotNull public List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
@@ -128,6 +150,12 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
         return mapper.selectByUserIds(userIds);
     }
 
+    /**
+     * 更新用户角色绑定关系
+     *
+     * @param args 用户参数
+     * @since 2024-08-17
+     */
     public void updateRelation(@NotNull IamUserArgs args) {
         LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUserRole>().lock(IamUserRole::getUserId, args.getUserId()), true, () -> {
@@ -152,11 +180,19 @@ public class IamUserRoleService extends ServiceImpl<IamUserRoleMapper, IamUserRo
                             role.setRoleId(roleId);
                             addList.add(role);
                         }
-                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                        mapper.insertBatch(addList, 500);
                     }
                 });
     }
 
+    /**
+     * 根据用户ID和角色ID集合删除用户角色绑定
+     *
+     * @param userId 用户ID
+     * @param roleIds 角色ID集合
+     * @return 删除的用户角色绑定数量
+     * @since 2024-08-17
+     */
     @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIdAndRoleIds(@NotNull String userId, @Nullable Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {

@@ -21,21 +21,31 @@ import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.enums.DelFlagEnum;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
+import com.zerolinck.passiflora.model.iam.entity.table.IamRoleTableDef;
+import com.zerolinck.passiflora.model.iam.entity.table.IamUserRoleTableDef;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * 用户角色绑定 Mybatis Mapper
  *
- * @author 林常坤 on 2024-08-17
+ * @author 林常坤
+ * @since 2024-08-17
  */
 public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
 
-    default int deleteByUserIds(@NotNull @Param("userIds") Collection<String> userIds) {
+    /**
+     * 根据用户ID集合删除用户角色绑定
+     *
+     * @param userIds 用户ID集合
+     * @return 删除的用户角色绑定数量
+     * @since 2024-08-17
+     */
+    default int deleteByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
@@ -43,23 +53,38 @@ public interface IamUserRoleMapper extends BaseMapper<IamUserRole> {
         return this.deleteByQuery(new QueryWrapper().in(IamUserRole::getUserId, userIds));
     }
 
-    @NotNull @Select(
-            """
-        SELECT a.user_id, b.role_id, b.role_name FROM
-        (SELECT user_id, role_id
-        FROM iam_user_role
-        WHERE del_flag = 0 AND user_id IN
-        <foreach item="id" index="index" collection="userIds" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-        ) as a
-        INNER JOIN iam_role as b ON a.role_id = b.role_id
-        WHERE b.del_flag = 0 AND b.role_status = 1
-    """)
-    List<IamUserRoleResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    /**
+     * 根据用户ID集合查询用户角色响应对象列表
+     *
+     * @param userIds 用户ID集合
+     * @return 用户角色响应对象列表
+     * @since 2024-08-17
+     */
+    default List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
+        IamRoleTableDef r = IamRoleTableDef.IAM_ROLE.as("r");
+        IamUserRoleTableDef ur = IamUserRoleTableDef.IAM_USER_ROLE.as("ur");
 
-    default int deleteByUserIdAndRoleIds(
-            @NotNull @Param("userId") String userId, @NotNull @Param("roleIds") Collection<String> roleIds) {
+        return selectListByQueryAs(
+                QueryWrapper.create()
+                        .select(ur.USER_ID, r.ROLE_ID, r.ROLE_NAME)
+                        .from(r)
+                        .innerJoin(ur)
+                        .on(ur.ROLE_ID.eq(r.ROLE_ID))
+                        .where(r.DEL_FLAG.eq(DelFlagEnum.NOT_DELETE))
+                        .where(r.ROLE_STATUS.eq(StatusEnum.ENABLE))
+                        .and(ur.USER_ID.in(userIds)),
+                IamUserRoleResp.class);
+    }
+
+    /**
+     * 根据用户ID和角色ID集合删除用户角色绑定
+     *
+     * @param userId 用户ID
+     * @param roleIds 角色ID集合
+     * @return 删除的用户角色绑定数量
+     * @since 2024-08-17
+     */
+    default int deleteByUserIdAndRoleIds(@NotNull String userId, @NotNull Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;
         }

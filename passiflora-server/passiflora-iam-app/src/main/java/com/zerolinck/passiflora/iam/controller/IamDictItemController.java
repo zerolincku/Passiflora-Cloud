@@ -26,6 +26,7 @@ import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.iam.IamDictItemApi;
 import com.zerolinck.passiflora.iam.service.IamDictItemService;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class IamDictItemController implements IamDictItemApi {
 
     @Override
     public Result<List<IamDictItem>> page(@NotNull QueryCondition<IamDictItem> condition) {
-        return Result.ok(iamDictItemService.page(condition));
+        return Result.ok(FlexPage.convert(iamDictItemService.page(condition)));
     }
 
     @Override

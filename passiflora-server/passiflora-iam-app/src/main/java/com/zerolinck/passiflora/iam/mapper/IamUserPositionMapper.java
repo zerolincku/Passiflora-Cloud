@@ -21,33 +21,54 @@ import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.enums.DelFlagEnum;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamUserPosition;
+import com.zerolinck.passiflora.model.iam.entity.table.IamPositionTableDef;
+import com.zerolinck.passiflora.model.iam.entity.table.IamUserPositionTableDef;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** @author linck on 2024-05-14 */
+/**
+ * 用户职位 Mybatis Mapper
+ *
+ * @since 2024-05-14
+ */
 public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
 
-    @NotNull @Select(
-            """
-            SELECT a.user_id, b.position_id, b.position_name FROM
-                 (SELECT user_id, position_id
-                    FROM iam_user_position
-                    WHERE del_flag = 0 AND user_id IN
-                    <foreach item="userId" index="index" collection="userIds" open="(" separator="," close=")">
-                        #{userId}
-                    </foreach>
-                ) as a
-                INNER JOIN iam_position as b ON a.position_id = b.position_id
-                WHERE b.del_flag = 0 AND b.position_status = 1
-    """)
-    List<IamUserPositionResp> selectByUserIds(@NotNull @Param("userIds") Collection<String> userIds);
+    /**
+     * 根据用户ID集合查询用户职位响应��象列表
+     *
+     * @param userIds 用户ID集合
+     * @return 用户职位响应对象列表
+     * @since 2024-05-14
+     */
+    default List<IamUserPositionResp> selectByUserIds(@NotNull Collection<String> userIds) {
+        IamPositionTableDef p = IamPositionTableDef.IAM_POSITION.as("p");
+        IamUserPositionTableDef up = IamUserPositionTableDef.IAM_USER_POSITION.as("up");
 
-    default int deleteByUserIds(@NotNull @Param("userIds") Collection<String> userIds) {
+        return selectListByQueryAs(
+                QueryWrapper.create()
+                        .select(up.USER_ID, p.POSITION_ID, p.POSITION_NAME)
+                        .from(p)
+                        .innerJoin(up)
+                        .on(up.POSITION_ID.eq(p.POSITION_ID))
+                        .where(p.DEL_FLAG.eq(DelFlagEnum.NOT_DELETE))
+                        .where(p.POSITION_STATUS.eq(StatusEnum.ENABLE))
+                        .and(up.USER_ID.in(userIds)),
+                IamUserPositionResp.class);
+    }
+
+    /**
+     * 根据用户ID集合删除用户职位
+     *
+     * @param userIds 用户ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
+    default int deleteByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return 0;
         }
@@ -55,7 +76,14 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
         return this.deleteByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
     }
 
-    default int deleteByPositionIds(@NotNull @Param("positionIds") Collection<String> positionIds) {
+    /**
+     * 根据职位ID集合删除用户职位
+     *
+     * @param positionIds 职位ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
+    default int deleteByPositionIds(@NotNull Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
@@ -63,8 +91,15 @@ public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
         return this.deleteByQuery(new QueryWrapper().in(IamUserPosition::getPositionId, positionIds));
     }
 
-    default int deleteByUserIdAndPositionIds(
-            @NotNull @Param("userId") String userId, @Nullable @Param("positionIds") Collection<String> positionIds) {
+    /**
+     * 根据用户ID和职位ID集合删除用户职位
+     *
+     * @param userId 用户ID
+     * @param positionIds 职位ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
+    default int deleteByUserIdAndPositionIds(@NotNull String userId, @Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }

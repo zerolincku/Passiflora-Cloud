@@ -19,8 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
@@ -29,23 +27,28 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 角色权限 Service
  *
- * @author 林常坤 on 2024-08-17
+ * @author 林常坤
+ * @since 2024-08-17
  */
 @Slf4j
 @Service
-public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMapper, IamRolePermission> {
-
+@RequiredArgsConstructor
+public class IamRolePermissionService {
+    private final IamRolePermissionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamRolePermission:";
 
     /**
@@ -57,7 +60,9 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
     @NotNull public Page<IamRolePermission> page(@Nullable QueryCondition<IamRolePermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamRolePermission.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamRolePermission.class));
     }
 
     /**
@@ -111,6 +116,12 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         return Optional.ofNullable(mapper.selectOneById(id));
     }
 
+    /**
+     * 根据角色ID集合删除角色权限
+     *
+     * @param roleIds 角色ID集合
+     * @since 2024-08-17
+     */
     @SuppressWarnings("UnusedReturnValue")
     public int deleteByRoleIds(@Nullable Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
@@ -119,6 +130,12 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         return mapper.deleteByRoleIds(roleIds);
     }
 
+    /**
+     * 根据角色ID集合获取权限ID集合
+     *
+     * @param roleIds 角色ID集合
+     * @since 2024-08-17
+     */
     @NotNull public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
@@ -126,6 +143,12 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
         return mapper.permissionIdsByRoleIds(roleIds);
     }
 
+    /**
+     * 保存角色权限
+     *
+     * @param args 角色权限参数
+     * @since 2024-08-17
+     */
     public void saveRolePermission(@NotNull RolePermissionArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -148,7 +171,7 @@ public class IamRolePermissionService extends ServiceImpl<IamRolePermissionMappe
                             iamRolePermission.setPermissionId(permissionId);
                             addList.add(iamRolePermission);
                         });
-                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                        mapper.insertBatch(addList, 500);
                     }
                 });
     }

@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.common.api;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mybatisflex.core.paginate.Page;
 
 import lombok.Data;
 
@@ -38,7 +37,7 @@ public class Result<T> {
     private T data;
     /** 页数 */
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long pageNumber;
+    private Long pageNum;
     /** 每页条数 */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long pageSize;
@@ -54,11 +53,11 @@ public class Result<T> {
         this.data = data;
     }
 
-    public Result(int code, String message, T data, Long pageNumber, Long pageSize, Long total) {
+    public Result(int code, String message, T data, Long pageNum, Long pageSize, Long total) {
         this.code = code;
         this.message = message;
         this.data = data;
-        this.pageNumber = pageNumber;
+        this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.total = total;
     }
@@ -82,7 +81,7 @@ public class Result<T> {
                 ResultCode.SUCCESS.getCode(),
                 ResultCode.SUCCESS.getMessage(),
                 page.getRecords(),
-                page.getPageNumber(),
+                page.getPageNum(),
                 page.getPageSize(),
                 page.getTotalRow());
     }

@@ -27,11 +27,13 @@ import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.JsonUtil;
 import com.zerolinck.passiflora.common.util.TestUtil;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
+import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import org.junit.jupiter.api.MethodOrderer;
@@ -62,6 +64,7 @@ class IamPermissionControllerTest {
     private static String testSysPermissionId;
     private static IamPermission testIamPermission;
     private static List<IamPermissionTableResp> permissionTree;
+    private static String testToken;
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
@@ -126,7 +129,18 @@ class IamPermissionControllerTest {
     @Test
     @Order(5)
     public void testMenuTree() throws Exception {
-        mockMvc.perform(get("/iam-permission/menu-tree"))
+        IamUser testUser = new IamUser("admin", "123456");
+        mockMvc.perform(post("/iam-user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
+                .andDo(result ->
+                        testToken = JsonUtil.readTree(result.getResponse().getContentAsString())
+                                .get("data")
+                                .asText());
+
+        mockMvc.perform(get("/iam-permission/menu-tree").header(Header.AUTHORIZATION.getValue(), testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -134,7 +148,7 @@ class IamPermissionControllerTest {
     @Test
     @Order(6)
     public void testPermissionTree() throws Exception {
-        mockMvc.perform(get("/iam-permission/permission-table-tree"))
+        mockMvc.perform(get("/iam-permission/permission-table-tree").header(Header.AUTHORIZATION.getValue(), testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
@@ -168,6 +182,7 @@ class IamPermissionControllerTest {
     @Order(9)
     public void testUpdateOrder() throws Exception {
         mockMvc.perform(post("/iam-permission/update-order")
+                        .header(Header.AUTHORIZATION.getValue(), testToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(permissionTree)))
                 .andExpect(status().isOk())

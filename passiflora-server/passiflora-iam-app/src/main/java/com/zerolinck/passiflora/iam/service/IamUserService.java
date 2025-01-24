@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
@@ -39,6 +37,8 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +51,8 @@ import lombok.RequiredArgsConstructor;
 /** @author linck on 2024-02-07 */
 @Service
 @RequiredArgsConstructor
-public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
-
+public class IamUserService {
+    private final IamUserMapper mapper;
     private final IamOrgService iamOrgService;
     private final IamUserPositionService userPositionService;
     private final PassifloraProperties passifloraProperties;
@@ -62,10 +62,19 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
 
     private static final String LOCK_KEY = "passiflora:lock:iamUser:";
 
+    /**
+     * 根据提供的组织ID和查询条件分页查询IAM用户。
+     *
+     * @param orgId 组织ID
+     * @param condition 查询条件
+     * @return IAM用户响应的分页结果
+     */
     @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         Page<IamUser> page = mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamUser.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamUser.class));
 
         Set<String> userIds = page.getRecords().stream().map(IamUser::getUserId).collect(Collectors.toSet());
         Set<String> orgIds = page.getRecords().stream()
@@ -117,6 +126,11 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return iamUserRespPage;
     }
 
+    /**
+     * 添加新的IAM用户。
+     *
+     * @param args IAM用户参数
+     */
     public void add(@NotNull IamUserArgs args) {
         args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
 
@@ -130,6 +144,12 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         });
     }
 
+    /**
+     * 更新现有的IAM用户。
+     *
+     * @param args IAM用户参数
+     * @return 如果更新成功返回true，否则返回false
+     */
     public boolean update(@NotNull IamUserArgs args) {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
@@ -142,6 +162,12 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
                 });
     }
 
+    /**
+     * 根据用户ID集合删除IAM用户。
+     *
+     * @param userIds 用户ID集合
+     * @return 删除的用户数量
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
@@ -152,13 +178,24 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return count;
     }
 
+    /**
+     * 根据用户ID获取IAM用户的详细信息。
+     *
+     * @param userId 用户ID
+     * @return 包含IAM用户响应的Optional对象
+     */
     @NotNull public Optional<IamUserResp> detail(@NotNull String userId) {
         return Optional.ofNullable(IamUserConvert.INSTANCE.entityToResp(mapper.selectOneById(userId)));
     }
 
+    /**
+     * 获取当前用户的信息。
+     *
+     * @return 当前用户的信息
+     */
     @NotNull public IamUserInfo currentUserInfo() {
         String userId = CurrentUtil.getCurrentUserId();
-        IamUser iamUser = this.getById(userId);
+        IamUser iamUser = mapper.selectOneById(userId);
         if (StringUtils.isBlank(userId) || Objects.isNull(iamUser)) {
             throw new BizException(ResultCode.UNAUTHORIZED);
         }
@@ -177,8 +214,14 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return iamUserInfo;
     }
 
+    /**
+     * 登录IAM用户。
+     *
+     * @param iamUser IAM用户
+     * @return 生成的令牌
+     */
     @NotNull public String login(@NotNull IamUser iamUser) {
-        IamUser dbIamUser = mapper.selectOneById(new QueryWrapper().eq(IamUser::getUserName, iamUser.getUserName()));
+        IamUser dbIamUser = mapper.selectByUsername(iamUser.getUserName());
         if (dbIamUser == null) {
             throw new BizException("账号或密码错误");
         }
@@ -193,6 +236,7 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         return token;
     }
 
+    /** 登出当前用户。 */
     public void logout() {
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
         if (CollectionUtils.isEmpty(keys)) {
@@ -201,6 +245,11 @@ public class IamUserService extends ServiceImpl<IamUserMapper, IamUser> {
         keys.forEach(RedisUtils::del);
     }
 
+    /**
+     * 检查当前用户的令牌是否有效。
+     *
+     * @return 如果令牌有效返回true，否则返回false
+     */
     public Boolean checkToken() {
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
         if (CollectionUtils.isEmpty(keys)) {

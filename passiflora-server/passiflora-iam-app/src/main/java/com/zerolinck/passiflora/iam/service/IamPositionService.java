@@ -19,17 +19,17 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
+import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPositionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,38 +39,47 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** @author linck on 2024-05-14 */
+/**
+ * IAM职位服务类
+ *
+ * @author linck
+ * @since 2024-05-14
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPosition> {
+public class IamPositionService {
+    private final IamPositionMapper mapper;
+    private final IamPositionPermissionMapper positionPermissionMapper;
 
     private static final String LOCK_KEY = "passiflora:lock:iamPosition:";
-
-    private final IamPositionPermissionService iamPositionPermissionService;
 
     /**
      * 分页查询
      *
      * @param condition 搜索条件
+     * @return 职位的分页结果
      * @since 2024-08-12
      */
     @NotNull public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamPosition.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamPosition.class));
     }
 
     /**
      * 根据职位ID集合查询数据
      *
      * @param positionIds 职位集合
+     * @return 职位列表
      * @since 2024-08-12
      */
     @NotNull @SuppressWarnings("unused")
     public List<IamPosition> listByIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
-        return mapper.selectListByQuery(new QueryWrapper().in(IamPosition::getPositionId, positionIds));
+        return mapper.listByPositionIds(positionIds);
     }
 
     /**
@@ -95,6 +104,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * 更新职位
      *
      * @param iamPosition 更新职位
+     * @return 如果更新成功返回true，否则返回false
      * @since 2024-08-12
      */
     public boolean update(@NotNull IamPosition iamPosition) {
@@ -121,6 +131,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * 根据职位ID集合删除数据
      *
      * @param positionIds 职位ID集合
+     * @return 删除的职位数量
      * @since 2024-08-12
      */
     @Transactional(rollbackFor = Exception.class)
@@ -129,7 +140,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
             return 0;
         }
         int changeRowNum = mapper.deleteBatchByIds(positionIds, 500);
-        iamPositionPermissionService.deleteByPositionIds(positionIds);
+        positionPermissionMapper.deleteByPositionIds(positionIds);
         return changeRowNum;
     }
 
@@ -137,6 +148,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
      * 查询详情
      *
      * @param positionId 职位ID
+     * @return 包含职位的Optional对象
      * @since 2024-08-12
      */
     @NotNull public Optional<IamPosition> detail(@NotNull String positionId) {
@@ -146,6 +158,7 @@ public class IamPositionService extends ServiceImpl<IamPositionMapper, IamPositi
     /**
      * 获取职位树
      *
+     * @return 职位树
      * @since 2024-08-12
      */
     @NotNull public List<IamPositionResp> positionTree() {

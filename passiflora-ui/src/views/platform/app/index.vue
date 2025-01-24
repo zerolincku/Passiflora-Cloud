@@ -310,7 +310,7 @@
   const size = ref<SizeProps>('large');
 
   const basePagination: Pagination = {
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
   };
   const pagination = reactive({
@@ -377,13 +377,13 @@
   );
 
   const fetchData = async (
-    params: appPageParams = { current: 1, pageSize: 10 }
+    params: appPageParams = { pageNum: 1, pageSize: 10 }
   ) => {
     setLoading(true);
     try {
       const { data } = await appPage(params);
       renderData.value = data.data;
-      pagination.current = params.current;
+      pagination.pageNum = params.pageNum;
       pagination.total = data.total;
     } catch (err) {
       // you can report use errorHandler or other
@@ -399,8 +399,8 @@
     } as unknown as appPageParams);
   };
 
-  const onPageChange = (current: number) => {
-    basePagination.current = current;
+  const onPageChange = (pageNum: number) => {
+    basePagination.pageNum = pageNum;
     search();
   };
 

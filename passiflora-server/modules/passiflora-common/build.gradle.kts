@@ -30,16 +30,12 @@ dependencies {
     compileOnlyApi("org.springframework:spring-web")
     compileOnlyApi("org.apache.tomcat.embed:tomcat-embed-core")
     compileOnlyApi("org.postgresql:postgresql")
-    compileOnlyApi("com.mybatis-flex:mybatis-flex-core")
-    compileOnly("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
     compileOnly("org.springframework:spring-test")
     compileOnly("org.testcontainers:postgresql")
     compileOnly("org.testcontainers:minio")
     compileOnly("com.redis:testcontainers-redis")
     compileOnly("org.freemarker:freemarker")
 
-    testImplementation("com.mybatis-flex:mybatis-flex-core")
-    testImplementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
 
     api(project(":modules:passiflora-base"))
     api("org.yaml:snakeyaml")

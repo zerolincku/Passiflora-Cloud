@@ -546,7 +546,7 @@
   };
 
   const basePagination: Pagination = {
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
   };
   const pagination = reactive({
@@ -693,13 +693,13 @@
   };
 
   const fetchData = async (
-    params: userPageParams = { current: 1, pageSize: 10 }
+    params: userPageParams = { pageNum: 1, pageSize: 10 }
   ) => {
     setLoading(true);
     try {
       const { data } = await userPage(params);
       renderData.value = data.data;
-      pagination.current = params.current as number;
+      pagination.pageNum = params.pageNum as number;
       pagination.total = data.total;
     } catch (err) {
       // you can report use errorHandler or other
@@ -714,8 +714,8 @@
       ...searchForm.value,
     } as unknown as userPageParams);
   };
-  const onPageChange = (current: number) => {
-    basePagination.current = current;
+  const onPageChange = (pageNum: number) => {
+    basePagination.pageNum = pageNum;
     search();
   };
 

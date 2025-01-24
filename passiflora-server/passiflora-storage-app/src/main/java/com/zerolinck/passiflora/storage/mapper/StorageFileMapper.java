@@ -28,38 +28,70 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
-import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * 通用文件 Mybatis Mapper
  *
- * @author linck on 2024-05-17
+ * @author linck
+ * @since 2024-05-17
  */
 public interface StorageFileMapper extends BaseMapper<StorageFile> {
 
-    default List<StorageFile> listByFileMd5(@NotNull @Param("fileMd5") String fileMd5) {
+    /**
+     * 根据文件MD5查询文件列表
+     *
+     * @param fileMd5 文件MD5
+     * @return 文件列表
+     * @since 2024-05-17
+     */
+    default List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
         return selectListByCondition(QueryCondition.create(STORAGE_FILE.FILE_MD5, fileMd5));
     }
 
-    default long countByFileMd5(@NotNull @Param("fileMd5") String fileMd5) {
+    /**
+     * 根据文件MD5统计文件数量
+     *
+     * @param fileMd5 文件MD5
+     * @return 文件数量
+     * @since 2024-05-17
+     */
+    default long countByFileMd5(@NotNull String fileMd5) {
         return selectCountByCondition(QueryCondition.create(STORAGE_FILE.FILE_MD5, fileMd5));
     }
 
-    default void incrDownCount(@NotNull @Param("fileId") String fileId) {
+    /**
+     * 增加文件下载次数
+     *
+     * @param fileId 文件ID
+     * @since 2024-05-17
+     */
+    default void incrDownCount(@NotNull String fileId) {
         UpdateChain.of(StorageFile.class)
                 .setRaw(StorageFile::getDownloadCount, "download_count + 1")
                 .eq(StorageFile::getFileId, fileId)
                 .update();
     }
 
-    default void confirmFile(@NotNull @Param("fileId") String fileId) {
+    /**
+     * 确认文件使用，将临时文件转换为正式文件
+     *
+     * @param fileId 文件ID
+     * @since 2024-05-17
+     */
+    default void confirmFile(@NotNull String fileId) {
         UpdateChain.of(StorageFile.class)
                 .set(StorageFile::getFileStatus, FileStatusEnum.CONFIRMED)
                 .eq(StorageFile::getFileId, fileId)
                 .update();
     }
 
+    /**
+     * 获取过期的临时文件ID集合
+     *
+     * @return 过期的临时文件ID集合
+     * @since 2024-05-17
+     */
     default Set<String> expiredTempFileIds() {
         List<StorageFile> storageFiles = selectListByQuery(QueryWrapper.create()
                 .select(STORAGE_FILE.FILE_ID)

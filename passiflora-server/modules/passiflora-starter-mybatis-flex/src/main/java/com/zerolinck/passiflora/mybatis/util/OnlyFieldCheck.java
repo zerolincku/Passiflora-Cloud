@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.util;
+package com.zerolinck.passiflora.mybatis.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.CaseFormat;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.base.valid.OnlyField;
 import com.zerolinck.passiflora.common.exception.BizException;
+import com.zerolinck.passiflora.common.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -47,7 +47,7 @@ public class OnlyFieldCheck {
     private static final Map<Class<?>, List<CheckField>> map = new HashMap<>();
 
     @SneakyThrows
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     public static <T extends BaseEntity> void checkInsert(BaseMapper mapper, T entity) {
         checkCache(entity);
         List<CheckField> checkFields = map.get(entity.getClass());
@@ -86,12 +86,11 @@ public class OnlyFieldCheck {
                 continue;
             }
 
+            String fieldName = checkField.getFieldName();
             long count = mapper.selectCountByQuery(new QueryWrapper()
-                    .eq(checkField.getFieldName(), fieldValue)
+                    .eq(fieldName, fieldValue)
                     .ne(
-                            CaseFormat.LOWER_CAMEL.to(
-                                    CaseFormat.LOWER_UNDERSCORE,
-                                    checkField.getIdField().getName()),
+                            StrUtil.camelToUnderline(checkField.getIdField().getName()),
                             checkField.getIdField().get(entity)));
             if (count > 0) {
                 String message;
@@ -136,11 +135,7 @@ public class OnlyFieldCheck {
                     desc = schema.description();
                 }
                 CheckField checkField = new CheckField(
-                        field,
-                        idField,
-                        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName()),
-                        desc,
-                        annotation.message());
+                        field, idField, StrUtil.camelToUnderline(field.getName()), desc, annotation.message());
                 result.add(checkField);
             }
             map.put(entity.getClass(), result);
@@ -151,11 +146,15 @@ public class OnlyFieldCheck {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckField {
-
+        /** 实体类字段 */
         private Field field;
+        /** 实体类主键字段 */
         private Field idField;
+        /** 字段对应数据库字段名 */
         private String fieldName;
+        /** 字段描述 */
         private String fieldDesc;
+        /** 字段重复时抛出的异常消息 */
         private String message;
     }
 }

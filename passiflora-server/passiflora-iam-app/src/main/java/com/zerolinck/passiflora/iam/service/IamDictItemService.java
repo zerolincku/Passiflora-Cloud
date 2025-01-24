@@ -20,16 +20,16 @@ import java.util.*;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
-import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
+import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,28 +45,37 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictItem> {
-
-    private final IamDictService iamDictService;
+public class IamDictItemService {
+    private final IamDictItemMapper mapper;
+    private final IamDictMapper dictMapper;
     private static final String LOCK_KEY = "passiflora:lock:iamDictItem:";
 
     /**
-     * 分页查询
+     * 分页查询字典项
      *
      * @param condition 搜索条件
+     * @return 字典项的分页结果
      * @since 2024-08-12
      */
     @NotNull public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamDictItem.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamDictItem.class));
     }
 
+    /**
+     * 新增字典项
+     *
+     * @param iamDictItem 字典项
+     */
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void add(@NotNull IamDictItem iamDictItem) {
-        IamDict iamDict =
-                iamDictService.detail(iamDictItem.getDictId()).orElseThrow(() -> new NoSuchElementException("无此字典"));
-
+        IamDict iamDict = dictMapper.selectOneById(iamDictItem.getDictId());
+        if (iamDict == null) {
+            throw new NoSuchElementException("无此字典");
+        }
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());
         if (YesOrNoEnum.NO.equals(iamDict.getValueIsOnly())) {
@@ -81,7 +90,7 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
                 throw new BizException("字典项标签重复，请重新填写");
             }
 
-            IamDict dict = iamDictService.getById(iamDictItem.getDictId());
+            IamDict dict = dictMapper.selectOneById(iamDictItem.getDictId());
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
                 count = mapper.selectCountByQuery(new QueryWrapper()
                         .eq(IamDictItem::getValue, iamDictItem.getValue())
@@ -95,19 +104,26 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         });
     }
 
+    /**
+     * 更新字典项
+     *
+     * @param iamDictItem 字典项
+     * @return 如果更新成功返回true，否则返回false
+     */
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@NotNull IamDictItem iamDictItem) {
-        IamDict iamDict = iamDictService
-                .detail(iamDictItem.getDictId())
-                .orElseThrow(() -> new BizException(ResultCode.ILLEGAL_ARGUMENT, "无此字典"));
+        IamDict dict = dictMapper.selectOneById(iamDictItem.getDictId());
+        if (dict == null) {
+            throw new NoSuchElementException("无此字典");
+        }
 
         LockWrapper<IamDictItem> lockWrapper =
                 new LockWrapper<IamDictItem>().lock(IamDictItem::getLabel, iamDictItem.getLabel());
-        if (YesOrNoEnum.NO.equals(iamDict.getValueIsOnly())) {
+        if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
             lockWrapper.lock(IamDictItem::getValue, iamDictItem.getValue());
         }
 
-        return LockUtil.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
+        return LockUtil.lock(LOCK_KEY + dict.getDictTag(), lockWrapper, true, () -> {
             IamDictItem dbIamDictItem = mapper.selectOneById(iamDictItem.getDictItemId());
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许修改");
@@ -123,7 +139,6 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
                 }
             }
 
-            IamDict dict = iamDictService.getById(iamDictItem.getDictId());
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
                 long count = mapper.selectCountByQuery(new QueryWrapper()
                         .eq(IamDictItem::getValue, iamDictItem.getValue())
@@ -139,6 +154,12 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         });
     }
 
+    /**
+     * 根据字典项ID集合删除字典项
+     *
+     * @param dictItemIds 字典项ID集合
+     * @return 删除的字典项数量
+     */
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@NotNull Collection<String> dictItemIds) {
@@ -154,29 +175,55 @@ public class IamDictItemService extends ServiceImpl<IamDictItemMapper, IamDictIt
         return mapper.deleteBatchByIds(dictItemIds, 500);
     }
 
+    /**
+     * 根据字典ID集合删除字典项
+     *
+     * @param dictIds 字典ID集合
+     */
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void deleteByDictIds(@Nullable Collection<String> dictIds) {
-        if (CollectionUtils.isEmpty(dictIds)) {
-            return;
-        }
         mapper.deleteByDictIds(dictIds);
     }
 
+    /**
+     * 根据字典项ID获取字典项的详细信息
+     *
+     * @param dictItemId 字典项ID
+     * @return 包含字典项的Optional对象
+     */
     @NotNull public Optional<IamDictItem> detail(@NotNull String dictItemId) {
         return Optional.ofNullable(mapper.selectOneById(dictItemId));
     }
 
+    /**
+     * 根据字典ID获取字典项列表
+     *
+     * @param dictId 字典ID
+     * @return 字典项列表
+     */
     @NotNull @Cacheable(value = "passiflora:dict:id", key = "#dictId")
     public List<IamDictItem> listByDictId(@NotNull String dictId) {
         return mapper.listByDictId(dictId);
     }
 
+    /**
+     * 根据字典名称获取字典项列表
+     *
+     * @param dictName 字典名称
+     * @return 字典项列表
+     */
     @NotNull @Cacheable(value = "passiflora:dict:name", key = "#dictName")
     public List<IamDictItem> listByDictName(@NotNull String dictName) {
         return mapper.listByDictName(dictName);
     }
 
+    /**
+     * 根据字典标签获取字典项列表
+     *
+     * @param dictTag 字典标签
+     * @return 字典项列表
+     */
     @NotNull @Cacheable(value = "passiflora:dict:tag", key = "#dictTag")
     public List<IamDictItem> listByDictTag(@NotNull String dictTag) {
         return mapper.listByDictTag(dictTag);

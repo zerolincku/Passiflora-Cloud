@@ -16,8 +16,17 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import static com.zerolinck.passiflora.model.iam.entity.table.IamUserTableDef.IAM_USER;
+
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.query.QueryCondition;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
+import org.jetbrains.annotations.Nullable;
 
 /** @author linck on 2024-02-07 */
-public interface IamUserMapper extends BaseMapper<IamUser> {}
+public interface IamUserMapper extends BaseMapper<IamUser> {
+
+    @Nullable default IamUser selectByUsername(String username) {
+        return this.selectOneByCondition(QueryCondition.createEmpty().and(IAM_USER.USER_NAME.eq(username)));
+    }
+}

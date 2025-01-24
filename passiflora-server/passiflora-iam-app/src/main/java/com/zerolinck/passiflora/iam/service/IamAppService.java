@@ -21,13 +21,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamAppMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,26 +45,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
-
+public class IamAppService {
+    private final IamAppMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamApp:";
 
     /**
-     * 分页查询
+     * 分页查询IAM应用
      *
-     * @param condition 搜索条件
+     * @param condition 查询条件
+     * @return IAM应用的分页结果
      * @since 2024-09-30
      */
     @NotNull public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamApp.class));
+                condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamApp.class));
     }
 
     /**
-     * 新增应用
+     * 新增IAM应用
      *
-     * @param iamApp 应用
+     * @param iamApp IAM应用
      * @since 2024-09-30
      */
     public void add(@NotNull IamApp iamApp) {
@@ -75,9 +76,10 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
     }
 
     /**
-     * 更新应用
+     * 更新IAM应用
      *
-     * @param iamApp 应用
+     * @param iamApp IAM应用
+     * @return 如果更新成功返回true，否则返回false
      * @since 2024-09-30
      */
     public boolean update(@NotNull IamApp iamApp) {
@@ -89,9 +91,10 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
     }
 
     /**
-     * 删除应用
+     * 根据应用ID集合删除IAM应用
      *
      * @param appIds 应用ID集合
+     * @return 删除的应用数量
      * @since 2024-09-30
      */
     @Transactional(rollbackFor = Exception.class)
@@ -102,20 +105,35 @@ public class IamAppService extends ServiceImpl<IamAppMapper, IamApp> {
         return mapper.deleteBatchByIds(appIds, 500);
     }
 
+    /**
+     * 禁用IAM应用
+     *
+     * @param appIds 应用ID集合
+     * @return 如果禁用成功返回true，否则返回false
+     * @since 2024-09-30
+     */
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(@Nullable Collection<String> appIds) {
         return mapper.disable(appIds);
     }
 
+    /**
+     * 启用IAM应用
+     *
+     * @param appIds 应用ID集合
+     * @return 如果启用成功返回true，否则返回false
+     * @since 2024-09-30
+     */
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(@Nullable Collection<String> appIds) {
         return mapper.enable(appIds);
     }
 
     /**
-     * 应用详情
+     * 根据应用ID获取IAM应用的详细信息
      *
      * @param appId 应用ID
+     * @return 包含IAM应用的Optional对象
      * @since 2024-09-30
      */
     @NotNull public Optional<IamApp> detail(@NotNull String appId) {

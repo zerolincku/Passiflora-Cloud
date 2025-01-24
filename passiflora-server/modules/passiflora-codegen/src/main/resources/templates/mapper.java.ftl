@@ -18,26 +18,4 @@ import java.util.Collection;
  * @author ${author} on ${date}
  */
 public interface ${mapperClass} extends BaseMapper<${entityClass}> {
-
-    /**
-     * 分页查询
-     *
-     * @param page 分页条件
-     * @param searchWrapper 搜索条件
-     * @param sortWrapper 排序条件
-     * @since ${date}
-     */
-    @NotNull
-    Page<${entityClass}> page(@NotNull IPage<${entityClass}> page,
-            @NotNull @Param(Constants.WRAPPER) QueryWrapper<${entityClass}> searchWrapper,
-            @NotNull @Param("sortWrapper") QueryWrapper<${entityClass}> sortWrapper);
-
-    /**
-     * 更新 del_flag = 1，保证 update_by 和 update_time 正确
-     *
-     * @param ${table.pkFieldName}s ${table.description}主键集合
-     * @since ${date}
-     */
-    int deleteByIds(@NotNull @Param("${table.pkFieldName}s") Collection<String> ${table.pkFieldName}s,
-                    @Nullable @Param("updateBy") String updateBy);
 }

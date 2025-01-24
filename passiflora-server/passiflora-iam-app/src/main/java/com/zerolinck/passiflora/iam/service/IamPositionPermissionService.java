@@ -19,8 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
@@ -29,29 +27,51 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** @author linck on 2024-05-06 */
+/**
+ * IAM职位权限服务类
+ *
+ * @author linck
+ * @since 2024-05-06
+ */
 @Slf4j
 @Service
-public class IamPositionPermissionService extends ServiceImpl<IamPositionPermissionMapper, IamPositionPermission> {
-
+@RequiredArgsConstructor
+public class IamPositionPermissionService {
+    private final IamPositionPermissionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamPositionPermission:";
 
+    /**
+     * 分页查询职位权限
+     *
+     * @param condition 查询条件
+     * @return 职位权限的分页结果
+     * @since 2024-05-06
+     */
     @NotNull public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(),
+                condition.getPageNum(),
                 condition.getPageSize(),
-                condition.searchWrapper(IamPositionPermission.class));
+                ConditionUtils.searchWrapper(condition, IamPositionPermission.class));
     }
 
+    /**
+     * 新增职位权限
+     *
+     * @param iamPositionPermission 职位权限实体
+     * @since 2024-05-06
+     */
     public void add(@NotNull IamPositionPermission iamPositionPermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkInsert(mapper, iamPositionPermission);
@@ -59,6 +79,13 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         });
     }
 
+    /**
+     * 更新职位权限
+     *
+     * @param iamPositionPermission 职位权限实体
+     * @return 如果更新成功返回true，否则返回false
+     * @since 2024-05-06
+     */
     public boolean update(@NotNull IamPositionPermission iamPositionPermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
             OnlyFieldCheck.checkUpdate(mapper, iamPositionPermission);
@@ -67,6 +94,13 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         });
     }
 
+    /**
+     * 根据职位权限ID集合删除职位权限
+     *
+     * @param ids 职位权限ID集合
+     * @return 删除的职位权限数量
+     * @since 2024-05-06
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
@@ -75,6 +109,13 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         return mapper.deleteBatchByIds(ids, 500);
     }
 
+    /**
+     * 根据职位ID集合删除职位权限
+     *
+     * @param positionIds 职位ID集合
+     * @return 删除的职位权限数量
+     * @since 2024-05-06
+     */
     @SuppressWarnings("UnusedReturnValue")
     @Transactional(rollbackFor = Exception.class)
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
@@ -84,10 +125,24 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         return mapper.deleteByPositionIds(positionIds);
     }
 
+    /**
+     * 根据职位权限ID获取职位权限的详细信息
+     *
+     * @param id 职位权限ID
+     * @return 包含职位权限的Optional对象
+     * @since 2024-05-06
+     */
     @NotNull public Optional<IamPositionPermission> detail(@NotNull String id) {
         return Optional.ofNullable(mapper.selectOneById(id));
     }
 
+    /**
+     * 根据职位ID集合获取权限ID集合
+     *
+     * @param positionIds 职位ID集合
+     * @return 权限ID集合
+     * @since 2024-05-06
+     */
     @NotNull public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return Collections.emptyList();
@@ -95,6 +150,12 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
         return mapper.permissionIdsByPositionIds(positionIds);
     }
 
+    /**
+     * 保存职位权限
+     *
+     * @param args 职位权限参数
+     * @since 2024-05-06
+     */
     public void savePositionPermission(@NotNull PositionPermissionArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -118,7 +179,7 @@ public class IamPositionPermissionService extends ServiceImpl<IamPositionPermiss
                             iamPositionPermission.setPermissionId(permissionId);
                             addList.add(iamPositionPermission);
                         });
-                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                        mapper.insertBatch(addList, 500);
                     }
                 });
     }

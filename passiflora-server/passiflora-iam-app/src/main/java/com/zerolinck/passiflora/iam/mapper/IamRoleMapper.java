@@ -23,17 +23,24 @@ import com.mybatisflex.core.update.UpdateChain;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * 角色 Mybatis Mapper
  *
- * @author 林常坤 on 2024-08-17
+ * @author 林常坤
+ * @since 2024-08-17
  */
 public interface IamRoleMapper extends BaseMapper<IamRole> {
 
-    default boolean disable(@NotNull @Param("roleIds") Collection<String> roleIds) {
+    /**
+     * 禁用角色
+     *
+     * @param roleIds 角色ID集合
+     * @return 如果禁用成功返回true，否则返回false
+     * @since 2024-08-17
+     */
+    default boolean disable(@NotNull Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return true;
         }
@@ -44,7 +51,14 @@ public interface IamRoleMapper extends BaseMapper<IamRole> {
                 .update();
     }
 
-    default boolean enable(@NotNull @Param("roleIds") Collection<String> roleIds) {
+    /**
+     * 启用角色
+     *
+     * @param roleIds 角色ID集合
+     * @return 如果启用成功返回true，否则返回false
+     * @since 2024-08-17
+     */
+    default boolean enable(@NotNull Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return true;
         }

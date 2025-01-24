@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 
 import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -40,7 +40,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
     @NotNull
     public Page<${entityClass}> page(@Nullable QueryCondition<${entityClass}> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(${entityClass}.class));
+        return mapper.paginate(condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, ${entityClass}.class));
     }
 
     /**

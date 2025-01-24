@@ -22,7 +22,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** @author linck on 2024-05-27 */
+/**
+ * PassifloraProperties类 用于映射passiflora前缀的配置属性
+ *
+ * @author linck
+ * @since 2024-05-27
+ */
 @Data
 @ConfigurationProperties(prefix = "passiflora")
 public class PassifloraProperties {
@@ -42,12 +47,14 @@ public class PassifloraProperties {
     @NestedConfigurationProperty
     private Storage storage;
 
+    /** IamConfig类 ��于映射IAM相关的配置属性 */
     @Data
     @NoArgsConstructor
     public static class IamConfig {
 
         private Token token;
 
+        /** Token类 用于映射token相关的配置属性 */
         @Data
         @NoArgsConstructor
         public static class Token {
@@ -57,12 +64,10 @@ public class PassifloraProperties {
         }
     }
 
+    /** Config类 用于映射通用配置属性 */
     @Data
     @NoArgsConstructor
     public static class Config {
-
-        /** 是否开启 MybatisConfig 默认配置 {@link com.zerolinck.passiflora.common.config.mybaits.MybatisConfig} */
-        private Boolean mybatis;
         /** 是否开启全局异常捕获 {@link com.zerolinck.passiflora.common.handler.GlobalExceptionHandler} */
         private Boolean exception;
         /** 是否开启全局默认过滤器 {@link com.zerolinck.passiflora.common.config.GlobalFilter} */
@@ -73,6 +78,7 @@ public class PassifloraProperties {
         private Boolean cache;
     }
 
+    /** Storage类 用于映射存储相关的配置属性 */
     @Data
     @NoArgsConstructor
     public static class Storage {
@@ -82,6 +88,7 @@ public class PassifloraProperties {
 
         private Oss oss;
 
+        /** Oss类 用于映射OSS相关的配置属性 */
         @Data
         @NoArgsConstructor
         public static class Oss {

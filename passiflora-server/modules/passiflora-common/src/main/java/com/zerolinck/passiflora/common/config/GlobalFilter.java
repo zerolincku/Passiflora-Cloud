@@ -26,13 +26,27 @@ import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
 
-/** @author linck on 2024-04-24 */
+/**
+ * 全局过滤器 用于在每个请求前清除当前线程的上下文信息
+ *
+ * @since 2024-04-24
+ */
 @Slf4j
 @WebFilter("/*")
 @Order(Integer.MIN_VALUE)
 @ConditionalOnProperty(prefix = "passiflora.config", name = "globalFilter", havingValue = "true")
 public class GlobalFilter implements Filter {
 
+    /**
+     * 过滤方法 在每个请求前清除当前线程的上下文信息
+     *
+     * @param servletRequest Servlet请求对象
+     * @param servletResponse Servlet响应对象
+     * @param filterChain 过滤器链
+     * @throws IOException 如果发生IO错误
+     * @throws ServletException 如果发生Servlet错误
+     * @since 2024-04-24
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {

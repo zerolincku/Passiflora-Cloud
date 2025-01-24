@@ -252,7 +252,7 @@
   const searchForm = ref(generateSearchFormModel());
 
   const basePagination: Pagination = {
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
   };
   const pagination = reactive({
@@ -287,7 +287,7 @@
 
   const fetchData = async (
     params: dictItemPageParams = {
-      current: 1,
+      pageNum: 1,
       pageSize: 10,
       dictId: dictRecord.value.dictId,
     }
@@ -296,7 +296,7 @@
     try {
       const { data } = await dictItemPage(params);
       renderData.value = data.data;
-      pagination.current = params.current;
+      pagination.pageNum = params.pageNum;
       pagination.total = data.total;
       renderData.value.forEach((item) => {
         if (item.isSystem === 1) {
@@ -317,8 +317,8 @@
       'eq[dictId]': dictRecord.value.dictId,
     } as unknown as dictItemPageParams);
   };
-  const onPageChange = (current: number) => {
-    basePagination.current = current;
+  const onPageChange = (pageNum: number) => {
+    basePagination.pageNum = pageNum;
     search();
   };
 

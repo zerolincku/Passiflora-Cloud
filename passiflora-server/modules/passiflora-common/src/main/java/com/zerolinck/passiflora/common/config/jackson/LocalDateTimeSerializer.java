@@ -24,8 +24,22 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-/** @author 林常坤 on 2024/09/28 */
+/**
+ * LocalDateTime序列化器 用于将LocalDateTime对象序列化为JSON中的时间戳字符串
+ *
+ * @since 2024-09-28
+ */
 public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+
+    /**
+     * 序列化方法 将LocalDateTime对象序列化为JSON中的时间戳字符串
+     *
+     * @param value 要序列化的LocalDateTime对象
+     * @param gen JsonGenerator对象，用于生成JSON内容
+     * @param serializers SerializerProvider对象，提供序列化上下文
+     * @throws IOException 如果序列化过程中发生IO错误
+     * @since 2024-09-28
+     */
     @Override
     public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         long timestamp = value.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.config.mybaits;
+package com.zerolinck.passiflora.mybatis.config;
 
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.core.FlexGlobalConfig;
@@ -23,7 +23,6 @@ import com.mybatisflex.core.keygen.KeyGenerators;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.common.util.SpringContextHolder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 /** @author linck on 2024-02-07 */
 @Slf4j
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "passiflora.config", name = "mybatis", havingValue = "true")
 public class MybatisConfig implements MyBatisFlexCustomizer {
 
     @Override

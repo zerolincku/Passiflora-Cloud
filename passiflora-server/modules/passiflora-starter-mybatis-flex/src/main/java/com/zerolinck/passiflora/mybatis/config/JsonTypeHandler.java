@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.config.mybaits;
+package com.zerolinck.passiflora.mybatis.config;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

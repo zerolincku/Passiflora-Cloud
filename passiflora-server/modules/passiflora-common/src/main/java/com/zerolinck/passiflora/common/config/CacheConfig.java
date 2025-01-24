@@ -33,7 +33,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
 
 /**
- * Spring Cache 配置
+ * Spring Cache 配置 配置Spring Cache使用Redis作为缓存存储
  *
  * @author linck
  */
@@ -42,6 +42,13 @@ import org.springframework.data.redis.serializer.*;
 @ConditionalOnProperty(prefix = "passiflora.config", name = "cache", havingValue = "true")
 public class CacheConfig {
 
+    /**
+     * 配置Redis Cache Manager
+     *
+     * @param redisConnectionFactory Redis连接工厂
+     * @param objectMapper Jackson的ObjectMapper对象
+     * @return 配置好的CacheManager对象
+     */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
@@ -60,6 +67,13 @@ public class CacheConfig {
                 .build();
     }
 
+    /**
+     * 配置Redis Template
+     *
+     * @param factory Redis连接工厂
+     * @param objectMapper Jackson的ObjectMapper对象
+     * @return 配置好的RedisTemplate对象
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory, ObjectMapper objectMapper) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();

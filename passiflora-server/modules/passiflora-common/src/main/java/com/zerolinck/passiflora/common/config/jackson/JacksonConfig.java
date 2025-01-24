@@ -42,10 +42,19 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/** @author linck on 2024-02-06 */
+/**
+ * Jackson配置类 配置Jackson的序列化和反序列化规则
+ *
+ * @since 2024-02-06
+ */
 @Configuration(proxyBeanMethods = false)
 public class JacksonConfig {
 
+    /**
+     * 配置Jackson的ObjectMapper
+     *
+     * @return Jackson2ObjectMapperBuilderCustomizer对象
+     */
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         Map<Class<?>, JsonSerializer<?>> serializers = getDefaultSerializer();
@@ -57,6 +66,11 @@ public class JacksonConfig {
                 .deserializersByType(deserializers);
     }
 
+    /**
+     * 获取默认的反序列化器
+     *
+     * @return 反序列化器的映射
+     */
     @SuppressWarnings("unchecked")
     public static Map<Class<?>, JsonDeserializer<?>> getDefaultDeserializer() {
         Map<Class<?>, JsonDeserializer<?>> deserializers = new HashMap<>();
@@ -77,6 +91,11 @@ public class JacksonConfig {
         return deserializers;
     }
 
+    /**
+     * 获取默认的序列化器
+     *
+     * @return 序列化器的映射
+     */
     public static Map<Class<?>, JsonSerializer<?>> getDefaultSerializer() {
         Map<Class<?>, JsonSerializer<?>> serializers = new HashMap<>();
         serializers.put(LocalDateTime.class, new LocalDateTimeSerializer());

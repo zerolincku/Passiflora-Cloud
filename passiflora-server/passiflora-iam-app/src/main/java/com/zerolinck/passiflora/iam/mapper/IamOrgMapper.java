@@ -25,15 +25,34 @@ import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import org.apache.ibatis.annotations.Param;
 
-/** @author linck on 2024-04-09 */
+/**
+ * 组织 Mybatis Mapper
+ *
+ * @author linck
+ * @since 2024-04-09
+ */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
-    default IamOrg selectByOrgCode(@Param("orgCode") String orgCode) {
+
+    /**
+     * 根据组织代码查询组织
+     *
+     * @param orgCode 组织代码
+     * @return 组织对象
+     * @since 2024-04-09
+     */
+    default IamOrg selectByOrgCode(String orgCode) {
         return selectOneByCondition(QueryCondition.create(IAM_ORG.ORG_CODE, orgCode));
     }
 
-    default List<IamOrgResp> listByParentId(@Param("orgParentId") String orgParentId) {
+    /**
+     * 根据父组织ID查询子组织列表
+     *
+     * @param orgParentId 父组织ID
+     * @return 子组织列表
+     * @since 2024-04-09
+     */
+    default List<IamOrgResp> listByParentId(String orgParentId) {
         return selectListByQueryAs(
                 QueryWrapper.create()
                         .where(IAM_ORG.PARENT_ORG_ID.eq(orgParentId))

@@ -16,6 +16,7 @@ val arch = System.getProperty("os.arch").lowercase(Locale.getDefault())
 
 dependencies {
     implementation(project(":modules:passiflora-feign"))
+    implementation(project(":modules:passiflora-starter-mybatis-flex"))
     annotationProcessor(platform(project(":modules:passiflora-bom")))
     testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
     liquibaseRuntime(platform(project(":modules:passiflora-bom")))

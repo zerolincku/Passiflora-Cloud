@@ -16,7 +16,12 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import static com.mybatisflex.core.query.QueryMethods.select;
 import static com.zerolinck.passiflora.model.iam.entity.table.IamPermissionTableDef.IAM_PERMISSION;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamPositionPermissionTableDef.IAM_POSITION_PERMISSION;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamRolePermissionTableDef.IAM_ROLE_PERMISSION;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamUserPositionTableDef.IAM_USER_POSITION;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamUserRoleTableDef.IAM_USER_ROLE;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,20 +33,36 @@ import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 
-/** @author linck on 2024-05-06 */
+/**
+ * 权限 Mybatis Mapper
+ *
+ * @author linck
+ * @since 2024-05-06
+ */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {
 
-    default void updateOrder(@Param("iamPermissionTableResp") IamPermissionTableResp iamPermissionTableResp) {
+    /**
+     * 更新权限顺序
+     *
+     * @param iamPermissionTableResp 权限表响应对象
+     * @since 2024-05-06
+     */
+    default void updateOrder(@NotNull IamPermissionTableResp iamPermissionTableResp) {
         UpdateChain.of(IamPermission.class)
                 .set(IamPermission::getOrder, iamPermissionTableResp.getOrder())
                 .eq(IamPermission::getPermissionId, iamPermissionTableResp.getPermissionId())
                 .update();
     }
 
+    /**
+     * 禁用权限
+     *
+     * @param permissionIds 权限ID集合
+     * @return 如果禁用成功返回true，否则返回false
+     * @since 2024-05-06
+     */
     default boolean disable(Collection<String> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
             return true;
@@ -53,7 +74,14 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
                 .update();
     }
 
-    default boolean enable(Collection<String> permissionIds, String updateBy) {
+    /**
+     * 启用权限
+     *
+     * @param permissionIds 权限ID集合
+     * @return 如果启用成功返回true，否则返回false
+     * @since 2024-05-06
+     */
+    default boolean enable(Collection<String> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
             return true;
         }
@@ -64,7 +92,14 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
                 .update();
     }
 
-    default List<IamPermission> listByParentId(@Param("permissionParentId") String permissionParentId) {
+    /**
+     * 根据父权限ID查询子权限列表
+     *
+     * @param permissionParentId 父权限ID
+     * @return 子权限列表
+     * @since 2024-05-06
+     */
+    default List<IamPermission> listByParentId(@NotNull String permissionParentId) {
         return selectListByQuery(QueryWrapper.create()
                 .where(IAM_PERMISSION.PERMISSION_PARENT_ID.eq(permissionParentId))
                 .orderBy(IAM_PERMISSION.PERMISSION_LEVEL, true)
@@ -72,7 +107,14 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
                 .orderBy(IAM_PERMISSION.PERMISSION_TITLE, true));
     }
 
-    default List<IamPermission> listSelfAndSub(@Param("permissionId") String permissionId) {
+    /**
+     * 根据权限ID查询自身及子权限列表
+     *
+     * @param permissionId 权限ID
+     * @return 自身及子权限列表
+     * @since 2024-05-06
+     */
+    default List<IamPermission> listSelfAndSub(@NotNull String permissionId) {
         return selectListByQuery(QueryWrapper.create()
                 .where(IAM_PERMISSION.PERMISSION_ID_PATH.like(permissionId))
                 .orderBy(IAM_PERMISSION.PERMISSION_LEVEL, true)
@@ -80,50 +122,74 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
                 .orderBy(IAM_PERMISSION.PERMISSION_TITLE, true));
     }
 
-    @NotNull @Select(
-            """
-        SELECT b.* FROM
-            (SELECT position_id, permission_id FROM iam_position_permission
-            WHERE del_flag = 0 AND position_id = #{positionId}) AS a
-            INNER JOIN iam_permission AS b ON a.permission_id = b.permission_id
-            INNER JOIN iam_position AS sp ON a.position_id = sp.position_id
-            WHERE b.del_flag = 0 AND sp.del_flag = 0 AND sp.position_status = 1
-            ORDER BY b.permission_level, b.\"order\", b.permission_title""")
-    List<IamPermission> listByPositionId(@NotNull @Param("positionId") String positionId);
+    /**
+     * 根据职位ID查询权限列表
+     *
+     * @param positionId 职位ID
+     * @return 权限列表
+     * @since 2024-05-06
+     */
+    default List<IamPermission> listByPositionId(@NotNull String positionId) {
+        return selectListByQuery(QueryWrapper.create()
+                .select(IAM_PERMISSION.ALL_COLUMNS)
+                .from(IAM_PERMISSION)
+                .where(IAM_PERMISSION.PERMISSION_STATUS.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.PERMISSION_ID.in(select(IAM_POSITION_PERMISSION.PERMISSION_ID)
+                        .from(IAM_POSITION_PERMISSION)
+                        .where(IAM_POSITION_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                        .and(IAM_POSITION_PERMISSION.POSITION_ID.eq(positionId)))));
+    }
 
-    @NotNull @Select(
-            """
-        SELECT b.* FROM
-            (SELECT role_id, permission_id FROM iam_role_permission
-            WHERE del_flag = 0 AND role_id = #{roleId}) AS a
-            INNER JOIN iam_permission AS b ON a.permission_id = b.permission_id
-            INNER JOIN iam_role AS sr ON a.role_id = sr.role_id
-            WHERE b.del_flag = 0 AND sr.del_flag = 0 AND sr.role_status = 1
-            ORDER BY b.permission_level, b.\"order\", b.permission_title""")
-    List<IamPermission> listByRoleId(@NotNull @Param("roleId") String roleId);
+    /**
+     * 根据角色ID查询权限列表
+     *
+     * @param roleId 角色ID
+     * @return 权限列表
+     * @since 2024-05-06
+     */
+    default List<IamPermission> listByRoleId(@NotNull String roleId) {
+        return selectListByQuery(QueryWrapper.create()
+                .select(IAM_PERMISSION.ALL_COLUMNS)
+                .from(IAM_PERMISSION)
+                .where(IAM_PERMISSION.PERMISSION_STATUS.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.PERMISSION_ID.in(select(IAM_ROLE_PERMISSION.PERMISSION_ID)
+                        .from(IAM_ROLE_PERMISSION)
+                        .where(IAM_ROLE_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                        .and(IAM_ROLE_PERMISSION.ROLE_ID.eq(roleId)))));
+    }
 
-    @NotNull @Select(
-            """
-        SELECT * FROM
-            (SELECT d.* FROM
-                (
-                SELECT b.permission_id FROM
-                (
-                    SELECT position_id FROM iam_user_position WHERE del_flag = 0 AND user_id = #{userId}
-                ) AS a
-                INNER JOIN iam_position_permission AS b ON a.position_id = b.position_id
-                INNER JOIN iam_position AS sp ON a.position_id = sp.position_id
-                WHERE b.del_flag = 0 AND sp.del_flag = 0 AND sp.position_status = 1
-                ) AS c INNER JOIN iam_permission AS d ON c.permission_id = d.permission_id
-                UNION SELECT d.* FROM
-                (
-                SELECT b.permission_id FROM
-                (SELECT role_id FROM iam_user_role WHERE del_flag = 0 AND user_id = #{userId}) AS a
-                INNER JOIN iam_role_permission AS b ON a.role_id = b.role_id
-                INNER JOIN iam_role AS sr ON a.role_id = sr.role_id
-                WHERE b.del_flag = 0 AND sr.del_flag = 0 AND sr.role_status = 1
-                ) AS c
-                INNER JOIN iam_permission AS d ON c.permission_id = d.permission_id) AS e
-                WHERE e.del_flag = 0 ORDER BY e.permission_level, e.\"order\", e.permission_title""")
-    List<IamPermission> listByUserId(@NotNull @Param("userId") String userId);
+    /**
+     * 根据用户ID查询权限列表
+     *
+     * @param userId 用户ID
+     * @return 权限列表
+     * @since 2024-05-06
+     */
+    default List<IamPermission> listByUserId(@NotNull String userId) {
+        return selectListByQuery(QueryWrapper.create()
+                .select(IAM_PERMISSION.ALL_COLUMNS)
+                .from(IAM_PERMISSION)
+                .where(IAM_PERMISSION.PERMISSION_STATUS.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                .and(IAM_PERMISSION.PERMISSION_ID.in(select(IAM_POSITION_PERMISSION.PERMISSION_ID)
+                        .from(IAM_POSITION_PERMISSION)
+                        .where(IAM_POSITION_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                        .and(IAM_POSITION_PERMISSION.POSITION_ID.in(select(IAM_USER_POSITION.POSITION_ID)
+                                .from(IAM_USER_POSITION)
+                                .where(IAM_USER_POSITION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                                .and(IAM_USER_POSITION.USER_ID.eq(userId))))))
+                .union(select(IAM_PERMISSION.ALL_COLUMNS)
+                        .from(IAM_PERMISSION)
+                        .where(IAM_PERMISSION.PERMISSION_STATUS.eq(StatusEnum.ENABLE))
+                        .and(IAM_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                        .and(IAM_PERMISSION.PERMISSION_ID.in(select(IAM_ROLE_PERMISSION.PERMISSION_ID)
+                                .from(IAM_ROLE_PERMISSION)
+                                .where(IAM_ROLE_PERMISSION.DEL_FLAG.eq(StatusEnum.ENABLE))
+                                .and(IAM_ROLE_PERMISSION.ROLE_ID.in(select(IAM_USER_ROLE.ROLE_ID)
+                                        .from(IAM_USER_ROLE)
+                                        .where(IAM_USER_ROLE.DEL_FLAG.eq(StatusEnum.ENABLE))
+                                        .and(IAM_USER_ROLE.USER_ID.eq(userId))))))));
+    }
 }

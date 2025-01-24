@@ -24,6 +24,7 @@ import com.zerolinck.passiflora.common.util.Asserts;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.feign.storage.StorageFileApi;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import com.zerolinck.passiflora.storage.service.StorageFileService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public class StorageFileController implements StorageFileApi {
 
     @NotNull @Override
     public Result<List<StorageFile>> page(@NotNull QueryCondition<StorageFile> condition) {
-        return Result.ok(storageFileService.page(condition));
+        return Result.ok(FlexPage.convert(storageFileService.page(condition)));
     }
 
     @NotNull @Override

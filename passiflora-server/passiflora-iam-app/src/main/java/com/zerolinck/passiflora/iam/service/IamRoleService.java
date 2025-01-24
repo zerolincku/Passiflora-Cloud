@@ -22,13 +22,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRoleMapper;
+import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,38 +42,42 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 角色 Service
  *
- * @author 林常坤 on 2024-08-17
+ * @author 林常坤
+ * @since 2024-08-17
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
-
+public class IamRoleService {
+    private final IamRoleMapper mapper;
+    private final IamRolePermissionMapper rolePermissionMapper;
     private static final String LOCK_KEY = "passiflora:lock:iamRole:";
-
-    private final IamRolePermissionService iamRolePermissionService;
 
     /**
      * 分页查询
      *
      * @param condition 搜索条件
+     * @return 角色的分页结果
      * @since 2024-08-17
      */
     @NotNull public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamRole.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamRole.class));
     }
 
     /**
      * 列表查询
      *
      * @param condition 搜索条件
+     * @return 角色列表
      * @since 2024-08-18
      */
     @NotNull public List<IamRole> list(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.selectListByQuery(condition.searchWrapper(IamRole.class));
+        return mapper.selectListByQuery(ConditionUtils.searchWrapper(condition, IamRole.class));
     }
 
     /**
@@ -92,6 +97,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * 更新角色
      *
      * @param iamRole 角色
+     * @return 如果更新成功返回true，否则返回false
      * @since 2024-08-17
      */
     public boolean update(@NotNull IamRole iamRole) {
@@ -106,6 +112,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * 删除角色
      *
      * @param roleIds 角色ID集合
+     * @return 删除的角色数量
      * @since 2024-08-17
      */
     @Transactional(rollbackFor = Exception.class)
@@ -114,7 +121,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
             return 0;
         }
         int changeRowNum = mapper.deleteBatchByIds(roleIds, 500);
-        iamRolePermissionService.deleteByRoleIds(roleIds);
+        rolePermissionMapper.deleteByRoleIds(roleIds);
         return changeRowNum;
     }
 
@@ -122,6 +129,7 @@ public class IamRoleService extends ServiceImpl<IamRoleMapper, IamRole> {
      * 角色详情
      *
      * @param roleId 角色ID
+     * @return 包含角色的Optional对象
      * @since 2024-08-17
      */
     @NotNull public Optional<IamRole> detail(@NotNull String roleId) {

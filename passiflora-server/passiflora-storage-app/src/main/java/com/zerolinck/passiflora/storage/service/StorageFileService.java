@@ -23,7 +23,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -33,6 +32,7 @@ import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -53,24 +53,41 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 通用文件 Service
  *
- * @author linck on 2024-05-17
+ * @author linck
+ * @since 2024-05-17
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFile> {
-
+public class StorageFileService {
+    private final StorageFileMapper mapper;
     private final PassifloraProperties passifloraProperties;
 
     private static final String LOCK_KEY = "passiflora:lock:storageFile:";
     private static final URLCodec urlCodec = new URLCodec();
 
+    /**
+     * 分页查询
+     *
+     * @param condition 搜索条件
+     * @return 文件的分页结果
+     * @since 2024-05-17
+     */
     @NotNull public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(StorageFile.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, StorageFile.class));
     }
 
+    /**
+     * 根据文件ID集合查询文件列表
+     *
+     * @param fileIds 文件ID集合
+     * @return 文件列表
+     * @since 2024-05-17
+     */
     public List<StorageFile> listByFileIds(List<String> fileIds) {
         return mapper.selectListByIds(fileIds);
     }
@@ -80,6 +97,7 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
      *
      * @param storageFile 需要参数 originalFileName，contentType, fileMd5
      * @return 空字符串表示无法秒传，应再次调用文件上传接口；有值字符串表示上传成功，上传文件ID
+     * @since 2024-05-17
      */
     @NotNull public String tryQuicklyUpload(@NotNull StorageFile storageFile) {
         return LockUtil.lock(
@@ -105,6 +123,14 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
+    /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @param fileName 文件名
+     * @return 上传文件ID
+     * @since 2024-05-17
+     */
     @NotNull @SneakyThrows
     public String upload(@NotNull MultipartFile file, @Nullable String fileName) {
         String md5Hex = DigestUtils.md5Hex(file.getBytes());
@@ -166,16 +192,35 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
+    /**
+     * 根据文件MD5查询文件列表
+     *
+     * @param fileMd5 文件MD5
+     * @return 文件列表
+     * @since 2024-05-17
+     */
     @NotNull public List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
         return mapper.listByFileMd5(fileMd5);
     }
 
+    /**
+     * 根据文件ID集合删除文件
+     *
+     * @param fileIds 文件ID集合
+     * @since 2024-05-17
+     */
     public void deleteByIds(@NotNull Collection<String> fileIds) {
         for (String fileId : fileIds) {
             deleteById(fileId);
         }
     }
 
+    /**
+     * 根据文件ID删除文件
+     *
+     * @param fileId 文件ID
+     * @since 2024-05-17
+     */
     @SneakyThrows
     public void deleteById(@NotNull String fileId) {
         if (StringUtils.isBlank(fileId)) {
@@ -198,10 +243,23 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
                 });
     }
 
+    /**
+     * 查询文件详情
+     *
+     * @param fileId 文件ID
+     * @return 包含文件的Optional对象
+     * @since 2024-05-17
+     */
     @NotNull public Optional<StorageFile> detail(@NotNull String fileId) {
         return Optional.ofNullable(mapper.selectOneById(fileId));
     }
 
+    /**
+     * 下载文件
+     *
+     * @param fileId 文件ID
+     * @since 2024-05-17
+     */
     @SneakyThrows
     public void downloadFile(@NotNull String fileId) {
         StorageFile storageFile = mapper.selectOneById(fileId);
@@ -221,6 +279,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         mapper.incrDownCount(fileId);
     }
 
+    /**
+     * 下载文件压缩包
+     *
+     * @param fileIds 文件ID集合
+     * @since 2024-05-17
+     */
     @SneakyThrows
     public void downloadZip(@NotNull List<String> fileIds) {
         NetUtil.getResponse()
@@ -243,7 +307,12 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         zipOut.close();
     }
 
-    /** 批量确认文件使用，将临时文件转换为正式文件 */
+    /**
+     * 批量确认文件使用，将临时文件转换为正式文件
+     *
+     * @param fileIds 文件ID集合
+     * @since 2024-05-17
+     */
     public void confirmFiles(@NotNull List<String> fileIds) {
         if (fileIds.isEmpty()) {
             return;
@@ -253,16 +322,34 @@ public class StorageFileService extends ServiceImpl<StorageFileMapper, StorageFi
         }
     }
 
-    /** 确认文件使用，将临时文件转换为正式文件 */
+    /**
+     * 确认文件使用，将临时文件转换为正式文件
+     *
+     * @param fileId 文件ID
+     * @since 2024-05-17
+     */
     public void confirmFile(@NotNull String fileId) {
         mapper.confirmFile(fileId);
     }
 
+    /**
+     * 获取过期的临时文件ID集合
+     *
+     * @return 过期的临时文件ID集合
+     * @since 2024-05-17
+     */
     public Set<String> expiredTempFileIds() {
         return mapper.expiredTempFileIds();
     }
 
-    /** 处理压缩包文件重名问题 */
+    /**
+     * 处理压缩包文件重名问题
+     *
+     * @param storageFile 文件
+     * @param fileNameCountMap 文件名计数Map
+     * @return 处理后的文件名
+     * @since 2024-05-17
+     */
     @NotNull private static String dealFileName(
             @NotNull StorageFile storageFile, @NotNull Map<String, Integer> fileNameCountMap) {
         String fileName = storageFile.getOriginalFileName();

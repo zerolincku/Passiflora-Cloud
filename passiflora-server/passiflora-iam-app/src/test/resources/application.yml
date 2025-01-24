@@ -1,7 +1,6 @@
 ---
 server:
   port: 51001
-  shutdown: "graceful"
   servlet:
     context-path: "/passiflora/iam-api"
 spring:
@@ -17,8 +16,6 @@ spring:
       compression:
         request:
           enabled: true
-          mime-types: "text/html,application/xml,application/json"
-          min-request-size: 2048
         response:
           enabled: true
       client:
@@ -39,7 +36,6 @@ passiflora:
     token:
       expire: 604800
   config:
-    mybatis: true
     exception: true
     globalFilter: true
     lock: true

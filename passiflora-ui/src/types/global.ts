@@ -26,7 +26,7 @@ export interface PostData {
 }
 
 export interface Pagination {
-  current: number;
+  pageNum: number;
   pageSize: number;
   total?: number;
 }
@@ -56,7 +56,7 @@ export interface BaseEntity {
 }
 
 export interface BasePageParam {
-  current?: number;
+  pageNum?: number;
   pageSize?: number;
 }
 

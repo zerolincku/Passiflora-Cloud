@@ -30,6 +30,7 @@ import com.zerolinck.passiflora.iam.service.IamPositionService;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +53,7 @@ public class IamPositionController implements IamPositionApi {
 
     @Override
     public Result<List<IamPosition>> page(@NotNull QueryCondition<IamPosition> condition) {
-        return Result.ok(iamPositionService.page(condition));
+        return Result.ok(FlexPage.convert(iamPositionService.page(condition)));
     }
 
     @Override

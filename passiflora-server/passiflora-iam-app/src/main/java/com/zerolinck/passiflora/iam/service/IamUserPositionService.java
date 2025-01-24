@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -34,15 +32,29 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** @author linck on 2024-05-14 */
+/**
+ * IAM用户职位服务类
+ *
+ * @author linck
+ * @since 2024-05-14
+ */
 @Slf4j
 @Service
-public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, IamUserPosition> {
-
+@RequiredArgsConstructor
+public class IamUserPositionService {
+    private final IamUserPositionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamUserPosition:";
 
+    /**
+     * 根据用户ID集合查询用户职位
+     *
+     * @param userIds 用户ID集合
+     * @return 用户职位响应列表
+     * @since 2024-05-14
+     */
     @NotNull public List<IamUserPositionResp> selectByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Collections.emptyList();
@@ -50,6 +62,12 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         return mapper.selectByUserIds(userIds);
     }
 
+    /**
+     * 更新用户职位关系
+     *
+     * @param args 用户参数
+     * @since 2024-05-14
+     */
     public void updateRelation(@NotNull IamUserArgs args) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -77,22 +95,43 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
                             position.setPositionId(positionId);
                             addList.add(position);
                         }
-                        ProxyUtil.proxy(this.getClass()).saveBatch(addList);
+                        mapper.insertBatch(addList, 500);
                     }
                 });
     }
 
+    /**
+     * 根据用户ID集合查询用户职位
+     *
+     * @param userIds 用户ID集合
+     * @return 用户职位列表
+     * @since 2024-05-14
+     */
     @NotNull public List<IamUserPosition> findByUserIds(@Nullable List<String> userIds) {
         userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
         return mapper.selectListByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
     }
 
+    /**
+     * 根据职位ID集合查询用户职位
+     *
+     * @param positionIds 职位ID集合
+     * @return 用户职位列表
+     * @since 2024-05-14
+     */
     @NotNull @SuppressWarnings("unused")
     public List<IamUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
         positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
         return mapper.selectListByQuery(new QueryWrapper().eq(IamUserPosition::getPositionId, positionIds));
     }
 
+    /**
+     * 根据用户ID集合删除用户职位
+     *
+     * @param userIds 用户ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
     @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
@@ -101,6 +140,13 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         return mapper.deleteByUserIds(userIds);
     }
 
+    /**
+     * 根据职位ID集合删除用户职位
+     *
+     * @param positionIds 职位ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
     @SuppressWarnings({"UnusedReturnValue", "unused"})
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
@@ -109,6 +155,14 @@ public class IamUserPositionService extends ServiceImpl<IamUserPositionMapper, I
         return mapper.deleteByPositionIds(positionIds);
     }
 
+    /**
+     * 根据用户ID和职位ID集合删除用户职位
+     *
+     * @param userId 用户ID
+     * @param positionIds 职位ID集合
+     * @return 删除的用户职位数量
+     * @since 2024-05-14
+     */
     @SuppressWarnings("UnusedReturnValue")
     public int deleteByUserIdAndPositionIds(@NotNull String userId, @Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {

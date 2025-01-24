@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -31,27 +29,44 @@ import com.zerolinck.passiflora.iam.mapper.IamOrgMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamOrgConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-04-09 */
 @Slf4j
 @Service
-public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
-
+@RequiredArgsConstructor
+public class IamOrgService {
+    private final IamOrgMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamOrg:";
 
+    /**
+     * 分页查询组织
+     *
+     * @param condition 查询条件
+     * @return 组织的分页结果
+     * @since 2024-04-09
+     */
     @NotNull public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamOrg.class));
+                condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamOrg.class));
     }
 
+    /**
+     * 新增组织
+     *
+     * @param iamOrg 组织实体
+     * @since 2024-04-09
+     */
     public void add(@NotNull IamOrg iamOrg) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -72,6 +87,13 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                 });
     }
 
+    /**
+     * 更新组织
+     *
+     * @param iamOrg 组织实体
+     * @return 如果更新成功返回true，否则返回false
+     * @since 2024-04-09
+     */
     public boolean update(@NotNull IamOrg iamOrg) {
         return LockUtil.lock(
                 LOCK_KEY,
@@ -106,7 +128,13 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                 });
     }
 
-    /** 此方法会级联删除下级机构 */
+    /**
+     * 根据组织ID集合删除组织 此方法会级联删除下级机构
+     *
+     * @param orgIds 组织ID集合
+     * @return 删除的组织数量
+     * @since 2024-04-09
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@NotNull Collection<String> orgIds) {
         int rowCount = 0;
@@ -116,10 +144,24 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
         return rowCount;
     }
 
+    /**
+     * 根据组织ID获取组织的详细信息
+     *
+     * @param orgId 组织ID
+     * @return 包含组织的Optional对象
+     * @since 2024-04-09
+     */
     @NotNull public Optional<IamOrg> detail(@NotNull String orgId) {
         return Optional.ofNullable(mapper.selectOneById(orgId));
     }
 
+    /**
+     * 根据组织ID集合获取组织ID到名称的映射
+     *
+     * @param orgIds 组织ID集合
+     * @return 组织ID到名称的映射
+     * @since 2024-04-09
+     */
     @NotNull public Map<String, String> orgId2NameMap(@NotNull Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
@@ -128,26 +170,58 @@ public class IamOrgService extends ServiceImpl<IamOrgMapper, IamOrg> {
                 .collect(Collectors.toMap(IamOrg::getOrgId, IamOrg::getOrgName));
     }
 
+    /**
+     * 根据组织代码获取组织
+     *
+     * @param orgCode 组织代码
+     * @return 组织实体
+     * @since 2024-04-09
+     */
     @Nullable @SuppressWarnings("unused")
     public IamOrg selectByOrgCode(@NotNull String orgCode) {
         return mapper.selectByOrgCode(orgCode);
     }
 
+    /**
+     * 根据父组织ID获取子组织列表
+     *
+     * @param orgParentId 父组织ID
+     * @return 子组织列表
+     * @since 2024-04-09
+     */
     @NotNull public List<IamOrgResp> listByParentId(@NotNull String orgParentId) {
         return mapper.listByParentId(orgParentId);
     }
 
+    /**
+     * 获取组织树
+     *
+     * @return 组织树
+     * @since 2024-04-09
+     */
     @Nullable public List<IamOrgResp> orgTree() {
         List<IamOrgResp> iamOrgResps = mapper.listByParentId("0");
         iamOrgResps.forEach(this::recursionTree);
         return iamOrgResps;
     }
 
+    /**
+     * 递归生成组织树
+     *
+     * @param iamOrgResp 组织响应对象
+     * @since 2024-04-09
+     */
     private void recursionTree(@NotNull IamOrgResp iamOrgResp) {
         iamOrgResp.setChildren(listByParentId(iamOrgResp.getOrgId()));
         iamOrgResp.getChildren().forEach(this::recursionTree);
     }
 
+    /**
+     * 生成组织路径和层级
+     *
+     * @param iamOrg 组织实体
+     * @since 2024-04-09
+     */
     private void generateIadPathAndLevel(@NotNull IamOrg iamOrg) {
         StringBuilder codeBuffer = new StringBuilder();
         String orgParentId = iamOrg.getParentOrgId();

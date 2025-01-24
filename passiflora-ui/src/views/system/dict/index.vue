@@ -276,7 +276,7 @@
   const size = ref<SizeProps>('large');
 
   const basePagination: Pagination = {
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
   };
   const pagination = reactive({
@@ -311,13 +311,13 @@
     },
   ]);
   const fetchData = async (
-    params: dictPageParams = { current: 1, pageSize: 10 }
+    params: dictPageParams = { pageNum: 1, pageSize: 10 }
   ) => {
     setLoading(true);
     try {
       const { data } = await dictPage(params);
       renderData.value = data.data;
-      pagination.current = params.current;
+      pagination.pageNum = params.pageNum;
       pagination.total = data.total;
       renderData.value.forEach((item) => {
         if (item.isSystem === 1) {
@@ -337,8 +337,8 @@
       ...searchForm.value,
     } as unknown as dictPageParams);
   };
-  const onPageChange = (current: number) => {
-    basePagination.current = current;
+  const onPageChange = (pageNum: number) => {
+    basePagination.pageNum = pageNum;
     search();
   };
 

@@ -29,6 +29,7 @@ import com.zerolinck.passiflora.iam.service.IamPermissionService;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +51,7 @@ public class IamPermissionController implements IamPermissionApi {
 
     @Override
     public Result<List<IamPermission>> page(@NotNull QueryCondition<IamPermission> condition) {
-        return Result.ok(iamPermissionService.page(condition));
+        return Result.ok(FlexPage.convert(iamPermissionService.page(condition)));
     }
 
     @Override

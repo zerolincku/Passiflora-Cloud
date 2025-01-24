@@ -1,7 +1,6 @@
 ---
 server:
   port: 51002
-  shutdown: "graceful"
   servlet:
     context-path: "/passiflora/storage-api"
 spring:
@@ -17,8 +16,6 @@ spring:
       compression:
         request:
           enabled: true
-          mime-types: "text/html,application/xml,application/json"
-          min-request-size: 2048
         response:
           enabled: true
       client:
@@ -36,7 +33,6 @@ spring:
       port: "@redis.port@"
 passiflora:
   config:
-    mybatis: true
     exception: true
     globalFilter: true
     lock: true

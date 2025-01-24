@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.config.mybaits;
+package com.zerolinck.passiflora.mybatis.config;
 
-import com.mybatisflex.annotation.UpdateListener;
+import com.mybatisflex.annotation.InsertListener;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 
 /** @author 林常坤 on 2024/12/24 */
-public class FlexUpdateListener implements UpdateListener {
-
+public class FlexInsertListener implements InsertListener {
     /**
-     * 更新操作的前置操作。
+     * 新增操作的前置操作。
      *
      * @param entity 实体类
      */
     @Override
-    public void onUpdate(Object entity) {
+    public void onInsert(Object entity) {
         String userId = CurrentUtil.getCurrentUserId();
         if (userId != null && entity instanceof BaseEntity baseEntity) {
+            baseEntity.setCreateBy(userId);
             baseEntity.setUpdateBy(userId);
         }
     }

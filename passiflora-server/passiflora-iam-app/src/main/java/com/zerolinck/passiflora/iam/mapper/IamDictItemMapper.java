@@ -31,9 +31,21 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** @author linck on 2024-04-01 */
+/**
+ * 字典项 Mybatis Mapper
+ *
+ * @author linck
+ * @since 2024-04-01
+ */
 public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
 
+    /**
+     * 根据字典ID集合删除字典项
+     *
+     * @param dictIds 字典ID集合
+     * @return 删除的字典项数量
+     * @since 2024-04-01
+     */
     @SuppressWarnings("UnusedReturnValue")
     default int deleteByDictIds(@Nullable Collection<String> dictIds) {
         if (CollectionUtils.isEmpty(dictIds)) {
@@ -43,16 +55,37 @@ public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
         return this.deleteByCondition(QueryCondition.createEmpty().and(IAM_DICT_ITEM.DICT_ID.in(dictIds)));
     }
 
+    /**
+     * 根据字典ID查询字典项列表
+     *
+     * @param dictId 字典ID
+     * @return 字典项列表
+     * @since 2024-04-01
+     */
     default List<IamDictItem> listByDictId(@NotNull String dictId) {
         return this.selectListByQuery(QueryWrapper.create().where(IAM_DICT_ITEM.DICT_ID.eq(dictId)));
     }
 
+    /**
+     * 根据字典名称查询字典项列表
+     *
+     * @param dictName 字典名称
+     * @return 字典项列表
+     * @since 2024-04-01
+     */
     default List<IamDictItem> listByDictName(@NotNull String dictName) {
         return this.selectListByQuery(QueryWrapper.create()
                 .where(IAM_DICT_ITEM.DICT_ID.in(
                         select(IAM_DICT.DICT_ID).from(IAM_DICT).where(IAM_DICT.DICT_NAME.eq(dictName)))));
     }
 
+    /**
+     * 根据字典标签查询字典项列表
+     *
+     * @param dictTag 字典标签
+     * @return 字典项列表
+     * @since 2024-04-01
+     */
     default List<IamDictItem> listByDictTag(@NotNull String dictTag) {
         return this.selectListByQuery(QueryWrapper.create()
                 .where(IAM_DICT_ITEM.DICT_ID.in(

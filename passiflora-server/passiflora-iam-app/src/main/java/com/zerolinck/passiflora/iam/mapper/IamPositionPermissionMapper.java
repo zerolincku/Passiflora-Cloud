@@ -16,22 +16,37 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import static com.mybatisflex.core.query.QueryMethods.select;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamPermissionTableDef.IAM_PERMISSION;
+import static com.zerolinck.passiflora.model.iam.entity.table.IamPositionPermissionTableDef.IAM_POSITION_PERMISSION;
+
 import java.util.Collection;
 import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.base.enums.DelFlagEnum;
+import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** @author linck on 2024-05-06 */
+/**
+ * 职位权限 Mybatis Mapper
+ *
+ * @since 2024-05-06
+ */
 public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermission> {
 
-    default int deleteByPositionIds(@Nullable @Param("positionIds") Collection<String> positionIds) {
+    /**
+     * 根据职位ID集合删除职位权限
+     *
+     * @param positionIds 职位ID集合
+     * @return 删除的职位权限数量
+     * @since 2024-05-06
+     */
+    default int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
             return 0;
         }
@@ -39,14 +54,24 @@ public interface IamPositionPermissionMapper extends BaseMapper<IamPositionPermi
         return this.deleteByQuery(new QueryWrapper().in(IamPositionPermission::getPositionId, positionIds));
     }
 
-    @NotNull @Select(
-            """
-        SELECT permission_id from iam_permission
-        WHERE permission_status = 1 AND del_flag = 0
-        AND permission_id IN
-            (SELECT permission_id from iam_position_permission
-            WHERE del_flag = 0 AND position_id IN
-            (SELECT position_id from iam_position_permission
-            WHERE del_flag = 0 AND position_id IN (#{positionIds})))""")
-    List<String> permissionIdsByPositionIds(@NotNull @Param("positionIds") List<String> positionIds);
+    /**
+     * 根据职位ID集合查询权限ID集合
+     *
+     * @param positionIds 职位ID集合
+     * @return 权限ID集合
+     * @since 2024-05-06
+     */
+    default List<String> permissionIdsByPositionIds(@NotNull List<String> positionIds) {
+        return this.selectListByQueryAs(
+                QueryWrapper.create()
+                        .select(IAM_PERMISSION.PERMISSION_ID)
+                        .from(IAM_PERMISSION)
+                        .where(IAM_PERMISSION.PERMISSION_STATUS.eq(StatusEnum.ENABLE))
+                        .and(IAM_PERMISSION.DEL_FLAG.eq(DelFlagEnum.NOT_DELETE))
+                        .and(IAM_PERMISSION.PERMISSION_ID.in(select(IAM_POSITION_PERMISSION.PERMISSION_ID)
+                                .from(IAM_POSITION_PERMISSION)
+                                .where(IAM_POSITION_PERMISSION.DEL_FLAG.eq(DelFlagEnum.NOT_DELETE))
+                                .and(IAM_POSITION_PERMISSION.POSITION_ID.in(positionIds)))),
+                String.class);
+    }
 }

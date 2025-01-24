@@ -14,25 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.common.config.mybaits;
+package com.zerolinck.passiflora.mybatis.util;
 
-import com.mybatisflex.annotation.InsertListener;
-import com.zerolinck.passiflora.base.BaseEntity;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.api.Page;
 
-/** @author 林常坤 on 2024/12/24 */
-public class FlexInsertListener implements InsertListener {
-    /**
-     * 新增操作的前置操作。
-     *
-     * @param entity 实体类
-     */
-    @Override
-    public void onInsert(Object entity) {
-        String userId = CurrentUtil.getCurrentUserId();
-        if (userId != null && entity instanceof BaseEntity baseEntity) {
-            baseEntity.setCreateBy(userId);
-            baseEntity.setUpdateBy(userId);
-        }
+import lombok.experimental.UtilityClass;
+
+/** @author 林常坤 on 2024/12/26 */
+@UtilityClass
+public class FlexPage {
+
+    public static <T> Page<T> convert(com.mybatisflex.core.paginate.Page<T> page) {
+        return new Page<>(page.getRecords(), page.getPageNumber(), page.getPageSize(), page.getTotalRow());
     }
 }

@@ -21,12 +21,10 @@ import java.util.stream.Collectors;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.base.constant.Constants;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -36,27 +34,46 @@ import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-05-06 */
 @Slf4j
 @Service
-public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPermission> {
-
+@RequiredArgsConstructor
+public class IamPermissionService {
+    private final IamPermissionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamPermission:";
 
+    /**
+     * 分页查询权限
+     *
+     * @param condition 查询条件
+     * @return 权限的分页结果
+     * @since 2024-05-06
+     */
     @NotNull public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamPermission.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamPermission.class));
     }
 
+    /**
+     * 新增权限
+     *
+     * @param iamPermission 权限实体
+     * @since 2024-05-06
+     */
     public void add(@NotNull IamPermission iamPermission) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -70,6 +87,13 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                 });
     }
 
+    /**
+     * 更新权限
+     *
+     * @param iamPermission 权限实体
+     * @return 如果更新成功返回true，否则返回false
+     * @since 2024-05-06
+     */
     public boolean update(@NotNull IamPermission iamPermission) {
         return LockUtil.lock(
                 LOCK_KEY,
@@ -90,10 +114,24 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
                 });
     }
 
+    /**
+     * 根据父权限ID获取子权限列表
+     *
+     * @param permissionParentId 父权限ID
+     * @return 子权限列表
+     * @since 2024-05-06
+     */
     @NotNull public List<IamPermission> listByParentId(@NotNull String permissionParentId) {
         return mapper.listByParentId(permissionParentId);
     }
 
+    /**
+     * 根据权限ID集合删除权限
+     *
+     * @param permissionIds 权限ID集合
+     * @return 删除的权限数量
+     * @since 2024-05-06
+     */
     @Transactional(rollbackFor = Exception.class)
     public int deleteByIds(@Nullable Collection<String> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
@@ -102,10 +140,23 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return mapper.deleteBatchByIds(permissionIds, 500);
     }
 
+    /**
+     * 根据权限ID获取权限的详细信息
+     *
+     * @param permissionId 权限ID
+     * @return 包含权限的Optional对象
+     * @since 2024-05-06
+     */
     @NotNull public Optional<IamPermission> detail(@NotNull String permissionId) {
         return Optional.ofNullable(mapper.selectOneById(permissionId));
     }
 
+    /**
+     * 获取菜单树
+     *
+     * @return 菜单树
+     * @since 2024-05-06
+     */
     @NotNull public List<IamPermissionResp> menuTree() {
         Map<String, List<IamPermissionResp>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
                 .filter(permission -> PermissionTypeEnum.MENU.equals(permission.getPermissionType())
@@ -122,6 +173,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
+    /**
+     * 获取权限表格树
+     *
+     * @return 权限表格树
+     * @since 2024-05-06
+     */
     @NotNull public List<IamPermissionTableResp> permissionTableTree() {
         Map<String, List<IamPermissionTableResp>> menuMap =
                 this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
@@ -137,6 +194,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         return topMenu;
     }
 
+    /**
+     * 更新权限顺序
+     *
+     * @param iamPermissionTableResps 权限表格响应对象集合
+     * @since 2024-05-06
+     */
     public void updateOrder(@Nullable Collection<IamPermissionTableResp> iamPermissionTableResps) {
         if (CollectionUtils.isEmpty(iamPermissionTableResps)) {
             return;
@@ -147,6 +210,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         }
     }
 
+    /**
+     * 禁用权限
+     *
+     * @param permissionIds 权限ID集合
+     * @since 2024-05-06
+     */
     @Transactional(rollbackFor = Exception.class)
     public void disable(@Nullable List<String> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
@@ -155,6 +224,12 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
         mapper.disable(permissionIds);
     }
 
+    /**
+     * 启用权限
+     *
+     * @param permissionIds 权限ID集合
+     * @since 2024-05-06
+     */
     @Transactional(rollbackFor = Exception.class)
     public void enable(@Nullable List<String> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
@@ -166,9 +241,16 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
             String[] permissionIdList = iamPermission.getPermissionIdPath().split("/");
             Collections.addAll(pathIds, permissionIdList);
         });
-        mapper.enable(pathIds, CurrentUtil.getCurrentUserId());
+        mapper.enable(pathIds);
     }
 
+    /**
+     * 获取自身及子权限列表
+     *
+     * @param permissionId 权限ID
+     * @return 权限列表
+     * @since 2024-05-06
+     */
     @NotNull @SuppressWarnings("unused")
     public List<IamPermission> listSelfAndSub(@NotNull String permissionId) {
         return mapper.listSelfAndSub(permissionId);
@@ -189,7 +271,7 @@ public class IamPermissionService extends ServiceImpl<IamPermissionMapper, IamPe
      * 根据角色ID查询权限
      *
      * @param roleId 角色ID
-     * @author 林常坤 on 2024/8/17
+     * @since 2024-08-17
      */
     @NotNull @SuppressWarnings("unused")
     List<IamPermission> listByRoleId(@NotNull String roleId) {

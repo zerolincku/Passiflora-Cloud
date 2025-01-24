@@ -26,9 +26,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /** @author linck on 2024-03-19 */
 @Data
+@NoArgsConstructor
 @Table("iam_user")
 @Schema(description = "用户")
 @EqualsAndHashCode(callSuper = false)
@@ -58,4 +60,9 @@ public class IamUser extends BaseEntity implements IUser {
     private String avatarFile;
     /** 所属机构 */
     private String orgId;
+
+    public IamUser(String userName, String userPassword) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
 }

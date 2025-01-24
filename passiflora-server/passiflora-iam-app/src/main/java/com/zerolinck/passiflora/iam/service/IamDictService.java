@@ -20,44 +20,58 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import jakarta.annotation.Resource;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.OnlyFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
+import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-04-01 */
 @Slf4j
 @Service
-public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
-
-    @Lazy
-    @Resource
-    private IamDictItemService iamDictItemService;
+@RequiredArgsConstructor
+public class IamDictService {
+    private final IamDictMapper mapper;
+    private final IamDictItemMapper dictItemMapper;
 
     private static final String LOCK_KEY = "passiflora:lock:iamDict:";
 
+    /**
+     * 分页查询字典
+     *
+     * @param condition 查询条件
+     * @return 字典的分页结果
+     * @since 2024-04-01
+     */
     @NotNull public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
         return mapper.paginate(
-                condition.getPageNumber(), condition.getPageSize(), condition.searchWrapper(IamDict.class));
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamDict.class));
     }
 
+    /**
+     * 新增字典
+     *
+     * @param iamDict 字典
+     * @since 2024-04-01
+     */
     public void add(@NotNull IamDict iamDict) {
         LockUtil.lock(
                 LOCK_KEY,
@@ -71,6 +85,13 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
                 });
     }
 
+    /**
+     * 更新字典
+     *
+     * @param iamDict 字典
+     * @return 如果更新成功返回true，否则返回false
+     * @since 2024-04-01
+     */
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@NotNull IamDict iamDict) {
         return LockUtil.lock(
@@ -91,6 +112,13 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
                 });
     }
 
+    /**
+     * 根据字典ID集合删除字典
+     *
+     * @param dictIds 字典ID集合
+     * @return 删除的字典数量
+     * @since 2024-04-01
+     */
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public int deleteByIds(@NotNull Collection<String> dictIds) {
@@ -101,10 +129,17 @@ public class IamDictService extends ServiceImpl<IamDictMapper, IamDict> {
             }
         });
         int rowCount = mapper.deleteBatchByIds(dictIds, 500);
-        iamDictItemService.deleteByDictIds(dictIds);
+        dictItemMapper.deleteByDictIds(dictIds);
         return rowCount;
     }
 
+    /**
+     * 根据字典ID获取字典的详细信息
+     *
+     * @param dictId 字典ID
+     * @return 包含字典的Optional对象
+     * @since 2024-04-01
+     */
     @NotNull public Optional<IamDict> detail(@NotNull String dictId) {
         return Optional.ofNullable(mapper.selectOneById(dictId));
     }

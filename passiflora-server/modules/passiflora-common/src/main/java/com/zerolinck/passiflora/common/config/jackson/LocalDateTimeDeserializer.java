@@ -26,8 +26,22 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.apache.commons.lang3.StringUtils;
 
-/** @author linck on 2024-02-06 */
+/**
+ * LocalDateTime反序列化器 用于将JSON中的时间戳字符串反序列化为LocalDateTime对象
+ *
+ * @author linck
+ * @since 2024-02-06
+ */
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+    /**
+     * 反序列化 将JSON中的时间戳字符串反序列化为LocalDateTime对象
+     *
+     * @param p JsonParser对象，用于解析JSON内容
+     * @param context DeserializationContext对象，提供反序列化上下文
+     * @return 反序列化后的LocalDateTime对象
+     * @throws IOException 如果解析过程中发生IO错误
+     * @since 2024-02-06
+     */
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
         String longStr = p.getValueAsString();

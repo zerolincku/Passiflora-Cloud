@@ -1,0 +1,13 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: "202412261624_update_data_user.yml"
+    author: "linck"
+    changes:
+    - update:
+        tableName: "iam_user"
+        columns:
+        - column:
+            name: "user_password"
+            value: "WQ5Pk1RHfo947d5572f842f04111ad001d947e3d1afba0bfd1"
+        where: "user_id = '1'"
