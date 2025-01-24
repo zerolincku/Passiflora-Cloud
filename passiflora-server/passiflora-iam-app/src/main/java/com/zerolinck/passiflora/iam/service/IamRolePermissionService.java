@@ -16,27 +16,23 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.*;
-
-import com.mybatisflex.core.paginate.Page;
 import com.zerolinck.passiflora.common.util.ProxyUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 /**
  * 角色权限 Service
@@ -50,20 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 public class IamRolePermissionService {
     private final IamRolePermissionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamRolePermission:";
-
-    /**
-     * 分页查询
-     *
-     * @param condition 搜索条件
-     * @since 2024-08-17
-     */
-    @NotNull public Page<IamRolePermission> page(@Nullable QueryCondition<IamRolePermission> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamRolePermission.class));
-    }
 
     /**
      * 新增角色权限
@@ -122,7 +104,7 @@ public class IamRolePermissionService {
      * @param roleIds 角色ID集合
      * @since 2024-08-17
      */
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "unused"})
     public int deleteByRoleIds(@Nullable Collection<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return 0;

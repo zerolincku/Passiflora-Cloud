@@ -24,9 +24,11 @@ import java.util.Collection;
 import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,20 @@ import org.jetbrains.annotations.Nullable;
  * @since 2024-04-01
  */
 public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param queryWrapper 查询条件
+     * @author 林常坤 on 2025/1/24
+     */
+    default com.zerolinck.passiflora.common.api.Page<IamDictItem> page(
+            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
+        Page<IamDictItem> paginate = paginate(pageNum, pageSize, queryWrapper);
+        return FlexPage.convert(paginate);
+    }
 
     /**
      * 根据字典ID集合删除字典项

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.mybatisflex.core.paginate.Page;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -62,7 +62,7 @@ public class IamRoleService {
      */
     @NotNull public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamRole.class));

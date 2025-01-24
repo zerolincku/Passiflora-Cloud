@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
+import com.zerolinck.passiflora.base.BaseIgnoreMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
@@ -42,5 +43,6 @@ public interface IamUserConvert {
     @Mapping(target = "userPassword", ignore = true)
     IamUserInfo entityToInfo(IamUser iamUser);
 
+    @BaseIgnoreMapper
     IamUser argsToEntity(IamUserArgs args);
 }

@@ -16,27 +16,23 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.*;
-
-import com.mybatisflex.core.paginate.Page;
 import com.zerolinck.passiflora.common.util.ProxyUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 /**
  * IAM职位权限服务类
@@ -50,21 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 public class IamPositionPermissionService {
     private final IamPositionPermissionMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamPositionPermission:";
-
-    /**
-     * 分页查询职位权限
-     *
-     * @param condition 查询条件
-     * @return 职位权限的分页结果
-     * @since 2024-05-06
-     */
-    @NotNull public Page<IamPositionPermission> page(@Nullable QueryCondition<IamPositionPermission> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamPositionPermission.class));
-    }
 
     /**
      * 新增职位权限
@@ -116,7 +97,7 @@ public class IamPositionPermissionService {
      * @return 删除的职位权限数量
      * @since 2024-05-06
      */
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "unused"})
     @Transactional(rollbackFor = Exception.class)
     public int deleteByPositionIds(@Nullable Collection<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {

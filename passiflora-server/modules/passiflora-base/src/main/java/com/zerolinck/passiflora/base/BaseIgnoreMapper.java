@@ -14,24 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.model.iam.mapperstruct;
+package com.zerolinck.passiflora.base;
 
-import com.zerolinck.passiflora.base.BaseIgnoreMapper;
-import com.zerolinck.passiflora.model.iam.entity.IamPosition;
-import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
-import org.mapstruct.Mapper;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-/** @author linck on 2024-03-26 */
-@Mapper
-@SuppressWarnings("all")
-public interface IamPositionConvert {
-    IamPositionConvert INSTANCE = Mappers.getMapper(IamPositionConvert.class);
-
-    @Mapping(target = "children", ignore = true)
-    IamPositionResp entityToResp(IamPosition entity);
-
-    @BaseIgnoreMapper
-    IamPosition respToEntity(IamPositionResp resp);
-}
+/** @author 林常坤 on 2025/1/24 */
+@Retention(RetentionPolicy.CLASS)
+@Mapping(target = "createBy", ignore = true)
+@Mapping(target = "updateBy", ignore = true)
+@Mapping(target = "createTime", ignore = true)
+@Mapping(target = "updateTime", ignore = true)
+@Mapping(target = "delFlag", ignore = true)
+public @interface BaseIgnoreMapper {}

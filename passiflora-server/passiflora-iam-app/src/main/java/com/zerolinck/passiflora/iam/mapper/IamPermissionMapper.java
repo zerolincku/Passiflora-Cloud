@@ -27,11 +27,13 @@ import java.util.Collection;
 import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +44,20 @@ import org.jetbrains.annotations.NotNull;
  * @since 2024-05-06
  */
 public interface IamPermissionMapper extends BaseMapper<IamPermission> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param queryWrapper 查询条件
+     * @author 林常坤 on 2025/1/24
+     */
+    default com.zerolinck.passiflora.common.api.Page<IamPermission> page(
+            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
+        Page<IamPermission> paginate = paginate(pageNum, pageSize, queryWrapper);
+        return FlexPage.convert(paginate);
+    }
 
     /**
      * 更新权限顺序

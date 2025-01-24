@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import com.mybatisflex.core.paginate.Page;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -63,7 +63,7 @@ public class IamPositionService {
      */
     @NotNull public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamPosition.class));

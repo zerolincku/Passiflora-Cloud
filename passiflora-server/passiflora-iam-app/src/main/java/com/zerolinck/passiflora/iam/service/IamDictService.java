@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.mybatisflex.core.paginate.Page;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -60,7 +60,7 @@ public class IamDictService {
      */
     @NotNull public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamDict.class));

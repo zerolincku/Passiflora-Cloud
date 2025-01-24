@@ -30,7 +30,6 @@ import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.valid.Login;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.validation.annotation.Validated;
@@ -51,7 +50,7 @@ public class IamUserController implements IamUserApi {
 
     @Override
     public Result<List<IamUserResp>> page(String orgId, @NotNull QueryCondition<IamUser> condition) {
-        return Result.ok(FlexPage.convert(iamUserService.page(orgId, condition)));
+        return Result.ok(iamUserService.page(orgId, condition));
     }
 
     @NotNull @Override

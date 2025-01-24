@@ -16,26 +16,21 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-
-import com.mybatisflex.core.paginate.Page;
-import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionDataScopeMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collection;
+import java.util.Optional;
 
 /** @author linck on 2024-05-14 */
 @Slf4j
@@ -44,21 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 public class IamPositionDataScopeService {
     private final IamPositionDataScopeMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamPositionDataScope:";
-
-    /**
-     * 分页查询职位数据范围
-     *
-     * @param condition 查询条件
-     * @return 职位数据范围的分页结果
-     * @since 2024-05-14
-     */
-    @NotNull public Page<IamPositionDataScope> page(@Nullable QueryCondition<IamPositionDataScope> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamPositionDataScope.class));
-    }
 
     /**
      * 新增职位数据范围
@@ -89,7 +69,7 @@ public class IamPositionDataScopeService {
     }
 
     /**
-     * 根据职位数据范围ID集合删除职位数据���围
+     * 根据职位数据范围ID集合删除职位数据范围
      *
      * @param scopeIds 职位数据范围ID集合
      * @return 删除的职位数据范围数量

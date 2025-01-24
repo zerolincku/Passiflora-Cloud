@@ -28,7 +28,6 @@ import com.zerolinck.passiflora.iam.service.IamRolePermissionService;
 import com.zerolinck.passiflora.iam.service.IamRoleService;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +52,7 @@ public class IamRoleController implements IamRoleApi {
 
     @NotNull @Override
     public Result<List<IamRole>> page(@NotNull QueryCondition<IamRole> condition) {
-        return Result.ok(FlexPage.convert(iamRoleService.page(condition)));
+        return Result.ok(iamRoleService.page(condition));
     }
 
     @NotNull @Override

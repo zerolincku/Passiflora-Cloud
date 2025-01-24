@@ -28,7 +28,6 @@ import com.zerolinck.passiflora.feign.iam.IamOrgApi;
 import com.zerolinck.passiflora.iam.service.IamOrgService;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +49,7 @@ public class IamOrgController implements IamOrgApi {
 
     @Override
     public Result<List<IamOrg>> page(@NotNull QueryCondition<IamOrg> condition) {
-        return Result.ok(FlexPage.convert(iamOrgService.page(condition)));
+        return Result.ok(iamOrgService.page(condition));
     }
 
     @Override

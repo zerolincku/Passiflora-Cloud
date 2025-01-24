@@ -16,11 +16,9 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.*;
-
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -30,6 +28,8 @@ import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,8 +38,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 /** @author linck on 2024-04-01 */
 @Slf4j
@@ -59,7 +58,7 @@ public class IamDictItemService {
      */
     @NotNull public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamDictItem.class));
@@ -180,6 +179,7 @@ public class IamDictItemService {
      *
      * @param dictIds 字典ID集合
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public void deleteByDictIds(@Nullable Collection<String> dictIds) {

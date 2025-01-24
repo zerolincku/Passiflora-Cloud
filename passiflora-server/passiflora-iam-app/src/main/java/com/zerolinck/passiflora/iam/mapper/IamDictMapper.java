@@ -17,7 +17,25 @@
 package com.zerolinck.passiflora.iam.mapper;
 
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 
 /** @author linck on 2024-04-01 */
-public interface IamDictMapper extends BaseMapper<IamDict> {}
+public interface IamDictMapper extends BaseMapper<IamDict> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param queryWrapper 查询条件
+     * @author 林常坤 on 2025/1/24
+     */
+    default com.zerolinck.passiflora.common.api.Page<IamDict> page(
+            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
+        Page<IamDict> paginate = paginate(pageNum, pageSize, queryWrapper);
+        return FlexPage.convert(paginate);
+    }
+}

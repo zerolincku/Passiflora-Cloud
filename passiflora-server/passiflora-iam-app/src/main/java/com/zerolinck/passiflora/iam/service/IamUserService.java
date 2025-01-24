@@ -19,8 +19,8 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.paginate.Page;
 import com.zerolinck.passiflora.base.constant.RedisPrefix;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -71,7 +71,7 @@ public class IamUserService {
      */
     @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        Page<IamUser> page = mapper.paginate(
+        Page<IamUser> page = mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamUser.class));
@@ -121,9 +121,7 @@ public class IamUserService {
                     return iamUserResp;
                 })
                 .toList();
-        Page<IamUserResp> iamUserRespPage = new Page<>(page.getPageNumber(), page.getPageSize(), page.getTotalRow());
-        iamUserRespPage.setRecords(recordsVo);
-        return iamUserRespPage;
+        return new Page<>(recordsVo, page.getPageNum(), page.getPageSize(), page.getTotalRow());
     }
 
     /**

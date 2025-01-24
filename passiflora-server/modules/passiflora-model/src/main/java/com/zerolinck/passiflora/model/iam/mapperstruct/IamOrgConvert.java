@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.model.iam.mapperstruct;
 
+import com.zerolinck.passiflora.base.BaseIgnoreMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import org.mapstruct.Mapper;
@@ -31,5 +32,6 @@ public interface IamOrgConvert {
     @Mapping(target = "children", ignore = true)
     IamOrgResp entityToResp(IamOrg iamOrg);
 
+    @BaseIgnoreMapper
     IamOrg respToEntity(IamOrgResp orgResp);
 }

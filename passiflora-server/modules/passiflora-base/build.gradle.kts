@@ -22,6 +22,7 @@ dependencies {
     compileOnlyApi("jakarta.validation:jakarta.validation-api")
     compileOnlyApi("org.hibernate.validator:hibernate-validator")
     compileOnly("com.mybatis-flex:mybatis-flex-core")
+    compileOnly("org.mapstruct:mapstruct")
 }
 
 tasks.test {

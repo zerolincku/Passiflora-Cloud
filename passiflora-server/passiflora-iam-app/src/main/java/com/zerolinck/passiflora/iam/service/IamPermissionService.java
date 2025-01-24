@@ -19,10 +19,10 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.constant.Constants;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.CurrentUtil;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -62,7 +62,7 @@ public class IamPermissionService {
      */
     @NotNull public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(),
                 condition.getPageSize(),
                 ConditionUtils.searchWrapper(condition, IamPermission.class));

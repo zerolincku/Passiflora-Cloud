@@ -28,7 +28,6 @@ import com.zerolinck.passiflora.common.util.RandomUtil;
 import com.zerolinck.passiflora.feign.iam.IamAppApi;
 import com.zerolinck.passiflora.iam.service.IamAppService;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +51,7 @@ public class IamAppController implements IamAppApi {
 
     @NotNull @Override
     public Result<List<IamApp>> page(@NotNull QueryCondition<IamApp> condition) {
-        return Result.ok(FlexPage.convert(iamAppService.page(condition)));
+        return Result.ok(iamAppService.page(condition));
     }
 
     @NotNull @Override

@@ -19,8 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.paginate.Page;
-import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -28,7 +26,6 @@ import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
@@ -51,21 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 public class IamUserRoleService {
     private final IamUserRoleMapper mapper;
     private static final String LOCK_KEY = "passiflora:lock:iamUserRole:";
-
-    /**
-     * 分页查询
-     *
-     * @param condition 搜索条件
-     * @return 用户角色绑定的分页结果
-     * @since 2024-08-17
-     */
-    @NotNull public Page<IamUserRole> page(@Nullable QueryCondition<IamUserRole> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamUserRole.class));
-    }
 
     /**
      * 新增用户角色绑定

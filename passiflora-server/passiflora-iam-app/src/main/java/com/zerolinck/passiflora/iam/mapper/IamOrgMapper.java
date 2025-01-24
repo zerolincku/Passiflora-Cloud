@@ -21,10 +21,12 @@ import static com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef.IAM
 import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
+import com.zerolinck.passiflora.mybatis.util.FlexPage;
 
 /**
  * 组织 Mybatis Mapper
@@ -33,6 +35,20 @@ import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
  * @since 2024-04-09
  */
 public interface IamOrgMapper extends BaseMapper<IamOrg> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param queryWrapper 查询条件
+     * @author 林常坤 on 2025/1/24
+     */
+    default com.zerolinck.passiflora.common.api.Page<IamOrg> page(
+            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
+        Page<IamOrg> paginate = paginate(pageNum, pageSize, queryWrapper);
+        return FlexPage.convert(paginate);
+    }
 
     /**
      * 根据组织代码查询组织

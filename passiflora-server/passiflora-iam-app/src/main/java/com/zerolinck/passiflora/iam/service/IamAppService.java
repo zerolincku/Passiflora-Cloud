@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.mybatisflex.core.paginate.Page;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -58,7 +58,7 @@ public class IamAppService {
      */
     @NotNull public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
         condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.paginate(
+        return mapper.page(
                 condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamApp.class));
     }
 
