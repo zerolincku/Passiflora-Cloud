@@ -17,15 +17,15 @@
 package com.zerolinck.passiflora.common.util;
 
 import com.zerolinck.passiflora.base.ILabelValue;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
 public class EnumUtil {
 
-    @NotNull public static ILabelValue getEnumByValue(
-            @NotNull Class<? extends ILabelValue> clazz, @NotNull Object value) {
+    @NotNull public static ILabelValue getEnumByValue(@NotNull Class<? extends ILabelValue> clazz, @NotNull Object value) {
         ILabelValue[] enumConstants = clazz.getEnumConstants();
         for (ILabelValue nameValue : enumConstants) {
             if (nameValue.getValue().equals(value)) {
@@ -36,8 +36,7 @@ public class EnumUtil {
     }
 
     @NotNull @SuppressWarnings("unused")
-    public static ILabelValue getEnumByName(
-            @NotNull Class<? extends ILabelValue> clazz, @NotNull Object name) {
+    public static ILabelValue getEnumByName(@NotNull Class<? extends ILabelValue> clazz, @NotNull Object name) {
         ILabelValue[] enumConstants = clazz.getEnumConstants();
         for (ILabelValue nameValue : enumConstants) {
             if (nameValue.getLabel().equals(name)) {

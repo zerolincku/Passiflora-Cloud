@@ -16,6 +16,13 @@
  */
 package com.zerolinck.passiflora.common.config.jackson;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -34,13 +41,6 @@ import com.zerolinck.passiflora.common.util.lock.ClassUtil;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.*;
 
 /**
  * Jackson配置类 配置Jackson的序列化和反序列化规则
@@ -109,8 +109,7 @@ public class JacksonConfig {
         // NameValue 序列化配置
         serializers.put(ILabelValue.class, new JsonSerializer<ILabelValue>() {
             @Override
-            public void serialize(
-                    ILabelValue value, JsonGenerator jsonGenerator, SerializerProvider serializers)
+            public void serialize(ILabelValue value, JsonGenerator jsonGenerator, SerializerProvider serializers)
                     throws IOException {
                 jsonGenerator.writeObject(value.getValue());
             }

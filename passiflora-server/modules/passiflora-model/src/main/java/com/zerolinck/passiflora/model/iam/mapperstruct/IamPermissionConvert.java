@@ -29,6 +29,7 @@ import org.mapstruct.factory.Mappers;
 public interface IamPermissionConvert {
     IamPermissionConvert INSTANCE = Mappers.getMapper(IamPermissionConvert.class);
 
+    @Mapping(target = "children", ignore = true)
     @Mapping(target = "name", source = "permissionName")
     @Mapping(target = "meta.title", source = "permissionTitle")
     @Mapping(target = "meta.icon", source = "permissionIcon")
@@ -36,5 +37,6 @@ public interface IamPermissionConvert {
     @Mapping(target = "meta.permissionType", source = "permissionType")
     IamPermissionResp entityToResp(IamPermission menu);
 
+    @Mapping(target = "children", ignore = true)
     IamPermissionTableResp entityToTableResp(IamPermission menu);
 }
