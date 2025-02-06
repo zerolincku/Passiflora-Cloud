@@ -16,7 +16,8 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import com.mybatisflex.core.query.QueryWrapper;
+import java.util.*;
+
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
@@ -28,8 +29,6 @@ import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +37,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-04-01 */
 @Slf4j
@@ -82,20 +82,16 @@ public class IamDictItemService {
         }
 
         LockUtil.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
-            long count = mapper.selectCountByQuery(new QueryWrapper()
-                    .eq(IamDictItem::getLabel, iamDictItem.getLabel())
-                    .eq(IamDictItem::getDictId, iamDictItem.getDictId()));
+            long count = mapper.countByLabel(iamDictItem.getLabel(), iamDictItem.getDictId(), null);
             if (count > 0) {
                 throw new BizException("字典项标签重复，请重新填写");
             }
 
             IamDict dict = dictMapper.selectOneById(iamDictItem.getDictId());
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                count = mapper.selectCountByQuery(new QueryWrapper()
-                        .eq(IamDictItem::getValue, iamDictItem.getValue())
-                        .eq(IamDictItem::getDictId, iamDictItem.getDictId()));
+                count = mapper.countByValue(iamDictItem.getValue(), iamDictItem.getDictId(), null);
                 if (count > 0) {
-                    throw new BizException("字典项标签重复，请重新填写");
+                    throw new BizException("字典项值重复，请重新填写");
                 }
             }
 
@@ -129,22 +125,18 @@ public class IamDictItemService {
             }
 
             if (iamDictItem.getLabel() != null && !iamDictItem.getLabel().equals(dbIamDictItem.getLabel())) {
-                long count = mapper.selectCountByQuery(new QueryWrapper()
-                        .eq(IamDictItem::getLabel, iamDictItem.getLabel())
-                        .eq(IamDictItem::getDictId, iamDictItem.getDictId())
-                        .ne(IamDictItem::getDictId, iamDictItem.getDictId()));
+                long count = mapper.countByLabel(
+                        iamDictItem.getLabel(), iamDictItem.getDictId(), iamDictItem.getDictItemId());
                 if (count > 0) {
-                    throw new BizException("字典值名称重复，请重新填写");
+                    throw new BizException("字典项标签重复，请重新填写");
                 }
             }
 
             if (YesOrNoEnum.NO.equals(dict.getValueIsOnly())) {
-                long count = mapper.selectCountByQuery(new QueryWrapper()
-                        .eq(IamDictItem::getValue, iamDictItem.getValue())
-                        .eq(IamDictItem::getDictId, iamDictItem.getDictId())
-                        .ne(IamDictItem::getDictItemId, iamDictItem.getDictItemId()));
+                long count = mapper.countByValue(
+                        iamDictItem.getValue(), iamDictItem.getDictId(), iamDictItem.getDictItemId());
                 if (count > 0) {
-                    throw new BizException("字典项标签重复，请重新填写");
+                    throw new BizException("字典项值重复，请重新填写");
                 }
             }
 

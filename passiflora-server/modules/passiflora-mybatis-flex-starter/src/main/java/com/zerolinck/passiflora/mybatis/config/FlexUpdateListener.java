@@ -24,7 +24,7 @@ import com.zerolinck.passiflora.common.util.CurrentUtil;
 public class FlexUpdateListener implements UpdateListener {
 
     /**
-     * 更新操作的前置操作。
+     * 更新操作的前置操作
      *
      * @param entity 实体类
      */

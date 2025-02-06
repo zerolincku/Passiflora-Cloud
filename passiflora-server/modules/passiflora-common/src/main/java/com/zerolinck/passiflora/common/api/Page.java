@@ -36,15 +36,15 @@ public class Page<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 当前页数据。 */
+    /** 当前页数据 */
     private List<T> records = Collections.emptyList();
 
-    /** 当前页码。 */
+    /** 当前页码 */
     private long pageNum = 1;
 
-    /** 每页数据数量。 */
+    /** 每页数据数量 */
     private long pageSize = 10;
 
-    /** 总数据数量。 */
+    /** 总数据数量 */
     private long totalRow = 0;
 }

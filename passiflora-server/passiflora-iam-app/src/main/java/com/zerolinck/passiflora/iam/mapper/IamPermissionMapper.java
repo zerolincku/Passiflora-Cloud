@@ -158,6 +158,18 @@ public interface IamPermissionMapper extends BaseMapper<IamPermission> {
     }
 
     /**
+     * 获取所有权限
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    default List<IamPermission> listAll() {
+        return selectListByQuery(new QueryWrapper()
+                .orderBy(IamPermission::getPermissionLevel, true)
+                .orderBy(IamPermission::getOrder, true)
+                .orderBy(IamPermission::getPermissionTitle, true));
+    }
+
+    /**
      * 根据角色ID查询权限列表
      *
      * @param roleId 角色ID

@@ -29,7 +29,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPositionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +94,7 @@ public class IamPositionService {
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(mapper, iamPosition);
+                    UniqueFieldCheck.checkInsert(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
                     mapper.insert(iamPosition);
                 });
@@ -113,7 +113,7 @@ public class IamPositionService {
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(mapper, iamPosition);
+                    UniqueFieldCheck.checkUpdate(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
                     int changeRowCount = mapper.update(iamPosition);
                     // 子机构数据变更

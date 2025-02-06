@@ -16,6 +16,8 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
+import java.util.*;
+
 import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -23,16 +25,15 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRolePermission;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 角色权限 Service
@@ -55,7 +56,7 @@ public class IamRolePermissionService {
      */
     public void add(@NotNull IamRolePermission iamRolePermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(mapper, iamRolePermission);
+            UniqueFieldCheck.checkInsert(mapper, iamRolePermission);
             mapper.insert(iamRolePermission);
         });
     }
@@ -68,7 +69,7 @@ public class IamRolePermissionService {
      */
     public boolean update(@NotNull IamRolePermission iamRolePermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(mapper, iamRolePermission);
+            UniqueFieldCheck.checkUpdate(mapper, iamRolePermission);
             int changeRowCount = mapper.update(iamRolePermission);
             return changeRowCount > 0;
         });

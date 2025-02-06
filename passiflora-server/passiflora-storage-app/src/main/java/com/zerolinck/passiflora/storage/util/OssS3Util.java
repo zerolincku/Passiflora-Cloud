@@ -40,7 +40,7 @@ public class OssS3Util {
     private static S3Client s3Client;
 
     /**
-     * 检查指定的桶是否存在。
+     * 检查指定的桶是否存在
      *
      * @param bucketName 要检查的桶名称
      * @return 如果桶存在返回 true，否则返回 false
@@ -56,7 +56,7 @@ public class OssS3Util {
     }
 
     /**
-     * 创建一个新的桶。
+     * 创建一个新的桶
      *
      * @param bucketName 要创建的桶名称
      * @throws S3Exception 如果在创建过程中发生 S3 相关错误
@@ -66,7 +66,7 @@ public class OssS3Util {
     }
 
     /**
-     * 检查指定的文件是否存在于桶中。
+     * 检查指定的文件是否存在于桶中
      *
      * @param bucketName 要检查的桶名称
      * @param key 要检查的对象的键
@@ -104,7 +104,7 @@ public class OssS3Util {
     }
 
     /**
-     * 下载指定的文件到输出流。
+     * 下载指定的文件到输出流
      *
      * @param bucketName 源桶名称
      * @param key 要下载的对象的键
@@ -118,7 +118,7 @@ public class OssS3Util {
     }
 
     /**
-     * 从指定的桶中删除文件。
+     * 从指定的桶中删除文件
      *
      * @param bucketName 包含要删除文件的桶名称
      * @param key 要删除的对象的键

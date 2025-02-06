@@ -16,21 +16,22 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
+import java.util.Collection;
+import java.util.Optional;
+
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionDataScopeMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** @author linck on 2024-05-14 */
 @Slf4j
@@ -48,7 +49,7 @@ public class IamPositionDataScopeService {
      */
     public void add(@NotNull IamPositionDataScope iamPositionDataScope) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(mapper, iamPositionDataScope);
+            UniqueFieldCheck.checkInsert(mapper, iamPositionDataScope);
             mapper.insert(iamPositionDataScope);
         });
     }
@@ -62,7 +63,7 @@ public class IamPositionDataScopeService {
      */
     public boolean update(@NotNull IamPositionDataScope iamPositionDataScope) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(mapper, iamPositionDataScope);
+            UniqueFieldCheck.checkUpdate(mapper, iamPositionDataScope);
             int changeRowCount = mapper.update(iamPositionDataScope);
             return changeRowCount > 0;
         });

@@ -16,6 +16,7 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,13 +40,37 @@ import org.jetbrains.annotations.Nullable;
 public interface IamUserPositionMapper extends BaseMapper<IamUserPosition> {
 
     /**
-     * 根据用户ID集合查询用户职位响应��象列表
+     * 根据用户ids获取所有关联
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    @NotNull default List<IamUserPosition> listByUserIds(@Nullable Collection<String> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return new ArrayList<>();
+        }
+        return selectListByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
+    }
+
+    /**
+     * 根据职位ids获取所有关联
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    @NotNull default List<IamUserPosition> listByPositionIds(@Nullable Collection<String> positionIds) {
+        if (CollectionUtils.isEmpty(positionIds)) {
+            return new ArrayList<>();
+        }
+        return selectListByQuery(new QueryWrapper().in(IamUserPosition::getPositionId, positionIds));
+    }
+
+    /**
+     * 根据用户ID集合查询用户职位响应对象列表
      *
      * @param userIds 用户ID集合
      * @return 用户职位响应对象列表
      * @since 2024-05-14
      */
-    default List<IamUserPositionResp> selectByUserIds(@NotNull Collection<String> userIds) {
+    @NotNull default List<IamUserPositionResp> selectByUserIds(@NotNull Collection<String> userIds) {
         IamPositionTableDef p = IamPositionTableDef.IAM_POSITION.as("p");
         IamUserPositionTableDef up = IamUserPositionTableDef.IAM_USER_POSITION.as("up");
 

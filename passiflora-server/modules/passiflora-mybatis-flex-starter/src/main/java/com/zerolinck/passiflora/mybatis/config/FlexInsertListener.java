@@ -23,7 +23,7 @@ import com.zerolinck.passiflora.common.util.CurrentUtil;
 /** @author 林常坤 on 2024/12/24 */
 public class FlexInsertListener implements InsertListener {
     /**
-     * 新增操作的前置操作。
+     * 新增操作的前置操作
      *
      * @param entity 实体类
      */

@@ -38,7 +38,7 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public class IamUserService {
     private static final String LOCK_KEY = "passiflora:lock:iamUser:";
 
     /**
-     * 根据提供的组织ID和查询条件分页查询IAM用户。
+     * 根据提供的组织ID和查询条件分页查询IAM用户
      *
      * @param orgId 组织ID
      * @param condition 查询条件
@@ -125,7 +125,7 @@ public class IamUserService {
     }
 
     /**
-     * 添加新的IAM用户。
+     * 添加新的IAM用户
      *
      * @param args IAM用户参数
      */
@@ -134,7 +134,7 @@ public class IamUserService {
 
         LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
             IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-            OnlyFieldCheck.checkInsert(mapper, iamUser);
+            UniqueFieldCheck.checkInsert(mapper, iamUser);
             mapper.insert(iamUser);
             args.setUserId(iamUser.getUserId());
             userPositionService.updateRelation(args);
@@ -143,7 +143,7 @@ public class IamUserService {
     }
 
     /**
-     * 更新现有的IAM用户。
+     * 更新现有的IAM用户
      *
      * @param args IAM用户参数
      * @return 如果更新成功返回true，否则返回false
@@ -152,7 +152,7 @@ public class IamUserService {
         return LockUtil.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
                     IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-                    OnlyFieldCheck.checkUpdate(mapper, iamUser);
+                    UniqueFieldCheck.checkUpdate(mapper, iamUser);
                     int changeRowCount = mapper.update(iamUser);
                     userPositionService.updateRelation(args);
                     iamUserRoleService.updateRelation(args);
@@ -161,7 +161,7 @@ public class IamUserService {
     }
 
     /**
-     * 根据用户ID集合删除IAM用户。
+     * 根据用户ID集合删除IAM用户
      *
      * @param userIds 用户ID集合
      * @return 删除的用户数量
@@ -177,7 +177,7 @@ public class IamUserService {
     }
 
     /**
-     * 根据用户ID获取IAM用户的详细信息。
+     * 根据用户ID获取IAM用户的详细信息
      *
      * @param userId 用户ID
      * @return 包含IAM用户响应的Optional对象
@@ -187,7 +187,7 @@ public class IamUserService {
     }
 
     /**
-     * 获取当前用户的信息。
+     * 获取当前用户的信息
      *
      * @return 当前用户的信息
      */
@@ -213,7 +213,7 @@ public class IamUserService {
     }
 
     /**
-     * 登录IAM用户。
+     * 登录IAM用户
      *
      * @param iamUser IAM用户
      * @return 生成的令牌
@@ -234,7 +234,7 @@ public class IamUserService {
         return token;
     }
 
-    /** 登出当前用户。 */
+    /** 登出当前用户 */
     public void logout() {
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
         if (CollectionUtils.isEmpty(keys)) {
@@ -244,7 +244,7 @@ public class IamUserService {
     }
 
     /**
-     * 检查当前用户的令牌是否有效。
+     * 检查当前用户的令牌是否有效
      *
      * @return 如果令牌有效返回true，否则返回false
      */

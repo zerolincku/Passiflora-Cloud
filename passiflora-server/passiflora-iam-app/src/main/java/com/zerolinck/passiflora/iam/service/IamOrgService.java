@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.QueryCondition;
@@ -30,7 +29,7 @@ import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamOrgConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -76,9 +75,7 @@ public class IamOrgService {
                 true,
                 () -> {
                     // 同一父机构下，机构名称不能重复
-                    long count = mapper.selectCountByQuery(new QueryWrapper()
-                            .eq(IamOrg::getOrgName, iamOrg.getOrgName())
-                            .eq(IamOrg::getParentOrgId, iamOrg.getParentOrgId()));
+                    long count = mapper.countByName(iamOrg.getOrgName(), iamOrg.getParentOrgId(), null);
                     if (count > 0) {
                         throw new BizException("机构名称重复，请重新填写");
                     }
@@ -102,15 +99,13 @@ public class IamOrgService {
                         .lock(IamOrg::getOrgCode, iamOrg.getOrgCode()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(mapper, iamOrg);
+                    UniqueFieldCheck.checkUpdate(mapper, iamOrg);
 
                     // 同一父机构下，机构名称不能重复
                     IamOrg dbIamOrg = mapper.selectOneById(iamOrg.getOrgId());
                     if (iamOrg.getOrgName() != null && !dbIamOrg.getOrgName().equals(iamOrg.getOrgName())) {
-                        long count = mapper.selectCountByQuery(new QueryWrapper()
-                                .eq(IamOrg::getOrgName, iamOrg.getOrgName())
-                                .eq(IamOrg::getParentOrgId, iamOrg.getParentOrgId())
-                                .ne(IamOrg::getOrgId, iamOrg.getOrgId()));
+                        long count =
+                                mapper.countByName(iamOrg.getOrgName(), iamOrg.getParentOrgId(), iamOrg.getOrgId());
                         if (count > 0) {
                             throw new BizException("机构名称重复，请重新填写");
                         }
@@ -166,8 +161,7 @@ public class IamOrgService {
         if (CollectionUtils.isEmpty(orgIds)) {
             return new HashMap<>();
         }
-        return mapper.selectListByQuery(new QueryWrapper().in(IamOrg::getOrgId, orgIds)).stream()
-                .collect(Collectors.toMap(IamOrg::getOrgId, IamOrg::getOrgName));
+        return mapper.listByOrgIds(orgIds).stream().collect(Collectors.toMap(IamOrg::getOrgId, IamOrg::getOrgName));
     }
 
     /**

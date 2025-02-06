@@ -16,6 +16,8 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
+import java.util.*;
+
 import com.zerolinck.passiflora.common.util.ProxyUtil;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
@@ -23,16 +25,15 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * IAM职位权限服务类
@@ -55,7 +56,7 @@ public class IamPositionPermissionService {
      */
     public void add(@NotNull IamPositionPermission iamPositionPermission) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(mapper, iamPositionPermission);
+            UniqueFieldCheck.checkInsert(mapper, iamPositionPermission);
             mapper.insert(iamPositionPermission);
         });
     }
@@ -69,7 +70,7 @@ public class IamPositionPermissionService {
      */
     public boolean update(@NotNull IamPositionPermission iamPositionPermission) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(mapper, iamPositionPermission);
+            UniqueFieldCheck.checkUpdate(mapper, iamPositionPermission);
             int changeRowCount = mapper.update(iamPositionPermission);
             return changeRowCount > 0;
         });

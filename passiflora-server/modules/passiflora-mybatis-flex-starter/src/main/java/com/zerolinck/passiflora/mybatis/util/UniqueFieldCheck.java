@@ -26,7 +26,6 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.BaseEntity;
-import com.zerolinck.passiflora.base.valid.OnlyField;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -42,30 +41,30 @@ import lombok.SneakyThrows;
  *
  * @author linck on 2023-12-18
  */
-public class OnlyFieldCheck {
+public class UniqueFieldCheck {
 
-    private static final Map<Class<?>, List<CheckField>> map = new HashMap<>();
+    private static final Map<Class<?>, List<UniqueField>> map = new HashMap<>();
 
     @SneakyThrows
     @SuppressWarnings({"rawtypes"})
     public static <T extends BaseEntity> void checkInsert(BaseMapper mapper, T entity) {
         checkCache(entity);
-        List<CheckField> checkFields = map.get(entity.getClass());
-        for (CheckField checkField : checkFields) {
-            checkField.getField().setAccessible(true);
+        List<UniqueField> uniqueFields = map.get(entity.getClass());
+        for (UniqueField uniqueField : uniqueFields) {
+            uniqueField.getField().setAccessible(true);
 
-            Object fieldValue = checkField.getField().get(entity);
+            Object fieldValue = uniqueField.getField().get(entity);
             if (fieldValue == null) {
                 continue;
             }
 
-            long count = mapper.selectCountByQuery(new QueryWrapper().eq(checkField.getFieldName(), fieldValue));
+            long count = mapper.selectCountByQuery(new QueryWrapper().eq(uniqueField.getFieldName(), fieldValue));
             if (count > 0) {
                 String message;
-                if (StringUtils.isNotBlank(checkField.getMessage())) {
-                    message = checkField.getMessage();
+                if (StringUtils.isNotBlank(uniqueField.getMessage())) {
+                    message = uniqueField.getMessage();
                 } else {
-                    message = checkField.getFieldDesc() + "已存在，请重新填写";
+                    message = uniqueField.getFieldDesc() + "已存在，请重新填写";
                 }
                 throw new BizException(message);
             }
@@ -76,28 +75,28 @@ public class OnlyFieldCheck {
     @SuppressWarnings({"rawtypes"})
     public static <T extends BaseEntity> void checkUpdate(BaseMapper mapper, T entity) {
         checkCache(entity);
-        List<CheckField> checkFields = map.get(entity.getClass());
-        for (CheckField checkField : checkFields) {
-            checkField.getField().setAccessible(true);
-            checkField.getIdField().setAccessible(true);
+        List<UniqueField> uniqueFields = map.get(entity.getClass());
+        for (UniqueField uniqueField : uniqueFields) {
+            uniqueField.getField().setAccessible(true);
+            uniqueField.getIdField().setAccessible(true);
 
-            Object fieldValue = checkField.getField().get(entity);
+            Object fieldValue = uniqueField.getField().get(entity);
             if (fieldValue == null) {
                 continue;
             }
 
-            String fieldName = checkField.getFieldName();
+            String fieldName = uniqueField.getFieldName();
             long count = mapper.selectCountByQuery(new QueryWrapper()
                     .eq(fieldName, fieldValue)
                     .ne(
-                            StrUtil.camelToUnderline(checkField.getIdField().getName()),
-                            checkField.getIdField().get(entity)));
+                            StrUtil.camelToUnderline(uniqueField.getIdField().getName()),
+                            uniqueField.getIdField().get(entity)));
             if (count > 0) {
                 String message;
-                if (StringUtils.isNotBlank(checkField.getMessage())) {
-                    message = checkField.getMessage();
+                if (StringUtils.isNotBlank(uniqueField.getMessage())) {
+                    message = uniqueField.getMessage();
                 } else {
-                    message = checkField.getFieldDesc() + "已存在，请重新填写";
+                    message = uniqueField.getFieldDesc() + "已存在，请重新填写";
                 }
                 throw new BizException(message);
             }
@@ -114,7 +113,7 @@ public class OnlyFieldCheck {
     private static <T extends BaseEntity> void checkCache(T entity) {
         if (!map.containsKey(entity.getClass())) {
             Field[] fields = entity.getClass().getDeclaredFields();
-            List<CheckField> result = new ArrayList<>();
+            List<UniqueField> result = new ArrayList<>();
             Field idField = null;
             for (Field field : fields) {
                 if (field.getAnnotation(Id.class) != null) {
@@ -123,7 +122,8 @@ public class OnlyFieldCheck {
                 }
             }
             for (Field field : fields) {
-                OnlyField annotation = field.getAnnotation(OnlyField.class);
+                com.zerolinck.passiflora.base.valid.UniqueField annotation =
+                        field.getAnnotation(com.zerolinck.passiflora.base.valid.UniqueField.class);
                 if (annotation == null) {
                     continue;
                 }
@@ -134,9 +134,9 @@ public class OnlyFieldCheck {
                 if (schema != null) {
                     desc = schema.description();
                 }
-                CheckField checkField = new CheckField(
+                UniqueField uniqueField = new UniqueField(
                         field, idField, StrUtil.camelToUnderline(field.getName()), desc, annotation.message());
-                result.add(checkField);
+                result.add(uniqueField);
             }
             map.put(entity.getClass(), result);
         }
@@ -145,7 +145,7 @@ public class OnlyFieldCheck {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CheckField {
+    public static class UniqueField {
         /** 实体类字段 */
         private Field field;
         /** 实体类主键字段 */

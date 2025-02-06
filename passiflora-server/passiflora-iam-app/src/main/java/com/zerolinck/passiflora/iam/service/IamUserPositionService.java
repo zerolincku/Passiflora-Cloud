@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.common.util.SetUtil;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -107,9 +106,8 @@ public class IamUserPositionService {
      * @return 用户职位列表
      * @since 2024-05-14
      */
-    @NotNull public List<IamUserPosition> findByUserIds(@Nullable List<String> userIds) {
-        userIds = Objects.requireNonNullElse(userIds, Collections.emptyList());
-        return mapper.selectListByQuery(new QueryWrapper().in(IamUserPosition::getUserId, userIds));
+    @NotNull public List<IamUserPosition> findByUserIds(@Nullable Collection<String> userIds) {
+        return mapper.listByUserIds(userIds);
     }
 
     /**
@@ -121,8 +119,7 @@ public class IamUserPositionService {
      */
     @NotNull @SuppressWarnings("unused")
     public List<IamUserPosition> findByPositionIds(@Nullable List<String> positionIds) {
-        positionIds = Objects.requireNonNullElse(positionIds, Collections.emptyList());
-        return mapper.selectListByQuery(new QueryWrapper().eq(IamUserPosition::getPositionId, positionIds));
+        return mapper.listByPositionIds(positionIds);
     }
 
     /**

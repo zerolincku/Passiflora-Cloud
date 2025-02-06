@@ -19,7 +19,6 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.constant.Constants;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.Page;
@@ -35,7 +34,7 @@ import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +80,7 @@ public class IamPermissionService {
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(mapper, iamPermission);
+                    UniqueFieldCheck.checkInsert(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
                     mapper.insert(iamPermission);
                 });
@@ -101,7 +100,7 @@ public class IamPermissionService {
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(mapper, iamPermission);
+                    UniqueFieldCheck.checkUpdate(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
                     int changeRowCount = mapper.update(iamPermission);
                     // 子权限数据变更
@@ -287,10 +286,7 @@ public class IamPermissionService {
     @NotNull @SuppressWarnings("unused")
     List<IamPermission> listByUserIds(@NotNull String userId) {
         if (Constants.SUPER_ADMIN_ID.equals(userId)) {
-            return mapper.selectListByQuery(new QueryWrapper()
-                    .orderBy(IamPermission::getPermissionLevel, true)
-                    .orderBy(IamPermission::getOrder, true)
-                    .orderBy(IamPermission::getPermissionTitle, true));
+            return mapper.listAll();
         }
         return mapper.listByUserId(userId);
     }

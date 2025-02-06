@@ -27,7 +27,7 @@ import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamAppMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +70,7 @@ public class IamAppService {
      */
     public void add(@NotNull IamApp iamApp) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(mapper, iamApp);
+            UniqueFieldCheck.checkInsert(mapper, iamApp);
             mapper.insert(iamApp);
         });
     }
@@ -84,7 +84,7 @@ public class IamAppService {
      */
     public boolean update(@NotNull IamApp iamApp) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(mapper, iamApp);
+            UniqueFieldCheck.checkUpdate(mapper, iamApp);
             int changeRowCount = mapper.update(iamApp);
             return changeRowCount > 0;
         });

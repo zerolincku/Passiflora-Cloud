@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import com.zerolinck.passiflora.base.valid.Insert;
-import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.UniqueField;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.valid.Login;
 import org.hibernate.validator.constraints.Length;
@@ -45,7 +45,7 @@ public class IamUserArgs {
             message = "主键不能为空")
     private String userId;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "用户名", maxLength = 50)
     @Length(
             groups = {Insert.class},
@@ -70,7 +70,7 @@ public class IamUserArgs {
     @Schema(description = "性别")
     private Integer gender;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "身份证号", maxLength = 50)
     @Pattern(
             groups = {Insert.class, Update.class},
@@ -81,7 +81,7 @@ public class IamUserArgs {
     @Schema(description = "出生日期")
     private LocalDate dateOfBirth;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "手机号", maxLength = 30)
     @Length(
             groups = {Insert.class, Update.class},

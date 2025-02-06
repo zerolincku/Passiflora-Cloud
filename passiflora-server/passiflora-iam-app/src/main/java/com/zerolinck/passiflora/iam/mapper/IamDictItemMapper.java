@@ -30,6 +30,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import com.zerolinck.passiflora.mybatis.util.FlexPage;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,5 +107,29 @@ public interface IamDictItemMapper extends BaseMapper<IamDictItem> {
         return this.selectListByQuery(QueryWrapper.create()
                 .where(IAM_DICT_ITEM.DICT_ID.in(
                         select(IAM_DICT.DICT_ID).from(IAM_DICT).where(IAM_DICT.DICT_TAG.eq(dictTag)))));
+    }
+
+    /**
+     * 根据标签查询数量
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    default long countByLabel(@NotNull String label, @NotNull String dictId, @Nullable String dictItemId) {
+        return this.selectCountByQuery(new QueryWrapper()
+                .eq(IamDictItem::getLabel, label)
+                .eq(IamDictItem::getDictId, dictId)
+                .ne(IamDictItem::getDictItemId, dictItemId, StringUtils.isNotBlank(dictItemId)));
+    }
+
+    /**
+     * 根据值查询数量
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    default long countByValue(@NotNull String value, @NotNull String dictId, @Nullable String dictItemId) {
+        return this.selectCountByQuery(new QueryWrapper()
+                .eq(IamDictItem::getValue, value)
+                .eq(IamDictItem::getDictId, dictId)
+                .ne(IamDictItem::getDictItemId, dictItemId, StringUtils.isNotBlank(dictItemId)));
     }
 }

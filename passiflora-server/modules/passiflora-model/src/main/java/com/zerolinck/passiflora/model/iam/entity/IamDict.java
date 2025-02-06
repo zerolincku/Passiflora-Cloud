@@ -23,7 +23,7 @@ import com.mybatisflex.annotation.Table;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.base.valid.Insert;
-import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.UniqueField;
 import com.zerolinck.passiflora.base.valid.Update;
 import org.hibernate.validator.constraints.Length;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,7 +49,7 @@ public class IamDict extends BaseEntity {
             message = "主键ID不能为空")
     private String dictId;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "字典名称", maxLength = 20)
     @Length(
             groups = {Insert.class, Update.class},
@@ -60,7 +60,7 @@ public class IamDict extends BaseEntity {
             message = "字典名称不能为空")
     private String dictName;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "字典标识", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},

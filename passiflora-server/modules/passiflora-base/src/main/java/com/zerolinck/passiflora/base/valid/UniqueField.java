@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OnlyField {
+public @interface UniqueField {
     /** 自定义错误返回信息 */
     String message() default "";
 }

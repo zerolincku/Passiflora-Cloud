@@ -25,7 +25,7 @@ import com.mybatisflex.annotation.Table;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.base.valid.Insert;
-import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.UniqueField;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import org.hibernate.validator.constraints.Length;
@@ -56,7 +56,7 @@ public class IamApp extends BaseEntity {
             message = "应用ID不能为空")
     private String appId;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "应用名称", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},
@@ -67,7 +67,7 @@ public class IamApp extends BaseEntity {
             message = "应用名称不能为空")
     private String appName;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "应用令牌", maxLength = 100)
     private String appKey;
 

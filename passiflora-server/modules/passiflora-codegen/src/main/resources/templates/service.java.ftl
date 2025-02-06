@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 
 import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import com.zerolinck.passiflora.common.util.QueryCondition;
 import com.zerolinck.passiflora.common.util.lock.LockUtil;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -53,7 +53,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(mapper, ${entityName});
+                    UniqueFieldCheck.checkInsert(mapper, ${entityName});
                     mapper.insert(${entityName});
                 }
         );
@@ -69,7 +69,7 @@ public class ${serviceClass} extends ServiceImpl<${mapperClass}, ${entityClass}>
         return LockUtil.lock(LOCK_KEY,
                 new LockWrapper<>(), true,
                 () -> {
-                    OnlyFieldCheck.checkUpdate(mapper, ${entityName});
+                    UniqueFieldCheck.checkUpdate(mapper, ${entityName});
                     int changeRowCount = mapper.update(${entityName});
                     return changeRowCount > 0;
                 }

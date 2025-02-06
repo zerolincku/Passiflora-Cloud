@@ -18,6 +18,8 @@ package com.zerolinck.passiflora.iam.mapper;
 
 import static com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef.IAM_ORG;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.mybatisflex.core.BaseMapper;
@@ -27,6 +29,10 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import com.zerolinck.passiflora.mybatis.util.FlexPage;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 组织 Mybatis Mapper
@@ -76,5 +82,29 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
                         .orderBy(IAM_ORG.ORDER, true)
                         .orderBy(IAM_ORG.ORG_NAME, true),
                 IamOrgResp.class);
+    }
+
+    /**
+     * 根据机构名称查询数量
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    default long countByName(@NotNull String orgName, @NotNull String orgParentId, @Nullable String orgId) {
+        return this.selectCountByQuery(new QueryWrapper()
+                .eq(IamOrg::getOrgName, orgName)
+                .eq(IamOrg::getParentOrgId, orgParentId)
+                .ne(IamOrg::getOrgId, orgId, StringUtils.isNotBlank(orgId)));
+    }
+
+    /**
+     * 根据机构ids查询机构列表
+     *
+     * @author 林常坤 on 2025/2/6
+     */
+    @NotNull default List<IamOrg> listByOrgIds(@Nullable Collection<String> orgIds) {
+        if (CollectionUtils.isEmpty(orgIds)) {
+            return Collections.emptyList();
+        }
+        return this.selectListByQuery(new QueryWrapper().in(IamOrg::getOrgId, orgIds));
     }
 }

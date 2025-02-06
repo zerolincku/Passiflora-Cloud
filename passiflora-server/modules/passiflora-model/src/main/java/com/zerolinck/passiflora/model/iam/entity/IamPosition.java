@@ -25,7 +25,7 @@ import com.mybatisflex.annotation.Table;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.base.valid.Insert;
-import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.UniqueField;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
 import org.hibernate.validator.constraints.Length;
@@ -52,7 +52,7 @@ public class IamPosition extends BaseEntity {
             message = "职位ID不能为空")
     private String positionId;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "职位名称", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},

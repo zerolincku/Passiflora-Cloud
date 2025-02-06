@@ -31,7 +31,7 @@ import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
@@ -80,7 +80,7 @@ public class IamDictService {
                         .lock(IamDict::getDictTag, iamDict.getDictTag()),
                 true,
                 () -> {
-                    OnlyFieldCheck.checkInsert(mapper, iamDict);
+                    UniqueFieldCheck.checkInsert(mapper, iamDict);
                     mapper.insert(iamDict);
                 });
     }
@@ -106,7 +106,7 @@ public class IamDictService {
                         throw new BizException("系统内置数据，不允许修改");
                     }
 
-                    OnlyFieldCheck.checkUpdate(mapper, iamDict);
+                    UniqueFieldCheck.checkUpdate(mapper, iamDict);
                     int changeRowCount = mapper.update(iamDict);
                     return changeRowCount > 0;
                 });

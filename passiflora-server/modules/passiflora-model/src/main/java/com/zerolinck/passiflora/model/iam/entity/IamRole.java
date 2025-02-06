@@ -24,7 +24,7 @@ import com.mybatisflex.annotation.Table;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.base.valid.Insert;
-import com.zerolinck.passiflora.base.valid.OnlyField;
+import com.zerolinck.passiflora.base.valid.UniqueField;
 import com.zerolinck.passiflora.base.valid.Update;
 import org.hibernate.validator.constraints.Length;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,7 +54,7 @@ public class IamRole extends BaseEntity {
             message = "角色ID不能为空")
     private String roleId;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "角色名称", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},
@@ -65,7 +65,7 @@ public class IamRole extends BaseEntity {
             message = "角色名称不能为空")
     private String roleName;
 
-    @OnlyField
+    @UniqueField
     @Schema(description = "角色标识", maxLength = 100)
     @Length(
             groups = {Insert.class, Update.class},

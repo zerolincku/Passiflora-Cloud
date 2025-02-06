@@ -26,7 +26,7 @@ import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import com.zerolinck.passiflora.mybatis.util.OnlyFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public class IamUserRoleService {
      */
     public void add(@NotNull IamUserRole iamUserRole) {
         LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkInsert(mapper, iamUserRole);
+            UniqueFieldCheck.checkInsert(mapper, iamUserRole);
             mapper.insert(iamUserRole);
         });
     }
@@ -71,7 +71,7 @@ public class IamUserRoleService {
      */
     public boolean update(@NotNull IamUserRole iamUserRole) {
         return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            OnlyFieldCheck.checkUpdate(mapper, iamUserRole);
+            UniqueFieldCheck.checkUpdate(mapper, iamUserRole);
             int changeRowCount = mapper.update(iamUserRole);
             return changeRowCount > 0;
         });
