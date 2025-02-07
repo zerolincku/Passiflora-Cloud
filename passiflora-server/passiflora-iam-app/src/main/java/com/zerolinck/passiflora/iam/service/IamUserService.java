@@ -221,7 +221,7 @@ public class IamUserService {
         if (!PwdUtils.verifyPassword(iamUser.getUserPassword(), dbIamUser.getUserPassword())) {
             throw new BizException("账号或密码错误");
         }
-        String token = RandomUtils.lowerChar(20);
+        String token = RandomUtils.lowerCharAndNum(20);
         RedisUtils.set(
                 RedisPrefix.TOKEN_KEY + dbIamUser.getUserId() + ":" + token,
                 dbIamUser,

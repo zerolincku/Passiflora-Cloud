@@ -23,7 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @UtilityClass
 public class RandomUtils {
 
-    public static String lowerChar(int count) {
+    public static String lowerCharAndNum(int count) {
         return RandomStringUtils.secure().next(count, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
 
@@ -34,6 +34,6 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String randomString(int length) {
-        return RandomStringUtils.secure().next(length);
+        return RandomStringUtils.secure().next(length, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     }
 }

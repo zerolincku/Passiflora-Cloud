@@ -56,8 +56,8 @@ public class IamAppController implements IamAppApi {
     @NotNull @Override
     public Result<String> add(@NotNull IamApp iamApp) {
         iamApp.setAppId(null);
-        iamApp.setAppKey(RandomUtils.lowerChar(32));
-        iamApp.setAppSecret(RandomUtils.lowerChar(32));
+        iamApp.setAppKey(RandomUtils.lowerCharAndNum(32));
+        iamApp.setAppSecret(RandomUtils.lowerCharAndNum(32));
         iamApp.setAppStatus(StatusEnum.ENABLE);
         iamAppService.add(iamApp);
         return Result.ok(iamApp.getAppId());
