@@ -23,7 +23,7 @@ import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamOrgApi;
 import com.zerolinck.passiflora.iam.service.IamOrgService;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
@@ -48,7 +48,7 @@ public class IamOrgController implements IamOrgApi {
     private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
-    public Result<List<IamOrg>> page(@NotNull QueryCondition<IamOrg> condition) {
+    public Result<List<IamOrg>> page(@NotNull Condition<IamOrg> condition) {
         return Result.ok(iamOrgService.page(condition));
     }
 

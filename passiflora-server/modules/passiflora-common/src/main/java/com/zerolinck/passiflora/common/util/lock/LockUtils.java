@@ -37,7 +37,7 @@ import lombok.Setter;
  *
  * @author linck on 2024-03-20
  */
-public class LockUtil {
+public class LockUtils {
 
     @Setter
     private static RedissonClient redissonClient;

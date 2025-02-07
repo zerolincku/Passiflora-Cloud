@@ -3,7 +3,7 @@ package com.zerolinck.passiflora.${moduleName}.controller;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.${moduleName}.${apiClass};
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import com.zerolinck.passiflora.${moduleName}.service.${serviceClass};

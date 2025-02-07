@@ -26,9 +26,9 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.NetUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.NetUtils;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
@@ -73,8 +73,8 @@ public class StorageFileService {
      * @return 文件的分页结果
      * @since 2024-05-17
      */
-    @NotNull public Page<StorageFile> page(@Nullable QueryCondition<StorageFile> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
+    @NotNull public Page<StorageFile> page(@Nullable Condition<StorageFile> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
         return mapper.paginate(
                 condition.getPageNum(),
                 condition.getPageSize(),
@@ -100,7 +100,7 @@ public class StorageFileService {
      * @since 2024-05-17
      */
     @NotNull public String tryQuicklyUpload(@NotNull StorageFile storageFile) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
                 true,
@@ -134,7 +134,7 @@ public class StorageFileService {
     @NotNull @SneakyThrows
     public String upload(@NotNull MultipartFile file, @Nullable String fileName) {
         String md5Hex = DigestUtils.md5Hex(file.getBytes());
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY, new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, md5Hex), true, () -> {
                     String bucket = passifloraProperties.getStorage().getBucketName();
                     StorageFile storageFile = new StorageFile();
@@ -230,7 +230,7 @@ public class StorageFileService {
         if (storageFile == null) {
             return;
         }
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<StorageFile>().lock(StorageFile::getFileMd5, storageFile.getFileMd5()),
                 true,
@@ -266,7 +266,7 @@ public class StorageFileService {
         if (storageFile == null) {
             throw new NoSuchElementException("文件不存在");
         }
-        HttpServletResponse response = NetUtil.getResponse();
+        HttpServletResponse response = NetUtils.getResponse();
         if (MimeTypeUtils.APPLICATION_JSON.toString().equals(storageFile.getContentType())) {
             response.setContentType(MimeTypeUtils.TEXT_PLAIN.toString());
         } else {
@@ -287,10 +287,10 @@ public class StorageFileService {
      */
     @SneakyThrows
     public void downloadZip(@NotNull List<String> fileIds) {
-        NetUtil.getResponse()
+        NetUtils.getResponse()
                 .setHeader(
                         Header.CONTENT_DISPOSITION.getValue(), "attachment; filename=" + urlCodec.encode("文件压缩包.zip"));
-        ZipOutputStream zipOut = new ZipOutputStream(NetUtil.getResponse().getOutputStream());
+        ZipOutputStream zipOut = new ZipOutputStream(NetUtils.getResponse().getOutputStream());
         Map<String, Integer> fileNameCountMap = new HashMap<>();
         for (String fileId : fileIds) {
             StorageFile storageFile = mapper.selectOneById(fileId);

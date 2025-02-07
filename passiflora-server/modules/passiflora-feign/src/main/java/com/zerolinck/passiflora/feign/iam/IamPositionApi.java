@@ -21,7 +21,7 @@ import java.util.List;
 import com.zerolinck.passiflora.base.valid.Insert;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
@@ -48,7 +48,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface IamPositionApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamPosition>> page(@NotNull @SpringQueryMap QueryCondition<IamPosition> condition);
+    Result<List<IamPosition>> page(@NotNull @SpringQueryMap Condition<IamPosition> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

@@ -27,8 +27,8 @@ import jakarta.annotation.Resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
 import org.junit.jupiter.api.MethodOrderer;
@@ -63,9 +63,9 @@ class IamDictControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -94,11 +94,11 @@ class IamDictControllerTest {
         iamDict.setValueIsOnly(YesOrNoEnum.NO);
         mockMvc.perform(post("/iam-dict/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamDict)))
+                        .content(JsonUtils.toJson(iamDict)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testSysDictId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testSysDictId = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -113,10 +113,10 @@ class IamDictControllerTest {
         iamDictItem.setIsSystem(YesOrNoEnum.NO);
         mockMvc.perform(post("/iam-dict-item/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamDictItem)))
+                        .content(JsonUtils.toJson(iamDictItem)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
-                .andDo(result -> testSysDictItemId = JsonUtil.readTree(
+                .andDo(result -> testSysDictItemId = JsonUtils.readTree(
                                 result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
@@ -130,8 +130,8 @@ class IamDictControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamDictItem = JsonUtil.convertValue(jsonNode.get("data"), IamDictItem.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamDictItem = JsonUtils.convertValue(jsonNode.get("data"), IamDictItem.class);
                 });
     }
 
@@ -140,7 +140,7 @@ class IamDictControllerTest {
     public void testUpdateItem() throws Exception {
         mockMvc.perform(post("/iam-dict-item/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamDictItem)))
+                        .content(JsonUtils.toJson(testIamDictItem)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -150,7 +150,7 @@ class IamDictControllerTest {
     public void testDeleteItem() throws Exception {
         mockMvc.perform(post("/iam-dict-item/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysDictItemId})))
+                        .content(JsonUtils.toJson(new String[] {testSysDictItemId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -163,8 +163,8 @@ class IamDictControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamDict = JsonUtil.convertValue(jsonNode.get("data"), IamDict.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamDict = JsonUtils.convertValue(jsonNode.get("data"), IamDict.class);
                 });
     }
 
@@ -173,7 +173,7 @@ class IamDictControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-dict/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamDict)))
+                        .content(JsonUtils.toJson(testIamDict)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -183,7 +183,7 @@ class IamDictControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-dict/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysDictId})))
+                        .content(JsonUtils.toJson(new String[] {testSysDictId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

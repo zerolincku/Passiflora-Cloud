@@ -19,8 +19,9 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.zerolinck.passiflora.common.util.SetUtil;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.SetUtils;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserPositionMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
@@ -56,7 +57,7 @@ public class IamUserPositionService {
      */
     @NotNull public List<IamUserPositionResp> selectByUserIds(@Nullable Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
-            return Collections.emptyList();
+            return ListUtils.emptyList();
         }
         return mapper.selectByUserIds(userIds);
     }
@@ -68,7 +69,7 @@ public class IamUserPositionService {
      * @since 2024-05-14
      */
     public void updateRelation(@NotNull IamUserArgs args) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamUserPosition>().lock(IamUserPosition::getUserId, args.getUserId()),
                 true,
@@ -81,8 +82,8 @@ public class IamUserPositionService {
                             .map(IamUserPosition::getPositionId)
                             .collect(Collectors.toSet());
                     Set<String> newPositionIds = new HashSet<>(args.getPositionIds());
-                    Set<String> addPositionIds = SetUtil.set2MoreOutSet1(existPositionIds, newPositionIds);
-                    Set<String> delPositionIds = SetUtil.set2MoreOutSet1(newPositionIds, existPositionIds);
+                    Set<String> addPositionIds = SetUtils.set2MoreOutSet1(existPositionIds, newPositionIds);
+                    Set<String> delPositionIds = SetUtils.set2MoreOutSet1(newPositionIds, existPositionIds);
                     if (CollectionUtils.isNotEmpty(delPositionIds)) {
                         this.deleteByUserIdAndPositionIds(args.getUserId(), delPositionIds);
                     }

@@ -25,7 +25,7 @@ import com.google.common.reflect.ClassPath;
 import com.zerolinck.passiflora.base.ILabelValue;
 
 /** @author 林常坤 on 2024-08-14 */
-public class ClassUtil {
+public class ClassUtils {
 
     /**
      * 获取所有 LabelValue 接口实现的枚举类

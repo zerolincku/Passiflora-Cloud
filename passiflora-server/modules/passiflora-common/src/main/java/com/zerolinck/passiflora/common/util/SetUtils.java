@@ -16,13 +16,19 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import lombok.experimental.UtilityClass;
 
-/** @author 林常坤 on 2024-08-13 */
+/** @author linck on 2024-06-29 */
 @UtilityClass
-public class ProxyUtil {
+public class SetUtils {
 
-    public static <T> T proxy(Class<T> clazz) {
-        return SpringContextHolder.getBean(clazz);
+    /** 返回 set2 相对于 set1 多出的值 */
+    public static Set<String> set2MoreOutSet1(Set<String> set1, Set<String> set2) {
+        Set<String> difference = new HashSet<>(set2);
+        difference.removeAll(set1);
+        return difference;
     }
 }

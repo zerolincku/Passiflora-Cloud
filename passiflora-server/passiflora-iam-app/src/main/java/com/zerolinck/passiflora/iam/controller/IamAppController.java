@@ -23,8 +23,8 @@ import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.RandomUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.RandomUtils;
 import com.zerolinck.passiflora.feign.iam.IamAppApi;
 import com.zerolinck.passiflora.iam.service.IamAppService;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
@@ -50,15 +50,15 @@ public class IamAppController implements IamAppApi {
     private final IamAppService iamAppService;
 
     @NotNull @Override
-    public Result<List<IamApp>> page(@NotNull QueryCondition<IamApp> condition) {
+    public Result<List<IamApp>> page(@NotNull Condition<IamApp> condition) {
         return Result.ok(iamAppService.page(condition));
     }
 
     @NotNull @Override
     public Result<String> add(@NotNull IamApp iamApp) {
         iamApp.setAppId(null);
-        iamApp.setAppKey(RandomUtil.lowerCharAndNum(32));
-        iamApp.setAppSecret(RandomUtil.lowerCharAndNum(32));
+        iamApp.setAppKey(RandomUtils.lowerCharAndNum(32));
+        iamApp.setAppSecret(RandomUtils.lowerCharAndNum(32));
         iamApp.setAppStatus(StatusEnum.ENABLE);
         iamAppService.add(iamApp);
         return Result.ok(iamApp.getAppId());

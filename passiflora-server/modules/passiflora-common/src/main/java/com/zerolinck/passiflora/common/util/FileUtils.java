@@ -19,13 +19,11 @@ package com.zerolinck.passiflora.common.util;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.FileUtils;
-
 import lombok.extern.slf4j.Slf4j;
 
 /** @author 林常坤 on 2024/10/24 */
 @Slf4j
-public class FileUtil {
+public class FileUtils {
 
     /**
      * 确保目录存在，不存在时创建
@@ -36,7 +34,7 @@ public class FileUtil {
     public static void ensureDirectoryExists(String dirPath) throws Exception {
         File dir = new File(dirPath);
         if (!dir.exists()) {
-            FileUtils.forceMkdir(dir);
+            org.apache.commons.io.FileUtils.forceMkdir(dir);
         }
     }
 
@@ -54,12 +52,12 @@ public class FileUtil {
             if (file.exists()) {
                 log.info("{} 文件已存在，覆盖", filePath);
             }
-            FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
+            org.apache.commons.io.FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
         } else {
             if (file.exists()) {
                 log.info("{} 文件已存在，不进行写入", filePath);
             } else {
-                FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
+                org.apache.commons.io.FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
             }
         }
     }

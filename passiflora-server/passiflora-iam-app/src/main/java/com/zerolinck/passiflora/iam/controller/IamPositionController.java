@@ -23,7 +23,7 @@ import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamPositionApi;
 import com.zerolinck.passiflora.iam.service.IamPositionPermissionService;
 import com.zerolinck.passiflora.iam.service.IamPositionService;
@@ -51,7 +51,7 @@ public class IamPositionController implements IamPositionApi {
     private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
-    public Result<List<IamPosition>> page(@NotNull QueryCondition<IamPosition> condition) {
+    public Result<List<IamPosition>> page(@NotNull Condition<IamPosition> condition) {
         return Result.ok(iamPositionService.page(condition));
     }
 

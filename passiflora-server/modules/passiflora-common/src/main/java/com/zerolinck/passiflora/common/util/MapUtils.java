@@ -14,25 +14,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.zerolinck.passiflora.mybatis.config;
+package com.zerolinck.passiflora.common.util;
 
-import com.mybatisflex.annotation.InsertListener;
-import com.zerolinck.passiflora.base.BaseEntity;
-import com.zerolinck.passiflora.common.util.CurrentUtils;
+import java.util.HashMap;
+import java.util.Map;
 
-/** @author 林常坤 on 2024/12/24 */
-public class FlexInsertListener implements InsertListener {
-    /**
-     * 新增操作的前置操作
-     *
-     * @param entity 实体类
-     */
-    @Override
-    public void onInsert(Object entity) {
-        String userId = CurrentUtils.getCurrentUserId();
-        if (userId != null && entity instanceof BaseEntity baseEntity) {
-            baseEntity.setCreateBy(userId);
-            baseEntity.setUpdateBy(userId);
+/** @author 林常坤 on 2024/10/24 */
+public class MapUtils {
+
+    public static MapBuilder builder() {
+        return new MapBuilder();
+    }
+
+    public static class MapBuilder {
+
+        private final Map<String, Object> map = new HashMap<>();
+
+        public MapBuilder put(String key, Object value) {
+            map.put(key, value);
+            return this;
+        }
+
+        public Map<String, Object> build() {
+            return map;
         }
     }
 }

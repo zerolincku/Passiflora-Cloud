@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamRoleApi;
 import com.zerolinck.passiflora.iam.service.IamRolePermissionService;
 import com.zerolinck.passiflora.iam.service.IamRoleService;
@@ -51,12 +51,12 @@ public class IamRoleController implements IamRoleApi {
     private final IamRolePermissionService iamRolePermissionService;
 
     @NotNull @Override
-    public Result<List<IamRole>> page(@NotNull QueryCondition<IamRole> condition) {
+    public Result<List<IamRole>> page(@NotNull Condition<IamRole> condition) {
         return Result.ok(iamRoleService.page(condition));
     }
 
     @NotNull @Override
-    public Result<List<IamRole>> list(@Nullable QueryCondition<IamRole> condition) {
+    public Result<List<IamRole>> list(@Nullable Condition<IamRole> condition) {
         return Result.ok(iamRoleService.list(condition));
     }
 

@@ -33,7 +33,7 @@ import lombok.experimental.UtilityClass;
  */
 @TestOnly
 @UtilityClass
-public class TestUtil {
+public class TestUtils {
 
     private static PostgreSQLContainer<?> postgres;
     private static MinIOContainer minio;

@@ -16,11 +16,16 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
+import java.util.Objects;
+
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.PageConvert;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** @author linck on 2024-04-01 */
 public interface IamDictMapper extends BaseMapper<IamDict> {
@@ -28,14 +33,15 @@ public interface IamDictMapper extends BaseMapper<IamDict> {
     /**
      * 分页查询
      *
-     * @param pageNum 页码
-     * @param pageSize 每页数量
-     * @param queryWrapper 查询条件
-     * @author 林常坤 on 2025/1/24
+     * @param condition 查询条件
+     * @author 林常坤 on 2025/2/7
      */
-    default com.zerolinck.passiflora.common.api.Page<IamDict> page(
-            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
-        Page<IamDict> paginate = paginate(pageNum, pageSize, queryWrapper);
-        return FlexPage.convert(paginate);
+    @NotNull default com.zerolinck.passiflora.common.api.Page<IamDict> page(@Nullable Condition<IamDict> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
+        Page<IamDict> paginate = paginate(
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamDict.class));
+        return PageConvert.toPage(paginate);
     }
 }

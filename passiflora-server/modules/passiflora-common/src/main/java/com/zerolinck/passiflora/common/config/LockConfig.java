@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.common.config;
 
 import jakarta.annotation.PostConstruct;
 
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +46,7 @@ public class LockConfig {
      */
     @PostConstruct
     public void init() {
-        LockUtil.setRedissonClient(applicationContext.getBean(RedissonClient.class));
-        LockUtil.setTransactionTemplate(applicationContext.getBean(TransactionTemplate.class));
+        LockUtils.setRedissonClient(applicationContext.getBean(RedissonClient.class));
+        LockUtils.setTransactionTemplate(applicationContext.getBean(TransactionTemplate.class));
     }
 }

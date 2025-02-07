@@ -21,10 +21,10 @@ import java.util.NoSuchElementException;
 
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.storage.StorageFileApi;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
+import com.zerolinck.passiflora.mybatis.util.PageConvert;
 import com.zerolinck.passiflora.storage.service.StorageFileService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,8 +49,8 @@ public class StorageFileController implements StorageFileApi {
     private final StorageFileService storageFileService;
 
     @NotNull @Override
-    public Result<List<StorageFile>> page(@NotNull QueryCondition<StorageFile> condition) {
-        return Result.ok(FlexPage.convert(storageFileService.page(condition)));
+    public Result<List<StorageFile>> page(@NotNull Condition<StorageFile> condition) {
+        return Result.ok(PageConvert.toPage(storageFileService.page(condition)));
     }
 
     @NotNull @Override

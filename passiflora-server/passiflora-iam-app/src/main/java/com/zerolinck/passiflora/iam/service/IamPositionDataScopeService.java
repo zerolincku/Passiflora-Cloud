@@ -19,11 +19,11 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.Collection;
 import java.util.Optional;
 
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionDataScopeMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionDataScope;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +48,8 @@ public class IamPositionDataScopeService {
      * @since 2024-05-14
      */
     public void add(@NotNull IamPositionDataScope iamPositionDataScope) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkInsert(mapper, iamPositionDataScope);
+        LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkInsert(mapper, iamPositionDataScope);
             mapper.insert(iamPositionDataScope);
         });
     }
@@ -62,8 +62,8 @@ public class IamPositionDataScopeService {
      * @since 2024-05-14
      */
     public boolean update(@NotNull IamPositionDataScope iamPositionDataScope) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkUpdate(mapper, iamPositionDataScope);
+        return LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkUpdate(mapper, iamPositionDataScope);
             int changeRowCount = mapper.update(iamPositionDataScope);
             return changeRowCount > 0;
         });

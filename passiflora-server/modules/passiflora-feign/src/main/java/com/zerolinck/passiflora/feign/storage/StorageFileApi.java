@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.feign.storage;
 import java.util.List;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface StorageFileApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<StorageFile>> page(@NotNull @SpringQueryMap QueryCondition<StorageFile> condition);
+    Result<List<StorageFile>> page(@NotNull @SpringQueryMap Condition<StorageFile> condition);
 
     @Operation(summary = "根据文件ids获取列表")
     @PostMapping("list-by-file-ids")

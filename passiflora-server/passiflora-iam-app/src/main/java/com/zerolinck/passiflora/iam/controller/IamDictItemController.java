@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamDictItemApi;
 import com.zerolinck.passiflora.iam.service.IamDictItemService;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
@@ -42,7 +42,7 @@ public class IamDictItemController implements IamDictItemApi {
     private final IamDictItemService iamDictItemService;
 
     @Override
-    public Result<List<IamDictItem>> page(@NotNull QueryCondition<IamDictItem> condition) {
+    public Result<List<IamDictItem>> page(@NotNull Condition<IamDictItem> condition) {
         return Result.ok(iamDictItemService.page(condition));
     }
 

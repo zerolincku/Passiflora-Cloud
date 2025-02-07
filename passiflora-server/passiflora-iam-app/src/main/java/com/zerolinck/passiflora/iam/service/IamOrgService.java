@@ -21,15 +21,14 @@ import java.util.stream.Collectors;
 
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamOrgMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamOrgConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,10 +53,8 @@ public class IamOrgService {
      * @return 组织的分页结果
      * @since 2024-04-09
      */
-    @NotNull public Page<IamOrg> page(@Nullable QueryCondition<IamOrg> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamOrg.class));
+    @NotNull public Page<IamOrg> page(@Nullable Condition<IamOrg> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -67,7 +64,7 @@ public class IamOrgService {
      * @since 2024-04-09
      */
     public void add(@NotNull IamOrg iamOrg) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamOrg>()
                         .lock(IamOrg::getOrgName, iamOrg.getOrgName())
@@ -92,14 +89,14 @@ public class IamOrgService {
      * @since 2024-04-09
      */
     public boolean update(@NotNull IamOrg iamOrg) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamOrg>()
                         .lock(IamOrg::getOrgName, iamOrg.getOrgName())
                         .lock(IamOrg::getOrgCode, iamOrg.getOrgCode()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkUpdate(mapper, iamOrg);
+                    UniqueFieldChecker.checkUpdate(mapper, iamOrg);
 
                     // 同一父机构下，机构名称不能重复
                     IamOrg dbIamOrg = mapper.selectOneById(iamOrg.getOrgId());

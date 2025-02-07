@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.mybatis.config;
 
 import com.mybatisflex.annotation.UpdateListener;
 import com.zerolinck.passiflora.base.BaseEntity;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.CurrentUtils;
 
 /** @author 林常坤 on 2024/12/24 */
 public class FlexUpdateListener implements UpdateListener {
@@ -30,7 +30,7 @@ public class FlexUpdateListener implements UpdateListener {
      */
     @Override
     public void onUpdate(Object entity) {
-        String userId = CurrentUtil.getCurrentUserId();
+        String userId = CurrentUtils.getCurrentUserId();
         if (userId != null && entity instanceof BaseEntity baseEntity) {
             baseEntity.setUpdateBy(userId);
         }

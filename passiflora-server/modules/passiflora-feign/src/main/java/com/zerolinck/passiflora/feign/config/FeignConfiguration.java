@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.feign.config;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.zerolinck.passiflora.base.constant.Header;
-import com.zerolinck.passiflora.common.util.NetUtil;
+import com.zerolinck.passiflora.common.util.NetUtils;
 import com.zerolinck.passiflora.common.util.SpringContextHolder;
 import org.springframework.context.annotation.Bean;
 
@@ -40,7 +40,7 @@ public class FeignConfiguration implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        HttpServletRequest request = NetUtil.getRequest();
+        HttpServletRequest request = NetUtils.getRequest();
         // FIXME 如果请求发起启点不是浏览器，比如定时任务
         if (request != null) {
             String authorization = request.getHeader(Header.AUTHORIZATION.toString());

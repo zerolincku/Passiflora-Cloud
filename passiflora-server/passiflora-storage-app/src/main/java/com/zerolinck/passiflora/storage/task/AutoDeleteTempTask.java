@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.storage.task;
 
 import java.util.Set;
 
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.storage.service.StorageFileService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class AutoDeleteTempTask {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteTempTask() {
-        LockUtil.lock(LOCK_KEY, () -> {
+        LockUtils.lock(LOCK_KEY, () -> {
             Set<String> expiredTempFileIds = storageFileService.expiredTempFileIds();
             storageFileService.deleteByIds(expiredTempFileIds);
             log.info("自定删除临时文件，删除数量: {}", expiredTempFileIds.size());

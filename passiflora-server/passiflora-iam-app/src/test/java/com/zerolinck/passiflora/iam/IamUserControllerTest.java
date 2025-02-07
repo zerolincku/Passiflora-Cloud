@@ -27,8 +27,8 @@ import jakarta.annotation.Resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -60,9 +60,9 @@ class IamUserControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -83,11 +83,11 @@ class IamUserControllerTest {
         iamUser.setOrgId("test");
         mockMvc.perform(post("/iam-user/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamUser)))
+                        .content(JsonUtils.toJson(iamUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testUserId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testUserId = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -100,8 +100,8 @@ class IamUserControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testUser = JsonUtil.convertValue(jsonNode.get("data"), IamUser.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testUser = JsonUtils.convertValue(jsonNode.get("data"), IamUser.class);
                 });
     }
 
@@ -110,7 +110,7 @@ class IamUserControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-user/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testUser)))
+                        .content(JsonUtils.toJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -122,11 +122,11 @@ class IamUserControllerTest {
         testUser.setUserPassword("test");
         mockMvc.perform(post("/iam-user/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testUser)))
+                        .content(JsonUtils.toJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testToken = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testToken = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -160,7 +160,7 @@ class IamUserControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-user/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testUserId})))
+                        .content(JsonUtils.toJson(new String[] {testUserId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

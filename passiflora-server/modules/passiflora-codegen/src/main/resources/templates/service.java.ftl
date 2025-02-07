@@ -3,10 +3,10 @@ package com.zerolinck.passiflora.${moduleName}.service;
 import org.apache.commons.collections4.CollectionUtils;
 
 
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.CurrentUtils;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import com.zerolinck.passiflora.${moduleName}.mapper.${mapperClass};

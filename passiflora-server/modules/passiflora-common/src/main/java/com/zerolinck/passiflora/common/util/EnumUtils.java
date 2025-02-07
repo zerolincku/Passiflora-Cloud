@@ -23,7 +23,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
-public class EnumUtil {
+public class EnumUtils {
 
     @NotNull public static ILabelValue getEnumByValue(@NotNull Class<? extends ILabelValue> clazz, @NotNull Object value) {
         ILabelValue[] enumConstants = clazz.getEnumConstants();

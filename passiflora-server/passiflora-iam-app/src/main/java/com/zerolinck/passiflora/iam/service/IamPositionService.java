@@ -20,16 +20,15 @@ import java.util.*;
 
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionMapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPositionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,12 +60,8 @@ public class IamPositionService {
      * @return 职位的分页结果
      * @since 2024-08-12
      */
-    @NotNull public Page<IamPosition> page(@Nullable QueryCondition<IamPosition> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamPosition.class));
+    @NotNull public Page<IamPosition> page(@Nullable Condition<IamPosition> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -89,12 +84,12 @@ public class IamPositionService {
      * @since 2024-08-12
      */
     public void add(@NotNull IamPosition iamPosition) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkInsert(mapper, iamPosition);
+                    UniqueFieldChecker.checkInsert(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
                     mapper.insert(iamPosition);
                 });
@@ -108,12 +103,12 @@ public class IamPositionService {
      * @since 2024-08-12
      */
     public boolean update(@NotNull IamPosition iamPosition) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPosition>().lock(IamPosition::getPositionName, iamPosition.getPositionName()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkUpdate(mapper, iamPosition);
+                    UniqueFieldChecker.checkUpdate(mapper, iamPosition);
                     generateIdPathAndLevel(iamPosition);
                     int changeRowCount = mapper.update(iamPosition);
                     // 子机构数据变更

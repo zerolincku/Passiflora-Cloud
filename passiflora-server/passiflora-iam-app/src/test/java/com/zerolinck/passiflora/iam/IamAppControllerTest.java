@@ -27,8 +27,8 @@ import jakarta.annotation.Resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import com.zerolinck.passiflora.model.iam.enums.AppTypeEnum;
 import org.junit.jupiter.api.MethodOrderer;
@@ -66,9 +66,9 @@ class IamAppControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -94,11 +94,11 @@ class IamAppControllerTest {
         iamApp.setAppRemark("test");
         mockMvc.perform(post("/iam-app/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamApp)))
+                        .content(JsonUtils.toJson(iamApp)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testIamAppId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testIamAppId = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -111,8 +111,8 @@ class IamAppControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamApp = JsonUtil.convertValue(jsonNode.get("data"), IamApp.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamApp = JsonUtils.convertValue(jsonNode.get("data"), IamApp.class);
                 });
     }
 
@@ -121,7 +121,7 @@ class IamAppControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-app/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamApp)))
+                        .content(JsonUtils.toJson(testIamApp)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -131,7 +131,7 @@ class IamAppControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-app/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testIamAppId})))
+                        .content(JsonUtils.toJson(new String[] {testIamAppId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

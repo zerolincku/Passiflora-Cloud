@@ -32,7 +32,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/09/28 */
 @UtilityClass
-public class JsonUtil {
+public class JsonUtils {
 
     /** 将对象转换为 JSON 字符串 */
     @SneakyThrows

@@ -29,7 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /** @author 林常坤 on 2024/09/28 */
-public class JsonUtilTest {
+public class JsonUtilsTest {
 
     @Data
     @NoArgsConstructor
@@ -42,7 +42,7 @@ public class JsonUtilTest {
     @Test
     void testToJson() {
         User user = new User("Alice", 30);
-        String json = JsonUtil.toJson(user);
+        String json = JsonUtils.toJson(user);
         assertTrue(json.contains("\"name\":\"Alice\""));
         assertTrue(json.contains("\"age\":30"));
     }
@@ -50,7 +50,7 @@ public class JsonUtilTest {
     @Test
     void testToPrettyJson() {
         User user = new User("Bob", 25);
-        String json = JsonUtil.toPrettyJson(user);
+        String json = JsonUtils.toPrettyJson(user);
         assertTrue(json.contains("\"name\" : \"Bob\""));
         assertTrue(json.contains("\"age\" : 25"));
         assertTrue(json.contains("\n")); // 确保有换行，表示美化
@@ -59,7 +59,7 @@ public class JsonUtilTest {
     @Test
     void testConvertValue() {
         String json = "{\"name\":\"Charlie\",\"age\":35}";
-        User user = JsonUtil.convertValue(json, User.class);
+        User user = JsonUtils.convertValue(json, User.class);
         assertEquals("Charlie", user.name);
         assertEquals(35, user.age);
     }
@@ -67,7 +67,7 @@ public class JsonUtilTest {
     @Test
     void testConvertToList() {
         String json = "[{\"name\":\"David\",\"age\":40},{\"name\":\"Eve\",\"age\":45}]";
-        List<User> users = JsonUtil.convertToList(json, User.class);
+        List<User> users = JsonUtils.convertToList(json, User.class);
         assertEquals(2, users.size());
         assertEquals("David", users.get(0).name);
         assertEquals(45, users.get(1).age);
@@ -76,7 +76,7 @@ public class JsonUtilTest {
     @Test
     void testConvertToMap() {
         User user = new User("Frank", 50);
-        Map<String, Object> map = JsonUtil.convertToMap(user);
+        Map<String, Object> map = JsonUtils.convertToMap(user);
         assertEquals("Frank", map.get("name"));
         assertEquals(50, map.get("age"));
     }
@@ -86,7 +86,7 @@ public class JsonUtilTest {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "Grace");
         map.put("age", 55);
-        User user = JsonUtil.convertValue(map, User.class);
+        User user = JsonUtils.convertValue(map, User.class);
         assertEquals("Grace", user.name);
         assertEquals(55, user.age);
     }
@@ -94,7 +94,7 @@ public class JsonUtilTest {
     @Test
     void testConvertToMapList() {
         List<User> users = Arrays.asList(new User("Henry", 60), new User("Ivy", 65));
-        List<Map<String, Object>> mapList = JsonUtil.convertToMapList(users);
+        List<Map<String, Object>> mapList = JsonUtils.convertToMapList(users);
         assertEquals(2, mapList.size());
         assertEquals("Henry", mapList.get(0).get("name"));
         assertEquals(65, mapList.get(1).get("age"));
@@ -112,7 +112,7 @@ public class JsonUtilTest {
         mapList.add(map1);
         mapList.add(map2);
 
-        List<User> users = JsonUtil.convertToList(mapList, User.class);
+        List<User> users = JsonUtils.convertToList(mapList, User.class);
         assertEquals(2, users.size());
         assertEquals("Jack", users.get(0).name);
         assertEquals(75, users.get(1).age);
@@ -121,7 +121,7 @@ public class JsonUtilTest {
     @Test
     void testReadTree() {
         String json = "{\"name\":\"Lucy\",\"age\":80}";
-        JsonNode jsonNode = JsonUtil.readTree(json);
+        JsonNode jsonNode = JsonUtils.readTree(json);
         assertEquals("Lucy", jsonNode.get("name").asText());
         assertEquals(80, jsonNode.get("age").asInt());
     }

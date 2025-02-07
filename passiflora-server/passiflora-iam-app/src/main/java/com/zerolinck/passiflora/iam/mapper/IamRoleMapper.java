@@ -17,16 +17,19 @@
 package com.zerolinck.passiflora.iam.mapper;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.PageConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 角色 Mybatis Mapper
@@ -39,15 +42,16 @@ public interface IamRoleMapper extends BaseMapper<IamRole> {
     /**
      * 分页查询
      *
-     * @param pageNum 页码
-     * @param pageSize 每页数量
-     * @param queryWrapper 查询条件
-     * @author 林常坤 on 2025/1/24
+     * @param condition 查询条件
+     * @author 林常坤 on 2025/2/7
      */
-    default com.zerolinck.passiflora.common.api.Page<IamRole> page(
-            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
-        Page<IamRole> paginate = paginate(pageNum, pageSize, queryWrapper);
-        return FlexPage.convert(paginate);
+    @NotNull default com.zerolinck.passiflora.common.api.Page<IamRole> page(@Nullable Condition<IamRole> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
+        Page<IamRole> paginate = paginate(
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, IamRole.class));
+        return PageConvert.toPage(paginate);
     }
 
     /**

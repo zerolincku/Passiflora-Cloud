@@ -28,7 +28,7 @@ import lombok.experimental.UtilityClass;
  * @author 林常坤 on 2024-08-13
  */
 @UtilityClass
-public class PwdUtil {
+public class PwdUtils {
 
     /**
      * 生成 hash 密码，前十位是 salt

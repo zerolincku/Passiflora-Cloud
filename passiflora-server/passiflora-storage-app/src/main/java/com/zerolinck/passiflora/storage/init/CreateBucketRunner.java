@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.storage.init;
 
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class CreateBucketRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         String bucketName = passifloraProperties.getStorage().getBucketName();
-        LockUtil.lock("passiflora:storage:bucket:", new LockWrapper<>(), true, () -> createBucket(bucketName));
+        LockUtils.lock("passiflora:storage:bucket:", new LockWrapper<>(), true, () -> createBucket(bucketName));
     }
 
     @SneakyThrows

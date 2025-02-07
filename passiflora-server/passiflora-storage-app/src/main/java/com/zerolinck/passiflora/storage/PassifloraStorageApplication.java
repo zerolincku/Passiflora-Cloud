@@ -17,7 +17,7 @@
 package com.zerolinck.passiflora.storage;
 
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
-import com.zerolinck.passiflora.common.util.NetUtil;
+import com.zerolinck.passiflora.common.util.NetUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,7 +47,7 @@ public class PassifloraStorageApplication {
         String port = environment.getProperty("server.port");
         String path = environment.getProperty("server.servlet.context-path");
         String buildTime = environment.getProperty("passiflora.build-time");
-        String outIp = NetUtil.findOutIp();
+        String outIp = NetUtils.findOutIp();
         log.info(
                 """
             \n项目启动成功: {} 环境

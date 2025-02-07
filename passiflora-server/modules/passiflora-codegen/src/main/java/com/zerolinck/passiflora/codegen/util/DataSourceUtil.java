@@ -21,13 +21,13 @@ import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zerolinck.passiflora.common.util.YamlUtil;
+import com.zerolinck.passiflora.common.util.YamlUtils;
 
 /** @author 林常坤 on 2024/10/24 */
 public class DataSourceUtil {
 
     public static DataSource getDataSource() {
-        Map<String, Object> configMap = YamlUtil.loadYamlFromClasspath("application.yml");
+        Map<String, Object> configMap = YamlUtils.loadYamlFromClasspath("application.yml");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(configMap.get("url").toString());
         config.setUsername(configMap.get("username").toString());

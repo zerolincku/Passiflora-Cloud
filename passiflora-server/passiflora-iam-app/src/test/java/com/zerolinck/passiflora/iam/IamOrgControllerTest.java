@@ -26,8 +26,8 @@ import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -59,9 +59,9 @@ class IamOrgControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -83,11 +83,11 @@ class IamOrgControllerTest {
         iamOrg.setOrder(1);
         mockMvc.perform(post("/iam-org/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamOrg)))
+                        .content(JsonUtils.toJson(iamOrg)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testSysOrgId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testSysOrgId = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -100,8 +100,8 @@ class IamOrgControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamOrg = JsonUtil.convertValue(jsonNode.get("data"), IamOrg.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamOrg = JsonUtils.convertValue(jsonNode.get("data"), IamOrg.class);
                 });
     }
 
@@ -110,7 +110,7 @@ class IamOrgControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-org/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamOrg)))
+                        .content(JsonUtils.toJson(testIamOrg)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -120,7 +120,7 @@ class IamOrgControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-org/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysOrgId})))
+                        .content(JsonUtils.toJson(new String[] {testSysOrgId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

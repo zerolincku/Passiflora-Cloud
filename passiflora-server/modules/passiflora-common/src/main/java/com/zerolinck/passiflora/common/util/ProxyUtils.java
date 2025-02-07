@@ -16,27 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.experimental.UtilityClass;
 
-/** @author 林常坤 on 2024/10/24 */
-public class MapUtil {
+/** @author 林常坤 on 2024-08-13 */
+@UtilityClass
+public class ProxyUtils {
 
-    public static MapBuilder builder() {
-        return new MapBuilder();
-    }
-
-    public static class MapBuilder {
-
-        private final Map<String, Object> map = new HashMap<>();
-
-        public MapBuilder put(String key, Object value) {
-            map.put(key, value);
-            return this;
-        }
-
-        public Map<String, Object> build() {
-            return map;
-        }
+    public static <T> T proxy(Class<T> clazz) {
+        return SpringContextHolder.getBean(clazz);
     }
 }

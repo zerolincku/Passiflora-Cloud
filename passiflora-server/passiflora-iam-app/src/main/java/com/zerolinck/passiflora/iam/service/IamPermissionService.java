@@ -23,9 +23,9 @@ import com.zerolinck.passiflora.base.constant.Constants;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.CurrentUtil;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.CurrentUtils;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPermissionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
@@ -33,8 +33,7 @@ import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
 import com.zerolinck.passiflora.model.iam.mapperstruct.IamPermissionConvert;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamPermissionTableResp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,12 +58,8 @@ public class IamPermissionService {
      * @return 权限的分页结果
      * @since 2024-05-06
      */
-    @NotNull public Page<IamPermission> page(@Nullable QueryCondition<IamPermission> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamPermission.class));
+    @NotNull public Page<IamPermission> page(@Nullable Condition<IamPermission> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -74,13 +69,13 @@ public class IamPermissionService {
      * @since 2024-05-06
      */
     public void add(@NotNull IamPermission iamPermission) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPermission>()
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkInsert(mapper, iamPermission);
+                    UniqueFieldChecker.checkInsert(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
                     mapper.insert(iamPermission);
                 });
@@ -94,13 +89,13 @@ public class IamPermissionService {
      * @since 2024-05-06
      */
     public boolean update(@NotNull IamPermission iamPermission) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamPermission>()
                         .lock(IamPermission::getPermissionTitle, iamPermission.getPermissionTitle()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkUpdate(mapper, iamPermission);
+                    UniqueFieldChecker.checkUpdate(mapper, iamPermission);
                     generateIadPathAndLevel(iamPermission);
                     int changeRowCount = mapper.update(iamPermission);
                     // 子权限数据变更
@@ -157,7 +152,7 @@ public class IamPermissionService {
      * @since 2024-05-06
      */
     @NotNull public List<IamPermissionResp> menuTree() {
-        Map<String, List<IamPermissionResp>> menuMap = this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
+        Map<String, List<IamPermissionResp>> menuMap = this.listByUserIds(CurrentUtils.requireCurrentUserId()).stream()
                 .filter(permission -> PermissionTypeEnum.MENU.equals(permission.getPermissionType())
                         || PermissionTypeEnum.MENU_SET.equals(permission.getPermissionType()))
                 .filter(permission -> StatusEnum.ENABLE.equals(permission.getPermissionStatus()))
@@ -180,7 +175,7 @@ public class IamPermissionService {
      */
     @NotNull public List<IamPermissionTableResp> permissionTableTree() {
         Map<String, List<IamPermissionTableResp>> menuMap =
-                this.listByUserIds(CurrentUtil.requireCurrentUserId()).stream()
+                this.listByUserIds(CurrentUtils.requireCurrentUserId()).stream()
                         .map(IamPermissionConvert.INSTANCE::entityToTableResp)
                         .collect(Collectors.groupingBy(
                                 IamPermissionTableResp::getPermissionParentId, Collectors.toList()));

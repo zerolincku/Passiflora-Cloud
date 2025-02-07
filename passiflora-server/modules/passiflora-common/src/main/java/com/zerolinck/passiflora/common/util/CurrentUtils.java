@@ -31,7 +31,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author linck on 2023-12-15 */
 @UtilityClass
-public class CurrentUtil {
+public class CurrentUtils {
 
     /** 当前登录账户，线程级别缓存 */
     private static final ThreadLocal<IUser> userMap = new ThreadLocal<>();
@@ -44,7 +44,7 @@ public class CurrentUtil {
         if (userMap.get() != null) {
             return userMap.get();
         }
-        String token = NetUtil.getRequest().getHeader(Header.AUTHORIZATION.toString());
+        String token = NetUtils.getRequest().getHeader(Header.AUTHORIZATION.toString());
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + token);
         if (keys == null || keys.isEmpty()) {
             return null;
@@ -54,7 +54,7 @@ public class CurrentUtil {
             return null;
         }
         @SuppressWarnings("unchecked")
-        IUser iamUser = JsonUtil.convertValue((Map<String, Object>) o, IUser.UserInfo.class);
+        IUser iamUser = JsonUtils.convertValue((Map<String, Object>) o, IUser.UserInfo.class);
         userMap.set(iamUser);
         return iamUser;
     }
@@ -80,7 +80,7 @@ public class CurrentUtil {
         if (tokenMap.get() != null) {
             return tokenMap.get();
         }
-        String token = NetUtil.getRequest().getHeader(Header.AUTHORIZATION.toString());
+        String token = NetUtils.getRequest().getHeader(Header.AUTHORIZATION.toString());
         tokenMap.set(token);
         return token;
     }

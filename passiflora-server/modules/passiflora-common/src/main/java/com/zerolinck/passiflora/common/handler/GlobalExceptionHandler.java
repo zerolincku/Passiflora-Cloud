@@ -25,7 +25,7 @@ import java.util.StringJoiner;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.NetUtil;
+import com.zerolinck.passiflora.common.util.NetUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public Result<String> exceptionHandler(NoResourceFoundException e) {
-        NetUtil.getResponse().setStatus(404);
+        NetUtils.getResponse().setStatus(404);
         log.error("404 Not Found: {}", e.getMessage());
         return Result.failed(ResultCode.NOT_FOUND);
     }

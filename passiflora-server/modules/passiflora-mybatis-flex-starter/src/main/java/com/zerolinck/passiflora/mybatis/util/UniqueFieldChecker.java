@@ -27,7 +27,7 @@ import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.BaseEntity;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.StrUtil;
+import com.zerolinck.passiflora.common.util.StrUtils;
 import org.apache.commons.lang3.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -41,7 +41,7 @@ import lombok.SneakyThrows;
  *
  * @author linck on 2023-12-18
  */
-public class UniqueFieldCheck {
+public class UniqueFieldChecker {
 
     private static final Map<Class<?>, List<UniqueField>> map = new HashMap<>();
 
@@ -89,7 +89,7 @@ public class UniqueFieldCheck {
             long count = mapper.selectCountByQuery(new QueryWrapper()
                     .eq(fieldName, fieldValue)
                     .ne(
-                            StrUtil.camelToUnderline(uniqueField.getIdField().getName()),
+                            StrUtils.camelToUnderline(uniqueField.getIdField().getName()),
                             uniqueField.getIdField().get(entity)));
             if (count > 0) {
                 String message;
@@ -135,7 +135,7 @@ public class UniqueFieldCheck {
                     desc = schema.description();
                 }
                 UniqueField uniqueField = new UniqueField(
-                        field, idField, StrUtil.camelToUnderline(field.getName()), desc, annotation.message());
+                        field, idField, StrUtils.camelToUnderline(field.getName()), desc, annotation.message());
                 result.add(uniqueField);
             }
             map.put(entity.getClass(), result);

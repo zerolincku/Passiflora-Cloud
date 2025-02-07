@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import jakarta.annotation.Resource;
 
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -51,9 +51,9 @@ class EnumControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test

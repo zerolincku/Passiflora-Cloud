@@ -25,9 +25,9 @@ import java.util.Map;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.ILabelValue;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.common.util.TimeUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.StrUtils;
+import com.zerolinck.passiflora.common.util.TimeUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.experimental.UtilityClass;
@@ -41,7 +41,7 @@ public class ConditionUtils {
     private static final Map<Class<?>, Map<String, Field>> FIELD_CACHE = new HashMap<>();
 
     /** 根据 condition 内容创建 queryWrapper column 会优先使用别名转换映射进行转换 如果字段在别名转换映射中不存在，则会通过 clazz 获取对应实体类的字段，存在的字段，才允许作为条件 */
-    public static <T> QueryWrapper searchWrapper(QueryCondition<T> condition, Class<?> clazz) {
+    public static <T> QueryWrapper searchWrapper(Condition<T> condition, Class<?> clazz) {
 
         QueryWrapper queryWrapper = new QueryWrapper();
         condition
@@ -128,7 +128,7 @@ public class ConditionUtils {
      * @param column 原字段
      * @return 转换后的字段
      */
-    private static <T> String fieldCover(QueryCondition<T> condition, String column, Class<?> clazz) {
+    private static <T> String fieldCover(Condition<T> condition, String column, Class<?> clazz) {
         if (condition.getFieldNameCover() != null
                 && condition.getFieldNameCover().containsKey(column)) {
             return condition.getFieldNameCover().get(column);
@@ -138,7 +138,7 @@ public class ConditionUtils {
             // 驼峰转下划线
             return condition.getTableAlise() == null
                     ? ""
-                    : condition.getTableAlise() + "." + StrUtil.camelToUnderline(column);
+                    : condition.getTableAlise() + "." + StrUtils.camelToUnderline(column);
         }
         throw new IllegalArgumentException(String.format("不允许的搜索条件: %s", column));
     }
@@ -154,11 +154,11 @@ public class ConditionUtils {
         if (field.getType().equals(String.class)) {
             return value;
         } else if (field.getType().equals(LocalDateTime.class)) {
-            return TimeUtil.timestamp2LocalDateTime(value);
+            return TimeUtils.timestamp2LocalDateTime(value);
         } else if (field.getType().equals(LocalDate.class)) {
-            return LocalDate.parse(value, TimeUtil.NORMAL_DATE_FORMATTER);
+            return LocalDate.parse(value, TimeUtils.NORMAL_DATE_FORMATTER);
         } else if (field.getType().equals(LocalTime.class)) {
-            return LocalTime.parse(value, TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND);
+            return LocalTime.parse(value, TimeUtils.NORMAL_TIME_FORMATTER_NO_SECOND);
         } else if (field.getType().equals(Integer.class)) {
             return Integer.valueOf(value);
         } else if (field.getType().equals(Long.class)) {

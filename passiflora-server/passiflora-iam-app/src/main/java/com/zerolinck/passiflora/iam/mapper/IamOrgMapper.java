@@ -19,16 +19,19 @@ package com.zerolinck.passiflora.iam.mapper;
 import static com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef.IAM_ORG;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.ListUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
-import com.zerolinck.passiflora.mybatis.util.FlexPage;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.PageConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -45,15 +48,14 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
     /**
      * 分页查询
      *
-     * @param pageNum 页码
-     * @param pageSize 每页数量
-     * @param queryWrapper 查询条件
-     * @author 林常坤 on 2025/1/24
+     * @param condition 查询条件
+     * @author 林常坤 on 2025/2/7
      */
-    default com.zerolinck.passiflora.common.api.Page<IamOrg> page(
-            Number pageNum, Number pageSize, QueryWrapper queryWrapper) {
-        Page<IamOrg> paginate = paginate(pageNum, pageSize, queryWrapper);
-        return FlexPage.convert(paginate);
+    @NotNull default com.zerolinck.passiflora.common.api.Page<IamOrg> page(@Nullable Condition<IamOrg> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
+        Page<IamOrg> paginate = paginate(
+                condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamOrg.class));
+        return PageConvert.toPage(paginate);
     }
 
     /**
@@ -103,7 +105,7 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
      */
     @NotNull default List<IamOrg> listByOrgIds(@Nullable Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
-            return Collections.emptyList();
+            return ListUtils.emptyList();
         }
         return this.selectListByQuery(new QueryWrapper().in(IamOrg::getOrgId, orgIds));
     }

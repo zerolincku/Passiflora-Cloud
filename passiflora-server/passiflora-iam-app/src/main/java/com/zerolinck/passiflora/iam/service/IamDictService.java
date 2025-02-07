@@ -18,20 +18,18 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
@@ -58,12 +56,8 @@ public class IamDictService {
      * @return 字典的分页结果
      * @since 2024-04-01
      */
-    @NotNull public Page<IamDict> page(@Nullable QueryCondition<IamDict> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamDict.class));
+    @NotNull public Page<IamDict> page(@Nullable Condition<IamDict> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -73,14 +67,14 @@ public class IamDictService {
      * @since 2024-04-01
      */
     public void add(@NotNull IamDict iamDict) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamDict>()
                         .lock(IamDict::getDictName, iamDict.getDictName())
                         .lock(IamDict::getDictTag, iamDict.getDictTag()),
                 true,
                 () -> {
-                    UniqueFieldCheck.checkInsert(mapper, iamDict);
+                    UniqueFieldChecker.checkInsert(mapper, iamDict);
                     mapper.insert(iamDict);
                 });
     }
@@ -94,7 +88,7 @@ public class IamDictService {
      */
     @CacheEvict(cacheNames = "passiflora:dict", allEntries = true)
     public boolean update(@NotNull IamDict iamDict) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<IamDict>()
                         .lock(IamDict::getDictName, iamDict.getDictName())
@@ -106,7 +100,7 @@ public class IamDictService {
                         throw new BizException("系统内置数据，不允许修改");
                     }
 
-                    UniqueFieldCheck.checkUpdate(mapper, iamDict);
+                    UniqueFieldChecker.checkUpdate(mapper, iamDict);
                     int changeRowCount = mapper.update(iamDict);
                     return changeRowCount > 0;
                 });

@@ -29,7 +29,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/08/16 */
 @UtilityClass
-public class StrUtil {
+public class StrUtils {
 
     @NotNull public static String str(@Nullable Object obj, @NotNull Charset charset) {
         return switch (obj) {

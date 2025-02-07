@@ -19,14 +19,15 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.zerolinck.passiflora.common.util.SetUtil;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.SetUtils;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserRoleMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUserRole;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,8 +57,8 @@ public class IamUserRoleService {
      * @since 2024-08-17
      */
     public void add(@NotNull IamUserRole iamUserRole) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkInsert(mapper, iamUserRole);
+        LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkInsert(mapper, iamUserRole);
             mapper.insert(iamUserRole);
         });
     }
@@ -70,8 +71,8 @@ public class IamUserRoleService {
      * @since 2024-08-17
      */
     public boolean update(@NotNull IamUserRole iamUserRole) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkUpdate(mapper, iamUserRole);
+        return LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkUpdate(mapper, iamUserRole);
             int changeRowCount = mapper.update(iamUserRole);
             return changeRowCount > 0;
         });
@@ -127,7 +128,7 @@ public class IamUserRoleService {
      */
     @NotNull public List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
-            return Collections.emptyList();
+            return ListUtils.emptyList();
         }
         return mapper.selectByUserIds(userIds);
     }
@@ -139,7 +140,7 @@ public class IamUserRoleService {
      * @since 2024-08-17
      */
     public void updateRelation(@NotNull IamUserArgs args) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY, new LockWrapper<IamUserRole>().lock(IamUserRole::getUserId, args.getUserId()), true, () -> {
                     if (CollectionUtils.isEmpty(args.getRoleIds())) {
                         this.deleteByUserIds(List.of(args.getUserId()));
@@ -149,8 +150,8 @@ public class IamUserRoleService {
                             .map(IamUserRoleResp::getRoleId)
                             .collect(Collectors.toSet());
                     Set<String> newRoleIds = new HashSet<>(args.getRoleIds());
-                    Set<String> addRoleIds = SetUtil.set2MoreOutSet1(existRoleIds, newRoleIds);
-                    Set<String> delRoleIds = SetUtil.set2MoreOutSet1(newRoleIds, existRoleIds);
+                    Set<String> addRoleIds = SetUtils.set2MoreOutSet1(existRoleIds, newRoleIds);
+                    Set<String> delRoleIds = SetUtils.set2MoreOutSet1(newRoleIds, existRoleIds);
                     if (CollectionUtils.isNotEmpty(delRoleIds)) {
                         this.deleteByUserIdAndRoleIds(args.getUserId(), delRoleIds);
                     }

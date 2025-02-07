@@ -21,7 +21,7 @@ import java.util.List;
 import com.zerolinck.passiflora.base.valid.Insert;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.args.RolePermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
@@ -48,11 +48,11 @@ public interface IamRoleApi {
 
     @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamRole>> page(@NotNull @SpringQueryMap QueryCondition<IamRole> condition);
+    Result<List<IamRole>> page(@NotNull @SpringQueryMap Condition<IamRole> condition);
 
     @NotNull @Operation(summary = "列表查询")
     @GetMapping("list")
-    Result<List<IamRole>> list(@Nullable @SpringQueryMap QueryCondition<IamRole> condition);
+    Result<List<IamRole>> list(@Nullable @SpringQueryMap Condition<IamRole> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

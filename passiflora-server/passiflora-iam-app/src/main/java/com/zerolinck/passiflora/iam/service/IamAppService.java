@@ -17,17 +17,15 @@
 package com.zerolinck.passiflora.iam.service;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.zerolinck.passiflora.common.api.Page;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamAppMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,10 +54,8 @@ public class IamAppService {
      * @return IAM应用的分页结果
      * @since 2024-09-30
      */
-    @NotNull public Page<IamApp> page(@Nullable QueryCondition<IamApp> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(), condition.getPageSize(), ConditionUtils.searchWrapper(condition, IamApp.class));
+    @NotNull public Page<IamApp> page(@Nullable Condition<IamApp> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -69,8 +65,8 @@ public class IamAppService {
      * @since 2024-09-30
      */
     public void add(@NotNull IamApp iamApp) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkInsert(mapper, iamApp);
+        LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkInsert(mapper, iamApp);
             mapper.insert(iamApp);
         });
     }
@@ -83,8 +79,8 @@ public class IamAppService {
      * @since 2024-09-30
      */
     public boolean update(@NotNull IamApp iamApp) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkUpdate(mapper, iamApp);
+        return LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkUpdate(mapper, iamApp);
             int changeRowCount = mapper.update(iamApp);
             return changeRowCount > 0;
         });

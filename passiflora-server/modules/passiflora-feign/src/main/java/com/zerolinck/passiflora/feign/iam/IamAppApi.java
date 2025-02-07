@@ -21,7 +21,7 @@ import java.util.List;
 import com.zerolinck.passiflora.base.valid.Insert;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public interface IamAppApi {
 
     @NotNull @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamApp>> page(@NotNull @SpringQueryMap QueryCondition<IamApp> condition);
+    Result<List<IamApp>> page(@NotNull @SpringQueryMap Condition<IamApp> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

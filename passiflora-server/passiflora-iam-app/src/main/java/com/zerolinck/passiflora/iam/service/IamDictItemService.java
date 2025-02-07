@@ -16,19 +16,21 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import com.zerolinck.passiflora.base.enums.YesOrNoEnum;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.exception.BizException;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictItemMapper;
 import com.zerolinck.passiflora.iam.mapper.IamDictMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import com.zerolinck.passiflora.model.iam.entity.IamDictItem;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,12 +58,8 @@ public class IamDictItemService {
      * @return 字典项的分页结果
      * @since 2024-08-12
      */
-    @NotNull public Page<IamDictItem> page(@Nullable QueryCondition<IamDictItem> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamDictItem.class));
+    @NotNull public Page<IamDictItem> page(@Nullable Condition<IamDictItem> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -81,7 +79,7 @@ public class IamDictItemService {
             lockWrapper.lock(IamDictItem::getValue, iamDictItem.getValue());
         }
 
-        LockUtil.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
+        LockUtils.lock(LOCK_KEY + iamDict.getDictTag(), lockWrapper, true, () -> {
             long count = mapper.countByLabel(iamDictItem.getLabel(), iamDictItem.getDictId(), null);
             if (count > 0) {
                 throw new BizException("字典项标签重复，请重新填写");
@@ -118,7 +116,7 @@ public class IamDictItemService {
             lockWrapper.lock(IamDictItem::getValue, iamDictItem.getValue());
         }
 
-        return LockUtil.lock(LOCK_KEY + dict.getDictTag(), lockWrapper, true, () -> {
+        return LockUtils.lock(LOCK_KEY + dict.getDictTag(), lockWrapper, true, () -> {
             IamDictItem dbIamDictItem = mapper.selectOneById(iamDictItem.getDictItemId());
             if (YesOrNoEnum.YES.equals(iamDictItem.getIsSystem())) {
                 throw new BizException("系统内置数据，不允许修改");

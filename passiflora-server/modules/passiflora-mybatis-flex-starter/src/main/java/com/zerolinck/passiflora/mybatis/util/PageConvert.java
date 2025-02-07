@@ -22,9 +22,9 @@ import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/12/26 */
 @UtilityClass
-public class FlexPage {
+public class PageConvert {
 
-    public static <T> Page<T> convert(com.mybatisflex.core.paginate.Page<T> page) {
+    public static <T> Page<T> toPage(com.mybatisflex.core.paginate.Page<T> page) {
         return new Page<>(page.getRecords(), page.getPageNumber(), page.getPageSize(), page.getTotalRow());
     }
 }

@@ -18,8 +18,8 @@ package com.zerolinck.passiflora.codegen.service.impl;
 
 import com.zerolinck.passiflora.codegen.model.Render;
 import com.zerolinck.passiflora.codegen.service.RenderService;
-import com.zerolinck.passiflora.common.util.FileUtil;
-import com.zerolinck.passiflora.common.util.FreemarkerUtil;
+import com.zerolinck.passiflora.common.util.FileUtils;
+import com.zerolinck.passiflora.common.util.FreemarkerUtils;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +31,8 @@ public class FileRenderServiceImpl implements RenderService {
     @Override
     @SneakyThrows
     public void render(Render render) {
-        String result = FreemarkerUtil.renderTemplate(
-                FreemarkerUtil.getTemplateFromClasspath(render.getTemplate()), render.getData());
+        String result = FreemarkerUtils.renderTemplate(
+                FreemarkerUtils.getTemplateFromClasspath(render.getTemplate()), render.getData());
 
         // 确定文件路径
         String currentDirectory = System.getProperty("user.dir");
@@ -42,9 +42,9 @@ public class FileRenderServiceImpl implements RenderService {
 
         try {
             // 确保目录存在
-            FileUtil.ensureDirectoryExists(dirPath);
+            FileUtils.ensureDirectoryExists(dirPath);
             // 写入文件
-            FileUtil.writeFile(filePath, result, render.isOverride());
+            FileUtils.writeFile(filePath, result, render.isOverride());
         } catch (Exception e) {
             log.error("文件写入错误", e);
         }

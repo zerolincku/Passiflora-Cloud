@@ -20,7 +20,7 @@ import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 
-import com.zerolinck.passiflora.common.util.CurrentUtil;
+import com.zerolinck.passiflora.common.util.CurrentUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 
@@ -50,7 +50,7 @@ public class GlobalFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        CurrentUtil.clear();
+        CurrentUtils.clear();
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

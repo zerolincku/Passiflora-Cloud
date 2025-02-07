@@ -26,8 +26,8 @@ import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.MethodOrderer;
@@ -66,10 +66,10 @@ class StorageFileControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
-        TestUtil.minioContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
+        TestUtils.minioContainerStart(registry);
     }
 
     @Test
@@ -90,8 +90,8 @@ class StorageFileControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testStorageFileId = JsonUtil.convertValue(jsonNode.get("data"), String.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testStorageFileId = JsonUtils.convertValue(jsonNode.get("data"), String.class);
                 });
     }
 
@@ -104,16 +104,16 @@ class StorageFileControllerTest {
         storageFile.setOriginalFileName("quickTest.txt");
         storageFile.setContentType("text/plain");
         storageFile.setFileMd5(DigestUtils.md5Hex(file.getBytes()));
-        log.info("请求参数: {}", JsonUtil.toJson(storageFile));
+        log.info("请求参数: {}", JsonUtils.toJson(storageFile));
         mockMvc.perform(post("/storage-file/try-quickly-upload")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(storageFile)))
+                        .content(JsonUtils.toJson(storageFile)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    quickUploadStorageFileId = JsonUtil.convertValue(jsonNode.get("data"), String.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    quickUploadStorageFileId = JsonUtils.convertValue(jsonNode.get("data"), String.class);
                 });
     }
 
@@ -122,7 +122,7 @@ class StorageFileControllerTest {
     public void testListByFileIds() throws Exception {
         mockMvc.perform(post("/storage-file/list-by-file-ids")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {
+                        .content(JsonUtils.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
@@ -142,7 +142,7 @@ class StorageFileControllerTest {
     public void testConfirmFile() throws Exception {
         mockMvc.perform(post("/storage-file/confirm-file")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testStorageFileId})))
+                        .content(JsonUtils.toJson(new String[] {testStorageFileId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -162,7 +162,7 @@ class StorageFileControllerTest {
     public void testDownloadZip() throws Exception {
         MvcResult result = mockMvc.perform(post("/storage-file/download-zip")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {
+                        .content(JsonUtils.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())
@@ -176,7 +176,7 @@ class StorageFileControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/storage-file/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {
+                        .content(JsonUtils.toJson(new String[] {
                             testStorageFileId, quickUploadStorageFileId,
                         })))
                 .andExpect(status().isOk())

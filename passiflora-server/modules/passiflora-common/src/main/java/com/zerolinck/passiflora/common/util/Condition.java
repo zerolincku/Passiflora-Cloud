@@ -40,7 +40,7 @@ import lombok.Data;
  * @author linck on 2022-11-18
  */
 @Data
-public class QueryCondition<T> {
+public class Condition<T> {
 
     /** 创建 page 以及，queryWrapper 是泛型对应的具体实体类 */
     @Schema(hidden = true)
@@ -111,7 +111,7 @@ public class QueryCondition<T> {
     /** 每页行数 */
     private Integer pageSize;
 
-    public QueryCondition() {
+    public Condition() {
         eq = new HashMap<>();
         gt = new HashMap<>();
         ge = new HashMap<>();
@@ -143,14 +143,14 @@ public class QueryCondition<T> {
 
     /** 设置表别名 */
     @SuppressWarnings("unused")
-    public QueryCondition<T> tableAlise(String tableAlise) {
+    public Condition<T> tableAlise(String tableAlise) {
         this.tableAlise = tableAlise;
         return this;
     }
 
     /** 设置字段名转换映射 */
     @SuppressWarnings("unused")
-    public QueryCondition<T> fieldNameCover(Map<String, String> fieldNameCover) {
+    public Condition<T> fieldNameCover(Map<String, String> fieldNameCover) {
         this.fieldNameCover = fieldNameCover;
         return this;
     }

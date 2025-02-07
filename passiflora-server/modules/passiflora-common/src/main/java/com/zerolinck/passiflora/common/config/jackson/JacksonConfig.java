@@ -35,9 +35,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.zerolinck.passiflora.base.ILabelValue;
-import com.zerolinck.passiflora.common.util.EnumUtil;
-import com.zerolinck.passiflora.common.util.TimeUtil;
-import com.zerolinck.passiflora.common.util.lock.ClassUtil;
+import com.zerolinck.passiflora.common.util.EnumUtils;
+import com.zerolinck.passiflora.common.util.TimeUtils;
+import com.zerolinck.passiflora.common.util.lock.ClassUtils;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,17 +75,17 @@ public class JacksonConfig {
     public static Map<Class<?>, JsonDeserializer<?>> getDefaultDeserializer() {
         Map<Class<?>, JsonDeserializer<?>> deserializers = new HashMap<>();
         deserializers.put(LocalDateTime.class, new LocalDateTimeDeserializer());
-        deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtil.NORMAL_DATE_FORMATTER));
-        deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
+        deserializers.put(LocalDate.class, new LocalDateDeserializer(TimeUtils.NORMAL_DATE_FORMATTER));
+        deserializers.put(LocalTime.class, new LocalTimeDeserializer(TimeUtils.NORMAL_TIME_FORMATTER_NO_SECOND));
 
-        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
+        Set<Class<?>> classes = ClassUtils.getLabelValueClasses();
 
         // 自动注册枚举反序列化规则
         classes.forEach(clazz -> deserializers.put(clazz, new JsonDeserializer<>() {
             @Override
             public Object deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
                 Integer value = jsonParser.getValueAsInt();
-                return EnumUtil.getEnumByValue((Class<? extends ILabelValue>) clazz, value);
+                return EnumUtils.getEnumByValue((Class<? extends ILabelValue>) clazz, value);
             }
         }));
         return deserializers;
@@ -99,8 +99,8 @@ public class JacksonConfig {
     public static Map<Class<?>, JsonSerializer<?>> getDefaultSerializer() {
         Map<Class<?>, JsonSerializer<?>> serializers = new HashMap<>();
         serializers.put(LocalDateTime.class, new LocalDateTimeSerializer());
-        serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtil.NORMAL_DATE_FORMATTER));
-        serializers.put(LocalTime.class, new LocalTimeSerializer(TimeUtil.NORMAL_TIME_FORMATTER_NO_SECOND));
+        serializers.put(LocalDate.class, new LocalDateSerializer(TimeUtils.NORMAL_DATE_FORMATTER));
+        serializers.put(LocalTime.class, new LocalTimeSerializer(TimeUtils.NORMAL_TIME_FORMATTER_NO_SECOND));
 
         // Long 序列化规则
         serializers.put(Long.class, ToStringSerializer.instance);

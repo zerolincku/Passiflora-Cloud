@@ -28,7 +28,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-02-06 */
 @UtilityClass
-public class TimeUtil {
+public class TimeUtils {
 
     private static final Pattern NORMAL = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
 

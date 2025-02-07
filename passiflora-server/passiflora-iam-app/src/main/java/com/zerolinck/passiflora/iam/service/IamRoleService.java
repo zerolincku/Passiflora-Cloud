@@ -22,14 +22,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.zerolinck.passiflora.common.api.Page;
-import com.zerolinck.passiflora.common.util.QueryCondition;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.Condition;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamRoleMapper;
 import com.zerolinck.passiflora.iam.mapper.IamRolePermissionMapper;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,12 +60,8 @@ public class IamRoleService {
      * @return 角色的分页结果
      * @since 2024-08-17
      */
-    @NotNull public Page<IamRole> page(@Nullable QueryCondition<IamRole> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        return mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamRole.class));
+    @NotNull public Page<IamRole> page(@Nullable Condition<IamRole> condition) {
+        return mapper.page(condition);
     }
 
     /**
@@ -75,8 +71,8 @@ public class IamRoleService {
      * @return 角色列表
      * @since 2024-08-18
      */
-    @NotNull public List<IamRole> list(@Nullable QueryCondition<IamRole> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
+    @NotNull public List<IamRole> list(@Nullable Condition<IamRole> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
         return mapper.selectListByQuery(ConditionUtils.searchWrapper(condition, IamRole.class));
     }
 
@@ -87,8 +83,8 @@ public class IamRoleService {
      * @since 2024-08-17
      */
     public void add(@NotNull IamRole iamRole) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkInsert(mapper, iamRole);
+        LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkInsert(mapper, iamRole);
             mapper.insert(iamRole);
         });
     }
@@ -101,8 +97,8 @@ public class IamRoleService {
      * @since 2024-08-17
      */
     public boolean update(@NotNull IamRole iamRole) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkUpdate(mapper, iamRole);
+        return LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkUpdate(mapper, iamRole);
             int changeRowCount = mapper.update(iamRole);
             return changeRowCount > 0;
         });

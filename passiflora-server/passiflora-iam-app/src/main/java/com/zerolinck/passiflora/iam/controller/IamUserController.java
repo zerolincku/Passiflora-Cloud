@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamUserApi;
 import com.zerolinck.passiflora.iam.service.IamUserService;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
@@ -49,7 +49,7 @@ public class IamUserController implements IamUserApi {
     private final IamUserService iamUserService;
 
     @Override
-    public Result<List<IamUserResp>> page(String orgId, @NotNull QueryCondition<IamUser> condition) {
+    public Result<List<IamUserResp>> page(String orgId, @NotNull Condition<IamUser> condition) {
         return Result.ok(iamUserService.page(orgId, condition));
     }
 

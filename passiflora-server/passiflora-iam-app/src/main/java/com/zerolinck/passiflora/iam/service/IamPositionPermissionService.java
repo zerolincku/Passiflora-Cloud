@@ -18,14 +18,15 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import com.zerolinck.passiflora.common.util.ProxyUtil;
-import com.zerolinck.passiflora.common.util.SetUtil;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.ProxyUtils;
+import com.zerolinck.passiflora.common.util.SetUtils;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamPositionPermissionMapper;
 import com.zerolinck.passiflora.model.iam.args.PositionPermissionArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamPositionPermission;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,8 +56,8 @@ public class IamPositionPermissionService {
      * @since 2024-05-06
      */
     public void add(@NotNull IamPositionPermission iamPositionPermission) {
-        LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkInsert(mapper, iamPositionPermission);
+        LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkInsert(mapper, iamPositionPermission);
             mapper.insert(iamPositionPermission);
         });
     }
@@ -69,8 +70,8 @@ public class IamPositionPermissionService {
      * @since 2024-05-06
      */
     public boolean update(@NotNull IamPositionPermission iamPositionPermission) {
-        return LockUtil.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
-            UniqueFieldCheck.checkUpdate(mapper, iamPositionPermission);
+        return LockUtils.lock(LOCK_KEY, new LockWrapper<>(), true, () -> {
+            UniqueFieldChecker.checkUpdate(mapper, iamPositionPermission);
             int changeRowCount = mapper.update(iamPositionPermission);
             return changeRowCount > 0;
         });
@@ -127,7 +128,7 @@ public class IamPositionPermissionService {
      */
     @NotNull public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
-            return Collections.emptyList();
+            return ListUtils.emptyList();
         }
         return mapper.permissionIdsByPositionIds(positionIds);
     }
@@ -139,7 +140,7 @@ public class IamPositionPermissionService {
      * @since 2024-05-06
      */
     public void savePositionPermission(@NotNull PositionPermissionArgs args) {
-        LockUtil.lock(
+        LockUtils.lock(
                 LOCK_KEY,
                 new LockWrapper<PositionPermissionArgs>()
                         .lock(PositionPermissionArgs::getPositionId, args.getPositionId()),
@@ -148,10 +149,10 @@ public class IamPositionPermissionService {
                     Set<String> exitPermissionIdSet =
                             new HashSet<>(this.permissionIdsByPositionIds(List.of(args.getPositionId())));
                     Set<String> newPermissionIdSet = new HashSet<>(args.getPermissionIds());
-                    Set<String> needAdd = SetUtil.set2MoreOutSet1(exitPermissionIdSet, newPermissionIdSet);
-                    Set<String> needDelete = SetUtil.set2MoreOutSet1(newPermissionIdSet, exitPermissionIdSet);
+                    Set<String> needAdd = SetUtils.set2MoreOutSet1(exitPermissionIdSet, newPermissionIdSet);
+                    Set<String> needDelete = SetUtils.set2MoreOutSet1(newPermissionIdSet, exitPermissionIdSet);
                     if (CollectionUtils.isNotEmpty(needDelete)) {
-                        ProxyUtil.proxy(this.getClass()).deleteByIds(needDelete);
+                        ProxyUtils.proxy(this.getClass()).deleteByIds(needDelete);
                     }
                     if (CollectionUtils.isNotEmpty(needAdd)) {
                         List<IamPositionPermission> addList = new ArrayList<>();

@@ -21,7 +21,7 @@ import java.util.List;
 import com.zerolinck.passiflora.base.valid.Insert;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.entity.IamDict;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface IamDictApi {
     @Operation(summary = "分页查询")
     @GetMapping("page")
-    Result<List<IamDict>> page(@NotNull @SpringQueryMap QueryCondition<IamDict> condition);
+    Result<List<IamDict>> page(@NotNull @SpringQueryMap Condition<IamDict> condition);
 
     @Operation(summary = "新增")
     @PostMapping("add")

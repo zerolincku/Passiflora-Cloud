@@ -25,7 +25,7 @@ import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.*;
-import com.zerolinck.passiflora.common.util.lock.LockUtil;
+import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.iam.mapper.IamUserMapper;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
@@ -37,8 +37,7 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserInfo;
 import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
-import com.zerolinck.passiflora.mybatis.util.UniqueFieldCheck;
+import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -69,12 +68,8 @@ public class IamUserService {
      * @param condition 查询条件
      * @return IAM用户响应的分页结果
      */
-    @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable QueryCondition<IamUser> condition) {
-        condition = Objects.requireNonNullElse(condition, new QueryCondition<>());
-        Page<IamUser> page = mapper.page(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamUser.class));
+    @NotNull public Page<IamUserResp> page(@NotNull String orgId, @Nullable Condition<IamUser> condition) {
+        Page<IamUser> page = mapper.page(condition);
 
         Set<String> userIds = page.getRecords().stream().map(IamUser::getUserId).collect(Collectors.toSet());
         Set<String> orgIds = page.getRecords().stream()
@@ -130,16 +125,17 @@ public class IamUserService {
      * @param args IAM用户参数
      */
     public void add(@NotNull IamUserArgs args) {
-        args.setUserPassword(PwdUtil.hashPassword(args.getUserPassword()));
+        args.setUserPassword(PwdUtils.hashPassword(args.getUserPassword()));
 
-        LockUtil.lock(LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
-            IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-            UniqueFieldCheck.checkInsert(mapper, iamUser);
-            mapper.insert(iamUser);
-            args.setUserId(iamUser.getUserId());
-            userPositionService.updateRelation(args);
-            iamUserRoleService.updateRelation(args);
-        });
+        LockUtils.lock(
+                LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
+                    IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
+                    UniqueFieldChecker.checkInsert(mapper, iamUser);
+                    mapper.insert(iamUser);
+                    args.setUserId(iamUser.getUserId());
+                    userPositionService.updateRelation(args);
+                    iamUserRoleService.updateRelation(args);
+                });
     }
 
     /**
@@ -149,10 +145,10 @@ public class IamUserService {
      * @return 如果更新成功返回true，否则返回false
      */
     public boolean update(@NotNull IamUserArgs args) {
-        return LockUtil.lock(
+        return LockUtils.lock(
                 LOCK_KEY, new LockWrapper<IamUser>().lock(IamUser::getUserName, args.getUserName()), true, () -> {
                     IamUser iamUser = IamUserConvert.INSTANCE.argsToEntity(args);
-                    UniqueFieldCheck.checkUpdate(mapper, iamUser);
+                    UniqueFieldChecker.checkUpdate(mapper, iamUser);
                     int changeRowCount = mapper.update(iamUser);
                     userPositionService.updateRelation(args);
                     iamUserRoleService.updateRelation(args);
@@ -192,7 +188,7 @@ public class IamUserService {
      * @return 当前用户的信息
      */
     @NotNull public IamUserInfo currentUserInfo() {
-        String userId = CurrentUtil.getCurrentUserId();
+        String userId = CurrentUtils.getCurrentUserId();
         IamUser iamUser = mapper.selectOneById(userId);
         if (StringUtils.isBlank(userId) || Objects.isNull(iamUser)) {
             throw new BizException(ResultCode.UNAUTHORIZED);
@@ -223,10 +219,10 @@ public class IamUserService {
         if (dbIamUser == null) {
             throw new BizException("账号或密码错误");
         }
-        if (!PwdUtil.verifyPassword(iamUser.getUserPassword(), dbIamUser.getUserPassword())) {
+        if (!PwdUtils.verifyPassword(iamUser.getUserPassword(), dbIamUser.getUserPassword())) {
             throw new BizException("账号或密码错误");
         }
-        String token = StrUtil.randomString(10);
+        String token = StrUtils.randomString(10);
         RedisUtils.set(
                 RedisPrefix.TOKEN_KEY + dbIamUser.getUserId() + ":" + token,
                 dbIamUser,
@@ -236,7 +232,7 @@ public class IamUserService {
 
     /** 登出当前用户 */
     public void logout() {
-        Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
+        Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtils.getToken());
         if (CollectionUtils.isEmpty(keys)) {
             return;
         }
@@ -249,7 +245,7 @@ public class IamUserService {
      * @return 如果令牌有效返回true，否则返回false
      */
     public Boolean checkToken() {
-        Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtil.getToken());
+        Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + CurrentUtils.getToken());
         if (CollectionUtils.isEmpty(keys)) {
             return Boolean.FALSE;
         }

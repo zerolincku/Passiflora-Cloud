@@ -30,8 +30,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.model.iam.enums.PermissionTypeEnum;
@@ -68,9 +68,9 @@ class IamPermissionControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -94,10 +94,10 @@ class IamPermissionControllerTest {
         iamPermission.setOrder(1);
         mockMvc.perform(post("/iam-permission/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamPermission)))
+                        .content(JsonUtils.toJson(iamPermission)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
-                .andDo(result -> testSysPermissionId = JsonUtil.readTree(
+                .andDo(result -> testSysPermissionId = JsonUtils.readTree(
                                 result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
@@ -111,8 +111,8 @@ class IamPermissionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamPermission = JsonUtil.convertValue(jsonNode.get("data"), IamPermission.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamPermission = JsonUtils.convertValue(jsonNode.get("data"), IamPermission.class);
                 });
     }
 
@@ -121,7 +121,7 @@ class IamPermissionControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-permission/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamPermission)))
+                        .content(JsonUtils.toJson(testIamPermission)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -132,11 +132,11 @@ class IamPermissionControllerTest {
         IamUser testUser = new IamUser("admin", "123456");
         mockMvc.perform(post("/iam-user/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testUser)))
+                        .content(JsonUtils.toJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testToken = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testToken = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
 
@@ -153,8 +153,8 @@ class IamPermissionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    permissionTree = JsonUtil.convertValue(jsonNode.get("data"), new TypeReference<>() {});
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    permissionTree = JsonUtils.convertValue(jsonNode.get("data"), new TypeReference<>() {});
                 });
     }
 
@@ -163,7 +163,7 @@ class IamPermissionControllerTest {
     public void testDisable() throws Exception {
         mockMvc.perform(post("/iam-permission/disable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPermissionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -173,7 +173,7 @@ class IamPermissionControllerTest {
     public void testEnable() throws Exception {
         mockMvc.perform(post("/iam-permission/enable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPermissionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -184,7 +184,7 @@ class IamPermissionControllerTest {
         mockMvc.perform(post("/iam-permission/update-order")
                         .header(Header.AUTHORIZATION.getValue(), testToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(permissionTree)))
+                        .content(JsonUtils.toJson(permissionTree)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -194,7 +194,7 @@ class IamPermissionControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-permission/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPermissionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPermissionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

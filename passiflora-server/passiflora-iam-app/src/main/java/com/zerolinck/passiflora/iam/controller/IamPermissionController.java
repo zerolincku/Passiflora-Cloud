@@ -23,7 +23,7 @@ import com.mybatisflex.core.keygen.impl.FlexIDKeyGenerator;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.util.Asserts;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.iam.IamPermissionApi;
 import com.zerolinck.passiflora.iam.service.IamPermissionService;
 import com.zerolinck.passiflora.model.iam.entity.IamPermission;
@@ -49,7 +49,7 @@ public class IamPermissionController implements IamPermissionApi {
     private static final FlexIDKeyGenerator flexIDKeyGenerator = new FlexIDKeyGenerator();
 
     @Override
-    public Result<List<IamPermission>> page(@NotNull QueryCondition<IamPermission> condition) {
+    public Result<List<IamPermission>> page(@NotNull Condition<IamPermission> condition) {
         return Result.ok(iamPermissionService.page(condition));
     }
 

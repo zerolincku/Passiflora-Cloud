@@ -20,8 +20,8 @@ import java.util.*;
 import jakarta.annotation.PostConstruct;
 
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.common.util.lock.ClassUtil;
+import com.zerolinck.passiflora.common.util.StrUtils;
+import com.zerolinck.passiflora.common.util.lock.ClassUtils;
 import com.zerolinck.passiflora.feign.iam.EnumApi;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +49,7 @@ public class EnumController implements EnumApi {
 
     @SneakyThrows
     private void initEnum() {
-        Set<Class<?>> classes = ClassUtil.getLabelValueClasses();
+        Set<Class<?>> classes = ClassUtils.getLabelValueClasses();
 
         for (Class<?> clazz : classes) {
             Object[] enumConstants = clazz.getEnumConstants();
@@ -59,7 +59,7 @@ public class EnumController implements EnumApi {
                         Objects.requireNonNull(ReflectionUtils.findMethod(clazz, "getLabel")), enumInstance);
                 Object value = ReflectionUtils.invokeMethod(
                         Objects.requireNonNull(ReflectionUtils.findMethod(clazz, "getValue")), enumInstance);
-                String enumName = StrUtil.camelToMidline(clazz.getSimpleName());
+                String enumName = StrUtils.camelToMidline(clazz.getSimpleName());
                 if (!MAP.containsKey(enumName)) {
                     MAP.put(enumName, new ArrayList<>());
                 }

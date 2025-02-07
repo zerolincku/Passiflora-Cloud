@@ -24,9 +24,9 @@ import com.zerolinck.passiflora.codegen.model.Table;
 import com.zerolinck.passiflora.codegen.service.RenderService;
 import com.zerolinck.passiflora.codegen.service.impl.FileRenderServiceImpl;
 import com.zerolinck.passiflora.codegen.service.impl.PostgresDbService;
-import com.zerolinck.passiflora.common.util.MapUtil;
-import com.zerolinck.passiflora.common.util.StrUtil;
-import com.zerolinck.passiflora.common.util.TimeUtil;
+import com.zerolinck.passiflora.common.util.MapUtils;
+import com.zerolinck.passiflora.common.util.StrUtils;
+import com.zerolinck.passiflora.common.util.TimeUtils;
 
 import lombok.SneakyThrows;
 
@@ -120,28 +120,28 @@ public class GenerateCode {
 
     private static Map<String, Object> getInfo(String tableName, String moduleName, String contextPath, String author) {
         Table table = new PostgresDbService().getTableInfo(tableName);
-        return MapUtil.builder()
+        return MapUtils.builder()
                 .put("author", author)
                 .put("contextPath", contextPath)
                 .put("table", table)
                 .put("tableName", tableName)
                 .put("moduleName", moduleName)
-                .put("date", TimeUtil.getDateStrNow())
-                .put("entityName", StrUtil.toCamelCase(table.getTableName()))
+                .put("date", TimeUtils.getDateStrNow())
+                .put("entityName", StrUtils.toCamelCase(table.getTableName()))
                 .put("entityNameUrl", table.getTableName().replace("_", "-"))
-                .put("serviceName", StrUtil.toCamelCase(table.getTableName() + "_" + "service"))
-                .put("mapperName", StrUtil.toCamelCase(table.getTableName() + "_" + "mapper"))
-                .put("controllerName", StrUtil.toCamelCase(table.getTableName() + "_" + "controller"))
-                .put("apiName", StrUtil.toCamelCase(table.getTableName() + "_" + "api"))
-                .put("convertName", StrUtil.toCamelCase(table.getTableName() + "_" + "convert"))
-                .put("entityClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())))
-                .put("serviceClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "service")))
-                .put("mapperClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "mapper")))
+                .put("serviceName", StrUtils.toCamelCase(table.getTableName() + "_" + "service"))
+                .put("mapperName", StrUtils.toCamelCase(table.getTableName() + "_" + "mapper"))
+                .put("controllerName", StrUtils.toCamelCase(table.getTableName() + "_" + "controller"))
+                .put("apiName", StrUtils.toCamelCase(table.getTableName() + "_" + "api"))
+                .put("convertName", StrUtils.toCamelCase(table.getTableName() + "_" + "convert"))
+                .put("entityClass", StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName())))
+                .put("serviceClass", StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName() + "_" + "service")))
+                .put("mapperClass", StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName() + "_" + "mapper")))
                 .put(
                         "controllerClass",
-                        StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "controller")))
-                .put("apiClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "api")))
-                .put("convertClass", StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName() + "_" + "convert")))
+                        StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName() + "_" + "controller")))
+                .put("apiClass", StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName() + "_" + "api")))
+                .put("convertClass", StrUtils.upperFirst(StrUtils.toCamelCase(table.getTableName() + "_" + "convert")))
                 .build();
     }
 }

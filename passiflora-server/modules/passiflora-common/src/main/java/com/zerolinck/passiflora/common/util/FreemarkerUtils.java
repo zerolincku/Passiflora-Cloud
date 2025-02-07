@@ -26,7 +26,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /** @author 林常坤 on 2024/10/24 */
-public class FreemarkerUtil {
+public class FreemarkerUtils {
 
     private static final Configuration configuration;
 
@@ -56,7 +56,7 @@ public class FreemarkerUtil {
      */
     public static Template getTemplateFromClasspath(String templateName) throws IOException {
         // 设置模板加载路径为 classpath 下的 /templates 目录
-        configuration.setClassLoaderForTemplateLoading(FreemarkerUtil.class.getClassLoader(), "/templates");
+        configuration.setClassLoaderForTemplateLoading(FreemarkerUtils.class.getClassLoader(), "/templates");
         return configuration.getTemplate(templateName);
     }
 

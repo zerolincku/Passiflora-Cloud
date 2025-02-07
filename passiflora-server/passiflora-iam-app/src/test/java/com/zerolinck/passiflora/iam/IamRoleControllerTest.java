@@ -27,8 +27,8 @@ import jakarta.annotation.Resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamRole;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -63,9 +63,9 @@ class IamRoleControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -86,11 +86,11 @@ class IamRoleControllerTest {
         iamRole.setRoleStatus(StatusEnum.ENABLE);
         mockMvc.perform(post("/iam-role/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamRole)))
+                        .content(JsonUtils.toJson(iamRole)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result ->
-                        testSysRoleId = JsonUtil.readTree(result.getResponse().getContentAsString())
+                        testSysRoleId = JsonUtils.readTree(result.getResponse().getContentAsString())
                                 .get("data")
                                 .asText());
     }
@@ -103,8 +103,8 @@ class IamRoleControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamRole = JsonUtil.convertValue(jsonNode.get("data"), IamRole.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamRole = JsonUtils.convertValue(jsonNode.get("data"), IamRole.class);
                 });
     }
 
@@ -113,7 +113,7 @@ class IamRoleControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-role/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamRole)))
+                        .content(JsonUtils.toJson(testIamRole)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -123,7 +123,7 @@ class IamRoleControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-role/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysRoleId})))
+                        .content(JsonUtils.toJson(new String[] {testSysRoleId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

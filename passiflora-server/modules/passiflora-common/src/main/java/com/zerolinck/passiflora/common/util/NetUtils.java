@@ -35,7 +35,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author linck on 2023-12-11 */
 @UtilityClass
-public class NetUtil {
+public class NetUtils {
 
     /** 查询网卡 ip 地址 */
     @NotNull public static String findOutIp() throws SocketException {

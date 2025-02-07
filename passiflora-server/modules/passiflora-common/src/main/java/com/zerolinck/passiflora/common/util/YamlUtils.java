@@ -29,7 +29,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import lombok.SneakyThrows;
 
 /** @author 林常坤 on 2024/10/24 */
-public class YamlUtil {
+public class YamlUtils {
 
     private static final Yaml yaml = new Yaml();
 
@@ -44,7 +44,7 @@ public class YamlUtil {
     /** 从 classpath 加载 YAML 文件 */
     @SneakyThrows
     public static Map<String, Object> loadYamlFromClasspath(String classpathFileName) {
-        try (InputStream inputStream = YamlUtil.class.getClassLoader().getResourceAsStream(classpathFileName)) {
+        try (InputStream inputStream = YamlUtils.class.getClassLoader().getResourceAsStream(classpathFileName)) {
             if (inputStream == null) {
                 throw new IllegalArgumentException("File not found in classpath: " + classpathFileName);
             }
@@ -66,7 +66,7 @@ public class YamlUtil {
     /** 从 classpath 加载 YAML 文件并解析为指定的类型 */
     @SneakyThrows
     public static <T> T loadYamlFromClasspath(String resourcePath, Class<T> type) {
-        try (InputStream inputStream = YamlUtil.class.getClassLoader().getResourceAsStream(resourcePath)) {
+        try (InputStream inputStream = YamlUtils.class.getClassLoader().getResourceAsStream(resourcePath)) {
             LoaderOptions loaderOptions = new LoaderOptions();
             Constructor constructor = new Constructor(type, loaderOptions);
             Yaml yaml = new Yaml(constructor);

@@ -29,8 +29,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.ResultCode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.model.iam.entity.IamPosition;
 import com.zerolinck.passiflora.model.iam.enums.PositionDataScopeTypeEnum;
 import com.zerolinck.passiflora.model.iam.resp.IamPositionResp;
@@ -64,9 +64,9 @@ class IamPositionControllerTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        TestUtil.nacosTestNameSpace(registry);
-        TestUtil.postgresContainerStart(registry);
-        TestUtil.redisContainerStart(registry);
+        TestUtils.nacosTestNameSpace(registry);
+        TestUtils.postgresContainerStart(registry);
+        TestUtils.redisContainerStart(registry);
     }
 
     @Test
@@ -90,10 +90,10 @@ class IamPositionControllerTest {
         iamPosition.setOrder(1);
         mockMvc.perform(post("/iam-position/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(iamPosition)))
+                        .content(JsonUtils.toJson(iamPosition)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
-                .andDo(result -> testSysPositionId = JsonUtil.readTree(
+                .andDo(result -> testSysPositionId = JsonUtils.readTree(
                                 result.getResponse().getContentAsString())
                         .get("data")
                         .asText());
@@ -107,8 +107,8 @@ class IamPositionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    testIamPosition = JsonUtil.convertValue(jsonNode.get("data"), IamPosition.class);
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    testIamPosition = JsonUtils.convertValue(jsonNode.get("data"), IamPosition.class);
                 });
     }
 
@@ -117,7 +117,7 @@ class IamPositionControllerTest {
     public void testUpdate() throws Exception {
         mockMvc.perform(post("/iam-position/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testIamPosition)))
+                        .content(JsonUtils.toJson(testIamPosition)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -130,8 +130,8 @@ class IamPositionControllerTest {
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())))
                 .andDo(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    JsonNode jsonNode = JsonUtil.readTree(responseBody);
-                    positionTree = JsonUtil.convertValue(jsonNode.get("data"), new TypeReference<>() {});
+                    JsonNode jsonNode = JsonUtils.readTree(responseBody);
+                    positionTree = JsonUtils.convertValue(jsonNode.get("data"), new TypeReference<>() {});
                 });
     }
 
@@ -140,7 +140,7 @@ class IamPositionControllerTest {
     public void testDisable() throws Exception {
         mockMvc.perform(post("/iam-position/disable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -150,7 +150,7 @@ class IamPositionControllerTest {
     public void testEnable() throws Exception {
         mockMvc.perform(post("/iam-position/enable")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -160,7 +160,7 @@ class IamPositionControllerTest {
     public void testUpdateOrder() throws Exception {
         mockMvc.perform(post("/iam-position/update-order")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(positionTree)))
+                        .content(JsonUtils.toJson(positionTree)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }
@@ -170,7 +170,7 @@ class IamPositionControllerTest {
     public void testDelete() throws Exception {
         mockMvc.perform(post("/iam-position/delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(new String[] {testSysPositionId})))
+                        .content(JsonUtils.toJson(new String[] {testSysPositionId})))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", equalTo(ResultCode.SUCCESS.getCode())));
     }

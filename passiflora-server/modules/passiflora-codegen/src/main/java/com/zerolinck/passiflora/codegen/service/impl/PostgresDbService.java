@@ -28,7 +28,7 @@ import com.zerolinck.passiflora.codegen.model.Table;
 import com.zerolinck.passiflora.codegen.service.DbService;
 import com.zerolinck.passiflora.codegen.util.DataSourceUtil;
 import com.zerolinck.passiflora.codegen.util.TypeConvert;
-import com.zerolinck.passiflora.common.util.StrUtil;
+import com.zerolinck.passiflora.common.util.StrUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -54,7 +54,7 @@ public class PostgresDbService implements DbService {
                 baseFlagNum.getAndIncrement();
             }
             column.setFieldType(TypeConvert.columnType2FieldType(column.getColumnType()));
-            column.setFieldName(StrUtil.toCamelCase(column.getColumnName()));
+            column.setFieldName(StrUtils.toCamelCase(column.getColumnName()));
             if (Boolean.TRUE.equals(column.getPk())) {
                 pkFiledName.set(column.getFieldName());
                 pkColumnName.set(column.getColumnName());

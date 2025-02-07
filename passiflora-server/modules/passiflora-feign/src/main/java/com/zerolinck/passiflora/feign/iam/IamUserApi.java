@@ -21,7 +21,7 @@ import java.util.List;
 import com.zerolinck.passiflora.base.valid.Insert;
 import com.zerolinck.passiflora.base.valid.Update;
 import com.zerolinck.passiflora.common.api.Result;
-import com.zerolinck.passiflora.common.util.QueryCondition;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.feign.config.FeignConfiguration;
 import com.zerolinck.passiflora.model.iam.args.IamUserArgs;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
@@ -51,7 +51,7 @@ public interface IamUserApi {
     @GetMapping("page")
     Result<List<IamUserResp>> page(
             @RequestParam(value = "orgId", required = false) String orgId,
-            @NotNull @SpringQueryMap QueryCondition<IamUser> condition);
+            @NotNull @SpringQueryMap Condition<IamUser> condition);
 
     @NotNull @Operation(summary = "新增")
     @PostMapping("add")

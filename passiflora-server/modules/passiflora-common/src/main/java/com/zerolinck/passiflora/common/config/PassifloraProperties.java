@@ -72,7 +72,7 @@ public class PassifloraProperties {
         private Boolean exception;
         /** 是否开启全局默认过滤器 {@link com.zerolinck.passiflora.common.config.GlobalFilter} */
         private Boolean globalFilter;
-        /** 是否开启 LockUtil 初始化 {@link com.zerolinck.passiflora.common.config.LockConfig} */
+        /** 是否开启 LockUtils 初始化 {@link com.zerolinck.passiflora.common.config.LockConfig} */
         private Boolean lock;
         /** 是否开启 Cache 初始化 {@link com.zerolinck.passiflora.common.config.CacheConfig} */
         private Boolean cache;

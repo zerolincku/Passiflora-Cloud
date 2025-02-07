@@ -22,7 +22,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/10/08 */
 @UtilityClass
-public class RandomUtil {
+public class RandomUtils {
 
     public static String lowerCharAndNum(int count) {
         return RandomStringUtils.random(count, "abcdefghijklmnopqrstuvwxyz0123456789");

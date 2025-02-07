@@ -1,8 +1,8 @@
 package com.zerolinck.passiflora.${moduleName};
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zerolinck.passiflora.common.util.JsonUtil;
-import com.zerolinck.passiflora.common.util.TestUtil;
+import com.zerolinck.passiflora.common.util.JsonUtils;
+import com.zerolinck.passiflora.common.util.TestUtils;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.model.${moduleName}.entity.${entityClass};
 import jakarta.annotation.Resource;
