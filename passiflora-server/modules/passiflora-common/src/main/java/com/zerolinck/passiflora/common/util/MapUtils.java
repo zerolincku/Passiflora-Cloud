@@ -16,10 +16,13 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /** @author 林常坤 on 2024/10/24 */
+@UtilityClass
 public class MapUtils {
 
     public static MapBuilder builder() {
