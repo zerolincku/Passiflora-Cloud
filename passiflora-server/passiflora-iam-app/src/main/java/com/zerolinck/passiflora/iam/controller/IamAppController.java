@@ -16,9 +16,6 @@
  */
 package com.zerolinck.passiflora.iam.controller;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import com.zerolinck.passiflora.base.enums.StatusEnum;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
@@ -28,13 +25,15 @@ import com.zerolinck.passiflora.common.util.RandomUtils;
 import com.zerolinck.passiflora.feign.iam.IamAppApi;
 import com.zerolinck.passiflora.iam.service.IamAppService;
 import com.zerolinck.passiflora.model.iam.entity.IamApp;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * 应用 Controller
@@ -57,8 +56,8 @@ public class IamAppController implements IamAppApi {
     @NotNull @Override
     public Result<String> add(@NotNull IamApp iamApp) {
         iamApp.setAppId(null);
-        iamApp.setAppKey(RandomUtils.lowerCharAndNum(32));
-        iamApp.setAppSecret(RandomUtils.lowerCharAndNum(32));
+        iamApp.setAppKey(RandomUtils.lowerChar(32));
+        iamApp.setAppSecret(RandomUtils.lowerChar(32));
         iamApp.setAppStatus(StatusEnum.ENABLE);
         iamAppService.add(iamApp);
         return Result.ok(iamApp.getAppId());

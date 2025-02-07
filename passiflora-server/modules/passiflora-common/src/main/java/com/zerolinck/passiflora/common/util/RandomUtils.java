@@ -16,15 +16,14 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /** @author 林常坤 on 2024/10/08 */
 @UtilityClass
 public class RandomUtils {
 
-    public static String lowerCharAndNum(int count) {
-        return RandomStringUtils.random(count, "abcdefghijklmnopqrstuvwxyz0123456789");
+    public static String lowerChar(int count) {
+        return RandomStringUtils.secure().next(count, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
 }
