@@ -26,4 +26,14 @@ public class RandomUtils {
     public static String lowerChar(int count) {
         return RandomStringUtils.secure().next(count, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
+
+    /**
+     * 生成指定长度的随机字符串
+     *
+     * @param length 字符串长度
+     * @return 随机字符串
+     */
+    public static String randomString(int length) {
+        return RandomStringUtils.secure().next(length);
+    }
 }

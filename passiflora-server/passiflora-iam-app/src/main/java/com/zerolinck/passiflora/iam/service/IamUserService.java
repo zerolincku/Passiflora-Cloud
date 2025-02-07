@@ -16,9 +16,6 @@
  */
 package com.zerolinck.passiflora.iam.service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.api.ResultCode;
@@ -38,6 +35,7 @@ import com.zerolinck.passiflora.model.iam.resp.IamUserPositionResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserResp;
 import com.zerolinck.passiflora.model.iam.resp.IamUserRoleResp;
 import com.zerolinck.passiflora.mybatis.util.UniqueFieldChecker;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +43,8 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** @author linck on 2024-02-07 */
 @Service
@@ -222,7 +221,7 @@ public class IamUserService {
         if (!PwdUtils.verifyPassword(iamUser.getUserPassword(), dbIamUser.getUserPassword())) {
             throw new BizException("账号或密码错误");
         }
-        String token = StrUtils.randomString(10);
+        String token = RandomUtils.lowerChar(20);
         RedisUtils.set(
                 RedisPrefix.TOKEN_KEY + dbIamUser.getUserId() + ":" + token,
                 dbIamUser,
