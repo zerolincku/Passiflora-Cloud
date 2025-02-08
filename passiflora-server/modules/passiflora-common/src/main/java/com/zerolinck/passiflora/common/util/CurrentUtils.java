@@ -16,18 +16,18 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.zerolinck.passiflora.base.IUser;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import lombok.experimental.UtilityClass;
+import java.util.Map;
+import java.util.Set;
 
 /** @author linck on 2023-12-15 */
 @UtilityClass
@@ -44,7 +44,11 @@ public class CurrentUtils {
         if (userMap.get() != null) {
             return userMap.get();
         }
-        String token = NetUtils.getRequest().getHeader(Header.AUTHORIZATION.toString());
+        HttpServletRequest request = NetUtils.getRequest();
+        if (request == null) {
+            return null;
+        }
+        String token = request.getHeader(Header.AUTHORIZATION.toString());
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + token);
         if (keys == null || keys.isEmpty()) {
             return null;
@@ -80,7 +84,11 @@ public class CurrentUtils {
         if (tokenMap.get() != null) {
             return tokenMap.get();
         }
-        String token = NetUtils.getRequest().getHeader(Header.AUTHORIZATION.toString());
+        HttpServletRequest request = NetUtils.getRequest();
+        if (request == null) {
+            return null;
+        }
+        String token = request.getHeader(Header.AUTHORIZATION.toString());
         tokenMap.set(token);
         return token;
     }
