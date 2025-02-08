@@ -19,16 +19,22 @@ package com.zerolinck.passiflora.storage.mapper;
 import static com.zerolinck.passiflora.model.storage.entity.table.StorageFileTableDef.STORAGE_FILE;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
+import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
+import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
+import com.zerolinck.passiflora.mybatis.util.PageConvert;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 通用文件 Mybatis Mapper
@@ -39,13 +45,28 @@ import org.jetbrains.annotations.NotNull;
 public interface StorageFileMapper extends BaseMapper<StorageFile> {
 
     /**
+     * 分页查询
+     *
+     * @param condition 查询条件
+     * @author 林常坤 on 2025/2/7
+     */
+    @NotNull default com.zerolinck.passiflora.common.api.Page<StorageFile> page(@Nullable Condition<StorageFile> condition) {
+        condition = Objects.requireNonNullElse(condition, new Condition<>());
+        Page<StorageFile> paginate = paginate(
+                condition.getPageNum(),
+                condition.getPageSize(),
+                ConditionUtils.searchWrapper(condition, StorageFile.class));
+        return PageConvert.toPage(paginate);
+    }
+
+    /**
      * 根据文件MD5查询文件列表
      *
      * @param fileMd5 文件MD5
      * @return 文件列表
      * @since 2024-05-17
      */
-    default List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
+    @NotNull default List<StorageFile> listByFileMd5(@NotNull String fileMd5) {
         return selectListByCondition(QueryCondition.create(STORAGE_FILE.FILE_MD5, fileMd5));
     }
 

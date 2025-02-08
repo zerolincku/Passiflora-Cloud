@@ -21,9 +21,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.base.constant.Header;
+import com.zerolinck.passiflora.common.api.Page;
 import com.zerolinck.passiflora.common.config.PassifloraProperties;
 import com.zerolinck.passiflora.common.exception.BizException;
 import com.zerolinck.passiflora.common.util.Condition;
@@ -32,7 +31,6 @@ import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
 import com.zerolinck.passiflora.model.storage.entity.StorageFile;
 import com.zerolinck.passiflora.model.storage.enums.FileStatusEnum;
-import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.storage.mapper.StorageFileMapper;
 import com.zerolinck.passiflora.storage.util.OssS3Util;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -75,10 +73,7 @@ public class StorageFileService {
      */
     @NotNull public Page<StorageFile> page(@Nullable Condition<StorageFile> condition) {
         condition = Objects.requireNonNullElse(condition, new Condition<>());
-        return mapper.paginate(
-                condition.getPageNum(),
-                condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, StorageFile.class));
+        return mapper.page(condition);
     }
 
     /**
@@ -159,8 +154,7 @@ public class StorageFileService {
                     }
 
                     // 检查文件是否已经上传
-                    List<StorageFile> storageFiles =
-                            mapper.selectListByQuery(new QueryWrapper().eq(StorageFile::getFileMd5, md5Hex));
+                    List<StorageFile> storageFiles = mapper.listByFileMd5(md5Hex);
                     boolean exist = false;
                     if (!storageFiles.isEmpty()) {
                         StorageFile dbStorageFile = storageFiles.getFirst();

@@ -16,18 +16,19 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import java.util.Map;
+import java.util.Set;
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.zerolinck.passiflora.base.IUser;
 import com.zerolinck.passiflora.base.constant.Header;
 import com.zerolinck.passiflora.base.constant.RedisPrefix;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Set;
+import lombok.experimental.UtilityClass;
 
 /** @author linck on 2023-12-15 */
 @UtilityClass
