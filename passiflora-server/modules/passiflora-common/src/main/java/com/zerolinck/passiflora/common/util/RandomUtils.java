@@ -16,16 +16,16 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/10/08 */
 @UtilityClass
 public class RandomUtils {
 
-    @NotNull
-    public static String lowerCharAndNum(int count) {
+    @NotNull public static String lowerCharAndNum(int count) {
         return RandomStringUtils.secure().next(count, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
 
@@ -35,8 +35,7 @@ public class RandomUtils {
      * @param length 字符串长度
      * @return 随机字符串
      */
-    @NotNull
-    public static String randomString(int length) {
+    @NotNull public static String randomString(int length) {
         return RandomStringUtils.secure()
                 .next(length, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     }

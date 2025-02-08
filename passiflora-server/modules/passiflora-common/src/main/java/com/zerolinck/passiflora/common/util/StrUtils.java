@@ -41,10 +41,10 @@ public class StrUtils {
     }
 
     /** 驼峰字符串，转换为使用 _ 连接的字符串 */
-    @NotNull @SuppressWarnings("unused")
+    @Nullable @SuppressWarnings("unused")
     public static String camelToUnderline(@Nullable String str) {
-        if (str == null) {
-            return "";
+        if (str == null || str.isEmpty()) {
+            return str;
         }
         StringJoiner joiner = new StringJoiner("_");
         String[] split = StringUtils.splitByCharacterTypeCamelCase(str);
@@ -55,9 +55,9 @@ public class StrUtils {
     }
 
     /** 驼峰字符串，转换为使用 - 连接的字符串 */
-    @NotNull public static String camelToMidline(@Nullable String str) {
-        if (str == null) {
-            return "";
+    @Nullable public static String camelToMidline(@Nullable String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
         }
         StringJoiner joiner = new StringJoiner("-");
         String[] split = StringUtils.splitByCharacterTypeCamelCase(str);
@@ -68,7 +68,7 @@ public class StrUtils {
     }
 
     /** 将字符串的第一个字符转为大写 */
-    public static String upperFirst(String str) {
+    @Nullable public static String upperFirst(@Nullable String str) {
         if (str == null || str.isEmpty()) {
             return str;
         }
@@ -76,7 +76,7 @@ public class StrUtils {
     }
 
     /** 将下划线分隔的字符串转换为驼峰命名法 */
-    public static String toCamelCase(String str) {
+    @Nullable public static String toCamelCase(@Nullable String str) {
         if (str == null || str.isEmpty()) {
             return str;
         }

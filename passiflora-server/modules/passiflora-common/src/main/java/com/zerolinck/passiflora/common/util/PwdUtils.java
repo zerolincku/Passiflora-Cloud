@@ -17,7 +17,6 @@
 package com.zerolinck.passiflora.common.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.experimental.UtilityClass;
@@ -37,7 +36,7 @@ public class PwdUtils {
      * @since 2024-08-13
      */
     @NotNull public static String hashPassword(@NotNull String password) {
-        String salt = RandomStringUtils.random(10, true, true);
+        String salt = RandomUtils.randomString(10);
         String hashPwd = DigestUtils.sha1Hex(salt + password);
         return salt + hashPwd;
     }

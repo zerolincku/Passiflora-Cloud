@@ -16,13 +16,16 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024-08-13 */
 @UtilityClass
 public class ProxyUtils {
 
-    public static <T> T proxy(Class<T> clazz) {
+    @Nullable public static <T> T proxy(@NotNull Class<T> clazz) {
         return SpringContextHolder.getBean(clazz);
     }
 }
