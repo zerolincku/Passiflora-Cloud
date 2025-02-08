@@ -16,18 +16,18 @@
  */
 package com.zerolinck.passiflora.common.util;
 
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/10/24 */
 @UtilityClass
@@ -36,6 +36,7 @@ public class YamlUtils {
     private static final Yaml yaml = new Yaml();
 
     /** 从绝对路径加载 YAML 文件 */
+    @NotNull
     @SneakyThrows
     public static Map<String, Object> loadYamlFromFile(String filePath) {
         try (InputStream inputStream = new FileInputStream(filePath)) {
@@ -44,6 +45,7 @@ public class YamlUtils {
     }
 
     /** 从 classpath 加载 YAML 文件 */
+    @NotNull
     @SneakyThrows
     public static Map<String, Object> loadYamlFromClasspath(String classpathFileName) {
         try (InputStream inputStream = YamlUtils.class.getClassLoader().getResourceAsStream(classpathFileName)) {
