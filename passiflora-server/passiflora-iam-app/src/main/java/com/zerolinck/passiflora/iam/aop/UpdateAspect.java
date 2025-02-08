@@ -38,9 +38,6 @@ public class UpdateAspect {
             + " com.zerolinck.passiflora.iam.*.*Controller.update(com.zerolinck.passiflora.base.BaseEntity+))"
             + " && args(entity)")
     public void beforeUpdate(JoinPoint joinPoint, BaseEntity entity) {
-        if (log.isDebugEnabled()) {
-            log.debug("UpdateAspect 前置处理，置空 createAt 和 createBy");
-        }
         entity.setCreateTime(null);
         entity.setCreateBy(null);
     }

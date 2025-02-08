@@ -49,9 +49,7 @@ public class CreateBucketRunner implements ApplicationRunner {
     @SneakyThrows
     private void createBucket(@NotNull String bucketName) {
         boolean bucketExists = OssS3Util.doesBucketExist(bucketName);
-        if (log.isDebugEnabled()) {
-            log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
-        }
+        log.debug("bucket: {}, 是否存在: {}", bucketName, bucketExists);
         if (!bucketExists) {
             OssS3Util.createBucket(bucketName);
         }

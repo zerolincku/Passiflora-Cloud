@@ -61,9 +61,7 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
         // 记录请求的基本信息，如方法、URI和头
         return Mono.fromSupplier(() -> {
             ServerHttpRequest request = exchange.getRequest();
-            if (log.isDebugEnabled()) {
-                log.debug("Received request: {}:{} {}", request.getMethod(), request.getURI(), request.getHeaders());
-            }
+            log.debug("Received request: {}:{} {}", request.getMethod(), request.getURI(), request.getHeaders());
             // 解析客户端IP地址
             return resolveClientIpAddress(request);
         });
@@ -73,9 +71,7 @@ public class ApiLoggingFilter implements GlobalFilter, Ordered {
         // 从请求头中获取客户端IP地址，如果未配置则使用远程地址
         String clientIpAddress = request.getHeaders().getFirst(Header.X_FORWARDED_FOR.toString());
         if (clientIpAddress == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("X-Forwarded-For 未配置");
-            }
+            log.debug("X-Forwarded-For 未配置");
             clientIpAddress = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
         } else {
             // 如果有多个IP地址，只取第一个

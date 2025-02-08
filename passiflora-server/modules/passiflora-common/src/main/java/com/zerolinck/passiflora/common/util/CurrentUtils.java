@@ -50,7 +50,7 @@ public class CurrentUtils {
         }
         String token = request.getHeader(Header.AUTHORIZATION.toString());
         Set<String> keys = RedisUtils.keys(RedisPrefix.TOKEN_KEY + "*:" + token);
-        if (keys == null || keys.isEmpty()) {
+        if (keys.isEmpty()) {
             return null;
         }
         Object o = RedisUtils.get(keys.stream().findFirst().get());

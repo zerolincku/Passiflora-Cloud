@@ -43,7 +43,7 @@ public class RedisUtils {
         RedisUtils.redisTemplate = redisTemplate;
     }
 
-    @Nullable public static Set<String> keys(@NotNull String keys) {
+    @NotNull public static Set<String> keys(@NotNull String keys) {
         return redisTemplate.keys(keys);
     }
 

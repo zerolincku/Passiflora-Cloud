@@ -19,6 +19,8 @@ package com.zerolinck.passiflora.common.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+
 import lombok.experimental.UtilityClass;
 
 /** @author linck on 2024-06-29 */
@@ -26,7 +28,7 @@ import lombok.experimental.UtilityClass;
 public class SetUtils {
 
     /** 返回 set2 相对于 set1 多出的值 */
-    public static Set<String> set2MoreOutSet1(Set<String> set1, Set<String> set2) {
+    @NotNull public static Set<String> set2MoreOutSet1(@NotNull Set<String> set1, @NotNull Set<String> set2) {
         Set<String> difference = new HashSet<>(set2);
         difference.removeAll(set1);
         return difference;

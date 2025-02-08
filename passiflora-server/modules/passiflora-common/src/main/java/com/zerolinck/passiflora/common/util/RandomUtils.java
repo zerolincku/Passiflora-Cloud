@@ -16,8 +16,9 @@
  */
 package com.zerolinck.passiflora.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2024/10/08 */
 @UtilityClass
@@ -34,6 +35,7 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String randomString(int length) {
-        return RandomStringUtils.secure().next(length, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+        return RandomStringUtils.secure()
+                .next(length, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     }
 }
