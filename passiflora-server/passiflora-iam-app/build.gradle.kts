@@ -1,18 +1,17 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-import java.util.*
 
 plugins {
     java
     jacoco
     id("org.liquibase.gradle") version Version.liquibasePluginVersion
     id("org.springframework.boot") version Version.springBootVersion
+    id("com.google.osdetector") version Version.osdetectorVersion
 }
 
 val env: String = System.getProperty("env", Constants.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
-val os = System.getProperty("os.name").lowercase(Locale.getDefault())
-val arch = System.getProperty("os.arch").lowercase(Locale.getDefault())
+val mockitoAgent = configurations.create("mockitoAgent")
 
 dependencies {
     implementation(project(":modules:passiflora-feign"))
@@ -21,12 +20,8 @@ dependencies {
     testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
     liquibaseRuntime(platform(project(":modules:passiflora-bom")))
 
-    if (os.contains("mac")) {
-        if (arch.contains("aarch64")) {
-            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = "osx-aarch_64")
-        } else {
-            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos")
-        }
+    if (osdetector.os.equals("osx")) {
+        compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = osdetector.classifier)
     }
 
     annotationProcessor("org.projectlombok:lombok")
@@ -73,6 +68,8 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.redis:testcontainers-redis")
+    testImplementation("org.mockito:mockito-core")
+    mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
 }
 
 tasks {
@@ -103,6 +100,7 @@ tasks {
     }
     test {
         useJUnitPlatform()
+        jvmArgs("-javaagent:${mockitoAgent.asPath}")
     }
     jar {
         enabled = false

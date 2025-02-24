@@ -4,25 +4,20 @@ import java.util.*
 plugins {
     java
     id("org.springframework.boot") version Version.springBootVersion
+    id("com.google.osdetector") version Version.osdetectorVersion
 }
 
 val env: String = System.getProperty("env", Constants.DEL_ENV)
 val projectVersion = project.version.toString()
 val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
-val os = System.getProperty("os.name").lowercase(Locale.getDefault())
-val arch = System.getProperty("os.arch").lowercase(Locale.getDefault())
 
 dependencies {
     implementation(project(":modules:passiflora-feign"))
     annotationProcessor(platform(project(":modules:passiflora-bom")))
     testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
 
-    if (os.contains("mac")) {
-        if (arch.contains("aarch64")) {
-            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = "osx-aarch_64")
-        } else {
-            compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos")
-        }
+    if (osdetector.os.equals("osx")) {
+        compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = osdetector.classifier)
     }
 
     annotationProcessor("org.projectlombok:lombok")
