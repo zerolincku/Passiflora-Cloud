@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>
+ * Copyright (C) 2025 Linck. <zerolinck@foxmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -16,10 +16,10 @@
  */
 package com.zerolinck.passiflora.codegen.model;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /** @author linck on 2024-02-06 */
 @Data
@@ -37,9 +37,9 @@ public class Table {
     /** 原始字段集合 */
     private List<Column> originColumnList;
 
-    /** 移除了 {@link com.zerolinck.passiflora.model.common.BaseEntity} 中已存在字段的字段集合 */
+    /** 移除了 {@link com.zerolinck.passiflora.base.BaseEntity} 中已存在字段的字段集合 */
     private List<Column> columnList;
 
-    /** 标识，是否应该继承 {@link com.zerolinck.passiflora.model.common.BaseEntity} */
+    /** 标识，是否应该继承 {@link com.zerolinck.passiflora.base.BaseEntity} */
     private boolean extendsBase;
 }

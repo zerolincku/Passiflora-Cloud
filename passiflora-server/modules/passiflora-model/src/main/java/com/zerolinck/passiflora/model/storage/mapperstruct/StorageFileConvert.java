@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>
+ * Copyright (C) 2025 Linck. <zerolinck@foxmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published

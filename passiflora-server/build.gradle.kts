@@ -65,7 +65,7 @@ tasks.compileJava { dependsOn("spotlessApply") }
 
 var header =
     "/* \n" +
-        " * Copyright (C) 2024 Linck. <zerolinck@foxmail.com>\n" +
+        " * Copyright (C) 2025 Linck. <zerolinck@foxmail.com>\n" +
         " * \n" +
         " * This program is free software: you can redistribute it and/or modify\n" +
         " * it under the terms of the GNU Affero General Public License as published\n" +
