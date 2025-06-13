@@ -12,9 +12,9 @@ dependencies {
         api("org.projectlombok:lombok-mapstruct-binding:0.2.0")
         api("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.5.0")
         api("com.github.xiaoymin:knife4j-gateway-spring-boot-starter:4.5.0")
-        api("org.springdoc:springdoc-openapi-starter-common:2.7.0")
-        api("org.springdoc:springdoc-openapi-starter-webmvc-api:2.7.0")
-        api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+        api("org.springdoc:springdoc-openapi-starter-common:2.8.8")
+        api("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.8")
+        api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
         api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.20")
         api("com.mybatis-flex:mybatis-flex-core:1.10.9")
         api("com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.10.9")
@@ -34,6 +34,9 @@ dependencies {
         api("com.zaxxer:HikariCP:6.3.0")
         api("com.redis:testcontainers-redis:2.2.4")
         api("org.jetbrains:annotations:26.0.1")
+
+        api("org.junit.jupiter:junit-jupiter-api:5.13.1")
+        api("org.junit.jupiter:junit-jupiter-engine:5.13.1")
     }
 }
 
