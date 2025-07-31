@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerolinck.passiflora.common.api.Result;
 import com.zerolinck.passiflora.common.api.ResultCode;
 import com.zerolinck.passiflora.common.exception.BizException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -32,10 +34,6 @@ import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import reactor.core.publisher.Mono;
 
 /** 网关异常通用处理器，只作用在webflux 环境下, 优先级低于 {@link ResponseStatusExceptionHandler} 执行 */
@@ -113,12 +111,14 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
      * @param throwable 抛出的异常
      */
     private void logException(ServerHttpRequest request, Throwable throwable) {
-        if (throwable instanceof BizException) {
-            log.warn("Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());
-        } else if (throwable instanceof NoResourceFoundException) {
-            log.warn("NoResourceFoundException: path={}, exception={}", request.getPath(), throwable.getMessage());
-        } else {
-            log.error("Unexpected exception: path={}", request.getPath(), throwable);
+        switch (throwable) {
+            case BizException bizException ->
+                    log.warn("Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case NoResourceFoundException noResourceFoundException ->
+                    log.warn("NoResourceFoundException: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case IllegalArgumentException illegalArgumentException ->
+                    log.warn("IllegalArgumentException: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case null, default -> log.error("Unexpected exception: path={}", request.getPath(), throwable);
         }
     }
 }
