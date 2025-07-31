@@ -2,6 +2,7 @@ plugins {
     java
     idea
     pmd
+    `maven-publish`
     id("io.spring.dependency-management") version Version.springDependencyManagementPluginVersion
     id("com.diffplug.spotless") version Version.spotlessPluginVersion
 }
@@ -42,6 +43,30 @@ allprojects {
         toolVersion = Version.pmdToolVersion
         rulesMinimumPriority = 5
         ruleSets(rootDir.absolutePath + "/pmd-rule.xml")
+    }
+
+    plugins.withId("java-library") {
+        apply(plugin = "maven-publish")
+
+        publishing {
+            publications {
+                create<MavenPublication>("mavenJava") {
+                    from(components["java"])
+                }
+            }
+        }
+    }
+
+    plugins.withId("java-platform") {
+        apply(plugin = "maven-publish")
+
+        publishing {
+            publications {
+                create<MavenPublication>("mavenJavaPlatform") {
+                    from(components["javaPlatform"])
+                }
+            }
+        }
     }
 }
 
