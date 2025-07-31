@@ -21,7 +21,7 @@ dependencies {
         api("com.mybatis-flex:mybatis-flex-processor:1.11.1")
         api("org.redisson:redisson-spring-boot-starter:3.50.0")
         api("org.redisson:redisson:3.50.0")
-        api("org.apache.commons:commons-lang3:3.17.0")
+        api("org.apache.commons:commons-lang3:3.18.0")
         api("org.apache.commons:commons-collections4:4.4")
         api("commons-codec:commons-codec:1.17.1")
         api("commons-io:commons-io:2.17.0")
