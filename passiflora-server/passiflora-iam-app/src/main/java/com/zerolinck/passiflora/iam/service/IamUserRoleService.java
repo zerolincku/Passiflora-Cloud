@@ -19,7 +19,7 @@ package com.zerolinck.passiflora.iam.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.Lists;
 import com.zerolinck.passiflora.common.util.SetUtils;
 import com.zerolinck.passiflora.common.util.lock.LockUtils;
 import com.zerolinck.passiflora.common.util.lock.LockWrapper;
@@ -128,7 +128,7 @@ public class IamUserRoleService {
      */
     @NotNull public List<IamUserRoleResp> selectByUserIds(@NotNull Collection<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
-            return ListUtils.emptyList();
+            return Lists.emptyList();
         }
         return mapper.selectByUserIds(userIds);
     }

@@ -27,7 +27,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.common.util.Condition;
-import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.Lists;
 import com.zerolinck.passiflora.model.iam.entity.IamOrg;
 import com.zerolinck.passiflora.model.iam.resp.IamOrgResp;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
@@ -105,7 +105,7 @@ public interface IamOrgMapper extends BaseMapper<IamOrg> {
      */
     @NotNull default List<IamOrg> listByOrgIds(@Nullable Collection<String> orgIds) {
         if (CollectionUtils.isEmpty(orgIds)) {
-            return ListUtils.emptyList();
+            return Lists.emptyList();
         }
         return this.selectListByQuery(new QueryWrapper().in(IamOrg::getOrgId, orgIds));
     }

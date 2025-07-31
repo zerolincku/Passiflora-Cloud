@@ -25,7 +25,7 @@ import lombok.experimental.UtilityClass;
 
 /** @author 林常坤 on 2025/2/7 */
 @UtilityClass
-public class ListUtils {
+public class Lists {
 
     @NotNull public static <T> List<T> emptyList() {
         return new ArrayList<>(0);

@@ -1,7 +1,7 @@
 object Version {
     const val passifloraVersion = "0.2"
 
-    const val springBootVersion = "3.5.0"
+    const val springBootVersion = "3.5.4"
     const val aliCloudVersion = "2023.0.3.3"
     const val springCloudVersion = "2025.0.0"
 

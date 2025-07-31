@@ -34,9 +34,6 @@ dependencies {
         api("com.zaxxer:HikariCP:6.3.0")
         api("com.redis:testcontainers-redis:2.2.4")
         api("org.jetbrains:annotations:26.0.1")
-
-        api("org.junit.jupiter:junit-jupiter-api:5.13.1")
-        api("org.junit.jupiter:junit-jupiter-engine:5.13.1")
     }
 }
 

@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.Lists;
 import com.zerolinck.passiflora.common.util.ProxyUtils;
 import com.zerolinck.passiflora.common.util.SetUtils;
 import com.zerolinck.passiflora.common.util.lock.LockUtils;
@@ -122,7 +122,7 @@ public class IamRolePermissionService {
      */
     @NotNull public List<String> permissionIdsByRoleIds(@Nullable List<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
-            return ListUtils.emptyList();
+            return Lists.emptyList();
         }
         return mapper.permissionIdsByRoleIds(roleIds);
     }

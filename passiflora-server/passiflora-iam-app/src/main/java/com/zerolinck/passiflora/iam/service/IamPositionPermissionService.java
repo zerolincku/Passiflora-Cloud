@@ -18,7 +18,7 @@ package com.zerolinck.passiflora.iam.service;
 
 import java.util.*;
 
-import com.zerolinck.passiflora.common.util.ListUtils;
+import com.zerolinck.passiflora.common.util.Lists;
 import com.zerolinck.passiflora.common.util.ProxyUtils;
 import com.zerolinck.passiflora.common.util.SetUtils;
 import com.zerolinck.passiflora.common.util.lock.LockUtils;
@@ -128,7 +128,7 @@ public class IamPositionPermissionService {
      */
     @NotNull public List<String> permissionIdsByPositionIds(@Nullable List<String> positionIds) {
         if (CollectionUtils.isEmpty(positionIds)) {
-            return ListUtils.emptyList();
+            return Lists.emptyList();
         }
         return mapper.permissionIdsByPositionIds(positionIds);
     }
