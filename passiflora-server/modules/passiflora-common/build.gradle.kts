@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    api(enforcedPlatform(project(":modules:passiflora-bom")))
-    annotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
-    testAnnotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    api(platform(project(":modules:passiflora-bom")))
+    annotationProcessor(platform(project(":modules:passiflora-bom")))
+    testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")

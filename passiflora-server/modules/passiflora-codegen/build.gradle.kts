@@ -11,8 +11,8 @@ val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
 dependencies {
     implementation(project(":modules:passiflora-common"))
-    annotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
-    testAnnotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    annotationProcessor(platform(project(":modules:passiflora-bom")))
+    testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
