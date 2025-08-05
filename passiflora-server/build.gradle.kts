@@ -30,11 +30,6 @@ allprojects {
     }
 
     dependencyManagement {
-        imports {
-            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${Version.aliCloudVersion}")
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${Version.springCloudVersion}")
-            mavenBom("org.springframework.boot:spring-boot-dependencies:${Version.springBootVersion}")
-        }
         applyMavenExclusions(false)
     }
 

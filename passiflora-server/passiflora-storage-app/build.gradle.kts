@@ -16,9 +16,9 @@ val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     implementation(project(":modules:passiflora-feign"))
     implementation(project(":modules:passiflora-mybatis-flex-starter"))
-    annotationProcessor(platform(project(":modules:passiflora-bom")))
-    testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
-    liquibaseRuntime(platform(project(":modules:passiflora-bom")))
+    annotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    testAnnotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    liquibaseRuntime(enforcedPlatform(project(":modules:passiflora-bom")))
 
     if (osdetector.os.equals("osx")) {
         compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = osdetector.classifier)

@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     java
+    `java-library`
 }
 
 val env: String = System.getProperty("env", Constants.DEL_ENV)
@@ -10,8 +11,8 @@ val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
 dependencies {
     implementation(project(":modules:passiflora-common"))
-    annotationProcessor(platform(project(":modules:passiflora-bom")))
-    testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
+    annotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    testAnnotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")

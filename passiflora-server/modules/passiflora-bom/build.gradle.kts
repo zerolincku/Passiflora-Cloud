@@ -2,7 +2,15 @@ plugins {
     `java-platform`
 }
 
+javaPlatform {
+    allowDependencies()
+}
+
 dependencies {
+    api(platform("org.springframework.boot:spring-boot-dependencies:${Version.springBootVersion}"))
+    api(platform("org.springframework.cloud:spring-cloud-dependencies:${Version.springCloudVersion}"))
+    api(platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${Version.aliCloudVersion}"))
+
     constraints {
         api("org.slf4j:slf4j-jdk14:2.0.16")
         api("io.netty:netty-resolver-dns-native-macos:4.1.114.Final")

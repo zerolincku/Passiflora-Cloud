@@ -1,5 +1,4 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-import java.util.*
 
 plugins {
     java
@@ -13,8 +12,8 @@ val configMap = configMap("${project.rootDir}/config.yml", env, projectVersion)
 
 dependencies {
     implementation(project(":modules:passiflora-feign"))
-    annotationProcessor(platform(project(":modules:passiflora-bom")))
-    testAnnotationProcessor(platform(project(":modules:passiflora-bom")))
+    annotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
+    testAnnotationProcessor(enforcedPlatform(project(":modules:passiflora-bom")))
 
     if (osdetector.os.equals("osx")) {
         compileOnly(group = "io.netty", name = "netty-resolver-dns-native-macos", classifier = osdetector.classifier)
