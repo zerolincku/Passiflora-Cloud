@@ -49,9 +49,8 @@
           return;
         }
         // Trigger router change
-        router.push({
-          name: item.name,
-        });
+        const target = item.name ? { name: item.name } : { path: item.path };
+        router.push(target).catch(() => null);
       };
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
@@ -102,33 +101,28 @@
               const icon = element?.meta?.icon
                 ? () => h(compile(`<${element?.meta?.icon}/>`))
                 : null;
+              const key = (element?.name || element?.path) as string;
+              const title = element?.meta?.locale
+                ? t(element?.meta?.locale as string)
+                : (element?.meta?.title as string);
               const node =
                 element?.children && element?.children.length !== 0 ? (
                   <a-sub-menu
-                    key={element?.name}
+                    key={key}
                     v-slots={{
                       icon,
-                      title: () =>
-                        h(
-                          compile(
-                            element?.meta?.locale
-                              ? t(element?.meta?.locale)
-                              : element?.meta?.title
-                          )
-                        ),
+                      title: () => title,
                     }}
                   >
                     {travel(element?.children)}
                   </a-sub-menu>
                 ) : (
                   <a-menu-item
-                    key={element?.name}
+                    key={key}
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {element?.meta?.locale
-                      ? t(element?.meta?.locale)
-                      : element?.meta?.title}
+                    {title}
                   </a-menu-item>
                 );
               nodes.push(node as never);
