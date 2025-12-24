@@ -136,9 +136,8 @@ public class ConditionUtils {
         Map<String, Field> fieldMap = getFields(clazz);
         if (fieldMap.containsKey(column)) {
             // 驼峰转下划线
-            return condition.getTableAlise() == null
-                    ? ""
-                    : condition.getTableAlise() + "." + StrUtils.camelToUnderline(column);
+            return (condition.getTableAlise() == null ? "" : (condition.getTableAlise() + "."))
+                    + StrUtils.camelToUnderline(column);
         }
         throw new IllegalArgumentException(String.format("不允许的搜索条件: %s", column));
     }

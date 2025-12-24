@@ -1,5 +1,5 @@
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
+import {resolve} from 'path';
+import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
@@ -40,7 +40,7 @@ export default defineConfig({
     proxy: {
       // https://cn.vitejs.dev/config/#server-proxy
       '/passiflora': {
-        target: 'http://127.0.0.1:51000',
+        target: 'http://localhost:51000',
         changeOrigin: true
       }
     }
