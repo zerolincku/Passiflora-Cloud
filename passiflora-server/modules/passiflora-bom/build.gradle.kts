@@ -41,6 +41,8 @@ dependencies {
         api("software.amazon.awssdk:apache-client:2.28.24")
         api("com.redis:testcontainers-redis:2.2.4")
         api("org.jetbrains:annotations:26.0.1")
+        api("org.apache.commons:commons-compress:1.26.0")
+        api("org.liquibase:liquibase-core:4.33.0")
     }
 }
 

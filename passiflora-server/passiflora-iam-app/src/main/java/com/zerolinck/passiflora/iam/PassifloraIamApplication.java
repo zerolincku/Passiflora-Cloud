@@ -46,20 +46,11 @@ public class PassifloraIamApplication {
         String path = environment.getProperty("server.servlet.context-path");
         String buildTime = environment.getProperty("passiflora.build-time");
         String outIp = NetUtils.findOutIp();
-        log.info(
-                """
+        log.info("""
             \n项目启动成功: {} 环境
             本地 Swagger: \t\thttp://localhost:{}{}/doc.html
             外部地址 Swagger: \thttp://{}:{}{}/doc.html
             Passiflora (C) 2024 version: {}
-            BuildTime: {}""",
-                env,
-                port,
-                path,
-                outIp,
-                port,
-                path,
-                projectVersion,
-                buildTime);
+            BuildTime: {}""", env, port, path, outIp, port, path, projectVersion, buildTime);
     }
 }

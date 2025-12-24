@@ -81,8 +81,7 @@ public class PostgresDbService implements DbService {
     }
 
     private static List<Column> getOriginColumnList(String tableName, QueryRunner runner) throws SQLException {
-        String sql =
-                """
+        String sql = """
                 SELECT A.attname AS columnName,
                     format_type( A.atttypid, A.atttypmod ) AS columnType,
                     A.attnotnull AS nullable,

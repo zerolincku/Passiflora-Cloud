@@ -20,15 +20,6 @@ allprojects {
         exclude(group = "commons-logging", module = "commons-logging")
     }
 
-    repositories {
-        huaweiRepository()
-        aliyunCentral()
-        tencentRepository()
-        springRepository()
-        mavenCentral()
-        google()
-    }
-
     dependencyManagement {
         applyMavenExclusions(false)
     }

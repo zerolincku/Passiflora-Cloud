@@ -114,12 +114,12 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
      */
     private void logException(ServerHttpRequest request, Throwable throwable) {
         switch (throwable) {
-            case BizException ignored -> log.warn(
-                    "Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());
-            case NoResourceFoundException ignored -> log.warn(
-                    "NoResourceFoundException: path={}, exception={}", request.getPath(), throwable.getMessage());
-            case IllegalArgumentException ignored -> log.warn(
-                    "IllegalArgumentException: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case BizException ignored ->
+                log.warn("Business exception: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case NoResourceFoundException ignored ->
+                log.warn("NoResourceFoundException: path={}, exception={}", request.getPath(), throwable.getMessage());
+            case IllegalArgumentException ignored ->
+                log.warn("IllegalArgumentException: path={}, exception={}", request.getPath(), throwable.getMessage());
             default -> log.error("Unexpected exception: path={}", request.getPath(), throwable);
         }
     }
