@@ -16,19 +16,21 @@
  */
 package com.zerolinck.passiflora.iam.mapper;
 
-import static com.zerolinck.passiflora.model.iam.entity.table.IamUserTableDef.IAM_USER;
-
-import java.util.Objects;
-
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.PageConvert;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
+import static com.zerolinck.passiflora.model.iam.entity.table.IamUserTableDef.IAM_USER;
 
 /** @author linck on 2024-02-07 */
 public interface IamUserMapper extends BaseMapper<IamUser> {
@@ -39,12 +41,21 @@ public interface IamUserMapper extends BaseMapper<IamUser> {
      * @param condition 查询条件
      * @author 林常坤 on 2025/2/7
      */
-    @NotNull default com.zerolinck.passiflora.common.api.Page<IamUser> page(@Nullable Condition<IamUser> condition) {
+    @NotNull default com.zerolinck.passiflora.common.api.Page<IamUser> page(@Nullable Condition<IamUser> condition, @Nullable String orgId) {
         condition = Objects.requireNonNullElse(condition, new Condition<>());
+        QueryWrapper queryWrapper = ConditionUtils.searchWrapper(condition, IamUser.class);
+        if (StringUtils.isNotBlank(orgId)) {
+            queryWrapper.in(
+                    "org_id",
+                    QueryWrapper.create().from("iam_org")
+                            .select("org_id")
+                            .like("org_id_path", "%" + orgId + "%")
+            );
+        }
         Page<IamUser> paginate = paginate(
                 condition.getPageNum(),
                 condition.getPageSize(),
-                ConditionUtils.searchWrapper(condition, IamUser.class));
+                queryWrapper);
         return PageConvert.toPage(paginate);
     }
 

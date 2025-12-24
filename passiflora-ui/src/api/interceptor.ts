@@ -1,10 +1,35 @@
+import type {AxiosRequestConfig, AxiosResponse} from 'axios';
 import axios from 'axios';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Message, Modal } from '@arco-design/web-vue';
-import { useUserStore } from '@/store';
-import { getToken, clearToken } from '@/utils/auth';
-import { Result } from '@/types/global';
+import {Message} from '@arco-design/web-vue';
+import {clearToken, getToken} from '@/utils/auth';
+import {Result} from '@/types/global';
 import router from '@/router';
+
+const toFiniteNumberOrNull = (value: unknown): number | null => {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) return null;
+  return num;
+};
+
+const coerceTotalFields = (node: unknown) => {
+  if (!node || typeof node !== 'object') return;
+  if (Array.isArray(node)) {
+    node.forEach(coerceTotalFields);
+    return;
+  }
+  Object.entries(node).forEach(([key, value]) => {
+    if (key === 'total') {
+      const num = toFiniteNumberOrNull(value);
+      if (num !== null) (node as Record<string, unknown>)[key] = num;
+      return;
+    }
+    coerceTotalFields(value);
+  });
+};
 
 if (import.meta.env.VITE_API_BASE_URL) {
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -44,6 +69,7 @@ axios.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || 'Error'));
     }
+    coerceTotalFields(res);
     return response;
   },
   (error) => {
