@@ -22,7 +22,6 @@ import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.zerolinck.passiflora.common.util.Condition;
 import com.zerolinck.passiflora.model.iam.entity.IamUser;
-import com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef;
 import com.zerolinck.passiflora.mybatis.util.ConditionUtils;
 import com.zerolinck.passiflora.mybatis.util.PageConvert;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static com.zerolinck.passiflora.model.iam.entity.table.IamOrgTableDef.IAM_ORG;
 import static com.zerolinck.passiflora.model.iam.entity.table.IamUserTableDef.IAM_USER;
 
 /** @author linck on 2024-02-07 */
@@ -47,10 +47,10 @@ public interface IamUserMapper extends BaseMapper<IamUser> {
         QueryWrapper queryWrapper = ConditionUtils.searchWrapper(condition, IamUser.class);
         if (StringUtils.isNotBlank(orgId)) {
             queryWrapper.in(
-                    IamOrgTableDef.IAM_ORG.ORG_ID.getName(),
-                    QueryWrapper.create().from(IamOrgTableDef.IAM_ORG)
-                            .select(IamOrgTableDef.IAM_ORG.ORG_ID.getName())
-                            .like(IamOrgTableDef.IAM_ORG.ORG_ID_PATH.getName(), "%" + orgId + "%")
+                    IAM_ORG.ORG_ID.getName(),
+                    QueryWrapper.create().from(IAM_ORG)
+                            .select(IAM_ORG.ORG_ID.getName())
+                            .like(IAM_ORG.ORG_ID_PATH.getName(), "%" + orgId + "%")
             );
         }
         Page<IamUser> paginate = paginate(
