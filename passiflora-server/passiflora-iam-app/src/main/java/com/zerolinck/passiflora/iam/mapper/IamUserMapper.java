@@ -50,7 +50,7 @@ public interface IamUserMapper extends BaseMapper<IamUser> {
                     IAM_ORG.ORG_ID.getName(),
                     QueryWrapper.create().from(IAM_ORG)
                             .select(IAM_ORG.ORG_ID.getName())
-                            .like(IAM_ORG.ORG_ID_PATH.getName(), "%" + orgId + "%")
+                            .like(IAM_ORG.ORG_ID_PATH.getName(), orgId)
             );
         }
         Page<IamUser> paginate = paginate(
